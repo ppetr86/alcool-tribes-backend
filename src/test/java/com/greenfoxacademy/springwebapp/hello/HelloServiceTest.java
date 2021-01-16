@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.hello;
 
-import com.greenfoxacademy.springwebapp.services.HelloServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
