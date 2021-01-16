@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.models;
+package com.greenfoxacademy.springwebapp.models.enums;
 
 public enum BuildingType {
   TOWNHALL("townhall"),
@@ -8,7 +8,7 @@ public enum BuildingType {
 
   public final String label;
 
-  private BuildingType(String label) {
+  BuildingType(String label) {
     this.label = label;
   }
 }
