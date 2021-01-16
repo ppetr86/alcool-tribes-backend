@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 public class HelloServiceImpl implements HelloService {
 
   public String getHelloWorld() {
-    return "Hello World!";
+    return "Hello everyone in the World!";
   }
 }
