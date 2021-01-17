@@ -27,9 +27,8 @@ public class BuildingsController {
       return ResponseEntity.badRequest().body(new ErrorResponseDTO("error", "Missing parameter(s): type!"));
     } else if (!buildingService.isBuildingTypeInRequestOk(dto) ||
             !kingdomService.hasKingdomTownhall()) {
-      return new ResponseEntity<>(
-              new ErrorResponseDTO("error", "Invalid building type || Cannot build buildings with higher level than the Townhall"),
-              HttpStatus.NOT_ACCEPTABLE);
+      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponseDTO(
+              "error", "Invalid building type || Cannot build buildings with higher level than the Townhall"));
     } else if (kingdomService.hasResourcesForBuilding()) {
       BuildingEntity building = buildingService.createBuildingType(dto.getType());
       buildingService.setStartedAt(building);
@@ -37,8 +36,7 @@ public class BuildingsController {
       buildingService.save(building);
       return ResponseEntity.ok(building);
     } else {
-      return new ResponseEntity<>(new ErrorResponseDTO("error", "Not enough resource"),
-              HttpStatus.CONFLICT);
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO("error", "Not enough resource"));
     }
   }
 }
