@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.models.enums;
+package com.greenfoxacademy.springwebapp.building.models.enums;
 
 public enum BuildingType {
   TOWNHALL("townhall"),
