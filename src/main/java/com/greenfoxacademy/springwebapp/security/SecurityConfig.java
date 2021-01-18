@@ -1,6 +1,6 @@
-package com.greenfoxacademy.springwebapp.configuration;
+package com.greenfoxacademy.springwebapp.security;
 
-import com.greenfoxacademy.springwebapp.configuration.jwt.JwtFilter;
+import com.greenfoxacademy.springwebapp.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

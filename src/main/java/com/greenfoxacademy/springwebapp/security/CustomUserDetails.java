@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.configuration;
+package com.greenfoxacademy.springwebapp.security;
 
 import com.greenfoxacademy.springwebapp.models.Player;
 import java.util.Collection;

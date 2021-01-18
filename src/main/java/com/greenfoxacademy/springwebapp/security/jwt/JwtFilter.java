@@ -1,9 +1,9 @@
-package com.greenfoxacademy.springwebapp.configuration.jwt;
+package com.greenfoxacademy.springwebapp.security.jwt;
 
 import static org.springframework.util.StringUtils.hasText;
 
-import com.greenfoxacademy.springwebapp.configuration.CustomUserDetails;
-import com.greenfoxacademy.springwebapp.configuration.CustomUserDetailsService;
+import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
+import com.greenfoxacademy.springwebapp.security.CustomUserDetailsService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

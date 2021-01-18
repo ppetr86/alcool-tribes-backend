@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.configuration.jwt;
+package com.greenfoxacademy.springwebapp.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

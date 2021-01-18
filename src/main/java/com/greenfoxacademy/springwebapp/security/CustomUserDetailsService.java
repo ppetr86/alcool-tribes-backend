@@ -1,7 +1,7 @@
-package com.greenfoxacademy.springwebapp.configuration;
+package com.greenfoxacademy.springwebapp.security;
 
 import com.greenfoxacademy.springwebapp.models.Player;
-import com.greenfoxacademy.springwebapp.services.PlayerService;
+import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
