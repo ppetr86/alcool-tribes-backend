@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ public class UserEntity {
   @Column(name = "username", unique = true, length = 20)
   private String username;
   @Column(name = "password")
+  @JsonIgnore
   private String password;
   @Column(name = "email")
   private String email;

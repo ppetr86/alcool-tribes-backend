@@ -13,5 +13,5 @@ public class UserDTO {
 
   private String email;
 
-  private String kingdomName;
+  private String kingdomname;
 }

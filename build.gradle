@@ -41,6 +41,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.2'
 
 }
 
