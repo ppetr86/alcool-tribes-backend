@@ -27,13 +27,6 @@ public class UserEntity {
   @Column(name = "kingdomname")
   private String kingdomName;
 
-  public UserEntity(String username, String password, String email) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.kingdomName = username + "'s kingdom";
-  }
-
   public UserEntity(String username, String password, String email, String kingdomName) {
     this.username = username;
     this.password = password;

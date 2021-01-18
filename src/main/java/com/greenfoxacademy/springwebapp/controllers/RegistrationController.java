@@ -18,6 +18,6 @@ public class RegistrationController {
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO){
     ResponseEntity<?> response = registrationService.createUser(userDTO);
-    return ResponseEntity.ok().body(response);
+    return ResponseEntity.status(response.getStatusCode()).body(response);
   }
 }
