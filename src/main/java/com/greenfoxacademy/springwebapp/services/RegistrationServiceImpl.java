@@ -18,15 +18,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
   @Override
   public ResponseEntity<?> createUser(UserDTO userDTO) {
-    if (userDTO.getUsername() == null) {
+    if (userDTO.getUsername() == null && userDTO.getPassword() == null){
+      UserErrorDTO error = new UserErrorDTO("Username and password are required.");
+      return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
+    } else if (userDTO.getUsername() == null) {
       UserErrorDTO error = new UserErrorDTO("Username is required");
+      return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
+    } else if (userDTO.getPassword() == null) {
+      UserErrorDTO error = new UserErrorDTO("Password is required.");
       return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
     } else if (registrationRepo.findByUsername(userDTO.getUsername()) != null) {
       UserErrorDTO error = new UserErrorDTO("Username is already taken.");
       return ResponseEntity.status(HttpStatus.valueOf(409)).body(error);
-    } else if (userDTO.getPassword() == null) {
-      UserErrorDTO error = new UserErrorDTO("Password is required.");
-      return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
     } else if (userDTO.getPassword().length() < 8) {
       UserErrorDTO error = new UserErrorDTO("Password must be 8 characters.");
       return ResponseEntity.status(HttpStatus.valueOf(406)).body(error);
