@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.services;
 
+import com.greenfoxacademy.springwebapp.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.models.UserEntity;
 import com.greenfoxacademy.springwebapp.models.dtos.UserDTO;
 import com.greenfoxacademy.springwebapp.models.dtos.UserErrorDTO;
@@ -43,11 +44,13 @@ public class RegistrationServiceImpl implements RegistrationService {
       userEntity.setUsername(userDTO.getUsername());
       userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
       userEntity.setEmail(userDTO.getEmail());
-      if (userDTO.getKingdomname() != null) {
-        userEntity.setKingdomName(userDTO.getKingdomname());
+      KingdomEntity kingdomEntity = new KingdomEntity();
+      if (userDTO.getKingdomname() == null) {
+        kingdomEntity.setKingdomName(userEntity.getUsername());
       } else {
-        userEntity.setKingdomName(userDTO.getUsername()+"'s kingdom");
+        kingdomEntity.setKingdomName(userDTO.getUsername()+"'s kingdom");
       }
+      userEntity.setKingdomEntity(kingdomEntity);
       registrationRepo.save(userEntity);
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(userEntity);
     }

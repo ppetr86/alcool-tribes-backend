@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,13 +27,14 @@ public class UserEntity {
   private String password;
   @Column(name = "email")
   private String email;
-  @Column(name = "kingdomname")
-  private String kingdomName;
 
-  public UserEntity(String username, String password, String email, String kingdomName) {
+  @OneToOne
+  KingdomEntity kingdomEntity;
+
+
+  public UserEntity(String username, String password, String email) {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.kingdomName = kingdomName;
   }
 }
