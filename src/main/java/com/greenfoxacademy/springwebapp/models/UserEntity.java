@@ -29,6 +29,10 @@ public class UserEntity {
   private String password;
   @Column(name = "email")
   private String email;
+  @Column(name = "avatar")
+  private String avatar = "http://avatar.loc/my.png";
+  @Column(name = "points")
+  private int points = 0;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "kingdomId", referencedColumnName = "Id")

@@ -23,36 +23,24 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   @Override
-  public ResponseEntity<?> createUser(UserDTO userDTO) {
-    if (userDTO.getUsername() == null && userDTO.getPassword() == null){
-      UserErrorDTO error = new UserErrorDTO("Username and password are required.");
-      return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
-    } else if (userDTO.getUsername() == null) {
-      UserErrorDTO error = new UserErrorDTO("Username is required");
-      return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
-    } else if (userDTO.getPassword() == null) {
-      UserErrorDTO error = new UserErrorDTO("Password is required.");
-      return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
-    } else if (registrationRepo.findByUsername(userDTO.getUsername()) != null) {
-      UserErrorDTO error = new UserErrorDTO("Username is already taken.");
-      return ResponseEntity.status(HttpStatus.valueOf(409)).body(error);
-    } else if (userDTO.getPassword().length() < 8) {
-      UserErrorDTO error = new UserErrorDTO("Password must be 8 characters.");
-      return ResponseEntity.status(HttpStatus.valueOf(406)).body(error);
+  public UserEntity saveUser(UserDTO userDTO) {
+    UserEntity userEntity = new UserEntity();
+    userEntity.setUsername(userDTO.getUsername());
+    userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+    userEntity.setEmail(userDTO.getEmail());
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    if (userDTO.getKingdomname() != null) {
+      kingdomEntity.setKingdomName(userDTO.getKingdomname());
     } else {
-      UserEntity userEntity = new UserEntity();
-      userEntity.setUsername(userDTO.getUsername());
-      userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-      userEntity.setEmail(userDTO.getEmail());
-      KingdomEntity kingdomEntity = new KingdomEntity();
-      if (userDTO.getKingdomname() != null) {
-        kingdomEntity.setKingdomName(userDTO.getKingdomname());
-      } else {
-        kingdomEntity.setKingdomName(userDTO.getUsername()+"'s kingdom");
-      }
-      userEntity.setKingdomEntity(kingdomEntity);
-      registrationRepo.save(userEntity);
-      return ResponseEntity.status(HttpStatus.valueOf(201)).body(userEntity);
+      kingdomEntity.setKingdomName(userDTO.getUsername() + "'s kingdom");
     }
+    userEntity.setKingdomEntity(kingdomEntity);
+    registrationRepo.save(userEntity);
+    return userEntity;
+  }
+
+  @Override
+  public UserEntity findByUsername(String username) {
+    return registrationRepo.findByUsername(username);
   }
 }
