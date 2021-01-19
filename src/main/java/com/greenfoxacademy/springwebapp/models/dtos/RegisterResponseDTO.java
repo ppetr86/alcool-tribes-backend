@@ -14,5 +14,4 @@ public class RegisterResponseDTO {
   private String avatar;
   private int points;
 
-
 }

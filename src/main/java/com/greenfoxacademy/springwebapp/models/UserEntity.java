@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,10 +39,11 @@ public class UserEntity {
   @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
   private KingdomEntity kingdomEntity;
 
-
-  public UserEntity(String username, String password, String email) {
+  public UserEntity(String username, String password, String email,
+                    KingdomEntity kingdomEntity) {
     this.username = username;
     this.password = password;
     this.email = email;
+    this.kingdomEntity = kingdomEntity;
   }
 }

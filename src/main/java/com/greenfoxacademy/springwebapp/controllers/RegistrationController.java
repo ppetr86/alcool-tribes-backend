@@ -26,7 +26,7 @@ public class RegistrationController {
       UserErrorDTO error = new UserErrorDTO("Username and password are required.");
       return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
     } else if (userDTO.getUsername() == null) {
-      UserErrorDTO error = new UserErrorDTO("Username is required");
+      UserErrorDTO error = new UserErrorDTO("Username is required.");
       return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
     } else if (userDTO.getPassword() == null) {
       UserErrorDTO error = new UserErrorDTO("Password is required.");
