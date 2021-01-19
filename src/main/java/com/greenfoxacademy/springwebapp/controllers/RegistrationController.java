@@ -21,7 +21,7 @@ public class RegistrationController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser2(@RequestBody UserDTO userDTO) {
+  public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
     if (userDTO.getUsername() == null && userDTO.getPassword() == null) {
       UserErrorDTO error = new UserErrorDTO("Username and password are required.");
       return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
