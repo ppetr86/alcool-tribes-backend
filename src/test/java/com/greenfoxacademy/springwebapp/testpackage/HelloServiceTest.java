@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.testpackage;
 
-import com.greenfoxacademy.springwebapp.models.Player;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,7 +14,7 @@ public class HelloServiceTest {
   public void init() {
     playerService = new PlayerService() {
       @Override
-      public Player loadPlayerByUsername(String username) {
+      public PlayerEntity findByUsername(String username) {
         return null;
       }
     };
@@ -22,11 +22,11 @@ public class HelloServiceTest {
 
   @Test
   public void getHelloWorld_ValidExpectedValue_Equals() {
-    Assert.assertEquals("Hello World!", playerService.loadPlayerByUsername("test"));
+    Assert.assertEquals("Hello World!", playerService.findByUsername("test"));
   }
 
   @Test
   public void getHelloWorld_InvalidExpectedValue_NotEquals() {
-    Assert.assertNotEquals("Hello!", playerService.loadPlayerByUsername("test"));
+    Assert.assertNotEquals("Hello!", playerService.findByUsername("test"));
   }
 }

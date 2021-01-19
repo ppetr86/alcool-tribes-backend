@@ -1,7 +1,9 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
-import com.greenfoxacademy.springwebapp.models.Player;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 
 public interface PlayerService {
-  Player loadPlayerByUsername(String username);
+  PlayerEntity findByUsername (String username);
+
+  PlayerEntity loginUser(PlayerEntity playerInput);
 }

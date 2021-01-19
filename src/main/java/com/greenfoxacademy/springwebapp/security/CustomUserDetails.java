@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.security;
 
-import com.greenfoxacademy.springwebapp.models.Player;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import java.util.Collection;
 import java.util.HashSet;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,10 +11,10 @@ public class CustomUserDetails implements UserDetails {
   private String password;
   private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-  public static CustomUserDetails fromPlayerToCustomUserDetails(Player player){
+  public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity playerEntity){
     CustomUserDetails details = new CustomUserDetails();
-    details.login = player.getUserName();
-    details.password = player.getPassword();
+    details.login = playerEntity.getUsername();
+    details.password = playerEntity.getPassword();
     details.grantedAuthorities= details.getAuthorities();//returning empty authorities since we dont use roles
     return details;
   }
