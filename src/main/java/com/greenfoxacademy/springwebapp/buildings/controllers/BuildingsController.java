@@ -2,8 +2,10 @@ package com.greenfoxacademy.springwebapp.buildings.controllers;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.ErrorResponseDTO;
 import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidBuildingTypeException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdoms.services.KingdomService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,19 +21,17 @@ import static org.springframework.util.StringUtils.hasText;
 @RequestMapping("/api")
 @AllArgsConstructor
 public class BuildingsController {
-  private BuildingService buildingService;
-  private KingdomService kingdomService;
+  private final BuildingService buildingService;
+  private final KingdomService kingdomService;
 
   @PostMapping("/kingdom/buildings")
-  public ResponseEntity<?> buildBuilding(@RequestBody BuildingRequestDTO dto) {
+  public ResponseEntity<?> buildBuilding(@RequestBody BuildingRequestDTO dto) throws MissingParameterException, InvalidBuildingTypeException, NotEnoughResourceException {
 
     if (!hasText(dto.getType().toLowerCase())) {
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO("error", "Missing parameter(s): type!"));
+      throw new MissingParameterException();
     } else if (!buildingService.isBuildingTypeInRequestOk(dto) ||
             !kingdomService.hasKingdomTownhall()) {
-      return new ResponseEntity<>(
-              new ErrorResponseDTO("error", "Invalid building type || Cannot build buildings with higher level than the Townhall"),
-              HttpStatus.NOT_ACCEPTABLE);
+      throw new InvalidBuildingTypeException();
     } else if (kingdomService.hasResourcesForBuilding()) {
       BuildingEntity building = buildingService.createBuildingType(dto.getType());
       buildingService.setStartedAt(building);
@@ -39,8 +39,7 @@ public class BuildingsController {
       buildingService.save(building);
       return ResponseEntity.ok(building);
     } else {
-      return new ResponseEntity<>(new ErrorResponseDTO("error", "Not enough resource"),
-              HttpStatus.CONFLICT);
+      throw new NotEnoughResourceException();
     }
   }
 }

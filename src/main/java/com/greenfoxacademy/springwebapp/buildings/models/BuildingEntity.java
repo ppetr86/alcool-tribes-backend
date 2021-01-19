@@ -1,9 +1,9 @@
 package com.greenfoxacademy.springwebapp.buildings.models;
 
-
 import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.Valid;
 

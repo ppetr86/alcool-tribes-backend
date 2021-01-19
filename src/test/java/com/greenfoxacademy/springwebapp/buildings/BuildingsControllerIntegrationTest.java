@@ -1,6 +1,7 @@
-package com.greenfoxacademy.springwebapp;
+package com.greenfoxacademy.springwebapp.buildings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.buildings.controllers.BuildingsController;
 import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;

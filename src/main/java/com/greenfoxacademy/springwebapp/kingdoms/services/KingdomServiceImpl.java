@@ -14,6 +14,6 @@ public class KingdomServiceImpl implements KingdomService {
   @Override
   public boolean hasResourcesForBuilding() {
     // TODO: hasResourcesForBuilding
-    return true;
+    return false;
   }
 }

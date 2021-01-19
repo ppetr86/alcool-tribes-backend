@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp;
+package com.greenfoxacademy.springwebapp.buildings;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;

@@ -12,5 +12,6 @@ public interface BuildingService {
   boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto);
 
   BuildingEntity createBuildingType(String type);
+
   void setStartedAt(BuildingEntity building);
 }
