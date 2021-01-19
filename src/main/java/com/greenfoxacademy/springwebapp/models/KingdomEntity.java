@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class KingdomEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "kingdomId")
   private long id;
 
   @Column(name = "kingdomname")

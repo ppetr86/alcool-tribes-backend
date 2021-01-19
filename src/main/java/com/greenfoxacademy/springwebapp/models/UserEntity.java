@@ -1,11 +1,13 @@
 package com.greenfoxacademy.springwebapp.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +30,9 @@ public class UserEntity {
   @Column(name = "email")
   private String email;
 
-  @OneToOne
-  KingdomEntity kingdomEntity;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
+  private KingdomEntity kingdomEntity;
 
 
   public UserEntity(String username, String password, String email) {
