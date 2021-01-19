@@ -45,8 +45,8 @@ public class RegistrationServiceImpl implements RegistrationService {
       userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
       userEntity.setEmail(userDTO.getEmail());
       KingdomEntity kingdomEntity = new KingdomEntity();
-      if (userDTO.getKingdomname() == null) {
-        kingdomEntity.setKingdomName(userEntity.getUsername());
+      if (userDTO.getKingdomname() != null) {
+        kingdomEntity.setKingdomName(userDTO.getKingdomname());
       } else {
         kingdomEntity.setKingdomName(userDTO.getUsername()+"'s kingdom");
       }
