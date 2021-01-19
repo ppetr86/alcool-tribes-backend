@@ -7,7 +7,7 @@ import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,21 +23,8 @@ public class LoginController {
     this.jwtProvider = jwtProvider;
   }
 
-  @GetMapping("/login")
+  @PostMapping("/login")
   public ResponseEntity<?> postLogin(@RequestBody PlayerEntity playerInput){
-
-    PlayerEntity loggedPlayer = playerService.loginUser(playerInput);
-    if (loggedPlayer != null) {
-      String token = jwtProvider.generateToken(loggedPlayer.getUsername());
-      PlayerTokenDTO tokenDTO = new PlayerTokenDTO(token);
-      return ResponseEntity.ok().body(tokenDTO);
-    } else {
-      return ResponseEntity.status(HttpStatus.valueOf(401)).build();
-    }
-  }
-
-  @GetMapping("/test")
-  public ResponseEntity<?> testSecurity(@RequestBody PlayerEntity playerInput){
 
     PlayerEntity loggedPlayer = playerService.loginUser(playerInput);
     if (loggedPlayer != null) {
