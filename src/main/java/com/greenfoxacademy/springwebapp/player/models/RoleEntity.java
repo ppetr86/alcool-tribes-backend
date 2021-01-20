@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.models;
+package com.greenfoxacademy.springwebapp.player.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,11 +1,11 @@
-package com.greenfoxacademy.springwebapp.models;
+package com.greenfoxacademy.springwebapp.player.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "user_table")
-public class UserEntity {
+@Table(name = "player_table")
+public class PlayerEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class UserEntity {
   @JoinColumn(name = "role_id")
   private RoleEntity roleEntity;
 
-  public UserEntity() {
+  public PlayerEntity() {
   }
 
   public Long getId() {

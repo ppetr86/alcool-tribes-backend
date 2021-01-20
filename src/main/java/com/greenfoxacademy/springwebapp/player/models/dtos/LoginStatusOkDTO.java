@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.models.dtos;
+package com.greenfoxacademy.springwebapp.player.models.dtos;
 
 public class LoginStatusOkDTO {
   private String status;

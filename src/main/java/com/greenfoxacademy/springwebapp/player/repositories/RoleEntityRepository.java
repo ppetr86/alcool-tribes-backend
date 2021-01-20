@@ -1,6 +1,6 @@
-package com.greenfoxacademy.springwebapp.repositories;
+package com.greenfoxacademy.springwebapp.player.repositories;
 
-import com.greenfoxacademy.springwebapp.models.RoleEntity;
+import com.greenfoxacademy.springwebapp.player.models.RoleEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
