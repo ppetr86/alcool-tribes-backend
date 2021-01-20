@@ -57,7 +57,7 @@ public class RegistrationControllerTest {
   }
 
   @Test
-  public void registerUserShouldThrowErrorOfUsername() {
+  public void registerUserShouldThrowErrorOfUsernameAnd400() {
     //Arrange
     UserDTO userDTO = new UserDTO(null, "password", "email@rmail.com", "my kingdom");
     KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
@@ -73,7 +73,7 @@ public class RegistrationControllerTest {
   }
 
   @Test
-  public void registerUserShouldThrowErrorOfPassword() {
+  public void registerUserShouldThrowErrorOfPasswordAnd400() {
     //Arrange
     UserDTO userDTO = new UserDTO("user1", null, "email@rmail.com", "my kingdom");
     KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
@@ -89,7 +89,7 @@ public class RegistrationControllerTest {
   }
 
   @Test
-  public void registerUserShouldThrowErrorOfUsernameAndPassword() {
+  public void registerUserShouldThrowErrorOfUsernameAndPasswordAnd400() {
     //Arrange
     UserDTO userDTO = new UserDTO(null, null, "email@rmail.com", "my kingdom");
     KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
@@ -105,7 +105,7 @@ public class RegistrationControllerTest {
   }
 
   @Test
-  public void registerUserShouldThrowErrorOfUsernameAlreadyTaken() {
+  public void registerUserShouldThrowErrorOfUsernameAlreadyTakenAnd409() {
     //Arrange
     UserDTO userDTO = new UserDTO("user1", "password", "email@rmail.com", "my kingdom");
     KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
@@ -122,7 +122,7 @@ public class RegistrationControllerTest {
   }
 
   @Test
-  public void registerUserShouldThrowErrorOfShortPassword() {
+  public void registerUserShouldThrowErrorOfShortPasswordAnd406() {
     //Arrange
     UserDTO userDTO = new UserDTO("user1", "pasword", "email@rmail.com", "my kingdom");
     KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
