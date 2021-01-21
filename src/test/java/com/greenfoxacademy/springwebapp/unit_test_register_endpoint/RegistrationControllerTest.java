@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.unit_test_controller;
+package com.greenfoxacademy.springwebapp.unit_test_register_endpoint;
 
 import com.greenfoxacademy.springwebapp.controllers.RegistrationController;
 import com.greenfoxacademy.springwebapp.models.KingdomEntity;
