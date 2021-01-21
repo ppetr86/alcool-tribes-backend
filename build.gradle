@@ -43,6 +43,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.2'
 
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {
