@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfoxacademy.springwebapp.security.CustomSecurityErrorDTO;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.servlet.ServletException;
@@ -17,7 +16,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint,
   public void commence(HttpServletRequest request, HttpServletResponse response,
                        AuthenticationException authException) throws IOException, ServletException {
     ObjectMapper mapper = new ObjectMapper();
-    String responseMsg = mapper.writeValueAsString(new CustomSecurityErrorDTO("error","Unauthorised request.") );
+    String responseMsg = mapper.writeValueAsString(new CustomSecurityErrorDTO());
 
     response.getWriter().write(responseMsg);
     response.addHeader("Content-Type","application/json");

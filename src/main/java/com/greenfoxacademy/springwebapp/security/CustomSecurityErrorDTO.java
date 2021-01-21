@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class CustomSecurityErrorDTO {
-  private String status;
-  private String message;
+  private String status = "error";
+  private String message = "Unauthorised request.";
 
 }
