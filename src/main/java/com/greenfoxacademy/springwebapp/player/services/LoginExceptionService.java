@@ -6,6 +6,5 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.UserDTO;
 
 public interface LoginExceptionService {
   ErrorMessageDTO loginExceptions(String error, String msg);
-  LoginStatusOkDTO loginStatusOk(String ok, String token);
 
 }

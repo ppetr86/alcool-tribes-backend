@@ -7,6 +7,8 @@ import com.greenfoxacademy.springwebapp.player.repositories.PlayerEntityReposito
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlayerEntityServiceImp implements PlayerEntityService {
 
@@ -21,7 +23,12 @@ public class PlayerEntityServiceImp implements PlayerEntityService {
   }
 
   @Override
-  public long countUsers() {
+  public List<PlayerEntity> findAllPlayer() {
+    return playerEntityRepository.findAll();
+  }
+
+  @Override
+  public long countPlayers() {
     return playerEntityRepository.count();
   }
 

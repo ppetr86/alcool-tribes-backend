@@ -26,6 +26,10 @@ public class PlayerEntity {
   public PlayerEntity() {
   }
 
+  public PlayerEntity(@NotNull String username) {
+    this.username = username;
+  }
+
   public Long getId() {
     return id;
   }
