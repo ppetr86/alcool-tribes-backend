@@ -49,4 +49,23 @@ public class RegistrationEndpointTest {
         .andExpect(status().isCreated());
   }
 
+  @Test
+  public void postRegisterRequestShouldReturn400() throws Exception {
+
+    UserDTO userDTO = new UserDTO();
+    userDTO.setEmail("email@email.com");
+    userDTO.setPassword("testPassword");
+
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+
+    ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+
+    String requestJson = writer.writeValueAsString(userDTO);
+
+    mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
+        .content(requestJson))
+        .andExpect(status().isBadRequest());
+  }
+
 }
