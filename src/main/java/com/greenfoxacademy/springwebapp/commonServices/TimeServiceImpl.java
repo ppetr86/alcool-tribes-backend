@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public class TimeServiceImpl implements TimeService{
 
   @Override
-  public long epochTimeNow() {
+  public long getTime() {
     // TODO: epochTimeNow
     return 888L;
   }

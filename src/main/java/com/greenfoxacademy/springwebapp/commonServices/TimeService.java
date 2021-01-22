@@ -4,5 +4,5 @@ import org.springframework.stereotype.Service;
 
 public interface TimeService {
 
-  long epochTimeNow();
+  long getTime();
 }

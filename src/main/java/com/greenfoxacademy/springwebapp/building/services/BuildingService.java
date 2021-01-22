@@ -5,12 +5,11 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 
 public interface BuildingService {
 
-  void save(BuildingEntity entity);
+  BuildingEntity save(BuildingEntity entity);
 
-  void defineFinishedAt(BuildingEntity entity);
+  BuildingEntity defineFinishedAt(BuildingEntity entity);
 
   boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto);
 
-  BuildingEntity createBuildingType(String type);
-  void setStartedAt(BuildingEntity building);
+  BuildingEntity setBuildingTypeOnEntity(String type);
 }

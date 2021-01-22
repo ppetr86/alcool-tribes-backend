@@ -5,5 +5,4 @@ public interface KingdomService {
 
   boolean hasKingdomTownhall();
 
-  boolean hasResourcesForBuilding();
 }

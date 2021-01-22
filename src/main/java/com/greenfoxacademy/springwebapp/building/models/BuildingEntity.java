@@ -12,7 +12,6 @@ import javax.validation.Valid;
 @NoArgsConstructor
 @Entity
 @Table(name = "buildings")
-@Valid
 public class BuildingEntity {
 
   @Id
@@ -22,7 +21,7 @@ public class BuildingEntity {
   @Column(updatable = false)
   private BuildingType type;
   private int level = 1;
-  private int hp = 100;
+  private int hp;
   @Column(updatable = false)
   private long startedAt;
   @Column(updatable = false)
@@ -34,6 +33,12 @@ public class BuildingEntity {
 
   public BuildingEntity(BuildingType type, long startedAt) {
     this.type = type;
+    this.startedAt = startedAt;
+  }
+
+  public BuildingEntity(BuildingType type, int hp, long startedAt) {
+    this.type = type;
+    this.hp = hp;
     this.startedAt = startedAt;
   }
 }

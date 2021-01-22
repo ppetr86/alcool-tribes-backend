@@ -3,7 +3,9 @@ package com.greenfoxacademy.springwebapp.building;
 import com.greenfoxacademy.springwebapp.building.controllers.BuildingsController;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.commonServices.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +18,16 @@ public class BuildingControllerUnitTest {
   private BuildingsController buildingController;
   private BuildingService buildingService;
   private KingdomService kingdomService;
+  private ResourceService resourceService;
+  private TimeService timeService;
 
   @Before
   public void setUp() {
     buildingService = Mockito.mock(BuildingService.class);
     kingdomService = Mockito.mock(KingdomService.class);
-    buildingController = new BuildingsController(buildingService, kingdomService);
+    resourceService = Mockito.mock(ResourceService.class);
+    timeService = Mockito.mock(TimeService.class);
+    buildingController = new BuildingsController(buildingService, kingdomService,timeService,resourceService);
   }
 
   @Test
@@ -53,7 +59,7 @@ public class BuildingControllerUnitTest {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
-    Mockito.when(kingdomService.hasResourcesForBuilding()).thenReturn(false);
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     ResponseEntity<?> response = buildingController.buildBuilding(request);
     Assert.assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
   }
@@ -63,7 +69,7 @@ public class BuildingControllerUnitTest {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
-    Mockito.when(kingdomService.hasResourcesForBuilding()).thenReturn(true);
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     ResponseEntity<?> response = buildingController.buildBuilding(request);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }

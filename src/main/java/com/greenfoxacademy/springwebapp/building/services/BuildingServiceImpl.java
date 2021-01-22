@@ -4,33 +4,27 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
-import com.greenfoxacademy.springwebapp.commonServices.TimeService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class BuildingServiceImpl implements BuildingService {
 
-  private BuildingRepository repo;
-  private TimeService timeService;
+  private static Environment env;
+  private final BuildingRepository repo;
 
   @Override
-  public void save(BuildingEntity entity) {
-    repo.save(entity);
+  public BuildingEntity save(BuildingEntity entity) {
+    return repo.save(entity);
   }
 
   @Override
-  public void defineFinishedAt(BuildingEntity entity) {
-    if (entity.getType().label.equalsIgnoreCase("townhall"))
-      entity.setFinishedAt(entity.getStartedAt() + 120);
-
-    if (entity.getType().label.equalsIgnoreCase("farm") ||
-            entity.getType().label.equalsIgnoreCase("mine"))
-      entity.setFinishedAt(entity.getStartedAt() + 60);
-
-    if (entity.getType().label.equals("academy"))
-      entity.setFinishedAt(entity.getStartedAt() + 90);
+  public BuildingEntity defineFinishedAt(BuildingEntity entity) {
+    entity.setFinishedAt(entity.getStartedAt() + Long.parseLong(
+            env.getProperty(String.format("building.%s.buildingTime", entity.getType()))));
+    return entity;
   }
 
   @Override
@@ -43,7 +37,7 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingEntity createBuildingType(String type) {
+  public BuildingEntity setBuildingTypeOnEntity(String type) {
     BuildingEntity buildingEntity = new BuildingEntity();
     if (type.equalsIgnoreCase("townhall")) {
       buildingEntity.setType(BuildingType.TOWNHALL);
@@ -55,11 +49,5 @@ public class BuildingServiceImpl implements BuildingService {
       buildingEntity.setType(BuildingType.ACADEMY);
     }
     return buildingEntity;
-  }
-
-  @Override
-  public void setStartedAt(BuildingEntity building) {
-
-    building.setStartedAt(timeService.epochTimeNow());
   }
 }
