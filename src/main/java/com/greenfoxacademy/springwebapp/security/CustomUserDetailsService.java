@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
+
   PlayerService playerService;
+
   public CustomUserDetailsService(PlayerService playerService) {
     this.playerService = playerService;
   }

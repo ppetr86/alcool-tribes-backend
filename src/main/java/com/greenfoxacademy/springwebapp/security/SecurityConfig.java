@@ -14,7 +14,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private JwtFilter jwtFilter;
   private AuthenticationExceptionHandler authenticationExceptionHandler;
-  public SecurityConfig (JwtFilter jwtFilter,AuthenticationExceptionHandler authenticationExceptionHandler){
+  public SecurityConfig (JwtFilter jwtFilter, AuthenticationExceptionHandler authenticationExceptionHandler) {
     this.jwtFilter = jwtFilter;
     this.authenticationExceptionHandler = authenticationExceptionHandler;
   }

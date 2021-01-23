@@ -22,27 +22,28 @@ public class JwtProvider {
   private String jwtSecret;
 
   public String generateToken(String userName){
-    Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());//creating Expiration date - by using LocalDate, which is preferred
+    //creating Expiration date - by using LocalDate, which is preferred
+    Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
         .setSubject(userName)
         .setExpiration(date)
-        .signWith(SignatureAlgorithm.HS512,jwtSecret)
+        .signWith(SignatureAlgorithm.HS512, jwtSecret)
         .compact();
   }
 
-  public boolean validateToken(String token){
+  public boolean validateToken(String token) {
     try{
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
       return true;
-    } catch (ExpiredJwtException e){
+    } catch (ExpiredJwtException e) {
       log.severe("invalid token: token expired");
-    } catch (UnsupportedJwtException e){
+    } catch (UnsupportedJwtException e) {
       log.severe("invalid token: format of received token is not supported");
-    } catch (MalformedJwtException e){
+    } catch (MalformedJwtException e) {
       log.severe("invalid token: JWT couldn't reconstruct token content");
-    } catch (SignatureException e){
+    } catch (SignatureException e) {
       log.severe("invalid token: JWT failed to calculate digital signature of token");
-    } catch (IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       log.severe("invalid token: token has passed invalid argument to the method");
     }
     return false;

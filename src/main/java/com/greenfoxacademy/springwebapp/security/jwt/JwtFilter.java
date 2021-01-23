@@ -34,17 +34,17 @@ public class JwtFilter extends GenericFilterBean {
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
       throws IOException, ServletException {
-    logger.info("JWT doFilter is used");
 
     String token = getTokenFromServletRequest((HttpServletRequest) servletRequest);
-    if (token!=null && jwtProvider.validateToken(token)){
+    if (token!=null && jwtProvider.validateToken(token)) {
       String userLogin = jwtProvider.getLoginFromToken(token);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
-          null,customUserDetails.getAuthorities());
+          null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
+      logger.info("Following player was authenticated: " + customUserDetails.getUsername());
     }
-    filterChain.doFilter(servletRequest,servletResponse);
+    filterChain.doFilter(servletRequest, servletResponse);
 
   }
 
