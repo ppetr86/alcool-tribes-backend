@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.integration_test_register_endpoint;
+package com.greenfoxacademy.springwebapp.registerTests.integration_test_register_endpoint;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.greenfoxacademy.springwebapp.models.dtos.PlayerDTO;
+import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

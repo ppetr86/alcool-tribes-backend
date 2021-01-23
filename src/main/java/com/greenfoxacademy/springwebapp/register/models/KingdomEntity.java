@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.models;
+package com.greenfoxacademy.springwebapp.register.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

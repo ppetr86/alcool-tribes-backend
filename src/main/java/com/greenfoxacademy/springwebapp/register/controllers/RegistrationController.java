@@ -1,10 +1,10 @@
-package com.greenfoxacademy.springwebapp.controllers;
+package com.greenfoxacademy.springwebapp.register.controllers;
 
-import com.greenfoxacademy.springwebapp.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.models.dtos.PlayerDTO;
-import com.greenfoxacademy.springwebapp.models.dtos.RegisterErrorDTO;
-import com.greenfoxacademy.springwebapp.services.RegistrationService;
+import com.greenfoxacademy.springwebapp.register.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.register.models.dtos.RegisterResponseDTO;
+import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerDTO;
+import com.greenfoxacademy.springwebapp.register.models.dtos.RegisterErrorDTO;
+import com.greenfoxacademy.springwebapp.register.services.RegistrationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.config;
+package com.greenfoxacademy.springwebapp.register.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
