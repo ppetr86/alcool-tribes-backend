@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.building;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfoxacademy.springwebapp.building.controllers.BuildingsController;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,9 +27,6 @@ public class BuildingsControllerIntegrationTest {
 
   @Autowired
   private MockMvc mockMvc;
-  private final BuildingService buildingService = Mockito.mock(BuildingService.class);
-  private final KingdomService kingdomService = Mockito.mock(KingdomService.class);
-  private final ResourceService resourceService = Mockito.mock(ResourceService.class);
 
   private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
           MediaType.APPLICATION_JSON.getSubtype());
@@ -40,14 +37,9 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
-    Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
-    Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
-
-    mockMvc.perform(post("/api/kingdom/builidngs")
+    mockMvc.perform(post(BuildingsController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
-            .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.type", is("farm")));
@@ -59,14 +51,95 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
-    mockMvc.perform(post("/api/kingdom/builidngs")
+    mockMvc.perform(post(BuildingsController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
-            .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.error", is("Missing parameter(s): type!")));
+            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
+  @Test
+  public void buildBuilding_WrongBuildingType() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("WRONG_TYPE");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
 
+    mockMvc.perform(post(BuildingsController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isNotAcceptable())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is("Invalid building type || Cannot build buildings with higher level than the Townhall")));
+  }
+
+  @Test
+  public void buildBuilding_NotEnoughtResourcesForFarm() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("farM");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(post(BuildingsController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isConflict())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is("Not enough resource")));
+  }
+
+  @Test
+  public void buildBuilding_NotEnoughtResourcesForTownhall() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("TOWNhall");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(post(BuildingsController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isConflict())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is("Not enough resource")));
+  }
+
+  @Test
+  public void buildBuilding_NotEnoughtResourcesForMine() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("MINE");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(post(BuildingsController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isConflict())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is("Not enough resource")));
+  }
+
+  @Test
+  public void buildBuilding_NotEnoughtResourcesForAcademy() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("academy");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(post(BuildingsController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isConflict())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is("Not enough resource")));
+  }
+
+  @Test
+  public void buildBuilding_NoTownhallInKingdom() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("academy");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(post(BuildingsController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isNotAcceptable())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is("Invalid building type || Cannot build buildings with higher level than the Townhall")));
+  }
 }

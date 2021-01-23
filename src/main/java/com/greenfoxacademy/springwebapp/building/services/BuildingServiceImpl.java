@@ -4,33 +4,44 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
+import com.greenfoxacademy.springwebapp.commonServices.TimeService;
 import lombok.AllArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class BuildingServiceImpl implements BuildingService {
 
-  private static Environment env;
+  //private static Environment env;
   private final BuildingRepository repo;
+  private final TimeService timeService;
 
   @Override
   public BuildingEntity save(BuildingEntity entity) {
     return repo.save(entity);
   }
 
-  @Override
+  /* Kond code which does not work, or I dont know how to make it work.
+ @Override
   public BuildingEntity defineFinishedAt(BuildingEntity entity) {
     entity.setFinishedAt(entity.getStartedAt() + Long.parseLong(
-            env.getProperty(String.format("building.%s.buildingTime", entity.getType()))));
+            env.getProperty(String.format("building.%s.buildingTime", entity.getType().label))));
+    return entity;
+  }*/
+
+  @Override
+  public BuildingEntity defineFinishedAt(BuildingEntity entity) {
+    for (BuildingType each : BuildingType.values()) {
+      if (each.equals(entity.getType()))
+        entity.setFinishedAt(entity.getStartedAt() + each.buildTime);
+    }
     return entity;
   }
 
   @Override
   public boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto) {
     for (BuildingType each : BuildingType.values()) {
-      if (dto.getType().toLowerCase().equals(each.label))
+      if (dto.getType().toLowerCase().equals(each.buildingType))
         return true;
     }
     return false;
@@ -38,16 +49,20 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity setBuildingTypeOnEntity(String type) {
-    BuildingEntity buildingEntity = new BuildingEntity();
-    if (type.equalsIgnoreCase("townhall")) {
-      buildingEntity.setType(BuildingType.TOWNHALL);
-    } else if (type.equalsIgnoreCase("farm")) {
-      buildingEntity.setType(BuildingType.FARM);
-    } else if (type.equalsIgnoreCase("mine")) {
-      buildingEntity.setType(BuildingType.MINE);
-    } else if (type.equalsIgnoreCase("academy")) {
-      buildingEntity.setType(BuildingType.ACADEMY);
+    BuildingEntity building = new BuildingEntity();
+    for (BuildingType each : BuildingType.values()) {
+      if (each.buildingType.equalsIgnoreCase(type))
+        building.setType(each);
     }
-    return buildingEntity;
+    return building;
+  }
+
+  @Override
+  public BuildingEntity createBuilding(BuildingRequestDTO dto) {
+    BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
+    result.setStartedAt(timeService.getTime());
+    result = defineFinishedAt(result);
+    result = save(result);
+    return result;
   }
 }

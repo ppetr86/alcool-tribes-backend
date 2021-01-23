@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 public class BuildingRequestDTO {
 
-  @NotEmpty
+  @NotBlank(message="Missing parameter(s): type!")
+  @NotEmpty(message="Missing parameter(s): type!")
   private String type;
 }
