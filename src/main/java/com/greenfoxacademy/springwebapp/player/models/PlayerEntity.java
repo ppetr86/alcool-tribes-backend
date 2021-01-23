@@ -1,10 +1,13 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "player_table")
+@AllArgsConstructor
 public class PlayerEntity {
 
   @Id
@@ -19,15 +22,16 @@ public class PlayerEntity {
   @NotNull
   private String password;
 
-  @ManyToOne
-  @JoinColumn(name = "role_id")
-  private RoleEntity roleEntity;
-
   public PlayerEntity() {
   }
 
   public PlayerEntity(@NotNull String username) {
     this.username = username;
+  }
+
+  public PlayerEntity(@NotNull String username, @NotNull String password) {
+    this.username = username;
+    this.password = password;
   }
 
   public Long getId() {
@@ -52,13 +56,5 @@ public class PlayerEntity {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public RoleEntity getRoleEntity() {
-    return roleEntity;
-  }
-
-  public void setRoleEntity(RoleEntity roleEntity) {
-    this.roleEntity = roleEntity;
   }
 }

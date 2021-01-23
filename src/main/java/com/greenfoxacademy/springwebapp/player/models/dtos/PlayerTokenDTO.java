@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class PlayerTokenDTO {
+  private String status;
   private String token;
 }

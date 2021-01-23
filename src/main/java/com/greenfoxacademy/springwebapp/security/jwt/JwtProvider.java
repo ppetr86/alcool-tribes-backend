@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.security.jwt;
 
 import io.jsonwebtoken.*;
-import lombok.Value;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 

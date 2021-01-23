@@ -1,5 +1,8 @@
 package com.greenfoxacademy.springwebapp.player.models.dtos;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class ErrorMessageDTO {
 
   private String status;
@@ -7,6 +10,8 @@ public class ErrorMessageDTO {
 
   public ErrorMessageDTO() {
   }
+
+
 
   public String getStatus() {
     return status;

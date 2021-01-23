@@ -8,7 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PlayerEntityRepository extends CrudRepository<PlayerEntity, Long> {
-  List<PlayerEntity> findAll();
   PlayerEntity findByUsername(String username);
-  PlayerEntity findByUsernameEqualsAndPasswordEquals(String username, String password);
 }
