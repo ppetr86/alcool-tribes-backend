@@ -1,8 +1,6 @@
 package com.greenfoxacademy.springwebapp.buildings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
-import com.greenfoxacademy.springwebapp.buildings.controllers.BuildingsController;
 import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdoms.services.KingdomService;
@@ -12,7 +10,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,7 +19,7 @@ import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(TestNoSecurityConfig.class)
+//@Import(TestNoSecurityConfig.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
