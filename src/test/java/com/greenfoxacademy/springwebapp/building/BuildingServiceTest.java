@@ -5,27 +5,30 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.building.services.BuildingServiceImpl;
+import com.greenfoxacademy.springwebapp.commonServices.TimeService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.springframework.core.env.Environment;
 
 public class BuildingServiceTest {
 
   private BuildingService buildingService;
+  private TimeService timeService;
 
   @Before
   public void init() {
     BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
-    buildingService = new BuildingServiceImpl(buildingRepository);
+    TimeService timeService = Mockito.mock(TimeService.class);
+
+    buildingService = new BuildingServiceImpl(buildingRepository, timeService);
   }
 
   @Test
   public void defineFinishedAt_Correct_Townhall() {
     BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(120L, b.getFinishedAt());
+    Assert.assertEquals(120, b.getFinishedAt());
   }
 
   @Test
@@ -46,35 +49,7 @@ public class BuildingServiceTest {
   public void defineFinishedAt_Correct_Academy() {
     BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(Long.parseLong("${building.academy.buildingTime}"), b.getFinishedAt());
-  }
-
-  @Test
-  public void defineFinishedAt_Wrong_Townhall() {
-    BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
-    buildingService.defineFinishedAt(b);
-    Assert.assertNotEquals(119L, b.getFinishedAt());
-  }
-
-  @Test
-  public void defineFinishedAt_Wrong_Farm() {
-    BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
-    buildingService.defineFinishedAt(b);
-    Assert.assertNotEquals(99, b.getFinishedAt());
-  }
-
-  @Test
-  public void defineFinishedAt_Wrong_Mine() {
-    BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
-    buildingService.defineFinishedAt(b);
-    Assert.assertNotEquals(101, b.getFinishedAt());
-  }
-
-  @Test
-  public void defineFinishedAt_Wrong_Academy() {
-    BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
-    buildingService.defineFinishedAt(b);
-    Assert.assertNotEquals(89, b.getFinishedAt());
+    Assert.assertEquals(90, b.getFinishedAt());
   }
 
   @Test
