@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserEntity {
+public class PlayerEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -39,8 +39,8 @@ public class UserEntity {
   @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
   private KingdomEntity kingdomEntity;
 
-  public UserEntity(String username, String password, String email,
-                    KingdomEntity kingdomEntity) {
+  public PlayerEntity(String username, String password, String email,
+                      KingdomEntity kingdomEntity) {
     this.username = username;
     this.password = password;
     this.email = email;

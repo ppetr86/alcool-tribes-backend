@@ -6,18 +6,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.greenfoxacademy.springwebapp.controllers.RegistrationController;
-import com.greenfoxacademy.springwebapp.models.UserEntity;
-import com.greenfoxacademy.springwebapp.models.dtos.UserDTO;
+import com.greenfoxacademy.springwebapp.models.dtos.PlayerDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,17 +26,17 @@ public class RegistrationEndpointTest {
   @Test
   public void postRegisterRequestShouldReturn201() throws Exception {
 
-    UserDTO userDTO = new UserDTO();
-    userDTO.setEmail("email@email.com");
-    userDTO.setUsername("testUser");
-    userDTO.setPassword("testPassword");
+    PlayerDTO playerDTO = new PlayerDTO();
+    playerDTO.setEmail("email@email.com");
+    playerDTO.setUsername("testUser");
+    playerDTO.setPassword("testPassword");
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 
     ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
-    String requestJson = writer.writeValueAsString(userDTO);
+    String requestJson = writer.writeValueAsString(playerDTO);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
@@ -51,16 +46,16 @@ public class RegistrationEndpointTest {
   @Test
   public void postRegisterRequestShouldReturn400() throws Exception {
 
-    UserDTO userDTO = new UserDTO();
-    userDTO.setEmail("email@email.com");
-    userDTO.setPassword("testPassword");
+    PlayerDTO playerDTO = new PlayerDTO();
+    playerDTO.setEmail("email@email.com");
+    playerDTO.setPassword("testPassword");
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 
     ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
-    String requestJson = writer.writeValueAsString(userDTO);
+    String requestJson = writer.writeValueAsString(playerDTO);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))

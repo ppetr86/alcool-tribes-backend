@@ -1,12 +1,9 @@
 package com.greenfoxacademy.springwebapp.services;
 
 import com.greenfoxacademy.springwebapp.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.models.UserEntity;
-import com.greenfoxacademy.springwebapp.models.dtos.UserDTO;
-import com.greenfoxacademy.springwebapp.models.dtos.UserErrorDTO;
+import com.greenfoxacademy.springwebapp.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.models.dtos.PlayerDTO;
 import com.greenfoxacademy.springwebapp.repositories.RegistrationRepo;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,24 +20,24 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   @Override
-  public UserEntity saveUser(UserDTO userDTO) {
-    UserEntity userEntity = new UserEntity();
-    userEntity.setUsername(userDTO.getUsername());
-    userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-    userEntity.setEmail(userDTO.getEmail());
+  public PlayerEntity saveUser(PlayerDTO playerDTO) {
+    PlayerEntity playerEntity = new PlayerEntity();
+    playerEntity.setUsername(playerDTO.getUsername());
+    playerEntity.setPassword(passwordEncoder.encode(playerDTO.getPassword()));
+    playerEntity.setEmail(playerDTO.getEmail());
     KingdomEntity kingdomEntity = new KingdomEntity();
-    if (userDTO.getKingdomname() != null) {
-      kingdomEntity.setKingdomName(userDTO.getKingdomname());
+    if (playerDTO.getKingdomname() != null) {
+      kingdomEntity.setKingdomName(playerDTO.getKingdomname());
     } else {
-      kingdomEntity.setKingdomName(userDTO.getUsername() + "'s kingdom");
+      kingdomEntity.setKingdomName(playerDTO.getUsername() + "'s kingdom");
     }
-    userEntity.setKingdomEntity(kingdomEntity);
-    registrationRepo.save(userEntity);
-    return userEntity;
+    playerEntity.setKingdomEntity(kingdomEntity);
+    registrationRepo.save(playerEntity);
+    return playerEntity;
   }
 
   @Override
-  public UserEntity findByUsername(String username) {
+  public PlayerEntity findByUsername(String username) {
     return registrationRepo.findByUsername(username);
   }
 }

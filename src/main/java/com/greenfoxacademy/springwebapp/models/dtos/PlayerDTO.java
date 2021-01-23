@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class PlayerDTO {
 
   private String username;
 
@@ -19,7 +19,7 @@ public class UserDTO {
 
   private String kingdomname;
 
-  public UserDTO(String username, String password, String email) {
+  public PlayerDTO(String username, String password, String email) {
     this.username = username;
     this.password = password;
     this.email = email;

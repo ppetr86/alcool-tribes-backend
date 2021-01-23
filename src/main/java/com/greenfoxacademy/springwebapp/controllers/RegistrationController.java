@@ -1,10 +1,9 @@
 package com.greenfoxacademy.springwebapp.controllers;
 
-import com.greenfoxacademy.springwebapp.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.models.UserEntity;
+import com.greenfoxacademy.springwebapp.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.models.dtos.UserDTO;
-import com.greenfoxacademy.springwebapp.models.dtos.UserErrorDTO;
+import com.greenfoxacademy.springwebapp.models.dtos.PlayerDTO;
+import com.greenfoxacademy.springwebapp.models.dtos.RegisterErrorDTO;
 import com.greenfoxacademy.springwebapp.services.RegistrationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,31 +20,31 @@ public class RegistrationController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
-    if (userDTO.getUsername() == null && userDTO.getPassword() == null) {
-      UserErrorDTO error = new UserErrorDTO("Username and password are required.");
+  public ResponseEntity<?> registerUser(@RequestBody PlayerDTO playerDTO) {
+    if (playerDTO.getUsername() == null && playerDTO.getPassword() == null) {
+      RegisterErrorDTO error = new RegisterErrorDTO("Username and password are required.");
       return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
-    } else if (userDTO.getUsername() == null) {
-      UserErrorDTO error = new UserErrorDTO("Username is required.");
+    } else if (playerDTO.getUsername() == null) {
+      RegisterErrorDTO error = new RegisterErrorDTO("Username is required.");
       return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
-    } else if (userDTO.getPassword() == null) {
-      UserErrorDTO error = new UserErrorDTO("Password is required.");
+    } else if (playerDTO.getPassword() == null) {
+      RegisterErrorDTO error = new RegisterErrorDTO("Password is required.");
       return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
-    } else if (registrationService.findByUsername(userDTO.getUsername()) != null) {
-      UserErrorDTO error = new UserErrorDTO("Username is already taken.");
+    } else if (registrationService.findByUsername(playerDTO.getUsername()) != null) {
+      RegisterErrorDTO error = new RegisterErrorDTO("Username is already taken.");
       return ResponseEntity.status(HttpStatus.valueOf(409)).body(error);
-    } else if (userDTO.getPassword().length() < 8) {
-      UserErrorDTO error = new UserErrorDTO("Password must be 8 characters.");
+    } else if (playerDTO.getPassword().length() < 8) {
+      RegisterErrorDTO error = new RegisterErrorDTO("Password must be 8 characters.");
       return ResponseEntity.status(HttpStatus.valueOf(406)).body(error);
     } else {
-      UserEntity userEntity = registrationService.saveUser(userDTO);
+      PlayerEntity playerEntity = registrationService.saveUser(playerDTO);
       RegisterResponseDTO responseDTO = new RegisterResponseDTO();
-      responseDTO.setId(userEntity.getId());
-      responseDTO.setUsername(userEntity.getUsername());
-      responseDTO.setEmail(userEntity.getEmail());
-      responseDTO.setKingdomId(userEntity.getKingdomEntity().getId());
-      responseDTO.setAvatar(userEntity.getAvatar());
-      responseDTO.setPoints(userEntity.getPoints());
+      responseDTO.setId(playerEntity.getId());
+      responseDTO.setUsername(playerEntity.getUsername());
+      responseDTO.setEmail(playerEntity.getEmail());
+      responseDTO.setKingdomId(playerEntity.getKingdomEntity().getId());
+      responseDTO.setAvatar(playerEntity.getAvatar());
+      responseDTO.setPoints(playerEntity.getPoints());
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(responseDTO);
 
     }

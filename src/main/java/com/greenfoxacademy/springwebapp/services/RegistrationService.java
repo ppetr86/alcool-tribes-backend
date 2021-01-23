@@ -1,14 +1,13 @@
 package com.greenfoxacademy.springwebapp.services;
 
-import com.greenfoxacademy.springwebapp.models.UserEntity;
-import com.greenfoxacademy.springwebapp.models.dtos.UserDTO;
-import org.springframework.http.ResponseEntity;
+import com.greenfoxacademy.springwebapp.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.models.dtos.PlayerDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface RegistrationService {
 
-  UserEntity saveUser(UserDTO userDTO);
+  PlayerEntity saveUser(PlayerDTO playerDTO);
 
-  UserEntity findByUsername(String username);
+  PlayerEntity findByUsername(String username);
 }

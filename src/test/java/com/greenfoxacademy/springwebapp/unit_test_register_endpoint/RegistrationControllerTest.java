@@ -2,10 +2,10 @@ package com.greenfoxacademy.springwebapp.unit_test_register_endpoint;
 
 import com.greenfoxacademy.springwebapp.controllers.RegistrationController;
 import com.greenfoxacademy.springwebapp.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.models.UserEntity;
+import com.greenfoxacademy.springwebapp.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.models.dtos.PlayerDTO;
 import com.greenfoxacademy.springwebapp.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.models.dtos.UserDTO;
-import com.greenfoxacademy.springwebapp.models.dtos.UserErrorDTO;
+import com.greenfoxacademy.springwebapp.models.dtos.RegisterErrorDTO;
 import com.greenfoxacademy.springwebapp.services.RegistrationService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,13 +28,13 @@ public class RegistrationControllerTest {
   @Test
   public void registerUserShouldSaveUserAndReturn201() {
     //Arrange
-    UserDTO userDTO = new UserDTO("user1", "password", "email@rmail.com", "my kingdom");
-    KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
-    UserEntity userEntity = new UserEntity(userDTO.getUsername(), userDTO.getPassword(),
-        userDTO.getEmail(), kingdomEntity);
+    PlayerDTO playerDTO = new PlayerDTO("user1", "password", "email@rmail.com", "my kingdom");
+    KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
+    PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
+        playerDTO.getEmail(), kingdomEntity);
     //Act
-    Mockito.when(registrationService.saveUser(userDTO)).thenReturn(userEntity);
-    ResponseEntity<?> response = registrationController.registerUser(userDTO);
+    Mockito.when(registrationService.saveUser(playerDTO)).thenReturn(playerEntity);
+    ResponseEntity<?> response = registrationController.registerUser(playerDTO);
     //Assert
     Assert.assertEquals(HttpStatus.valueOf(201), response.getStatusCode());
   }
@@ -42,14 +42,14 @@ public class RegistrationControllerTest {
   @Test
   public void registerUserShouldSaveUserAndReturnCorrectKingdomId() {
     //Arrange
-    UserDTO userDTO = new UserDTO("user1", "password", "email@rmail.com", "my kingdom");
-    KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
-    UserEntity userEntity = new UserEntity(userDTO.getUsername(), userDTO.getPassword(),
-        userDTO.getEmail(), kingdomEntity);
+    PlayerDTO playerDTO = new PlayerDTO("user1", "password", "email@rmail.com", "my kingdom");
+    KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
+    PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
+        playerDTO.getEmail(), kingdomEntity);
     //Act
-    Mockito.when(registrationService.saveUser(userDTO)).thenReturn(userEntity);
+    Mockito.when(registrationService.saveUser(playerDTO)).thenReturn(playerEntity);
     ResponseEntity<RegisterResponseDTO> response =
-        (ResponseEntity<RegisterResponseDTO>) registrationController.registerUser(userDTO);
+        (ResponseEntity<RegisterResponseDTO>) registrationController.registerUser(playerDTO);
     //Assert
     Assert.assertEquals(1, response.getBody().getKingdomId());
     Assert.assertEquals(HttpStatus.valueOf(201), response.getStatusCode());
@@ -59,14 +59,14 @@ public class RegistrationControllerTest {
   @Test
   public void registerUserShouldThrowErrorOfUsernameAnd400() {
     //Arrange
-    UserDTO userDTO = new UserDTO(null, "password", "email@rmail.com", "my kingdom");
-    KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
-    UserEntity userEntity = new UserEntity(userDTO.getUsername(), userDTO.getPassword(),
-        userDTO.getEmail(), kingdomEntity);
+    PlayerDTO playerDTO = new PlayerDTO(null, "password", "email@rmail.com", "my kingdom");
+    KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
+    PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
+        playerDTO.getEmail(), kingdomEntity);
     //Act
-    Mockito.when(registrationService.saveUser(userDTO)).thenReturn(userEntity);
-    ResponseEntity<UserErrorDTO> response =
-        (ResponseEntity<UserErrorDTO>) registrationController.registerUser(userDTO);
+    Mockito.when(registrationService.saveUser(playerDTO)).thenReturn(playerEntity);
+    ResponseEntity<RegisterErrorDTO> response =
+        (ResponseEntity<RegisterErrorDTO>) registrationController.registerUser(playerDTO);
     //Assert
     Assert.assertEquals("Username is required.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(400), response.getStatusCode());
@@ -75,14 +75,14 @@ public class RegistrationControllerTest {
   @Test
   public void registerUserShouldThrowErrorOfPasswordAnd400() {
     //Arrange
-    UserDTO userDTO = new UserDTO("user1", null, "email@rmail.com", "my kingdom");
-    KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
-    UserEntity userEntity = new UserEntity(userDTO.getUsername(), userDTO.getPassword(),
-        userDTO.getEmail(), kingdomEntity);
+    PlayerDTO playerDTO = new PlayerDTO("user1", null, "email@rmail.com", "my kingdom");
+    KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
+    PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
+        playerDTO.getEmail(), kingdomEntity);
     //Act
-    Mockito.when(registrationService.saveUser(userDTO)).thenReturn(userEntity);
-    ResponseEntity<UserErrorDTO> response =
-        (ResponseEntity<UserErrorDTO>) registrationController.registerUser(userDTO);
+    Mockito.when(registrationService.saveUser(playerDTO)).thenReturn(playerEntity);
+    ResponseEntity<RegisterErrorDTO> response =
+        (ResponseEntity<RegisterErrorDTO>) registrationController.registerUser(playerDTO);
     //Assert
     Assert.assertEquals("Password is required.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(400), response.getStatusCode());
@@ -91,14 +91,14 @@ public class RegistrationControllerTest {
   @Test
   public void registerUserShouldThrowErrorOfUsernameAndPasswordAnd400() {
     //Arrange
-    UserDTO userDTO = new UserDTO(null, null, "email@rmail.com", "my kingdom");
-    KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
-    UserEntity userEntity = new UserEntity(userDTO.getUsername(), userDTO.getPassword(),
-        userDTO.getEmail(), kingdomEntity);
+    PlayerDTO playerDTO = new PlayerDTO(null, null, "email@rmail.com", "my kingdom");
+    KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
+    PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
+        playerDTO.getEmail(), kingdomEntity);
     //Act
-    Mockito.when(registrationService.saveUser(userDTO)).thenReturn(userEntity);
-    ResponseEntity<UserErrorDTO> response =
-        (ResponseEntity<UserErrorDTO>) registrationController.registerUser(userDTO);
+    Mockito.when(registrationService.saveUser(playerDTO)).thenReturn(playerEntity);
+    ResponseEntity<RegisterErrorDTO> response =
+        (ResponseEntity<RegisterErrorDTO>) registrationController.registerUser(playerDTO);
     //Assert
     Assert.assertEquals("Username and password are required.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(400), response.getStatusCode());
@@ -107,15 +107,15 @@ public class RegistrationControllerTest {
   @Test
   public void registerUserShouldThrowErrorOfUsernameAlreadyTakenAnd409() {
     //Arrange
-    UserDTO userDTO = new UserDTO("user1", "password", "email@rmail.com", "my kingdom");
-    KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
-    UserEntity userEntity = new UserEntity(userDTO.getUsername(), userDTO.getPassword(),
-        userDTO.getEmail(), kingdomEntity);
+    PlayerDTO playerDTO = new PlayerDTO("user1", "password", "email@rmail.com", "my kingdom");
+    KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
+    PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
+        playerDTO.getEmail(), kingdomEntity);
     //Act
-    Mockito.when(registrationService.findByUsername(userDTO.getUsername())).thenReturn(userEntity);
-    ResponseEntity<UserErrorDTO> response =
-        (ResponseEntity<UserErrorDTO>) registrationController.registerUser(userDTO);
-    Mockito.when(registrationService.saveUser(userDTO)).thenReturn(userEntity);
+    Mockito.when(registrationService.findByUsername(playerDTO.getUsername())).thenReturn(playerEntity);
+    ResponseEntity<RegisterErrorDTO> response =
+        (ResponseEntity<RegisterErrorDTO>) registrationController.registerUser(playerDTO);
+    Mockito.when(registrationService.saveUser(playerDTO)).thenReturn(playerEntity);
     //Assert
     Assert.assertEquals("Username is already taken.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(409), response.getStatusCode());
@@ -124,14 +124,14 @@ public class RegistrationControllerTest {
   @Test
   public void registerUserShouldThrowErrorOfShortPasswordAnd406() {
     //Arrange
-    UserDTO userDTO = new UserDTO("user1", "pasword", "email@rmail.com", "my kingdom");
-    KingdomEntity kingdomEntity = new KingdomEntity(1, userDTO.getKingdomname());
-    UserEntity userEntity = new UserEntity(userDTO.getUsername(), userDTO.getPassword(),
-        userDTO.getEmail(), kingdomEntity);
+    PlayerDTO playerDTO = new PlayerDTO("user1", "pasword", "email@rmail.com", "my kingdom");
+    KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
+    PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
+        playerDTO.getEmail(), kingdomEntity);
     //Act
-    ResponseEntity<UserErrorDTO> response =
-        (ResponseEntity<UserErrorDTO>) registrationController.registerUser(userDTO);
-    Mockito.when(registrationService.saveUser(userDTO)).thenReturn(userEntity);
+    ResponseEntity<RegisterErrorDTO> response =
+        (ResponseEntity<RegisterErrorDTO>) registrationController.registerUser(playerDTO);
+    Mockito.when(registrationService.saveUser(playerDTO)).thenReturn(playerEntity);
     //Assert
     Assert.assertEquals("Password must be 8 characters.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(406), response.getStatusCode());
