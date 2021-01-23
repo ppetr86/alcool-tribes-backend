@@ -27,10 +27,10 @@ public class PlayerEntityServiceTest {
   @Test
   public void countPlayersMethodShouldReturnCorrectNumber(){
     List<PlayerEntity> fakeList = Arrays.asList(
-      new PlayerEntity("Mark"),
-      new PlayerEntity("Zdenek"),
-      new PlayerEntity("Ahmed"),
-      new PlayerEntity("Petr")
+      new PlayerEntity("Mark", "password"),
+      new PlayerEntity("Zdenek", "password"),
+      new PlayerEntity("Ahmed", "password"),
+      new PlayerEntity("Petr", "password")
     );
 
     Mockito.when(playerEntityRepository.count()).thenReturn((long)fakeList.size());

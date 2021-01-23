@@ -35,9 +35,19 @@ public class LoginAPIController {
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
     if (errorList.isEmpty()) {
-      return ResponseEntity.ok().body(loginExceptionService.generateTokenToLoggedInPlayer(userDTO));
+      if (playerEntityService.countPlayers() > 0 &&
+        playerEntityService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword()) != null) {
+        return ResponseEntity.ok().body(loginExceptionService.generateTokenToLoggedInPlayer(userDTO));
+      } else if (playerEntityService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword()) == null) {
+        return ResponseEntity.status(401).body(new ErrorMessageDTO("error", "Username or password is incorrect."));
+      } else {
+        return ResponseEntity.status(404).body(new ErrorMessageDTO("error", "No player in the database."));
+      }
     } else {
-      String error = errorList.get(0).getCode();
+      String error = errorList.get(0).getCode(); //check in debug, what is the main error message if we have more
+      if (userDTO.getPassword() == null && userDTO.getUsername() == null) {
+        return ResponseEntity.status(400).body(new ErrorMessageDTO("error", "Username and password are required."));
+      }
       return ResponseEntity.status(400).body(new ErrorMessageDTO("error", errorList.get(0).getDefaultMessage()));
     }
   }

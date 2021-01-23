@@ -18,13 +18,6 @@ public class LoginExceptionServiceImp implements LoginExceptionService {
     this.jwtProvider = jwtProvider;
   }
 
-  @Override
-  public ErrorMessageDTO loginExceptions(String error, String msg) {
-    ErrorMessageDTO errorMessageDTO = new ErrorMessageDTO();
-    errorMessageDTO.setStatus(error);
-    errorMessageDTO.setMessage(msg);
-    return errorMessageDTO;
-  }
 
   @Override
   public PlayerTokenDTO generateTokenToLoggedInPlayer(UserDTO userDTO) {

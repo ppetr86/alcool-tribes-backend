@@ -42,12 +42,11 @@ public class LoginAPIControllerUnitTest {
     PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
     UserDTO userDTO = new UserDTO("Mark", "mark");
     PlayerTokenDTO fakePlayerDto = new PlayerTokenDTO("ok", playerEntity.getUsername());
-    ErrorMessageDTO fakeErrorMsgDTO = new ErrorMessageDTO();
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
-    Mockito.when(loginExceptionService.loginExceptions("error","Username is required.")).thenReturn(fakeErrorMsgDTO);
     Mockito.when(loginExceptionService.generateTokenToLoggedInPlayer(userDTO)).thenReturn(fakePlayerDto);
     Mockito.when(playerEntityService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword())).thenReturn(playerEntity);
+    Mockito.when(playerEntityService.countPlayers()).thenReturn(1L);
 
     ResponseEntity<?> response = loginAPIController.postLogin(userDTO, bindingResult);
 

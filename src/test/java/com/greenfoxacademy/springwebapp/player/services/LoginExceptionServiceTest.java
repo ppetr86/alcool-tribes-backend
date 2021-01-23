@@ -1,6 +1,9 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.ErrorMessageDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.UserDTO;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,20 +15,27 @@ import static org.junit.Assert.*;
 public class LoginExceptionServiceTest {
 
   private LoginExceptionService loginExceptionService;
+  private PlayerEntityService playerEntityService;
+  private JwtProvider mockJwtProvider;
 
   @Before
   public void init(){
-    PlayerEntityService playerEntityService = Mockito.mock(PlayerEntityService.class);
-    JwtProvider mockJwtProvider = Mockito.mock(JwtProvider.class);
+    playerEntityService = Mockito.mock(PlayerEntityService.class);
+    mockJwtProvider = Mockito.mock(JwtProvider.class);
     loginExceptionService = new LoginExceptionServiceImp(playerEntityService, mockJwtProvider);
   }
 
   @Test
-  public void loginExceptionMethodShouldReturnCorrectErrorMessageDTODetails(){
-    ErrorMessageDTO fakeErrorMessageDTO = loginExceptionService.loginExceptions("error", "hello");
+  public void generateTokenToLoggedInPlayerShouldGenerateTokenToLoggedPlayer(){
+    UserDTO userDTO = new UserDTO("Mark", "mark");
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
 
-    Assert.assertEquals("error", fakeErrorMessageDTO.getStatus());
-    Assert.assertEquals("hello", fakeErrorMessageDTO.getMessage());
+    Mockito.when(playerEntityService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword())).thenReturn(playerEntity);
+    Mockito.when(mockJwtProvider.generateToken(playerEntity.getUsername())).thenReturn(playerEntity.getUsername());
+
+    PlayerTokenDTO fakePlayerTokenDTO = loginExceptionService.generateTokenToLoggedInPlayer(userDTO);
+
+    Assert.assertEquals("ok", fakePlayerTokenDTO.getStatus());
   }
 
 }
