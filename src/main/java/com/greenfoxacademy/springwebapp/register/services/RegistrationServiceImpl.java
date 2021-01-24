@@ -20,18 +20,15 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   @Override
-  public PlayerEntity saveUser(PlayerDTO playerDTO) {
-    PlayerEntity playerEntity = new PlayerEntity();
-    playerEntity.setUsername(playerDTO.getUsername());
-    playerEntity.setPassword(passwordEncoder.encode(playerDTO.getPassword()));
-    playerEntity.setEmail(playerDTO.getEmail());
-    KingdomEntity kingdomEntity = new KingdomEntity();
-    if (playerDTO.getKingdomname() != null) {
-      kingdomEntity.setKingdomName(playerDTO.getKingdomname());
+  public PlayerEntity savePlayer(PlayerDTO dto) {
+    KingdomEntity kingdom = new KingdomEntity();
+    if (dto.getKingdomname() != null) {
+      kingdom.setKingdomName(dto.getKingdomname());
     } else {
-      kingdomEntity.setKingdomName(playerDTO.getUsername() + "'s kingdom");
+      kingdom.setKingdomName(dto.getUsername() + "'s kingdom");
     }
-    playerEntity.setKingdomEntity(kingdomEntity);
+    PlayerEntity playerEntity =
+        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), kingdom);
     registrationRepo.save(playerEntity);
     return playerEntity;
   }

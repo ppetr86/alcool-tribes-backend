@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface RegistrationService {
 
-  PlayerEntity saveUser(PlayerDTO playerDTO);
+  PlayerEntity savePlayer(PlayerDTO playerDTO);
 
   PlayerEntity findByUsername(String username);
 }
