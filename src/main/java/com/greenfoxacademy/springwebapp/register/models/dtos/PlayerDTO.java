@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -16,6 +17,7 @@ public class PlayerDTO {
 
   private long id;
   @NotNull(message = "Username is required.")
+  @NotBlank(message = "Username is required.")
   private String username;
 
   @NotNull(message = "Password is required.")

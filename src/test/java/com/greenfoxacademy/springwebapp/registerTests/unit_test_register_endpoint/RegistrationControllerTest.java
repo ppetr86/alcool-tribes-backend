@@ -68,14 +68,16 @@ public class RegistrationControllerTest {
     KingdomEntity kingdomEntity = new KingdomEntity(1, playerDTO.getKingdomname());
     PlayerEntity playerEntity = new PlayerEntity(playerDTO.getUsername(), playerDTO.getPassword(),
         playerDTO.getEmail(), kingdomEntity);
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
+    BindingResult bindingResult = new BeanPropertyBindingResult(PlayerDTO.class, playerDTO.getUsername());
 
     //Act
     Mockito.when(registrationService.savePlayer(playerDTO)).thenReturn(playerEntity);
     ResponseEntity<?> response = registrationController.registerUser(playerDTO, bindingResult);
     //Assert
-    Assert.assertEquals("Username is required.", response.getBody());
+    Assert.assertEquals("Username is required.", ((ErrorDTO) response.getBody()).getMessage());
     Assert.assertEquals(HttpStatus.valueOf(400), response.getStatusCode());
+
+    //binding result issue, need to somehow give binding result existing user so it properly gives the error
   }
 
   @Test
@@ -95,7 +97,7 @@ public class RegistrationControllerTest {
     Assert.assertEquals("Password is required.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(400), response.getStatusCode());
 
-    //casting issue
+    //binding result issue, need to somehow give binding result existing user so it properly gives the error
   }
 
   @Test
@@ -115,7 +117,7 @@ public class RegistrationControllerTest {
     Assert.assertEquals("Username and password are required.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(400), response.getStatusCode());
 
-    //casting issue
+    //binding result issue, need to somehow give binding result existing user so it properly gives the error
   }
 
   @Test
@@ -154,7 +156,7 @@ public class RegistrationControllerTest {
     Assert.assertEquals("Password must be 8 characters.", response.getBody().getMessage());
     Assert.assertEquals(HttpStatus.valueOf(406), response.getStatusCode());
 
-    //casting issue
+    //binding result issue, need to somehow give binding result existing user so it properly gives the error
   }
 
 

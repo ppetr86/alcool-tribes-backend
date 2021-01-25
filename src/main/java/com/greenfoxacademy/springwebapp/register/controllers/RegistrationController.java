@@ -44,11 +44,13 @@ public class RegistrationController {
     } else if (playerDTO.getUsername() == null && playerDTO.getPassword() == null) {
       return ResponseEntity.status(HttpStatus.valueOf(400))
           .body(new ErrorDTO("Username and password are required."));
+    } else if (playerDTO.getPassword().length() < 8){
+      return ResponseEntity.status(HttpStatus.valueOf(406))
+          .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
     }
 
     return ResponseEntity.status(HttpStatus.valueOf(400))
         .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
-    // how can i return 406 status when password in less tan 8 letters? it gives good output but 400 status code.
   }
 }
 
