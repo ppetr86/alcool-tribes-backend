@@ -31,10 +31,7 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity defineFinishedAt(BuildingEntity entity) {
-    for (BuildingType each : BuildingType.values()) {
-      if (each.equals(entity.getType()))
-        entity.setFinishedAt(entity.getStartedAt() + each.buildTime);
-    }
+    entity.setFinishedAt(entity.getType().buildTime + entity.getStartedAt());
     return entity;
   }
 

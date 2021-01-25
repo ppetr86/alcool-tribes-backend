@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-import static org.springframework.util.StringUtils.hasText;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping(BuildingsController.URI)
@@ -42,15 +40,15 @@ public class BuildingsController {
     if (!errorList.isEmpty()) {
       String error = errorList.get(0).getDefaultMessage();
       return ResponseEntity.badRequest().body(new ErrorResponseDTO(error));
-    } else if (!buildingService.isBuildingTypeInRequestOk(dto) ||
-            !kingdomService.hasKingdomTownhall()) {
+    } else if (!buildingService.isBuildingTypeInRequestOk(dto)) {
       return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponseDTO(
-              "Invalid building type || Cannot build buildings with higher level than the Townhall"));
-    } else if (resourceService.hasResourcesForBuilding()) {
-      BuildingEntity building = buildingService.setBuildingTypeOnEntity(dto.getType());
-      building.setStartedAt(timeService.getTime());
-      buildingService.defineFinishedAt(building);
-      buildingService.save(building);
+              "Invalid building type"));
+    } else if (!kingdomService.hasKingdomTownhall()) {
+      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponseDTO(
+              "Cannot build buildings with higher level than the Townhall"));
+    }
+    if (resourceService.hasResourcesForBuilding()) {
+      BuildingEntity building = buildingService.createBuilding(dto);
       return ResponseEntity.ok(building);
     } else {
       return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO("Not enough resource"));

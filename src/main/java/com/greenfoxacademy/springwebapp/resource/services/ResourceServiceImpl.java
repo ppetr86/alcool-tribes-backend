@@ -8,6 +8,6 @@ public class ResourceServiceImpl implements ResourceService {
   @Override
   public boolean hasResourcesForBuilding() {
     // TODO: hasResourcesForBuilding
-    return false;
+    return true;
   }
 }

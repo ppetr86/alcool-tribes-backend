@@ -60,6 +60,20 @@ public class BuildingsControllerIntegrationTest {
   }
 
   @Test
+  public void buildBuilding_EmptyInputV2() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("             ");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(post(BuildingsController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
+  }
+
+  @Test
   public void buildBuilding_WrongBuildingType() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("WRONG_TYPE");
     ObjectMapper mapper = new ObjectMapper();
@@ -70,9 +84,10 @@ public class BuildingsControllerIntegrationTest {
             .content(json))
             .andExpect(status().isNotAcceptable())
             .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.message", is("Invalid building type || Cannot build buildings with higher level than the Townhall")));
+            .andExpect(jsonPath("$.message", is("Invalid building type")));
   }
 
+  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForFarm() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("farM");
@@ -87,6 +102,7 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
+  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForTownhall() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("TOWNhall");
@@ -101,6 +117,7 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
+  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForMine() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("MINE");
@@ -115,6 +132,7 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
+  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForAcademy() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("academy");
@@ -129,6 +147,7 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
+  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NoTownhallInKingdom() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("academy");
@@ -140,6 +159,6 @@ public class BuildingsControllerIntegrationTest {
             .content(json))
             .andExpect(status().isNotAcceptable())
             .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.message", is("Invalid building type || Cannot build buildings with higher level than the Townhall")));
+            .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
 }
