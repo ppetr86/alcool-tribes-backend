@@ -10,43 +10,55 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.core.env.Environment;
 
 public class BuildingServiceTest {
 
+
+  private Environment env;
   private BuildingService buildingService;
   private TimeService timeService;
 
   @Before
   public void init() {
+
     BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
-
-    buildingService = new BuildingServiceImpl(buildingRepository, timeService);
+    Environment env = Mockito.mock(Environment.class);
+    Mockito.when(env.getProperty("building.townhall.buildingTime"))
+            .thenReturn("120");
+    Mockito.when(env.getProperty("building.farm.buildingTime"))
+            .thenReturn("60");
+    Mockito.when(env.getProperty("building.mine.buildingTime"))
+            .thenReturn("60");
+    Mockito.when(env.getProperty("building.academy.buildingTime"))
+            .thenReturn("90");
+    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService);
   }
 
   @Test
-  public void defineFinishedAt_Correct_Townhall() {
+  public void defineFinishedAt_Townhall() {
     BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
     buildingService.defineFinishedAt(b);
     Assert.assertEquals(120, b.getFinishedAt());
   }
 
   @Test
-  public void defineFinishedAt_Correct_Farm() {
+  public void defineFinishedAt_Farm() {
     BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
     buildingService.defineFinishedAt(b);
     Assert.assertEquals(60, b.getFinishedAt());
   }
 
   @Test
-  public void defineFinishedAt_Correct_Mine() {
+  public void defineFinishedAt_Mine() {
     BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
     buildingService.defineFinishedAt(b);
     Assert.assertEquals(60, b.getFinishedAt());
   }
 
   @Test
-  public void defineFinishedAt_Correct_Academy() {
+  public void defineFinishedAt_Academy() {
     BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
     buildingService.defineFinishedAt(b);
     Assert.assertEquals(90, b.getFinishedAt());
@@ -67,7 +79,7 @@ public class BuildingServiceTest {
     Assert.assertEquals(BuildingType.TOWNHALL, buildingService.setBuildingTypeOnEntity("TOWNHALL").getType());
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void isTypeOkRequest_Townhall_ShouldNull_UpperCase() {
     Assert.assertNull(buildingService.setBuildingTypeOnEntity("TOWNHALLL").getType());
   }

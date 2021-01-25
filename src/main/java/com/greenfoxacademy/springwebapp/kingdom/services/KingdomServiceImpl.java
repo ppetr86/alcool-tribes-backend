@@ -10,6 +10,4 @@ public class KingdomServiceImpl implements KingdomService {
     //TODO: hasKingdomTownhall
     return true;
   }
-
-
 }

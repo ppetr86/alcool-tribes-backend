@@ -6,13 +6,14 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.commonServices.TimeService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class BuildingServiceImpl implements BuildingService {
 
-  //private static Environment env;
+  private final Environment env;
   private final BuildingRepository repo;
   private final TimeService timeService;
 
@@ -21,37 +22,34 @@ public class BuildingServiceImpl implements BuildingService {
     return repo.save(entity);
   }
 
-  /* Kond code which does not work, or I dont know how to make it work.
- @Override
-  public BuildingEntity defineFinishedAt(BuildingEntity entity) {
-    entity.setFinishedAt(entity.getStartedAt() + Long.parseLong(
-            env.getProperty(String.format("building.%s.buildingTime", entity.getType().label))));
-    return entity;
-  }*/
-
   @Override
   public BuildingEntity defineFinishedAt(BuildingEntity entity) {
-    entity.setFinishedAt(entity.getType().buildTime + entity.getStartedAt());
+    String time = env.getProperty(String.format("building.%s.buildingTime", entity.getType().buildingType.toLowerCase()));
+    entity.setFinishedAt(entity.getStartedAt() + Long.parseLong(time));
     return entity;
   }
 
   @Override
   public boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto) {
-    for (BuildingType each : BuildingType.values()) {
-      if (dto.getType().toLowerCase().equals(each.buildingType))
-        return true;
+    try {
+      BuildingType.valueOf(dto.getType().toUpperCase());
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
     }
-    return false;
   }
 
   @Override
   public BuildingEntity setBuildingTypeOnEntity(String type) {
     BuildingEntity building = new BuildingEntity();
-    for (BuildingType each : BuildingType.values()) {
-      if (each.buildingType.equalsIgnoreCase(type))
-        building.setType(each);
+
+    try {
+      BuildingType.valueOf(type.toUpperCase());
+      building.setType(BuildingType.valueOf(type.toUpperCase()));
+      return building;
+    } catch (IllegalArgumentException e) {
+      return null;
     }
-    return building;
   }
 
   @Override
