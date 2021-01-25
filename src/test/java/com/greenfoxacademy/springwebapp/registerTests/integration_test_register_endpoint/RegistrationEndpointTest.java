@@ -34,9 +34,7 @@ public class RegistrationEndpointTest {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 
-    ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-
-    String requestJson = writer.writeValueAsString(playerRegistrationRequestDTO);
+    String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
@@ -53,9 +51,7 @@ public class RegistrationEndpointTest {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 
-    ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-
-    String requestJson = writer.writeValueAsString(playerRegistrationRequestDTO);
+    String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
