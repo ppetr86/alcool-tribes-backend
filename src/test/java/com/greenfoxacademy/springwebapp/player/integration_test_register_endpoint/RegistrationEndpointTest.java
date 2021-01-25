@@ -32,9 +32,6 @@ public class RegistrationEndpointTest {
     playerRegistrationRequestDTO.setUsername("testUser");
     playerRegistrationRequestDTO.setPassword("testPassword");
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-
     String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
@@ -50,9 +47,6 @@ public class RegistrationEndpointTest {
     PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
     playerRegistrationRequestDTO.setEmail("email@email.com");
     playerRegistrationRequestDTO.setPassword("testPassword");
-
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 
     String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
 
