@@ -14,4 +14,7 @@ public interface BuildingService {
   BuildingEntity setBuildingTypeOnEntity(String type);
 
   BuildingEntity createBuilding(BuildingRequestDTO dto);
+
+  BuildingEntity defineHp(BuildingEntity entity);
+
 }

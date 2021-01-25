@@ -25,6 +25,7 @@ public class BuildingServiceTest {
     BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
     Environment env = Mockito.mock(Environment.class);
+
     Mockito.when(env.getProperty("building.townhall.buildingTime"))
             .thenReturn("120");
     Mockito.when(env.getProperty("building.farm.buildingTime"))
@@ -33,6 +34,16 @@ public class BuildingServiceTest {
             .thenReturn("60");
     Mockito.when(env.getProperty("building.academy.buildingTime"))
             .thenReturn("90");
+
+    Mockito.when(env.getProperty("building.townhall.hp"))
+            .thenReturn("200");
+    Mockito.when(env.getProperty("building.farm.hp"))
+            .thenReturn("100");
+    Mockito.when(env.getProperty("building.mine.hp"))
+            .thenReturn("100");
+    Mockito.when(env.getProperty("building.academy.hp"))
+            .thenReturn("150");
+
     buildingService = new BuildingServiceImpl(env, buildingRepository, timeService);
   }
 
@@ -62,6 +73,34 @@ public class BuildingServiceTest {
     BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
     buildingService.defineFinishedAt(b);
     Assert.assertEquals(90, b.getFinishedAt());
+  }
+
+  @Test
+  public void defineHP_Townhall() {
+    BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
+    buildingService.defineHp(b);
+    Assert.assertEquals(200, b.getHp());
+  }
+
+  @Test
+  public void defineHP_Farm() {
+    BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
+    buildingService.defineHp(b);
+    Assert.assertEquals(100, b.getHp());
+  }
+
+  @Test
+  public void defineHP_Mine() {
+    BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
+    buildingService.defineHp(b);
+    Assert.assertEquals(100, b.getHp());
+  }
+
+  @Test
+  public void defineHP_Academy() {
+    BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
+    buildingService.defineHp(b);
+    Assert.assertEquals(150, b.getHp());
   }
 
   @Test

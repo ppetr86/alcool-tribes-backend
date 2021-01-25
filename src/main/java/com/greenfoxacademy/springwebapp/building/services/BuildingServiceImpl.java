@@ -30,6 +30,13 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
+  public BuildingEntity defineHp(BuildingEntity entity) {
+    String hp = env.getProperty(String.format("building.%s.hp", entity.getType().buildingType.toLowerCase()));
+    entity.setHp(Integer.parseInt(hp));
+    return entity;
+  }
+
+  @Override
   public boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto) {
     try {
       BuildingType.valueOf(dto.getType().toUpperCase());
@@ -57,6 +64,7 @@ public class BuildingServiceImpl implements BuildingService {
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
+    result = defineHp(result);
     result = save(result);
     return result;
   }
