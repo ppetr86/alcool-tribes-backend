@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerDTO;
+import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerRegistrationRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +26,17 @@ public class RegistrationEndpointTest {
   @Test
   public void postRegisterRequestShouldReturn201() throws Exception {
 
-    PlayerDTO playerDTO = new PlayerDTO();
-    playerDTO.setEmail("email@email.com");
-    playerDTO.setUsername("testUser");
-    playerDTO.setPassword("testPassword");
+    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
+    playerRegistrationRequestDTO.setEmail("email@email.com");
+    playerRegistrationRequestDTO.setUsername("testUser");
+    playerRegistrationRequestDTO.setPassword("testPassword");
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 
     ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
-    String requestJson = writer.writeValueAsString(playerDTO);
+    String requestJson = writer.writeValueAsString(playerRegistrationRequestDTO);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
@@ -46,16 +46,16 @@ public class RegistrationEndpointTest {
   @Test
   public void postRegisterRequestShouldReturn400() throws Exception {
 
-    PlayerDTO playerDTO = new PlayerDTO();
-    playerDTO.setEmail("email@email.com");
-    playerDTO.setPassword("testPassword");
+    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
+    playerRegistrationRequestDTO.setEmail("email@email.com");
+    playerRegistrationRequestDTO.setPassword("testPassword");
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 
     ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
-    String requestJson = writer.writeValueAsString(playerDTO);
+    String requestJson = writer.writeValueAsString(playerRegistrationRequestDTO);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))

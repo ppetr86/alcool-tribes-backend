@@ -1,8 +1,8 @@
 package com.greenfoxacademy.springwebapp.register.controllers;
 
 import com.greenfoxacademy.springwebapp.register.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.register.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerDTO;
 import com.greenfoxacademy.springwebapp.register.models.dtos.ErrorDTO;
 import com.greenfoxacademy.springwebapp.register.services.RegistrationService;
 import org.springframework.http.HttpStatus;
@@ -25,14 +25,14 @@ public class RegistrationController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerDTO playerDTO, BindingResult bindingResult) {
+  public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegistrationRequestDTO playerRegistrationRequestDTO, BindingResult bindingResult) {
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
     if (errorList.isEmpty()) {
-      if (registrationService.findByUsername(playerDTO.getUsername()) != null) {
+      if (registrationService.findByUsername(playerRegistrationRequestDTO.getUsername()) != null) {
         return ResponseEntity.status(HttpStatus.valueOf(409)).body(new ErrorDTO("Username is already taken."));
       }
-      PlayerEntity playerEntity = registrationService.savePlayer(playerDTO);
+      PlayerEntity playerEntity = registrationService.savePlayer(playerRegistrationRequestDTO);
       RegisterResponseDTO responseDTO = new RegisterResponseDTO();
       responseDTO.setId(playerEntity.getId());
       responseDTO.setUsername(playerEntity.getUsername());
@@ -41,10 +41,10 @@ public class RegistrationController {
       responseDTO.setAvatar(playerEntity.getAvatar());
       responseDTO.setPoints(playerEntity.getPoints());
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(responseDTO);
-    } else if (playerDTO.getUsername() == null && playerDTO.getPassword() == null) {
+    } else if (playerRegistrationRequestDTO.getUsername() == null && playerRegistrationRequestDTO.getPassword() == null) {
       return ResponseEntity.status(HttpStatus.valueOf(400))
           .body(new ErrorDTO("Username and password are required."));
-    } else if (playerDTO.getPassword().length() < 8){
+    } else if (playerRegistrationRequestDTO.getPassword().length() < 8){
       return ResponseEntity.status(HttpStatus.valueOf(406))
           .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
     }

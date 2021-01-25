@@ -2,7 +2,7 @@ package com.greenfoxacademy.springwebapp.register.services;
 
 import com.greenfoxacademy.springwebapp.register.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.register.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerDTO;
+import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.register.repositories.RegistrationRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   @Override
-  public PlayerEntity savePlayer(PlayerDTO dto) {
+  public PlayerEntity savePlayer(PlayerRegistrationRequestDTO dto) {
     KingdomEntity kingdom = new KingdomEntity();
     if (dto.getKingdomname() != null) {
       kingdom.setKingdomName(dto.getKingdomname());

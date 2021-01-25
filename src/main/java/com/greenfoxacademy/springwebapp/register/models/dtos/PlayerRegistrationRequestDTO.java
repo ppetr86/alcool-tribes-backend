@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerDTO {
+public class PlayerRegistrationRequestDTO {
 
   private long id;
   @NotNull(message = "Username is required.")
@@ -28,15 +28,15 @@ public class PlayerDTO {
 
   private String kingdomname;
 
-  public PlayerDTO(String username, String password, String email) {
+  public PlayerRegistrationRequestDTO(String username, String password, String email) {
     this.username = username;
     this.password = password;
     this.email = email;
   }
 
-  public PlayerDTO(@NotNull(message = "Username is required.") String username,
-                   @NotNull(message = "Password is required.") @Size(min = 8, message = "Password must be 8 characters.") String password,
-                   String email, String kingdomname) {
+  public PlayerRegistrationRequestDTO(@NotNull(message = "Username is required.") String username,
+                                      @NotNull(message = "Password is required.") @Size(min = 8, message = "Password must be 8 characters.") String password,
+                                      String email, String kingdomname) {
     this.username = username;
     this.password = password;
     this.email = email;
