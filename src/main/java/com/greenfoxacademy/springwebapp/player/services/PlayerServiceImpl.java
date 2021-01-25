@@ -1,27 +1,27 @@
-package com.greenfoxacademy.springwebapp.player.register.services;
+package com.greenfoxacademy.springwebapp.player.services;
 
-import com.greenfoxacademy.springwebapp.player.register.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.player.register.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.player.register.models.dtos.PlayerRegistrationRequestDTO;
-import com.greenfoxacademy.springwebapp.player.register.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.player.register.repositories.RegistrationRepo;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
+import com.greenfoxacademy.springwebapp.player.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegistrationServiceImpl implements RegistrationService {
-  private RegistrationRepo registrationRepo;
+public class PlayerServiceImpl implements PlayerService {
+  private PlayerRepo playerRepo;
   private PasswordEncoder passwordEncoder;
 
-  public RegistrationServiceImpl(
-      RegistrationRepo registrationRepo,
+  public PlayerServiceImpl(
+      PlayerRepo playerRepo,
       PasswordEncoder passwordEncoder) {
-    this.registrationRepo = registrationRepo;
+    this.playerRepo = playerRepo;
     this.passwordEncoder = passwordEncoder;
   }
 
   @Override
-  public RegisterResponseDTO savePlayer(PlayerRegistrationRequestDTO dto) {
+  public PlayerResponseDTO savePlayer(PlayerRegistrationRequestDTO dto) {
     KingdomEntity kingdom = new KingdomEntity();
     if (dto.getKingdomname() != null) {
       kingdom.setKingdomName(dto.getKingdomname());
@@ -31,9 +31,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     PlayerEntity playerEntity =
         new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), kingdom);
-    registrationRepo.save(playerEntity);
+    playerRepo.save(playerEntity);
 
-    RegisterResponseDTO responseDTO = new RegisterResponseDTO();
+    PlayerResponseDTO responseDTO = new PlayerResponseDTO();
     responseDTO.setId(playerEntity.getId());
     responseDTO.setUsername(playerEntity.getUsername());
     responseDTO.setEmail(playerEntity.getEmail());
@@ -46,6 +46,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
   @Override
   public PlayerEntity findByUsername(String username) {
-    return registrationRepo.findByUsername(username);
+    return playerRepo.findByUsername(username);
   }
 }

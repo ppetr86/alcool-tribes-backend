@@ -1,10 +1,11 @@
-package com.greenfoxacademy.springwebapp.player.register.models;
+package com.greenfoxacademy.springwebapp.player.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,5 @@ public class KingdomEntity {
   @Column(name = "kingdomname")
   private String kingdomName;
 
+  //TODO: need to add rest of fields
 }

@@ -1,6 +1,7 @@
-package com.greenfoxacademy.springwebapp.player.register.models;
+package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,9 +34,9 @@ public class PlayerEntity {
   @Column(name = "email")
   private String email;
   @Column(name = "avatar")
-  private String avatar = "http://avatar.loc/my.png";
+  private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
   @Column(name = "points")
-  private int points = 0;
+  private int points = 0; //TODO: need to have proper point logic
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "kingdomId", referencedColumnName = "Id")

@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.greenfoxacademy.springwebapp.player.register.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

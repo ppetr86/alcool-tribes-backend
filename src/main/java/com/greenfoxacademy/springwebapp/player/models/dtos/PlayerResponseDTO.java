@@ -1,11 +1,15 @@
-package com.greenfoxacademy.springwebapp.player.register.models.dtos;
+package com.greenfoxacademy.springwebapp.player.models.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterResponseDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class PlayerResponseDTO {
 
   private long id;
   private String username;
