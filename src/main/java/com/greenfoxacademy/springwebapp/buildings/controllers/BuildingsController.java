@@ -1,10 +1,10 @@
-package com.greenfoxacademy.springwebapp.building.controllers;
+package com.greenfoxacademy.springwebapp.buildings.controllers;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.building.models.dtos.ErrorResponseDTO;
-import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.commonServices.TimeService;
+import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.buildings.models.dtos.ErrorResponseDTO;
+import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
+import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package com.greenfoxacademy.springwebapp.building.services;
+package com.greenfoxacademy.springwebapp.buildings.services;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
 
 public interface BuildingService {
 

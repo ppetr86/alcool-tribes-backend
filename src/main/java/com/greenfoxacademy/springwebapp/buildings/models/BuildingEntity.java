@@ -1,7 +1,7 @@
-package com.greenfoxacademy.springwebapp.building.models;
+package com.greenfoxacademy.springwebapp.buildings.models;
 
 
-import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

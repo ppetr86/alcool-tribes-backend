@@ -1,6 +1,6 @@
-package com.greenfoxacademy.springwebapp.building.repositories;
+package com.greenfoxacademy.springwebapp.buildings.repositories;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
