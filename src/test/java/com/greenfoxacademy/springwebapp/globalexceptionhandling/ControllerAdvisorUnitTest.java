@@ -13,7 +13,15 @@ public class ControllerAdvisorUnitTest {
   public void invalidBuildingTypeException_ReturnsNOTACCEPTABLE() {
     ResponseEntity<ExceptionResponseDTO> result = ca.handleExceptions(new InvalidBuildingTypeException());
     Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
-    Assert.assertEquals("Invalid building type || Cannot build buildings with higher level than the Townhall",
+    Assert.assertEquals("Invalid building type",
+            result.getBody().getMessage());
+  }
+
+  @Test
+  public void townhallLevelException_ReturnsNOTACCEPTABLE() {
+    ResponseEntity<ExceptionResponseDTO> result = ca.handleExceptions(new TownhallLevelException());
+    Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
+    Assert.assertEquals("Cannot build buildings with higher level than the Townhall",
             result.getBody().getMessage());
   }
 

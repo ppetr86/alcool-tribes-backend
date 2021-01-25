@@ -22,6 +22,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ExceptionResponseDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
 
+  @ExceptionHandler(TownhallLevelException.class)
+  public ResponseEntity<ExceptionResponseDTO> handleExceptions(
+          TownhallLevelException ex) {
+    return new ResponseEntity<>(new ExceptionResponseDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+  }
+
   @ExceptionHandler(MissingParameterException.class)
   public ResponseEntity<ExceptionResponseDTO> handleExceptions(
           MissingParameterException ex) {
