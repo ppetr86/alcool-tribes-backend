@@ -21,6 +21,7 @@ public class PlayerRegistrationRequestDTO {
   private String username;
 
   @NotNull(message = "Password is required.")
+  @NotBlank(message = "Password is required.")
   @Size(min = 8, message = "Password must be 8 characters.")
   private String password;
 
