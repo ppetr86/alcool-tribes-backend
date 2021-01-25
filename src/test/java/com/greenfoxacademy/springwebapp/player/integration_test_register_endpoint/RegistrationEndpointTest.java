@@ -1,6 +1,8 @@
 package com.greenfoxacademy.springwebapp.player.integration_test_register_endpoint;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +39,9 @@ public class RegistrationEndpointTest {
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
-        .andExpect(status().isCreated());
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.username", is("testUser")))
+        .andExpect(jsonPath("$.email", is("email@email.com")));
   }
 
   @Test
