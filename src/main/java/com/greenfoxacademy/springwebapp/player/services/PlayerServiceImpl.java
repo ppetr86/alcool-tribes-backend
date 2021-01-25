@@ -48,4 +48,9 @@ public class PlayerServiceImpl implements PlayerService {
   public PlayerEntity findByUsername(String username) {
     return playerRepo.findByUsername(username);
   }
+
+  @Override
+  public PlayerEntity loginUser(PlayerEntity playerInput) {
+    return null;
+  }
 }
