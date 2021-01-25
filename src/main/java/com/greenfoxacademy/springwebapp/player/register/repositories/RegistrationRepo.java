@@ -1,6 +1,6 @@
-package com.greenfoxacademy.springwebapp.register.repositories;
+package com.greenfoxacademy.springwebapp.player.register.repositories;
 
-import com.greenfoxacademy.springwebapp.register.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.register.models.PlayerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

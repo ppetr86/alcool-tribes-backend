@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.register.models.dtos;
+package com.greenfoxacademy.springwebapp.player.register.models.dtos;
 
 import lombok.Getter;
 import lombok.Setter;

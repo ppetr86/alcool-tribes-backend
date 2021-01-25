@@ -1,12 +1,12 @@
-package com.greenfoxacademy.springwebapp.registerTests.unit_test_register_endpoint;
+package com.greenfoxacademy.springwebapp.player.unit_test_register_endpoint;
 
-import com.greenfoxacademy.springwebapp.register.controllers.RegistrationController;
-import com.greenfoxacademy.springwebapp.register.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.register.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.register.models.dtos.ErrorDTO;
-import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerRegistrationRequestDTO;
-import com.greenfoxacademy.springwebapp.register.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.register.services.RegistrationService;
+import com.greenfoxacademy.springwebapp.player.register.controllers.RegistrationController;
+import com.greenfoxacademy.springwebapp.player.register.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.register.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.ErrorDTO;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.RegisterResponseDTO;
+import com.greenfoxacademy.springwebapp.player.register.services.RegistrationService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

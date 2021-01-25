@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.register.models;
+package com.greenfoxacademy.springwebapp.player.register.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;

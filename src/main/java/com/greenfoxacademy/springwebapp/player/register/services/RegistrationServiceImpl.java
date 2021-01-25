@@ -1,10 +1,10 @@
-package com.greenfoxacademy.springwebapp.register.services;
+package com.greenfoxacademy.springwebapp.player.register.services;
 
-import com.greenfoxacademy.springwebapp.register.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.register.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerRegistrationRequestDTO;
-import com.greenfoxacademy.springwebapp.register.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.register.repositories.RegistrationRepo;
+import com.greenfoxacademy.springwebapp.player.register.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.register.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.RegisterResponseDTO;
+import com.greenfoxacademy.springwebapp.player.register.repositories.RegistrationRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

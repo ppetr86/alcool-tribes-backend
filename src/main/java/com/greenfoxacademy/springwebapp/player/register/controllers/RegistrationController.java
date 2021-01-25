@@ -1,10 +1,9 @@
-package com.greenfoxacademy.springwebapp.register.controllers;
+package com.greenfoxacademy.springwebapp.player.register.controllers;
 
-import com.greenfoxacademy.springwebapp.register.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.register.models.dtos.PlayerRegistrationRequestDTO;
-import com.greenfoxacademy.springwebapp.register.models.dtos.RegisterResponseDTO;
-import com.greenfoxacademy.springwebapp.register.models.dtos.ErrorDTO;
-import com.greenfoxacademy.springwebapp.register.services.RegistrationService;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.RegisterResponseDTO;
+import com.greenfoxacademy.springwebapp.player.register.models.dtos.ErrorDTO;
+import com.greenfoxacademy.springwebapp.player.register.services.RegistrationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
