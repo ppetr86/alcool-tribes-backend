@@ -24,9 +24,9 @@ public class TokenServiceTest {
 
   @Test
   public void generateTokenToLoggedInPlayerShouldGenerateTokenToLoggedPlayer() {
-    PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
 
-    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "mark");
+    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "markmark");
 
     Mockito.when(playerEntityService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword())).thenReturn(playerEntity);
     Mockito.when(mockJwtProvider.generateToken(playerEntity.getUsername())).thenReturn("token");

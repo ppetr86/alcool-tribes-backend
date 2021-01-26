@@ -27,7 +27,8 @@ public class LoginController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> postLogin(@RequestBody @Valid PlayerRequestDTO playerRequestDTO, BindingResult bindingResult) {
+  public ResponseEntity<?> postLogin(@RequestBody @Valid PlayerRequestDTO playerRequestDTO,
+                                     BindingResult bindingResult) {
 
     List<ObjectError> errorList = bindingResult.getAllErrors();
 

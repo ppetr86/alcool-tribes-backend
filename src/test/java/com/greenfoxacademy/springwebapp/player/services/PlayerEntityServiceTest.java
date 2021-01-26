@@ -27,19 +27,19 @@ public class PlayerEntityServiceTest {
   //Tests for findByUsername method
   @Test
   public void findCorrectPlayerWithFindByUsername(){
-    PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
 
     Mockito.when(playerEntityRepository.findByUsername("Mark")).thenReturn(playerEntity);
 
     PlayerEntity fakePlayer = playerEntityService.findByUsername("Mark");
 
     Assert.assertEquals("Mark", fakePlayer.getUsername());
-    Assert.assertEquals("mark", fakePlayer.getPassword());
+    Assert.assertEquals("markmark", fakePlayer.getPassword());
   }
 
   @Test
   public void returnNullWithFindByUsernameIfTheGivenNameIsIncorrect(){
-    PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
 
     Mockito.when(playerEntityRepository.findByUsername("Mark")).thenReturn(playerEntity);
 
@@ -52,26 +52,26 @@ public class PlayerEntityServiceTest {
   // Tests for findByUsernameAndPassword
   @Test
   public void findByUserAndPasswordShouldReturnCorrectPlayer(){
-    PlayerEntity playerEntity = new PlayerEntity("Petr", "petr");
+    PlayerEntity playerEntity = new PlayerEntity("Petr", "petrpetr");
 
     Mockito.when(playerEntityService.findByUsername("Petr")).thenReturn(playerEntity);
-    Mockito.when(passwordEncoder.matches("petr", playerEntity.getPassword())).thenReturn(true);
+    Mockito.when(passwordEncoder.matches("petrpetr", playerEntity.getPassword())).thenReturn(true);
 
-    PlayerEntity mockPlayer = playerEntityService.findByUsernameAndPassword("Petr", "petr");
+    PlayerEntity mockPlayer = playerEntityService.findByUsernameAndPassword("Petr", "petrpetr");
 
     Assert.assertEquals("Petr", mockPlayer.getUsername());
-    Assert.assertEquals("petr", mockPlayer.getPassword());
+    Assert.assertEquals("petrpetr", mockPlayer.getPassword());
 
     Assert.assertNotEquals("Petr", "Petrr");
-    Assert.assertNotEquals("petr", "password");
+    Assert.assertNotEquals("petrpetr", "password");
   }
 
   @Test
   public void findByUserAndPasswordShouldReturnNullIfGivenPasswordIsIncorrect(){
-    PlayerEntity playerEntity = new PlayerEntity("Petr", "petr");
+    PlayerEntity playerEntity = new PlayerEntity("Petr", "petrpetr");
 
     Mockito.when(playerEntityService.findByUsername("Petr")).thenReturn(playerEntity);
-    Mockito.when(passwordEncoder.matches("petr", playerEntity.getPassword())).thenReturn(true);
+    Mockito.when(passwordEncoder.matches("petrpetr", playerEntity.getPassword())).thenReturn(true);
 
     PlayerEntity mockPlayer = playerEntityService.findByUsernameAndPassword("Petr", "badPassword");
 
@@ -80,12 +80,12 @@ public class PlayerEntityServiceTest {
 
   @Test
   public void findByUserAndPasswordShouldReturnNullIfGivenUsernameIsIncorrect(){
-    PlayerEntity playerEntity = new PlayerEntity("Petr", "petr");
+    PlayerEntity playerEntity = new PlayerEntity("Petr", "petrpetr");
 
     Mockito.when(playerEntityService.findByUsername("Petr")).thenReturn(playerEntity);
-    Mockito.when(passwordEncoder.matches("petr", playerEntity.getPassword())).thenReturn(true);
+    Mockito.when(passwordEncoder.matches("petrpetr", playerEntity.getPassword())).thenReturn(true);
 
-    PlayerEntity mockPlayer = playerEntityService.findByUsernameAndPassword("NoPetr", "petr");
+    PlayerEntity mockPlayer = playerEntityService.findByUsernameAndPassword("NoPetr", "petrpetr");
 
     Assert.assertNull(mockPlayer);
   }

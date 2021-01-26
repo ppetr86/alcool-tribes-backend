@@ -32,16 +32,16 @@ public class LoginControllerUnitTest {
   }
 
   @Test
-  public void postLoginShouldReturnTokenDTOWithTokenAndOkMessage() throws Exception{
+  public void postLoginShouldReturnCorrectDtoWithCorrectStatusAndMessage() throws Exception{
 
-    PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
     PlayerTokenDTO fakePlayerDto = new PlayerTokenDTO(playerEntity.getUsername());
 
-    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "mark");
-    PlayerRequestDTO playerRequestDTO2 = new PlayerRequestDTO(null, "mark");
+    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "markmark");
+    PlayerRequestDTO playerRequestDTO2 = new PlayerRequestDTO(null, "markmark");
     PlayerRequestDTO playerRequestDTO3 = new PlayerRequestDTO("Mark", null);
     PlayerRequestDTO playerRequestDTO4 = new PlayerRequestDTO();
-    PlayerRequestDTO playerRequestDTO5 = new PlayerRequestDTO("BadMark", "mark");
+    PlayerRequestDTO playerRequestDTO5 = new PlayerRequestDTO("BadMark", "markmark");
     PlayerRequestDTO playerRequestDTO6 = new PlayerRequestDTO("Mark", "badPassword");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
