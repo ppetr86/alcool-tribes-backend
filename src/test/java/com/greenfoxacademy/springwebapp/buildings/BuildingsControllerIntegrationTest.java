@@ -83,7 +83,6 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Invalid building type")));
   }
 
-  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForFarm() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("farM");
@@ -98,7 +97,6 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
-  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForTownhall() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("TOWNhall");
@@ -113,7 +111,6 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
-  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForMine() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("MINE");
@@ -128,7 +125,6 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
-  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NotEnoughtResourcesForAcademy() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("academy");
@@ -143,7 +139,6 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
-  // TODO: service results are hardcoded, update once service is ready
   @Test
   public void buildBuilding_NoTownhallInKingdom() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("academy");
