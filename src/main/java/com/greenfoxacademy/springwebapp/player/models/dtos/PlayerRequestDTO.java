@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PlayerDTO {
+public class PlayerRequestDTO {
 
   @NotNull(message = "Username is required.")
   private String username;

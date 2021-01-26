@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class LoginControllerIT {
   @Test
   public void postLoginShouldReturnCorrectPlayer() throws Exception {
 
-    PlayerDTO request = new PlayerDTO("Mark", "mark");
+    PlayerRequestDTO request = new PlayerRequestDTO("Mark", "mark");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 

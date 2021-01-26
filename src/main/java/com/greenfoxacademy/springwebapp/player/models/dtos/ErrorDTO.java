@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class ErrorMessageDTO {
+public class ErrorDTO {
 
   private String status;
   private String message;
 
-  public ErrorMessageDTO(String message) {
+  public ErrorDTO(String message) {
     this.status = "error";
     this.message = message;
   }
