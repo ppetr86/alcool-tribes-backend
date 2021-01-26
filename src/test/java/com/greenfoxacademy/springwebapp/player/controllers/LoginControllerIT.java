@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
@@ -12,15 +11,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -32,20 +31,20 @@ public class LoginControllerIT {
   @Autowired
   private MockMvc mockMvc;
 
-  private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-    MediaType.APPLICATION_JSON.getSubtype());
-
   @MockBean
   private JwtProvider jwtProviderMock;
-  //    JwtProvider jwtProvider = Mockito.mock(JwtProvider.class);
 
+  @MockBean
+  private PasswordEncoder passwordEncoder;  //Have to Mock the .matches method
 
   @Test
   public void postLoginShouldReturn200AndOkMessage() throws Exception {
     PlayerRequestDTO request = new PlayerRequestDTO("Mark", "markmark");
+
     String json = new ObjectMapper().writeValueAsString(request);
 
     Mockito.when(jwtProviderMock.generateToken(request.getUsername())).thenReturn("12345");
+    Mockito.when(passwordEncoder.matches(request.getPassword(), "markmark")).thenReturn(true);
 
     mockMvc.perform(post("/login")
       .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +90,6 @@ public class LoginControllerIT {
       .contentType(MediaType.APPLICATION_JSON)
       .content(json))
       .andExpect(status().isBadRequest())
-      .andExpect(content().contentType(contentType))
       .andExpect(jsonPath("$.status", is("error")))
       .andExpect(jsonPath("$.message", is("Username is required.")));
   }
