@@ -57,7 +57,7 @@ public class LoginControllerUnitTest {
 
     BindingResult bindingResult = Mockito.mock(BindingResult.class);
     List<ObjectError> errorList = bindingResult.getAllErrors();
-    errorList.add(new ObjectError("userDTO2", "Username is required."));
+    errorList.add(new ObjectError("userDTO", "Username is required."));
 
     Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
 
@@ -73,7 +73,7 @@ public class LoginControllerUnitTest {
 
     BindingResult bindingResult = Mockito.mock(BindingResult.class);
     List<ObjectError> errorList = bindingResult.getAllErrors();
-    errorList.add(new ObjectError("userDTO3", "Password is required."));
+    errorList.add(new ObjectError("userDTO", "Password is required."));
 
     Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
 
@@ -84,12 +84,27 @@ public class LoginControllerUnitTest {
   }
 
   @Test
+  public void postLoginShould400ErrorStatusAndPasswordHasContainAtLeast8LettersMessage() throws Exception{
+    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "mark");
+
+    BindingResult bindingResult = Mockito.mock(BindingResult.class);
+    List<ObjectError> errorList = bindingResult.getAllErrors();
+    errorList.add(new ObjectError("userDTO", "Password has to contain at least 8 letters."));
+
+    Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
+
+    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult); //Password need at least 8 letters
+    Assert.assertEquals("error", ((ErrorDTO)response.getBody()).getStatus());
+    Assert.assertEquals("Password has to contain at least 8 letters.", ((ErrorDTO)response.getBody()).getMessage());
+  }
+
+  @Test
   public void postLoginShould400ErrorStatusAndUsernameAndPasswordAreRequiredMessage() throws Exception{
     PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO();
 
     BindingResult bindingResult = Mockito.mock(BindingResult.class);
     List<ObjectError> errorList = bindingResult.getAllErrors();
-    errorList.add(new ObjectError("userDTO4", "Username and password are required."));
+    errorList.add(new ObjectError("userDTO", "Username and password are required."));
 
     Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
 
