@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.player.controllers;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,7 +38,14 @@ public class PlayerControllerIT {
         .content(requestJson))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.username", is("testUser")))
-        .andExpect(jsonPath("$.email", is("email@email.com")));
+        .andExpect(jsonPath("$.email", is("email@email.com")))
+        .andExpect(content().json("{id: 1," +
+            "username: testUser," +
+            "email: email@email.com" +
+            "kingdomId: 1," +
+            "avatar: http://avatar.loc/my.png" +
+            " points: 0" +
+            "}"));
   }
 
   @Test
@@ -53,6 +62,23 @@ public class PlayerControllerIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.status", is("error")))
         .andExpect(jsonPath("$.message", is("Username is required.")));
+  }
+
+  @Test
+  public void postRegisterRequestShouldReturn406AndPasswordSizeError() throws Exception {
+
+    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
+    playerRegistrationRequestDTO.setUsername("usernameTest");
+    playerRegistrationRequestDTO.setPassword("123");
+    playerRegistrationRequestDTO.setEmail("email@email.com");
+
+    String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
+
+    mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
+        .content(requestJson))
+        .andExpect(status().isNotAcceptable())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Password must be 8 characters.")));
   }
 
 }

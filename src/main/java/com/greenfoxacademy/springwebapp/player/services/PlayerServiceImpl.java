@@ -27,15 +27,8 @@ public class PlayerServiceImpl implements PlayerService {
     PlayerEntity playerEntity =
         new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), kingdom);
     playerRepo.save(playerEntity);
-
-    PlayerResponseDTO responseDTO = new PlayerResponseDTO();
-    responseDTO.setId(playerEntity.getId());
-    responseDTO.setUsername(playerEntity.getUsername());
-    responseDTO.setEmail(playerEntity.getEmail());
-    responseDTO.setKingdomId(playerEntity.getKingdomEntity().getId());
-    responseDTO.setAvatar(playerEntity.getAvatar());
-    responseDTO.setPoints(playerEntity.getPoints());
-
+    
+    PlayerResponseDTO responseDTO = assignResponseDto(playerEntity);
     return responseDTO;
   }
 
@@ -48,6 +41,18 @@ public class PlayerServiceImpl implements PlayerService {
     }
     return kingdom;
   }
+
+  private PlayerResponseDTO assignResponseDto(PlayerEntity playerEntity){
+    PlayerResponseDTO responseDTO = new PlayerResponseDTO();
+    responseDTO.setId(playerEntity.getId());
+    responseDTO.setUsername(playerEntity.getUsername());
+    responseDTO.setEmail(playerEntity.getEmail());
+    responseDTO.setKingdomId(playerEntity.getKingdomEntity().getId());
+    responseDTO.setAvatar(playerEntity.getAvatar());
+    responseDTO.setPoints(playerEntity.getPoints());
+    return responseDTO;
+  }
+
 
   @Override
   public PlayerEntity findByUsername(String username) {
