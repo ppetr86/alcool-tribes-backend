@@ -22,12 +22,7 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerResponseDTO savePlayer(PlayerRegistrationRequestDTO dto) {
-    KingdomEntity kingdom = new KingdomEntity();
-    if (dto.getKingdomname() != null) {
-      kingdom.setKingdomName(dto.getKingdomname());
-    } else {
-      kingdom.setKingdomName(dto.getUsername() + "'s kingdom");
-    }
+    KingdomEntity kingdom = assignKingdomName(dto);
 
     PlayerEntity playerEntity =
         new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), kingdom);
@@ -42,6 +37,16 @@ public class PlayerServiceImpl implements PlayerService {
     responseDTO.setPoints(playerEntity.getPoints());
 
     return responseDTO;
+  }
+
+  private KingdomEntity assignKingdomName(PlayerRegistrationRequestDTO dto){
+    KingdomEntity kingdom = new KingdomEntity();
+    if (dto.getKingdomname() != null) {
+      kingdom.setKingdomName(dto.getKingdomname());
+    } else {
+      kingdom.setKingdomName(dto.getUsername() + "'s kingdom");
+    }
+    return kingdom;
   }
 
   @Override

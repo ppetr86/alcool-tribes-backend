@@ -39,9 +39,7 @@ public class PlayerRegistrationRequestDTO {
     this.email = email;
   }
 
-  public PlayerRegistrationRequestDTO(@NotNull(message = "Username is required.") String username,
-                                      @NotNull(message = "Password is required.") @Size(min = 8, message = "Password must be 8 characters.") String password,
-                                      String email, String kingdomname) {
+  public PlayerRegistrationRequestDTO(String username, String password, String email, String kingdomname) {
     this.username = username;
     this.password = password;
     this.email = email;

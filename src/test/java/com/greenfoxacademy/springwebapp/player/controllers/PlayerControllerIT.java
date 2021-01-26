@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.player.integration_test_register_endpoint;
+package com.greenfoxacademy.springwebapp.player.controllers;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RegistrationEndpointTest {
+public class PlayerControllerIT {
   @Autowired
   private MockMvc mockMvc;
 
@@ -50,7 +50,9 @@ public class RegistrationEndpointTest {
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Username is required.")));
   }
 
 }
