@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@EnableWebMvc
 public class LoginControllerIT {
 
   @Autowired
@@ -127,7 +129,7 @@ public class LoginControllerIT {
 
     mockMvc.perform(post("/login")
       .contentType(MediaType.APPLICATION_JSON)
-      .contentType(json))
+      .content(json))
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.status", is("error")))
       .andExpect(jsonPath("$.message", is("Password has to contain at least 8 letters.")));
