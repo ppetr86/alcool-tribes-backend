@@ -27,10 +27,8 @@ public class RegistrationEndpointTest {
   @Test
   public void postRegisterRequestShouldReturn201() throws Exception {
 
-    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
-    playerRegistrationRequestDTO.setEmail("email@email.com");
-    playerRegistrationRequestDTO.setUsername("testUser");
-    playerRegistrationRequestDTO.setPassword("testPassword");
+    PlayerRegistrationRequestDTO playerRegistrationRequestDTO =
+        new PlayerRegistrationRequestDTO("testUser", "testPassword", "email@email.com");
 
     String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
 

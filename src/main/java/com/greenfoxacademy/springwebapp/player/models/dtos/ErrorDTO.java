@@ -1,10 +1,8 @@
 package com.greenfoxacademy.springwebapp.player.models.dtos;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class ErrorDTO {
   private String status;
   private String message;
