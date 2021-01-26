@@ -10,12 +10,12 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDTO {
+public class PlayerDTO {
 
   @NotNull(message = "Username is required.")
   private String username;
   @NotNull(message = "Password is required.")
-  @Size(min = 2, message = "Password have to at least contains 8 letters.")
+  @Size(min = 2, message = "Password have to at least contains 2 letters.")
   private String password;
 
 }

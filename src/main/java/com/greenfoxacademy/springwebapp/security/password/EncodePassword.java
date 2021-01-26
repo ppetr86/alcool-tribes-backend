@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.configuration;
+package com.greenfoxacademy.springwebapp.security.password;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

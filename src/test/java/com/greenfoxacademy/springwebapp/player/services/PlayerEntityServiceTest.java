@@ -2,42 +2,29 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerEntityRepository;
+import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class PlayerEntityServiceTest {
 
   private PlayerEntityService playerEntityService;
   private PlayerEntityRepository playerEntityRepository;
   private PasswordEncoder passwordEncoder;
+  private JwtProvider mockJwtProvider;
 
   @Before
-  public void init(){
+  public void setUp(){
     playerEntityRepository = Mockito.mock(PlayerEntityRepository.class);
     passwordEncoder = Mockito.mock(PasswordEncoder.class);
-    playerEntityService = new PlayerEntityServiceImp(playerEntityRepository, passwordEncoder);
+    mockJwtProvider = Mockito.mock(JwtProvider.class);
+    playerEntityService = new PlayerEntityServiceImp(playerEntityRepository, passwordEncoder, mockJwtProvider);
   }
 
-  @Test
-  public void countPlayersMethodShouldReturnCorrectNumber(){
-    List<PlayerEntity> fakeList = Arrays.asList(
-      new PlayerEntity("Mark", "password"),
-      new PlayerEntity("Zdenek", "password"),
-      new PlayerEntity("Ahmed", "password"),
-      new PlayerEntity("Petr", "password")
-    );
-
-    Mockito.when(playerEntityRepository.count()).thenReturn((long)fakeList.size());
-
-    Assert.assertEquals(4, playerEntityService.countPlayers());
-  }
-
+  //Tests for findByUsername method
   @Test
   public void findCorrectPlayerWithFindByUsername(){
     PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
@@ -51,6 +38,19 @@ public class PlayerEntityServiceTest {
   }
 
   @Test
+  public void returnNullWithFindByUsernameIfTheGivenNameIsIncorrect(){
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "mark");
+
+    Mockito.when(playerEntityRepository.findByUsername("Mark")).thenReturn(playerEntity);
+
+    PlayerEntity fakePlayer = playerEntityService.findByUsername("BadMark");
+
+    Assert.assertNull(fakePlayer);
+  }
+
+
+  // Tests for findByUsernameAndPassword
+  @Test
   public void findByUserAndPasswordShouldReturnCorrectPlayer(){
     PlayerEntity playerEntity = new PlayerEntity("Petr", "petr");
 
@@ -61,5 +61,32 @@ public class PlayerEntityServiceTest {
 
     Assert.assertEquals("Petr", mockPlayer.getUsername());
     Assert.assertEquals("petr", mockPlayer.getPassword());
+
+    Assert.assertNotEquals("Petr", "Petrr");
+    Assert.assertNotEquals("petr", "password");
+  }
+
+  @Test
+  public void findByUserAndPasswordShouldReturnNullIfGivenPasswordIsIncorrect(){
+    PlayerEntity playerEntity = new PlayerEntity("Petr", "petr");
+
+    Mockito.when(playerEntityService.findByUsername("Petr")).thenReturn(playerEntity);
+    Mockito.when(passwordEncoder.matches("petr", playerEntity.getPassword())).thenReturn(true);
+
+    PlayerEntity mockPlayer = playerEntityService.findByUsernameAndPassword("Petr", "badPassword");
+
+    Assert.assertNull(mockPlayer);
+  }
+
+  @Test
+  public void findByUserAndPasswordShouldReturnNullIfGivenUsernameIsIncorrect(){
+    PlayerEntity playerEntity = new PlayerEntity("Petr", "petr");
+
+    Mockito.when(playerEntityService.findByUsername("Petr")).thenReturn(playerEntity);
+    Mockito.when(passwordEncoder.matches("petr", playerEntity.getPassword())).thenReturn(true);
+
+    PlayerEntity mockPlayer = playerEntityService.findByUsernameAndPassword("NoPetr", "petr");
+
+    Assert.assertNull(mockPlayer);
   }
 }
