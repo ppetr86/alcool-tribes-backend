@@ -9,13 +9,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
-  /*@ExceptionHandler(InvalidBuildingTypeException.class)
-  @ResponseBody
-  @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
-  public ExceptionResponseDTO handleExceptions(InvalidBuildingTypeException ex) {
-    return new ExceptionResponseDTO(ex.getMessage());
-  }*/
-
   @ExceptionHandler(InvalidBuildingTypeException.class)
   public ResponseEntity<ExceptionResponseDTO> handleExceptions(
           InvalidBuildingTypeException ex) {
