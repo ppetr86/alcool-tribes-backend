@@ -62,8 +62,13 @@ public class TimeServiceUnitTests {
   }
 
   @Test
-  public void getTimeBetweenReturnsIncorrectTimeInSeconds() {
-    Assert.assertNotEquals(2000, timeService.getTimeBetween(1611392000L, 1611393000L));
+  public void getTimeBetweenWhenSecondNumberIsLargerThenFirstNumberThanReturnsPositiveNumber() {
+    Assert.assertTrue(timeService.getTimeBetween(1611392000L, 1611399000L) > 0);
+  }
+
+  @Test
+  public void getTimeBetweenWhenSecondNumberIsSmallerThenFirstnumberThanReturns0() {
+    Assert.assertEquals(0, timeService.getTimeBetween(1611392000L, 1611391000L));
   }
 
 

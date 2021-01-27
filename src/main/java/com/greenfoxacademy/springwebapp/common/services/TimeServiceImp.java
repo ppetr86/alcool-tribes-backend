@@ -19,6 +19,9 @@ public class TimeServiceImp implements TimeService {
 
   @Override
   public int getTimeBetween(long from, long to) {
-    return (int) (to - from);
+    if(to > from) {
+      return (int) (to - from);
+    }
+    else return 0;
   }
 }
