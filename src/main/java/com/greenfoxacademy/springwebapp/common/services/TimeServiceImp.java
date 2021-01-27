@@ -8,7 +8,7 @@ public class TimeServiceImp implements TimeService {
 
   @Override
   public long getTime() {
-    Instant instant = Instant.now(); //creates Instant object with actual time
+    Instant instant = Instant.now();
     return instant.getEpochSecond();
   }
 

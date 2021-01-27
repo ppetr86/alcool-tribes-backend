@@ -20,40 +20,35 @@ public class TimeServiceUnitTests {
 
   @Test
   public void getTimeReturnsCorrectTimeInSeconds() {
-    //arrange
     Long minEpochTime = 1611392000L;
-    Long maxEpochTime =
-        1711392000L;//difference is apx 3 years, so the unit test will be valid for 3 years
+    //difference is apx 10 years, so the unit test will be valid for 10 years
+    Long maxEpochTime = (Long) (1611392000L + (10*365*24*60*60));
 
-    //act
     Long actualTimeInSec = timeService.getTime();
 
-    //assert
     Assert.assertTrue(minEpochTime < actualTimeInSec);
     Assert.assertTrue(maxEpochTime > actualTimeInSec);
   }
 
   @Test
   public void getTimeAfterReturnsCorrectFutureTimeInSeconds() {
-    //arrange
     timeService = Mockito.spy(
-        TimeServiceImp.class); //spy = i want to fake only particular method from timeService, not whole class
+        TimeServiceImp.class);
     Mockito.doReturn(100L).when(timeService)
-        .getTime(); //here i am faking just getTime() method from timeService
-    //act
+        .getTime();
+
     long timeAfter = timeService.getTimeAfter(500);
-    //assert
+
     Assert.assertEquals(600L, timeAfter);
   }
 
   @Test
   public void getTimeAfterReturnsWrongFutureTimeInSeconds() {
-    //arrange
     timeService = Mockito.spy(TimeServiceImp.class);
     Mockito.doReturn(100L).when(timeService).getTime();
-    //act
+
     long timeAfter = timeService.getTimeAfter(500);
-    //assert
+
     Assert.assertNotEquals(500L, timeAfter);
     verify(timeService, times(1)).getTime();
   }
