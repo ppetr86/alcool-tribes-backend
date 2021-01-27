@@ -10,13 +10,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
-@Log
+@Slf4j
 @Component
 public class JwtFilter extends GenericFilterBean {
 
@@ -42,7 +42,7 @@ public class JwtFilter extends GenericFilterBean {
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
           null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
-      logger.info("Following player was authenticated: " + customUserDetails.getUsername());
+      log.info("Following player was authenticated: {}", customUserDetails.getUsername());
     }
     filterChain.doFilter(servletRequest, servletResponse);
 
