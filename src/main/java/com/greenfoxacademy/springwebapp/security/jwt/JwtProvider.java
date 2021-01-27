@@ -10,11 +10,11 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Log
+@Slf4j
 @Component
 public class JwtProvider {
 
@@ -36,15 +36,15 @@ public class JwtProvider {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
       return true;
     } catch (ExpiredJwtException e) {
-      log.severe("invalid token: token expired");
+      log.error("invalid token: token expired");
     } catch (UnsupportedJwtException e) {
-      log.severe("invalid token: format of received token is not supported");
+      log.error("invalid token: format of received token is not supported");
     } catch (MalformedJwtException e) {
-      log.severe("invalid token: JWT couldn't reconstruct token content");
+      log.error("invalid token: JWT couldn't reconstruct token content");
     } catch (SignatureException e) {
-      log.severe("invalid token: JWT failed to calculate digital signature of token");
+      log.error("invalid token: JWT failed to calculate digital signature of token");
     } catch (IllegalArgumentException e) {
-      log.severe("invalid token: token has passed invalid argument to the method");
+      log.error("invalid token: token has passed invalid argument to the method");
     }
     return false;
   }

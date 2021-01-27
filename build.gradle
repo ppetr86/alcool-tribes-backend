@@ -51,6 +51,10 @@ dependencies {
     implementation 'org.springframework.security:spring-security-test'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
+    /*compile 'ch.qos.logback:logback-core:1.2.3' //for logging
+    compile 'ch.qos.logback:logback-classic:1.2.3' //for logging
+    compile 'org.slf4j:slf4j-api:1.7.30' //for logging*/
+
 }
 
 test {
