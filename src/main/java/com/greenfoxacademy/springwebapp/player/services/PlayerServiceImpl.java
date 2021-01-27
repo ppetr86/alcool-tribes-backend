@@ -27,7 +27,7 @@ public class PlayerServiceImpl implements PlayerService {
     PlayerEntity playerEntity =
         new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), kingdom);
     playerRepo.save(playerEntity);
-    
+
     PlayerResponseDTO responseDTO = assignResponseDto(playerEntity);
     return responseDTO;
   }
