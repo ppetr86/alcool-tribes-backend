@@ -46,9 +46,9 @@ public class TimeServiceUnitTests {
     timeService = Mockito.spy(TimeServiceImp.class);
     Mockito.doReturn(100L).when(timeService).getTime();
 
-    long timeAfter = timeService.getTimeAfter(500);
+    long timeAfter = timeService.getTimeAfter(400);
 
-    Assert.assertNotEquals(500L, timeAfter);
+    Assert.assertNotEquals(600L, timeAfter);
     verify(timeService, times(1)).getTime();
   }
 
@@ -58,11 +58,6 @@ public class TimeServiceUnitTests {
     Long to = 1611393000L;
     int timeBetween = timeService.getTimeBetween(from, to);
     Assert.assertEquals(1000, timeBetween);
-  }
-
-  @Test
-  public void getTimeBetweenWhenSecondNumberIsLargerThenFirstNumberThanReturnsPositiveNumber() {
-    Assert.assertTrue(timeService.getTimeBetween(1611392000L, 1611399000L) > 0);
   }
 
   @Test
