@@ -1,10 +1,10 @@
-package com.greenfoxacademy.springwebapp.buildings.controllers;
+package com.greenfoxacademy.springwebapp.building.controllers;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.ErrorResponseDTO;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
-import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingsInKingdomResponseDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.ErrorResponseDTO;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
@@ -12,27 +12,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(BuildingsController.URI)
 public class BuildingsController {
 
-  public static final String URI = "/kingdom/buildings";
+  public static final String URI_POST = "/kingdom/buildings";
+  public static final String URI_GET = "/kingdom/{id}/buildings";
 
   private final BuildingService buildingService;
   private final KingdomService kingdomService;
-  private final TimeService timeService;
   private final ResourceService resourceService;
 
-  @PostMapping
+  @GetMapping(URI_GET)
+  public ResponseEntity<BuildingsInKingdomResponseDTO> getKingdomBuildings(@PathVariable Long id) {
+
+    List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(id);
+    return ResponseEntity.status(HttpStatus.OK).body(new BuildingsInKingdomResponseDTO(list));
+  }
+
+  @PostMapping(URI_POST)
   public ResponseEntity<?> buildBuilding(
           @RequestBody @Valid BuildingRequestDTO dto, BindingResult bindingResult) {
     List<ObjectError> errorList = bindingResult.getAllErrors();

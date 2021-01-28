@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.security;
 
+import com.greenfoxacademy.springwebapp.building.controllers.BuildingsController;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/register", "/login").permitAll() //permits these endpoints without auth.
+        .antMatchers("/register", "/login", "/kingdom/1/buildings","/kingdom/2/buildings", BuildingsController.URI_POST).permitAll() //permits these endpoints without auth.
         .anyRequest().authenticated() //any other endpoints requires authentication
         .and()
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

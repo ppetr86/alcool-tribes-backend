@@ -1,13 +1,15 @@
-package com.greenfoxacademy.springwebapp.buildings.services;
+package com.greenfoxacademy.springwebapp.building.services;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
-import com.greenfoxacademy.springwebapp.buildings.repositories.BuildingRepository;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +36,11 @@ public class BuildingServiceImpl implements BuildingService {
     String hp = env.getProperty(String.format("building.%s.hp", entity.getType().buildingType.toLowerCase()));
     entity.setHp(Integer.parseInt(hp));
     return entity;
+  }
+
+  @Override
+  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
+    return repo.findBuildingsByKingdomID(id);
   }
 
   @Override
