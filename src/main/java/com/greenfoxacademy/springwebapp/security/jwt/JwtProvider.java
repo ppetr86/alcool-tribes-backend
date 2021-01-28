@@ -1,18 +1,13 @@
 package com.greenfoxacademy.springwebapp.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
+import io.jsonwebtoken.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Log
 @Component
@@ -21,18 +16,18 @@ public class JwtProvider {
   @Value("${jwt.secret}")
   private String jwtSecret;
 
-  public String generateToken(String userName){
+  public String generateToken(String userName) {
     //creating Expiration date - by using LocalDate, which is preferred
     Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
-        .setSubject(userName)
-        .setExpiration(date)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .compact();
+            .setSubject(userName)
+            .setExpiration(date)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
   }
 
   public boolean validateToken(String token) {
-    try{
+    try {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
       return true;
     } catch (ExpiredJwtException e) {
@@ -49,7 +44,7 @@ public class JwtProvider {
     return false;
   }
 
-  public String getLoginFromToken(String token){
+  public String getLoginFromToken(String token) {
     Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     return claims.getSubject();
   }

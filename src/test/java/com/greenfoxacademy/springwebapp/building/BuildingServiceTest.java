@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.building;
 
-
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
