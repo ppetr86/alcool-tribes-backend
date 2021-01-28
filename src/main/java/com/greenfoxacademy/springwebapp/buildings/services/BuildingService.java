@@ -3,6 +3,8 @@ package com.greenfoxacademy.springwebapp.buildings.services;
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
 
+import java.util.List;
+
 public interface BuildingService {
 
   BuildingEntity save(BuildingEntity entity);
@@ -16,5 +18,7 @@ public interface BuildingService {
   BuildingEntity createBuilding(BuildingRequestDTO dto);
 
   BuildingEntity defineHp(BuildingEntity entity);
+
+  List<BuildingEntity> findBuildingsByKingdomId(Long id);
 
 }
