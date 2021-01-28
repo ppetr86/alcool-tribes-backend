@@ -6,7 +6,6 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerEntityService;
 import com.greenfoxacademy.springwebapp.player.services.TokenService;
-import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -117,8 +116,11 @@ public class LoginControllerUnitTest {
   @Test
   public void postLoginShould401ErrorStatusAndUsernameOrPasswordIsIncorrectMessageBecauseWrongUsername() throws Exception{
     PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("BadMark", "markmark");
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
+
+    Mockito.when(playerEntityService.findByUsernameAndPassword(playerEntity.getUsername(), playerEntity.getPassword())).thenReturn(playerEntity);
 
     ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);   //Username or password is incorrect (Bad username)
 
@@ -130,8 +132,11 @@ public class LoginControllerUnitTest {
   public void postLoginShould401ErrorStatusAndUsernameOrPasswordIsIncorrectMessageBecauseWrongPassword() throws Exception{
 
     PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "badPassword");
+    PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
+
+    Mockito.when(playerEntityService.findByUsernameAndPassword(playerEntity.getUsername(), playerEntity.getPassword())).thenReturn(playerEntity);
 
     ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);   //Username or password is incorrect (Bad password)
 
