@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 
 
 import com.greenfoxacademy.springwebapp.common.services.TimeServiceImp;
+import java.time.Instant;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,13 +22,11 @@ public class TimeServiceUnitTests {
   @Test
   public void getTimeReturnsCorrectTimeInSeconds() {
     Long minEpochTime = 1611392000L;
-    //difference is apx 10 years, so the unit test will be valid for 10 years
-    Long maxEpochTime = (Long) (1611392000L + (10*365*24*60*60));
 
     Long actualTimeInSec = timeService.getTime();
 
     Assert.assertTrue(minEpochTime < actualTimeInSec);
-    Assert.assertTrue(maxEpochTime > actualTimeInSec);
+    Assert.assertEquals((Long)(Instant.now().getEpochSecond()), actualTimeInSec);
   }
 
   @Test
