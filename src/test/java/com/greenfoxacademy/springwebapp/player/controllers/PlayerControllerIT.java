@@ -79,4 +79,20 @@ public class PlayerControllerIT {
         .andExpect(jsonPath("$.message", is("Password must be 8 characters.")));
   }
 
+  @Test
+  public void postRegisterRequestShouldReturn409AndUsernameExistsError() throws Exception {
+
+    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
+    playerRegistrationRequestDTO.setUsername("user1");
+    playerRegistrationRequestDTO.setPassword("123");
+    playerRegistrationRequestDTO.setEmail("email@email.com");
+
+    String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
+
+    mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
+        .content(requestJson))
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Username is already taken.")));
+  }
 }
