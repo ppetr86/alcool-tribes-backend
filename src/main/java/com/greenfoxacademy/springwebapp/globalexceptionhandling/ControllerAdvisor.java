@@ -9,15 +9,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(InvalidBuildingTypeException.class)
+  @ExceptionHandler({InvalidBuildingTypeException.class, TownhallLevelException.class})
   public ResponseEntity<ExceptionResponseDTO> handleExceptions(
-          InvalidBuildingTypeException ex) {
-    return new ResponseEntity<>(new ExceptionResponseDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
-  }
-
-  @ExceptionHandler(TownhallLevelException.class)
-  public ResponseEntity<ExceptionResponseDTO> handleExceptions(
-          TownhallLevelException ex) {
+          Exception ex) {
     return new ResponseEntity<>(new ExceptionResponseDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
 

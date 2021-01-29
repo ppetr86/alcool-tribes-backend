@@ -27,9 +27,9 @@ public class ControllerAdvisorUnitTest {
 
   @Test
   public void missingParameterException_ReturnsBADREQUESTandCorrectMessage() {
-    ResponseEntity<ExceptionResponseDTO> result = ca.handleExceptions(new MissingParameterException());
+    ResponseEntity<ExceptionResponseDTO> result = ca.handleExceptions(new MissingParameterException("id"));
     Assert.assertEquals(HttpStatus.valueOf(400), result.getStatusCode());
-    Assert.assertEquals("Missing parameter(s): type!", result.getBody().getMessage());
+    Assert.assertEquals("Missing parameter(s): id!", result.getBody().getMessage());
   }
 
   @Test
