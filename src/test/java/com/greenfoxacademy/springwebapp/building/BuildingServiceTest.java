@@ -45,7 +45,7 @@ public class BuildingServiceTest {
             .thenReturn("100");
     Mockito.when(env.getProperty("building.academy.hp"))
             .thenReturn("150");
-
+//TODO: ALTB-15
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 100, 200));
     fakeList.add(new BuildingEntity(2L, BuildingType.ACADEMY, 1, 100, 100, 200));
@@ -54,12 +54,12 @@ public class BuildingServiceTest {
 
     Mockito.when(buildingRepository.findBuildingsByKingdomID(1L)).thenReturn(fakeList);
   }
-
+  //TODO: ALTB-15
   @Test
   public void findBuildingsByKingdomId_correct() {
     Assert.assertEquals(4, buildingService.findBuildingsByKingdomId(1L).size());
   }
-
+  //TODO: ALTB-15
   @Test
   public void findBuildingsByKingdomId_wrong() {
     Assert.assertNotEquals(999, buildingService.findBuildingsByKingdomId(1L).size());

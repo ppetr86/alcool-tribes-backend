@@ -35,7 +35,7 @@ public class BuildingsControllerIntegrationTest {
   private KingdomService kingdomService;
   @MockBean
   private ResourceService resourceService;
-
+  //TODO: ALTB-15
   @Test
   public void getKingdomBuildings() throws Exception {
     String URI = BuildingsController.URI_GET.replace("{id}", "2");

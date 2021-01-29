@@ -21,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BuildingsController {
 
+  //TODO: ALTB-15
   public static final String URI_POST = "/kingdom/buildings";
   public static final String URI_GET = "/kingdom/{id}/buildings";
 
@@ -28,6 +29,7 @@ public class BuildingsController {
   private final KingdomService kingdomService;
   private final ResourceService resourceService;
 
+  //TODO: ALTB-15
   @GetMapping(URI_GET)
   public ResponseEntity<BuildingsInKingdomResponseDTO> getKingdomBuildings(@PathVariable Long id) {
 

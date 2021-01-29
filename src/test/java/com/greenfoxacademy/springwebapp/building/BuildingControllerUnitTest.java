@@ -29,7 +29,7 @@ public class BuildingControllerUnitTest {
     buildingController = new BuildingsController(buildingService, kingdomService, resourceService);
 
   }
-
+  //TODO: ALTB-15
   @Test
   public void getKingdomBuildings_ReturnsCorrectStatusCode() {
     ResponseEntity<?> response = buildingController.getKingdomBuildings(1L);

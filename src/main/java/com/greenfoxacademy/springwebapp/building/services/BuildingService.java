@@ -18,7 +18,7 @@ public interface BuildingService {
   BuildingEntity createBuilding(BuildingRequestDTO dto);
 
   BuildingEntity defineHp(BuildingEntity entity);
-
+  //TODO: ALTB-15
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 
 }

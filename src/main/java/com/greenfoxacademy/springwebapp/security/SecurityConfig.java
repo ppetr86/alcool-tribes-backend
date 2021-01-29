@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
+            //TODO: ALTB-15
             .antMatchers("/register", "/login", "/kingdom/1/buildings", "/kingdom/2/buildings", BuildingsController.URI_POST).permitAll() //permits these endpoints without auth.
             .anyRequest().authenticated() //any other endpoints requires authentication
             .and()

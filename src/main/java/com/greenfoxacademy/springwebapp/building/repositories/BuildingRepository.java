@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BuildingRepository extends JpaRepository<BuildingEntity, Long> {
-
+  //TODO: ALTB-15
   @Query(value = "SELECT * FROM buildings WHERE fk_kingdom_id = :kingdomID", nativeQuery = true)
   List<BuildingEntity> findBuildingsByKingdomID(Long kingdomID);
 }

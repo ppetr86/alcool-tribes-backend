@@ -38,6 +38,7 @@ public class BuildingServiceImpl implements BuildingService {
     return entity;
   }
 
+  //TODO: ALTB-15
   @Override
   public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
     return repo.findBuildingsByKingdomID(id);

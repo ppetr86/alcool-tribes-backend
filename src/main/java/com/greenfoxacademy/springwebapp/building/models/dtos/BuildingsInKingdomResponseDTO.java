@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.building.models.dtos;
 
-
+//TODO: ALTB-15
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
