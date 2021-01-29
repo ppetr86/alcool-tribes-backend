@@ -47,10 +47,10 @@ public class BuildingServiceTest {
             .thenReturn("150");
 
     List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(new BuildingEntity(1, BuildingType.TOWNHALL, 1, 100, 100, 200));
-    fakeList.add(new BuildingEntity(2, BuildingType.ACADEMY, 1, 100, 100, 200));
-    fakeList.add(new BuildingEntity(3, BuildingType.FARM, 1, 100, 100, 200));
-    fakeList.add(new BuildingEntity(4, BuildingType.MINE, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(2L, BuildingType.ACADEMY, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(3L, BuildingType.FARM, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100, 200));
 
     Mockito.when(buildingRepository.findBuildingsByKingdomID(1L)).thenReturn(fakeList);
   }

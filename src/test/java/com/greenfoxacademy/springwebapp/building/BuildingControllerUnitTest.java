@@ -31,15 +31,9 @@ public class BuildingControllerUnitTest {
   }
 
   @Test
-  public void getKingdomBuildings_ReturnsCorrectResults() {
+  public void getKingdomBuildings_ReturnsCorrectStatusCode() {
     ResponseEntity<?> response = buildingController.getKingdomBuildings(1L);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-  }
-
-  @Test
-  public void getKingdomBuildings_ReturnsCorrectResultsV2() {
-    ResponseEntity<?> response = buildingController.getKingdomBuildings(1L);
-    Assert.assertNotEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
 
   @Test
