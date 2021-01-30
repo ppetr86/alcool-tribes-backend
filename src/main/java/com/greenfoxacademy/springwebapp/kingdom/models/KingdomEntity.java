@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.player.models;
+package com.greenfoxacademy.springwebapp.kingdom.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
