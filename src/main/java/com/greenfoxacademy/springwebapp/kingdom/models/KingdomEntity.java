@@ -22,4 +22,9 @@ public class KingdomEntity {
   @OneToMany()
   @JoinColumn(name = "fk_kingdom_id")
   private List<BuildingEntity> building;
+
+  @Column(name = "kingdomname")
+  private String kingdomName;
+
+  //TODO: need to add rest of fields
 }

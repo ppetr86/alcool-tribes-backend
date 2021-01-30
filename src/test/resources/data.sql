@@ -13,3 +13,8 @@ INSERT INTO buildings (id, finished_at, hp, level, started_at, type, fk_kingdom_
 VALUES (15, 948, 100, 1, 888, 2, 1);
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, fk_kingdom_id)
 VALUES (16, 978, 150, 1, 888, 3, 2);
+
+CREATE TABLE player (id int, avatar varchar, email varchar, password varchar, points int, username varchar(20), kingdom_id int);
+
+INSERT INTO players (id, avatar, email, password, points, username, kingdom_id)
+VALUES (1,'http://avatar.loc/my.png', 'test@email.com', 'password', 1, 'user1', 1);

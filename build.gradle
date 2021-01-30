@@ -36,6 +36,9 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    compile 'org.springframework.security:spring-security-crypto:5.4.2'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java'
@@ -50,6 +53,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
 
 test {
