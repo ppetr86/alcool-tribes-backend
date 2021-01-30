@@ -32,7 +32,7 @@ public class PlayerController {
       if (playerService.findByUsername(playerRegistrationRequestDTO.getUsername()) != null) {
         return ResponseEntity.status(HttpStatus.valueOf(409)).body(new ErrorDTO("Username is already taken."));
       }
-      PlayerResponseDTO responsePlayerEntity = playerService.savePlayer(playerRegistrationRequestDTO);
+      PlayerResponseDTO responsePlayerEntity = playerService.saveNewPlayer(playerRegistrationRequestDTO);
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(responsePlayerEntity);
     } else if (playerRegistrationRequestDTO.getUsername() == null &&
         playerRegistrationRequestDTO.getPassword() == null) {
