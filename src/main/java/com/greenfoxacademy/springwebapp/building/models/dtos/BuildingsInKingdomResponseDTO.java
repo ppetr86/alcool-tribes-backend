@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 public class BuildingsInKingdomResponseDTO {
 
   private List<BuildingEntity> buildings;

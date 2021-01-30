@@ -1,7 +1,9 @@
 package com.greenfoxacademy.springwebapp.building;
 
 import com.greenfoxacademy.springwebapp.building.controllers.BuildingsController;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -13,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BuildingControllerUnitTest {
 
@@ -32,6 +38,10 @@ public class BuildingControllerUnitTest {
   //TODO: ALTB-15
   @Test
   public void getKingdomBuildings_ReturnsCorrectStatusCode() {
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1,100,1,2));
+    ResponseEntity result = ResponseEntity.status(HttpStatus.OK).body(fakeList);
+    Mockito.when(buildingController.getKingdomBuildings(1L)).thenReturn(result);
     ResponseEntity<?> response = buildingController.getKingdomBuildings(1L);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
