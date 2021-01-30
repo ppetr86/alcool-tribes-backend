@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,14 +12,11 @@ public class PlayerServiceImp implements PlayerService {
 
   private PlayerRepository playerRepository;
   private PasswordEncoder passwordEncoder;
-  private JwtProvider jwtProvider;
 
   public PlayerServiceImp(PlayerRepository playerRepository,
-                          PasswordEncoder passwordEncoder,
-                          JwtProvider jwtProvider) {
+                          PasswordEncoder passwordEncoder) {
     this.playerRepository = playerRepository;
     this.passwordEncoder = passwordEncoder;
-    this.jwtProvider = jwtProvider;
   }
 
   @Override

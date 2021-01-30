@@ -14,14 +14,12 @@ public class PlayerServiceTest {
   private PlayerService playerService;
   private PlayerRepository playerRepository;
   private PasswordEncoder passwordEncoder;
-  private JwtProvider mockJwtProvider;
 
   @Before
   public void setUp(){
     playerRepository = Mockito.mock(PlayerRepository.class);
     passwordEncoder = Mockito.mock(PasswordEncoder.class);
-    mockJwtProvider = Mockito.mock(JwtProvider.class);
-    playerService = new PlayerServiceImp(playerRepository, passwordEncoder, mockJwtProvider);
+    playerService = new PlayerServiceImp(playerRepository, passwordEncoder);
   }
 
   @Test

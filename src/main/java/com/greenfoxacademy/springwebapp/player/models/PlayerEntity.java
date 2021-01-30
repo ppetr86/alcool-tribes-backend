@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "player_table")
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class PlayerEntity {
 
