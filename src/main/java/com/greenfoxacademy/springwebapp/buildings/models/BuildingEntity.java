@@ -18,7 +18,7 @@ public class BuildingEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(updatable = false)
-  private Integer id;
+  private Long id;
   @Column(updatable = false)
   private BuildingType type;
   private int level;
