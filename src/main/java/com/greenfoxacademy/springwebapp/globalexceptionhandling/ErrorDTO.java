@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.player.models.dtos;
+package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
 import lombok.Data;
 

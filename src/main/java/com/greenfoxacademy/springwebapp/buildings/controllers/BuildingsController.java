@@ -2,9 +2,9 @@ package com.greenfoxacademy.springwebapp.buildings.controllers;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.ErrorResponseDTO;
 import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
@@ -39,19 +39,19 @@ public class BuildingsController {
 
     if (!errorList.isEmpty()) {
       String error = errorList.get(0).getDefaultMessage();
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO(error));
+      return ResponseEntity.badRequest().body(new ErrorDTO(error));
     } else if (!buildingService.isBuildingTypeInRequestOk(dto)) {
-      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponseDTO(
+      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorDTO(
               "Invalid building type"));
     } else if (!kingdomService.hasKingdomTownhall()) {
-      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponseDTO(
+      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorDTO(
               "Cannot build buildings with higher level than the Townhall"));
     }
     if (resourceService.hasResourcesForBuilding()) {
       BuildingEntity building = buildingService.createBuilding(dto);
       return ResponseEntity.ok(building);
     } else {
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO("Not enough resource"));
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDTO("Not enough resource"));
     }
   }
 }
