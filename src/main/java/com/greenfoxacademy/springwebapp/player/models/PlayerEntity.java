@@ -14,7 +14,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

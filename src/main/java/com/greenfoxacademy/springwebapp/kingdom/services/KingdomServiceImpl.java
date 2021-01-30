@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
-import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomEntityRepository;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomEntityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
