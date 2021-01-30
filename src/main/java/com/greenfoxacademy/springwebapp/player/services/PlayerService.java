@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface PlayerService {
 
-  PlayerResponseDTO savePlayer(PlayerRegistrationRequestDTO playerRegistrationRequestDTO);
+  PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO playerRegistrationRequestDTO);
 
   PlayerEntity findByUsername(String username);
 
