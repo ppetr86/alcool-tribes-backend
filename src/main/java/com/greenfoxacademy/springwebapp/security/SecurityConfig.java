@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             //TODO: ALTB-15
-            .antMatchers("/register", "/login", "/kingdom/1/buildings", "/kingdom/2/buildings", BuildingsController.URI_POST).permitAll() //permits these endpoints without auth.
+            .antMatchers("/register", "/login").permitAll() //permits these endpoints without auth.
             .anyRequest().authenticated() //any other endpoints requires authentication
             .and()
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
