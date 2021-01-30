@@ -1,33 +1,76 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 @Entity
-@Table(name = "player_table")
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@Table(name = "players")
 public class PlayerEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private long id;
 
-  @Column
-  @NotNull
+  @Column(name = "username", unique = true, length = 20)
   private String username;
-
-  @Column
-  @NotNull
+  @Column(name = "password")
+  @JsonIgnore
   private String password;
+  @Column(name = "email")
+  private String email;
+  @Column(name = "avatar")
+  private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
+  @Column(name = "points")
+  private int points = 0; //TODO: need to have proper point logic
 
-  public PlayerEntity(@NotNull String username, @NotNull String password) {
+  @Column(name = "buildings")
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<BuildingEntity> listOfBuildings;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
+  private KingdomEntity kingdomEntity;
+
+  public PlayerEntity(String username, String password) {
+      this.username = username;
+      this.password = password;
+    }
+
+  public PlayerEntity(String username, String password, String email,
+                      KingdomEntity kingdomEntity) {
     this.username = username;
     this.password = password;
+    this.email = email;
+    this.kingdomEntity = kingdomEntity;
+  }
+
+  public PlayerEntity(String username, String password, String email,
+                      List<BuildingEntity> listOfBuildings,
+                      KingdomEntity kingdomEntity) {
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.listOfBuildings = listOfBuildings;
+    this.kingdomEntity = kingdomEntity;
   }
 }

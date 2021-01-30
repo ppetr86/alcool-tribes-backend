@@ -1,6 +1,8 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,11 @@ public class PlayerServiceImp implements PlayerService {
                           PasswordEncoder passwordEncoder) {
     this.playerRepository = playerRepository;
     this.passwordEncoder = passwordEncoder;
+  }
+
+  @Override
+  public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO playerRegistrationRequestDTO) {
+    return null;
   }
 
   @Override
