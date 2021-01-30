@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenServiceImp implements TokenService{
 
-  private PlayerEntityService playerEntityService;
+  private PlayerService playerService;
   private JwtProvider jwtProvider;
 
-  public TokenServiceImp(PlayerEntityService playerEntityService, JwtProvider jwtProvider) {
-    this.playerEntityService = playerEntityService;
+  public TokenServiceImp(PlayerService playerService, JwtProvider jwtProvider) {
+    this.playerService = playerService;
     this.jwtProvider = jwtProvider;
   }
 
   @Override
   public PlayerTokenDTO generateTokenToLoggedInPlayer(PlayerRequestDTO playerRequestDTO) {
-    PlayerEntity loggedPlayer = playerEntityService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword());
+    PlayerEntity loggedPlayer = playerService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword());
     String token = jwtProvider.generateToken(loggedPlayer.getUsername());
     return new PlayerTokenDTO(token);
   }

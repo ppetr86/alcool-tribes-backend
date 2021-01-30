@@ -43,8 +43,13 @@ public class LoginControllerIT {
 
     String json = new ObjectMapper().writeValueAsString(request);
 
-    Mockito.when(jwtProviderMock.generateToken(request.getUsername())).thenReturn("12345");
-    Mockito.when(passwordEncoder.matches(request.getPassword(), "markmark")).thenReturn(true);
+    Mockito
+      .when(jwtProviderMock.generateToken(request.getUsername()))
+      .thenReturn("12345");
+
+    Mockito
+      .when(passwordEncoder.matches(request.getPassword(), "markmark"))
+      .thenReturn(true);
 
     mockMvc.perform(post("/login")
       .contentType(MediaType.APPLICATION_JSON)

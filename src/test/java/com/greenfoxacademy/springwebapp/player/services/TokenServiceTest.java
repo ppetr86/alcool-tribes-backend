@@ -12,30 +12,34 @@ import org.mockito.Mockito;
 public class TokenServiceTest {
 
   private TokenService tokenService;
-  private PlayerEntityService playerEntityService;
+  private PlayerService playerService;
   private JwtProvider mockJwtProvider;
 
   @Before
   public void setUp() {
-    playerEntityService = Mockito.mock(PlayerEntityServiceImp.class);
+    playerService = Mockito.mock(PlayerServiceImp.class);
     mockJwtProvider = Mockito.mock(JwtProvider.class);
-    tokenService = new TokenServiceImp(playerEntityService, mockJwtProvider);
+    tokenService = new TokenServiceImp(playerService, mockJwtProvider);
   }
 
   @Test
   public void generateTokenToLoggedInPlayerShouldGenerateTokenToLoggedPlayer() {
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
-
     PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "markmark");
+    String username = playerRequestDTO.getUsername();
+    String password = playerRequestDTO.getPassword();
 
-    Mockito.when(playerEntityService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword())).thenReturn(playerEntity);
-    Mockito.when(mockJwtProvider.generateToken(playerEntity.getUsername())).thenReturn("token");
+    Mockito
+      .when(playerService.findByUsernameAndPassword(username, password))
+      .thenReturn(playerEntity);
+
+    Mockito
+      .when(mockJwtProvider.generateToken(playerEntity.getUsername()))
+      .thenReturn("token");
 
     PlayerTokenDTO fakePlayerTokenDto = tokenService.generateTokenToLoggedInPlayer(playerRequestDTO);
 
     Assert.assertEquals("ok", fakePlayerTokenDto.getStatus());
     Assert.assertEquals("token", fakePlayerTokenDto.getToken());
-
   }
-
 }

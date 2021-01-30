@@ -3,7 +3,7 @@ package com.greenfoxacademy.springwebapp.player.controllers;
 import com.greenfoxacademy.springwebapp.player.models.dtos.ErrorDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
-import com.greenfoxacademy.springwebapp.player.services.PlayerEntityService;
+import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.player.services.TokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,22 +18,22 @@ import java.util.List;
 @RestController
 public class LoginController {
 
-  private PlayerEntityService playerEntityService;
+  private PlayerService playerService;
   private TokenService tokenService;
 
-  public LoginController(PlayerEntityService playerEntityService, TokenService tokenService) {
-    this.playerEntityService = playerEntityService;
+  public LoginController(PlayerService playerService, TokenService tokenService) {
+    this.playerService = playerService;
     this.tokenService = tokenService;
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> postLogin(@RequestBody @Valid PlayerRequestDTO playerRequestDTO,
-                                     BindingResult bindingResult) {
+  public ResponseEntity<?> login(@RequestBody @Valid PlayerRequestDTO playerRequestDTO,
+                                 BindingResult bindingResult) {
 
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
     if (errorList.isEmpty()) {
-      if (playerEntityService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword()) != null) {
+      if (playerService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword()) != null) {
         PlayerTokenDTO playerTokenDTO = tokenService.generateTokenToLoggedInPlayer(playerRequestDTO);
         return ResponseEntity.ok().body(playerTokenDTO);
       } else {

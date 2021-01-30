@@ -4,7 +4,7 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.ErrorDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
-import com.greenfoxacademy.springwebapp.player.services.PlayerEntityService;
+import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.player.services.TokenService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,30 +22,37 @@ public class LoginControllerUnitTest {
 
   private BindingResult bindingResult;
   private LoginController loginController;
-  private PlayerEntityService playerEntityService;
+  private PlayerService playerService;
   private TokenService tokenService;
 
   @Before
   public void setUp() {
     bindingResult = Mockito.mock(BindingResult.class);
     tokenService = Mockito.mock(TokenService.class);
-    playerEntityService = Mockito.mock(PlayerEntityService.class);
-    loginController = new LoginController(playerEntityService, tokenService);
+    playerService = Mockito.mock(PlayerService.class);
+    loginController = new LoginController(playerService, tokenService);
   }
 
   @Test
   public void postLoginShouldReturn200AndOkStatus() throws Exception {
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
     PlayerTokenDTO fakePlayerDto = new PlayerTokenDTO("12345");
-
     PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "markmark");
+
+    String username = playerRequestDTO.getUsername();
+    String password = playerRequestDTO.getPassword();
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
-    Mockito.when(tokenService.generateTokenToLoggedInPlayer(playerRequestDTO)).thenReturn(fakePlayerDto);
-    Mockito.when(playerEntityService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword())).thenReturn(playerEntity);
+    Mockito
+      .when(tokenService.generateTokenToLoggedInPlayer(playerRequestDTO))
+      .thenReturn(fakePlayerDto);
 
-    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);     //status ok
+    Mockito
+      .when(playerService.findByUsernameAndPassword(username, password))
+      .thenReturn(playerEntity);
+
+    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assert.assertEquals("ok", ((PlayerTokenDTO) response.getBody()).getStatus());
@@ -59,9 +66,11 @@ public class LoginControllerUnitTest {
     List<ObjectError> errorList = bindingResult.getAllErrors();
     errorList.add(new ObjectError("userDTO", "Username is required."));
 
-    Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
+    Mockito
+      .when(bindingResult.getAllErrors())
+      .thenReturn(errorList);
 
-    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);  //Username is required
+    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     Assert.assertEquals("Username is required.", ((ErrorDTO) response.getBody()).getMessage());
@@ -74,9 +83,11 @@ public class LoginControllerUnitTest {
     List<ObjectError> errorList = bindingResult.getAllErrors();
     errorList.add(new ObjectError("userDTO", "Password is required."));
 
-    Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
+    Mockito
+      .when(bindingResult.getAllErrors())
+      .thenReturn(errorList);
 
-    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);  //Password is required
+    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     Assert.assertEquals("Password is required.", ((ErrorDTO) response.getBody()).getMessage());
@@ -89,9 +100,11 @@ public class LoginControllerUnitTest {
     List<ObjectError> errorList = bindingResult.getAllErrors();
     errorList.add(new ObjectError("userDTO", "Password has to contain at least 8 letters."));
 
-    Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
+    Mockito
+      .when(bindingResult.getAllErrors())
+      .thenReturn(errorList);
 
-    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult); //Password need at least 8 letters
+    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
     Assert.assertEquals("error", ((ErrorDTO) response.getBody()).getStatus());
     Assert.assertEquals("Password has to contain at least 8 letters.", ((ErrorDTO) response.getBody()).getMessage());
   }
@@ -103,9 +116,11 @@ public class LoginControllerUnitTest {
     List<ObjectError> errorList = bindingResult.getAllErrors();
     errorList.add(new ObjectError("userDTO", "Username and password are required."));
 
-    Mockito.when(bindingResult.getAllErrors()).thenReturn(errorList);
+    Mockito
+      .when(bindingResult.getAllErrors())
+      .thenReturn(errorList);
 
-    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);  //Username and password are required
+    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     Assert.assertEquals("Username and password are required.", ((ErrorDTO) response.getBody()).getMessage());
@@ -115,12 +130,16 @@ public class LoginControllerUnitTest {
   public void postLoginShould401ErrorStatusAndUsernameOrPasswordIsIncorrectMessageBecauseWrongUsername() throws Exception {
     PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("BadMark", "markmark");
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
+    String username = playerEntity.getUsername();
+    String password = playerEntity.getPassword();
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
-    Mockito.when(playerEntityService.findByUsernameAndPassword(playerEntity.getUsername(), playerEntity.getPassword())).thenReturn(playerEntity);
+    Mockito
+      .when(playerService.findByUsernameAndPassword(username, password))
+      .thenReturn(playerEntity);
 
-    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);   //Username or password is incorrect (Bad username)
+    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Username or password is incorrect.", ((ErrorDTO) response.getBody()).getMessage());
@@ -131,12 +150,16 @@ public class LoginControllerUnitTest {
 
     PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "badPassword");
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
+    String username = playerEntity.getUsername();
+    String password = playerEntity.getPassword();
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
-    Mockito.when(playerEntityService.findByUsernameAndPassword(playerEntity.getUsername(), playerEntity.getPassword())).thenReturn(playerEntity);
+    Mockito
+      .when(playerService.findByUsernameAndPassword(username, password))
+      .thenReturn(playerEntity);
 
-    ResponseEntity<?> response = loginController.postLogin(playerRequestDTO, bindingResult);   //Username or password is incorrect (Bad password)
+    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Username or password is incorrect.", ((ErrorDTO) response.getBody()).getMessage());

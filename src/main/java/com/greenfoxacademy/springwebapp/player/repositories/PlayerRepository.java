@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PlayerEntityRepository extends CrudRepository<PlayerEntity, Long> {
+public interface PlayerRepository extends CrudRepository<PlayerEntity, Long> {
   PlayerEntity findByUsername(String username);
 }
