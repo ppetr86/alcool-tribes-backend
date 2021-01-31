@@ -1,21 +1,22 @@
 package com.greenfoxacademy.springwebapp.location.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "locations")
+@Data
 @Entity
 @NoArgsConstructor
-@Data
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Table(name = "locations")
 public class LocationEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  @NonNull
   private int x;
+  @NonNull
   private int y;
 }

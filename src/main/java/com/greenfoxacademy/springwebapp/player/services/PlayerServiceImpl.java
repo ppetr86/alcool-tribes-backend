@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;

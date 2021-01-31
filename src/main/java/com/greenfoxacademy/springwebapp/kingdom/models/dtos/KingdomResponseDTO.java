@@ -1,7 +1,10 @@
 package com.greenfoxacademy.springwebapp.kingdom.models.dtos;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +21,18 @@ public class KingdomResponseDTO {
   private long userId;
   private Set<BuildingEntity> buildings;
   private Set<ResourceEntity> resources;
+  private Set<TroopEntity> troops;
+  private LocationEntity location;
+
+
+  public KingdomResponseDTO(KingdomEntity e){
+    this.id = e.getId();
+    this.name = e.getKingdomName();
+    this.userId = e.getUserID().getId();
+
+    this.buildings = e.getBuildings();
+    this.resources = e.getResources();
+    this.troops = e.getTroops();
+    this.location = e.getLocation();
+  }
 }

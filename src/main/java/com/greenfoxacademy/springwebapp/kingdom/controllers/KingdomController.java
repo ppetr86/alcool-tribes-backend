@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ExceptionResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,22 +11,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+//TODO: ALTB-14
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(KingdomController.KINGDOMGET)
+@RequestMapping(KingdomController.KINGDOM_GET)
 public class KingdomController {
 
-  public static final String KINGDOMGET = "/kingdom/{id}";
+  public static final String KINGDOM_GET = "/kingdom/{id}";
 
   private final KingdomService kingdomService;
 
   @GetMapping
-  public ResponseEntity getKingdomByID(@PathVariable Long id){
+  public ResponseEntity<Object> getKingdomByID(@PathVariable Long id){
     KingdomEntity k = kingdomService.findByID(id);
 
     if (k!=null){
-      return;
+      return ResponseEntity.status(HttpStatus.OK).body(new KingdomResponseDTO(k));
     }
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDTO("Id not found"));
