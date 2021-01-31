@@ -20,7 +20,7 @@ public class KingdomEntity {
   private Long id;
 
   @OneToMany()
-  @JoinColumn(name = "fk_kingdom_id")
+  @JoinColumn(name = "fk_buildings_kingdom")
   private List<BuildingEntity> building;
 
   @Column(name = "kingdomname")
