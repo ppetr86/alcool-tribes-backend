@@ -28,7 +28,7 @@ public class KingdomResponseDTO {
   public KingdomResponseDTO(KingdomEntity e){
     this.id = e.getId();
     this.name = e.getKingdomName();
-    this.userId = e.getUserID().getId();
+    this.userId = e.getUserId().getId();
 
     this.buildings = e.getBuildings();
     this.resources = e.getResources();

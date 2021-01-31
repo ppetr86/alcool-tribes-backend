@@ -35,7 +35,7 @@ public class PlayerControllerIT {
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(status().isCreated())
-        .andExpect(content().json("{id: 1," +
+        .andExpect(content().json("{id: 3," +
             "username: testUser," +
             "email: email@email.com" +
             "kingdomId: 1," +

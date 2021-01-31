@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
-@Table
+//TODO: ALTB-14-Petr renamed the table
+@Table(name = "kingdoms")
 @Entity
 @NoArgsConstructor
 @Data
@@ -24,27 +25,27 @@ public class KingdomEntity {
   private Long id;
 
   @OneToMany()
-  @JoinColumn(name = "fk_kingdom_id")
+  @JoinColumn(name = "fk_buildings_kingdom")
   private Set<BuildingEntity> buildings;
 
   @OneToMany
-  @JoinColumn(name = "fk_kingdom_id")
+  @JoinColumn(name = "fk_resources_kingdom")
   private Set<ResourceEntity> resources;
 
   @OneToMany
-  @JoinColumn(name = "fk_kingdom_id")
+  @JoinColumn(name = "fk_troops_kingdom")
   private Set<TroopEntity> troops;
 
   @Column(name = "kingdomname")
   private String kingdomName;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne
+  @JoinColumn(name = "fk_location_kingdom")
   private LocationEntity location;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
-  private PlayerEntity userID;
+  @OneToOne
+  @JoinColumn(name = "fk_user_kingdom")
+  private PlayerEntity userId;
 
 
   //TODO: need to add rest of fields

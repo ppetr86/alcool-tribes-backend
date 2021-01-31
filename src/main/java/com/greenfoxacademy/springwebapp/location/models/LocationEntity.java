@@ -8,15 +8,13 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Table(name = "locations")
 public class LocationEntity {
 
+  // TODO: ALTB-14 - no generated ID as Kingdom and Player share the same ID
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @NonNull
   private int x;
-  @NonNull
   private int y;
 }

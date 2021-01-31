@@ -27,6 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "players")
 public class PlayerEntity {
+  // TODO: ALTB-14 - no generated ID as Kingdom and Player share the same ID
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -43,12 +44,10 @@ public class PlayerEntity {
   @Column(name = "points")
   private int points = 0; //TODO: need to have proper point logic
 
-  @Column(name = "buildings")
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<BuildingEntity> listOfBuildings;
+  //TODO:ALTB-14-Petr - removed buildings from Player,they are enough in Kingdom
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
+  @JoinColumn(name = "kingdomId", referencedColumnName = "id")
   private KingdomEntity kingdomEntity;
 
   public PlayerEntity(String username, String password, String email,
@@ -59,13 +58,13 @@ public class PlayerEntity {
     this.kingdomEntity = kingdomEntity;
   }
 
+  //TODO:ALTB-14-Petr - updated this constructor based on removing the Buildings
   public PlayerEntity(String username, String password, String email,
                       List<BuildingEntity> listOfBuildings,
                       KingdomEntity kingdomEntity) {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.listOfBuildings = listOfBuildings;
     this.kingdomEntity = kingdomEntity;
   }
 }
