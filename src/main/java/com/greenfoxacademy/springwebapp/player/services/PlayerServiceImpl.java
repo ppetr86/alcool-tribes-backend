@@ -10,9 +10,8 @@ import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -30,9 +29,9 @@ public class PlayerServiceImpl implements PlayerService {
   public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO dto) {
     KingdomEntity kingdom = assignKingdomName(dto);
 
-    List<BuildingEntity> listOfBuildings = loadBuildingsWithLevel1();
+    Set<BuildingEntity> setOfDefaultBuildings = loadBuildingsWithLevel1();
     PlayerEntity playerEntity =
-        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), listOfBuildings,
+        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), setOfDefaultBuildings,
             kingdom);
     playerRepo.save(playerEntity);
 
@@ -62,16 +61,19 @@ public class PlayerServiceImpl implements PlayerService {
     return responseDTO;
   }
 
-  private List<BuildingEntity> loadBuildingsWithLevel1() {
+  private Set<BuildingEntity> loadBuildingsWithLevel1() {
     BuildingEntity townhall = new BuildingEntity(BuildingType.TOWNHALL, 1);
     BuildingEntity mine = new BuildingEntity(BuildingType.MINE, 1);
     BuildingEntity academy = new BuildingEntity(BuildingType.ACADEMY, 1);
     BuildingEntity farm = new BuildingEntity(BuildingType.FARM, 1);
 
-    List<BuildingEntity> listOfBuildings = new ArrayList<>();
-    listOfBuildings.addAll(Arrays.asList(townhall, mine, academy, farm));
+    Set<BuildingEntity> setOfBuildings = new HashSet<>();
+    setOfBuildings.add(townhall);
+    setOfBuildings.add(mine);
+    setOfBuildings.add(academy);
+    setOfBuildings.add(farm);
 
-    return listOfBuildings;
+    return setOfBuildings;
   }
 
 
