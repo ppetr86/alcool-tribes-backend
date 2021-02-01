@@ -27,7 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "players")
 public class PlayerEntity {
-  // TODO: ALTB-14 - no generated ID as Kingdom and Player share the same ID
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -46,8 +46,9 @@ public class PlayerEntity {
 
   //TODO:ALTB-14-Petr - removed buildings from Player,they are enough in Kingdom
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "kingdomId", referencedColumnName = "id")
+
+  //TODO: ALTB-14-Petr - I redefined the mapping. Please reconsider
+  @OneToOne(mappedBy = "userId")
   private KingdomEntity kingdomEntity;
 
   public PlayerEntity(String username, String password, String email,

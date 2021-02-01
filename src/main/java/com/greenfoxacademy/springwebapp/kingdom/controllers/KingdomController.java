@@ -24,12 +24,10 @@ public class KingdomController {
 
   @GetMapping
   public ResponseEntity<Object> getKingdomByID(@PathVariable Long id){
-    KingdomEntity k = kingdomService.findByID(id);
-
-    if (k!=null){
-      return ResponseEntity.status(HttpStatus.OK).body(new KingdomResponseDTO(k));
+    KingdomEntity kingdom = kingdomService.findByID(id);
+    if (kingdom==null){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDTO("Id not found"));
     }
-
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDTO("Id not found"));
+    return ResponseEntity.status(HttpStatus.OK).body(kingdomService.kingdomResponseDTO(kingdom));
   }
 }

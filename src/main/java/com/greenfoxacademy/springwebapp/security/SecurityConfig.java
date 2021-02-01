@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/register", "/login").permitAll() //permits these endpoints without auth.
+        .antMatchers("/register", "/login", "/kingdom/1", "/kingdom/2").permitAll() //permits these endpoints without auth.
         .anyRequest().authenticated() //any other endpoints requires authentication
         .and()
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

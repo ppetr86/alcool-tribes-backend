@@ -43,10 +43,8 @@ public class KingdomEntity {
   @JoinColumn(name = "fk_location_kingdom")
   private LocationEntity location;
 
+  //TODO: ALTB-14-Petr - I redefined the mapping. Please reconsider
   @OneToOne
-  @JoinColumn(name = "fk_user_kingdom")
+  @JoinColumn(name = "fk_player_kingdom")
   private PlayerEntity userId;
-
-
-  //TODO: need to add rest of fields
 }
