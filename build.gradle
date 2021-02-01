@@ -1,3 +1,14 @@
+buildscript {                                                                       //Flyway
+    repositories {                                                                  //Flyway
+        maven {                                                                     //Flyway
+            url "https://plugins.gradle.org/m2/"                                    //Flyway
+        }
+    }
+    dependencies {                                                                  //Flyway
+        classpath "gradle.plugin.org.flywaydb:gradle-plugin-publishing:7.5.2"       //Flyway
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -51,8 +62,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    compile "org.flywaydb:flyway-core:7.5.1"                        //Flyway
-    flywayMigration "com.mygroupid:my-lib:1.2.3"                    //Flyway
+    //  compile "org.flywaydb:flyway-core:7.5.1"                    //Flyway Not need
+    //   flywayMigration "com.mygroupid:my-lib:1.2.3"               //Flyway Not need
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit:4.12'
