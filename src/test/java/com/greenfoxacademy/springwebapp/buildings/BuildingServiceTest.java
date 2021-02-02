@@ -145,6 +145,8 @@ public class BuildingServiceTest {
             buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
   }
 
+
+  //Mark's tests
   @Test
   public void countMethodShouldReturnWithCorrectValue(){
     List<BuildingEntity> buildings = Arrays.asList(
@@ -185,11 +187,11 @@ public class BuildingServiceTest {
 
   @Test
   public void findByIdShouldReturnWithUnCorrectBuildingType(){
-    BuildingEntity buildingEntity = new BuildingEntity(BuildingType.FARM);
+    BuildingEntity buildingEntity = new BuildingEntity(BuildingType.MINE);
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
     String buildingType = buildingService.findBuildingById(1L).getType().toString();
 
-    Assert.assertNotEquals("MINE", buildingType);
+    Assert.assertNotEquals("FARM", buildingType);
   }
 }
