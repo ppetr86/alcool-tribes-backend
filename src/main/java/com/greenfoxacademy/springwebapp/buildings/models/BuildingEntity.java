@@ -18,10 +18,10 @@ public class BuildingEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(updatable = false)
-  private Integer id;
+  private Long id;
   @Column(updatable = false)
   private BuildingType type;
-  private int level = 1;
+  private int level;
   private int hp;
   @Column(updatable = false)
   private long startedAt;
@@ -41,6 +41,11 @@ public class BuildingEntity {
     this.type = type;
     this.hp = hp;
     this.startedAt = startedAt;
+  }
+
+  public BuildingEntity(BuildingType type, int level) {
+    this.type = type;
+    this.level = level;
   }
 }
 
