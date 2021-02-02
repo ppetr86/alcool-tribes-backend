@@ -32,7 +32,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     List<BuildingEntity> listOfBuildings = loadBuildingsWithLevel1();
     PlayerEntity playerEntity =
-        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), listOfBuildings,
+        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(),
             kingdom);
     playerRepo.save(playerEntity);
 

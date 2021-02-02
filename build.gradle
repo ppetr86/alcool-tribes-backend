@@ -1,26 +1,8 @@
-buildscript {                                                                       //Flyway
-    repositories {                                                                  //Flyway
-        maven {                                                                     //Flyway
-            url "https://plugins.gradle.org/m2/"                                    //Flyway
-        }
-    }
-    dependencies {                                                                  //Flyway
-        classpath "gradle.plugin.org.flywaydb:gradle-plugin-publishing:7.5.2"       //Flyway
-    }
-}
 
 plugins {
     id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
-    id "org.flywaydb.flyway" version "7.5.1"                        //Flyway
-}
-
-flyway {                                                            //Flyway
-    url = 'jdbc:mysql://localhost:3306/travian_project_phase'       //Flyway
-    user = 'username'                                               //Flyway
-    password = 'password'                                           //Flyway
-    driver = 'com.microsoft.sqlserver.jdbc.SQLServerDriver'         //Flyway
 }
 
 apply plugin: 'checkstyle'
@@ -65,8 +47,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    //  compile "org.flywaydb:flyway-core:7.5.1"                    //Flyway Not need
-    //   flywayMigration "com.mygroupid:my-lib:1.2.3"               //Flyway Not need
+    implementation 'org.flywaydb:flyway-core'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit:4.12'

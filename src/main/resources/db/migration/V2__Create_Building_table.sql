@@ -1,8 +1,8 @@
-create table Building (
-    ID int not null auto_increment,
-    TYPE varchar(50) not null,
-    LEVEL int not null ,
-    HP int not null ,
-    STARTEDAT long not null ,
-    FINISHEDAT long not null
+create table buildings (
+    id bigint not null auto_increment PRIMARY KEY ,
+    type int not null,
+    level int not null ,
+    hp int not null ,
+    started_at bigint not null ,
+    finished_at bigint not null
 );
