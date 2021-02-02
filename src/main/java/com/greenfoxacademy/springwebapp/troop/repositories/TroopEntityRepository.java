@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
-//TODO: ALTB-14
+//TODO: ALTB-14, ALTB-22
 @Repository
 public interface TroopEntityRepository extends JpaRepository<TroopEntity, Long> {
 

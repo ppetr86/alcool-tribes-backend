@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "troops")
-@Entity
-@NoArgsConstructor
 @Data
+@Entity
+@Table(name = "troops")
+@NoArgsConstructor
 @AllArgsConstructor
 public class TroopEntity {
 

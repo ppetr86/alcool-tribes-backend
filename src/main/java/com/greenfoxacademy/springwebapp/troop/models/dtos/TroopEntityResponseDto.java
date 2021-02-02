@@ -15,5 +15,4 @@ public class TroopEntityResponseDto {
   private int defence;
   private long startedAt;
   private long finishedAt;
-
 }

@@ -17,9 +17,9 @@ import java.util.Set;
 
 public class TroopServiceTest {
 
+  private final ModelMapper modelMapper = new ModelMapper();
   private TroopService troopService;
   private TroopEntityRepository troopEntityRepository;
-  private final ModelMapper modelMapper = new ModelMapper();
 
   @Before
   public void init() {

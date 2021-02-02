@@ -22,7 +22,7 @@ public class TroopServiceImpl implements TroopService {
   //TODO: ALTB-14 and ALTB-22
   @Override
   public Set<TroopEntity> findTroopsByKingdomID(Long id) {
-    //TODO: needs to implement the Kingdom Entity and
+    //TODO: needs to implement the Kingdom Entity
     return repo.findAllByKingdomID(id);
   }
 

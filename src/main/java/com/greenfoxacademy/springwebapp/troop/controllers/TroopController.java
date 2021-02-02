@@ -16,6 +16,8 @@ public class TroopController {
 
   @GetMapping(TroopController.URI_GET_KINGDOM_TROOPS)
   public ResponseEntity<TroopResponseDto> getTroopsOfKingdom(Long id) {
+
+    //TODO:ALTB-22: needs to be finished to return work with relevant kingdom ID
     return ResponseEntity.ok(troopService.findTroopEntitiesConvertToResponseDTO(1L));
   }
 }

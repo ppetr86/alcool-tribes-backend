@@ -17,6 +17,4 @@ public interface TroopService {
   TroopEntityResponseDto convertEntityToEntityResponseDTO(TroopEntity entity);
 
   TroopResponseDto findTroopEntitiesConvertToResponseDTO(Long id);
-
-
 }
