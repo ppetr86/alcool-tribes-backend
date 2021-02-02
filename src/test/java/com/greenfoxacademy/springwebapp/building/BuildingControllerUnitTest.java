@@ -1,8 +1,8 @@
-package com.greenfoxacademy.springwebapp.buildings;
+package com.greenfoxacademy.springwebapp.building;
 
-import com.greenfoxacademy.springwebapp.buildings.controllers.BuildingsController;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
+import com.greenfoxacademy.springwebapp.building.controllers.BuildingsController;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;

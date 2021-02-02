@@ -1,8 +1,8 @@
-package com.greenfoxacademy.springwebapp.buildings;
+package com.greenfoxacademy.springwebapp.building;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfoxacademy.springwebapp.buildings.controllers.BuildingsController;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.controllers.BuildingsController;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

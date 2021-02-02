@@ -1,9 +1,9 @@
-package com.greenfoxacademy.springwebapp.buildings.services;
+package com.greenfoxacademy.springwebapp.building.services;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
-import com.greenfoxacademy.springwebapp.buildings.repositories.BuildingRepository;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
