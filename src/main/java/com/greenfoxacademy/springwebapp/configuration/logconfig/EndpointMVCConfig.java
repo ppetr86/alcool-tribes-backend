@@ -12,7 +12,7 @@ public class EndpointMVCConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(endpointsInterceptor)
-        .addPathPatterns("/**/");
+    registry.addInterceptor(endpointsInterceptor);
+        //.addPathPatterns("/**/");
   }
 }

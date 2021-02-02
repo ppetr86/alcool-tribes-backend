@@ -1,12 +1,8 @@
 package com.greenfoxacademy.springwebapp.security.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -31,22 +27,9 @@ public class JwtProvider {
         .compact();
   }
 
-  public boolean validateToken(String token) {
-    try{
-      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-      return true;
-    } catch (ExpiredJwtException e) {
-      log.error("invalid token: token expired");
-    } catch (UnsupportedJwtException e) {
-      log.error("invalid token: format of received token is not supported");
-    } catch (MalformedJwtException e) {
-      log.error("invalid token: JWT couldn't reconstruct token content");
-    } catch (SignatureException e) {
-      log.error("invalid token: JWT failed to calculate digital signature of token");
-    } catch (IllegalArgumentException e) {
-      log.error("invalid token: token has passed invalid argument to the method");
-    }
-    return false;
+  public boolean validateToken(String token) throws Exception {
+    Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+    return true;
   }
 
   public String getLoginFromToken(String token){

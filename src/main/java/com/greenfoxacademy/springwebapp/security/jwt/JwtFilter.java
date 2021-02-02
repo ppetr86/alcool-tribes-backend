@@ -2,50 +2,62 @@ package com.greenfoxacademy.springwebapp.security.jwt;
 
 import static org.springframework.util.StringUtils.hasText;
 
+
+import com.greenfoxacademy.springwebapp.configuration.logconfig.EndpointsInterceptor;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetailsService;
+import com.greenfoxacademy.springwebapp.security.SecurityConfig;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @Component
-public class JwtFilter extends GenericFilterBean {
+@AllArgsConstructor
+public class JwtFilter extends /*GenericFilterBean*/ OncePerRequestFilter {
 
   public static final String AUTHORIZATION = "Authorization";
 
   private JwtProvider jwtProvider;
   private CustomUserDetailsService customUserDetailsService;
-
-  public JwtFilter(JwtProvider jwtProvider,
-                   CustomUserDetailsService customUserDetailsService) {
-    this.jwtProvider = jwtProvider;
-    this.customUserDetailsService = customUserDetailsService;
-  }
+  private EndpointsInterceptor endpointsInterceptor;
 
   @Override
-  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-      throws IOException, ServletException {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                  FilterChain filterChain) throws ServletException, IOException {
+    String token = getTokenFromServletRequest(request);
+    Boolean tokenIsValid = false;
 
-    String token = getTokenFromServletRequest((HttpServletRequest) servletRequest);
-    if (token != null && jwtProvider.validateToken(token)) {
+    try{
+      tokenIsValid = jwtProvider.validateToken(token);
+    } catch (Exception e) {
+      SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
+      log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
+          request,
+          response,
+          SecurityConfig.AUTHENTICATIONFAILURESTATUSCODE,
+          "Token validation error"
+      ));
+    }
+
+    if (token != null && tokenIsValid /*jwtProvider.validateToken(token)*/) {
       String userLogin = jwtProvider.getLoginFromToken(token);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
           null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
-      log.info("Following player was authenticated: {}", customUserDetails.getUsername());
+      log.info("Authenticated player: {}", customUserDetails.getUsername());
     }
-    filterChain.doFilter(servletRequest, servletResponse);
 
+    filterChain.doFilter(request, response);
   }
 
   private String getTokenFromServletRequest(HttpServletRequest servletRequest){
