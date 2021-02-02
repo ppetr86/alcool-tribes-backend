@@ -37,6 +37,16 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
+  public BuildingEntity findBuildingById(Long id) {
+    return repo.findById(id).orElse(null);
+  }
+
+  @Override
+  public long countBuildings() {
+    return repo.count();
+  }
+
+  @Override
   public boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto) {
     try {
       BuildingType.valueOf(dto.getType().toUpperCase());

@@ -84,4 +84,9 @@ public class BuildingControllerUnitTest {
     ResponseEntity<?> response = buildingController.buildBuilding(request,bindingResult);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
+
+  @Test
+  public void returnCorrectBuildingById(){
+
+  }
 }

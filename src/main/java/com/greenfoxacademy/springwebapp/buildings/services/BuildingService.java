@@ -17,4 +17,8 @@ public interface BuildingService {
 
   BuildingEntity defineHp(BuildingEntity entity);
 
+  BuildingEntity findBuildingById(Long id);
+
+  long countBuildings();
+
 }

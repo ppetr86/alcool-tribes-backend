@@ -12,17 +12,22 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 public class BuildingServiceTest {
 
 
   private Environment env;
   private BuildingService buildingService;
   private TimeService timeService;
+  private BuildingRepository buildingRepository;
 
   @Before
   public void init() {
 
-    BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
+    buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
     Environment env = Mockito.mock(Environment.class);
 
@@ -138,5 +143,53 @@ public class BuildingServiceTest {
   public void isTypeOkRequest_Academy_ShouldTrue_VariousCase() {
     Assert.assertEquals(BuildingType.ACADEMY,
             buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
+  }
+
+  @Test
+  public void countMethodShouldReturnWithCorrectValue(){
+    List<BuildingEntity> buildings = Arrays.asList(
+      new BuildingEntity(),
+      new BuildingEntity(),
+      new BuildingEntity()
+    );
+
+    Mockito.when(buildingService.countBuildings()).thenReturn((long)buildings.size());
+
+    Assert.assertEquals(3, buildingService.countBuildings());
+  }
+
+  @Test
+  public void countMethodShouldReturnWithUnCorrectValue(){
+    List<BuildingEntity> buildings = Arrays.asList(
+      new BuildingEntity(),
+      new BuildingEntity(),
+      new BuildingEntity(),
+      new BuildingEntity(),
+      new BuildingEntity()
+    );
+
+    Mockito.when(buildingService.countBuildings()).thenReturn((long)buildings.size());
+
+    Assert.assertNotEquals(3, buildingService.countBuildings());
+  }
+
+  @Test
+  public void findByIdShouldReturnWithCorrectBuildingType(){
+    BuildingEntity buildingEntity = new BuildingEntity(BuildingType.FARM);
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+    String buildingType = buildingService.findBuildingById(1L).getType().toString();
+
+    Assert.assertEquals("FARM", buildingType);
+  }
+
+  @Test
+  public void findByIdShouldReturnWithUnCorrectBuildingType(){
+    BuildingEntity buildingEntity = new BuildingEntity(BuildingType.FARM);
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+    String buildingType = buildingService.findBuildingById(1L).getType().toString();
+
+    Assert.assertNotEquals("MINE", buildingType);
   }
 }
