@@ -32,7 +32,7 @@ public class PlayerControllerTest {
         new PlayerRegistrationRequestDTO("user1", "user1234", "email@email.com");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-    Mockito.when(registrationService.savePlayer(playerRegistrationRequestDTO)).thenReturn(playerResponseDTO);
+    Mockito.when(registrationService.saveNewPlayer(playerRegistrationRequestDTO)).thenReturn(playerResponseDTO);
 
     ResponseEntity<?> response = playerController.registerUser(playerRegistrationRequestDTO, bindingResult);
 
@@ -53,7 +53,7 @@ public class PlayerControllerTest {
         new PlayerRegistrationRequestDTO("user1", "user1234", "email");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-    Mockito.when(registrationService.savePlayer(playerRegistrationRequestDTO)).thenReturn(playerResponseDTO);
+    Mockito.when(registrationService.saveNewPlayer(playerRegistrationRequestDTO)).thenReturn(playerResponseDTO);
 
     ResponseEntity<PlayerResponseDTO> response =
         (ResponseEntity<PlayerResponseDTO>) playerController.registerUser(playerRegistrationRequestDTO, bindingResult);

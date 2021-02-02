@@ -56,7 +56,8 @@ dependencies {
 
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
 
-    compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'}
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.9'
+    }
 
 test {
     useJUnitPlatform()

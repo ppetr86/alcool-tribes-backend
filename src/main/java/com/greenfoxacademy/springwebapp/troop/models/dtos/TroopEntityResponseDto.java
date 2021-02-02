@@ -1,11 +1,12 @@
 package com.greenfoxacademy.springwebapp.troop.models.dtos;
 
-import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class TroopEntityResponseDto {
 
   private int level;

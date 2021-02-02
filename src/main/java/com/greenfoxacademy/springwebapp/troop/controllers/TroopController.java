@@ -15,7 +15,7 @@ public class TroopController {
   private TroopService troopService;
 
   @GetMapping(TroopController.URI_GET_KINGDOM_TROOPS)
-  public ResponseEntity<TroopResponseDto> getTroopOfKingdom(Long id){
-    return ResponseEntity.ok(troopService.findTroopEntitiesConvertToResponseDTO(id));
+  public ResponseEntity<TroopResponseDto> getTroopsOfKingdom(Long id) {
+    return ResponseEntity.ok(troopService.findTroopEntitiesConvertToResponseDTO(1L));
   }
 }

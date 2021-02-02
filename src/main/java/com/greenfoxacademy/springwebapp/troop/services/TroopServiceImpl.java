@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class TroopServiceImpl implements TroopService {
 
   private final TroopEntityRepository repo;
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
 
   //TODO: ALTB-14 and ALTB-22
   @Override
@@ -29,7 +29,7 @@ public class TroopServiceImpl implements TroopService {
   public Set<TroopEntityResponseDto> convertEntitySetToDTO(Set<TroopEntity> entities) {
     return entities
             .stream()
-            .map(this::convertToEntityDTO)
+            .map(this::convertEntityToEntityResponseDTO)
             .collect(Collectors.toSet());
   }
 
@@ -39,7 +39,7 @@ public class TroopServiceImpl implements TroopService {
   }
 
   @Override
-  public TroopEntityResponseDto convertToEntityDTO(TroopEntity entity) {
+  public TroopEntityResponseDto convertEntityToEntityResponseDTO(TroopEntity entity) {
     modelMapper.getConfiguration()
             .setMatchingStrategy(MatchingStrategies.LOOSE);
     TroopEntityResponseDto result = modelMapper
