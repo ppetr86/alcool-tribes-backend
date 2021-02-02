@@ -22,6 +22,7 @@ public class TroopServiceImpl implements TroopService {
   //TODO: ALTB-14 and ALTB-22
   @Override
   public Set<TroopEntity> findTroopsByKingdomID(Long id) {
+    //TODO: needs to implement the Kingdom Entity and
     return repo.findAllByKingdomID(id);
   }
 
@@ -50,7 +51,7 @@ public class TroopServiceImpl implements TroopService {
   @Override
   public TroopResponseDto findTroopEntitiesConvertToResponseDTO(Long id) {
     Set<TroopEntity> troopEntities = findTroopsByKingdomID(id);
-    Set<TroopEntityResponseDto> entityResponseDtos = convertEntitySetToDTO(troopEntities);
-    return convertDTOSetToDTO(entityResponseDtos);
+    Set<TroopEntityResponseDto> entityResponseDTOs = convertEntitySetToDTO(troopEntities);
+    return convertDTOSetToDTO(entityResponseDTOs);
   }
 }

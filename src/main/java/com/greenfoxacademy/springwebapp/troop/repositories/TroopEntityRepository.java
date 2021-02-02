@@ -11,6 +11,6 @@ import java.util.Set;
 @Repository
 public interface TroopEntityRepository extends JpaRepository<TroopEntity, Long> {
 
-    @Query(value="SELECT * FROM troops WHERE fk_kingdom_id = :id", nativeQuery = true)
-    Set<TroopEntity> findAllByKingdomID(Long id);
+  @Query(value = "SELECT * FROM troops WHERE fk_kingdom_id = :id", nativeQuery = true)
+  Set<TroopEntity> findAllByKingdomID(Long id);
 }

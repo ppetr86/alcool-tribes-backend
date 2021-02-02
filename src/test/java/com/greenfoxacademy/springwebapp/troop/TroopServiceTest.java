@@ -19,27 +19,47 @@ public class TroopServiceTest {
 
   private TroopService troopService;
   private TroopEntityRepository troopEntityRepository;
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper = new ModelMapper();
 
   @Before
-  public void init(){
+  public void init() {
     troopEntityRepository = Mockito.mock(TroopEntityRepository.class);
-    troopService = Mockito.mock(TroopService.class);
     troopService = new TroopServiceImpl(troopEntityRepository, modelMapper);
   }
 
   @Test
-  public void findTroopsByKingdomID_ReturnsCorrectSet(){
+  public void findTroopsByKingdomID_ReturnsCorrectSet() {
     Set<TroopEntity> entities = new HashSet<>();
-    entities.add(new TroopEntity(1L,1, 100,50,20,999,1111));
-    entities.add(new TroopEntity(1L,1, 100,50,20,1111,1222));
+    entities.add(new TroopEntity(1L, 1, 100, 50, 20, 999, 1111));
+    entities.add(new TroopEntity(1L, 1, 100, 50, 20, 1111, 1222));
     Mockito.when(troopEntityRepository.findAllByKingdomID(1L)).thenReturn(entities);
     Assert.assertEquals(2, entities.size());
   }
 
   @Test
-  public void convertEntityToEntityResponseDTO_inputDataMatchesOutput(){
-    TroopEntity input = new TroopEntity(1L,1, 100,50,20,999,1111);
+  public void convertDTOSetToDTO_ReturnsCorrectResult() {
+    TroopEntityResponseDto first = new TroopEntityResponseDto(1, 101, 101, 101, 101, 101);
+    TroopEntityResponseDto second = new TroopEntityResponseDto(2, 102, 102, 102, 102, 102);
+    TroopEntityResponseDto third = new TroopEntityResponseDto(3, 103, 103, 103, 103, 103);
+
+    Set<TroopEntityResponseDto> input = new HashSet<>();
+    input.add(first);
+    input.add(second);
+    input.add(third);
+
+    TroopResponseDto output = new TroopResponseDto();
+    output.setTroops(input);
+
+    TroopResponseDto result = troopService.convertDTOSetToDTO(input);
+
+    Assert.assertEquals(output.getTroops().size(), result.getTroops().size());
+    Assert.assertEquals(output.getTroops().contains(first), result.getTroops().contains(first));
+  }
+
+  @Test
+  public void convertEntityToEntityResponseDTO_inputDataMatchesOutput() {
+    TroopEntity input = new TroopEntity(1L, 1, 100, 50, 20, 999, 1111);
+
     TroopEntityResponseDto output = new TroopEntityResponseDto();
     output.setLevel(input.getLevel());
     output.setHp(input.getHp());
@@ -58,9 +78,37 @@ public class TroopServiceTest {
     Assert.assertEquals(output.getFinishedAt(), result.getFinishedAt());
   }
 
+  @Test
+  public void convertEntitySetToDTO_inputDataMatchesOutput() {
+    Set<TroopEntity> input = new HashSet<>();
+    TroopEntity one = new TroopEntity(1L, 1, 101, 101, 101, 101, 101);
+    TroopEntity two = new TroopEntity(2L, 2, 102, 102, 102, 102, 102);
+    TroopEntity three = new TroopEntity(3L, 3, 103, 103, 103, 103, 103);
+    input.add(one);
+    input.add(two);
+    input.add(three);
 
+    TroopEntityResponseDto first = new TroopEntityResponseDto(1, 101, 101, 101, 101, 101);
+    TroopEntityResponseDto second = new TroopEntityResponseDto(2, 102, 102, 102, 102, 102);
+    TroopEntityResponseDto third = new TroopEntityResponseDto(3, 103, 103, 103, 103, 103);
 
+    Set<TroopEntityResponseDto> output = new HashSet<>();
+    output.add(first);
+    output.add(second);
+    output.add(third);
 
+    TroopEntityResponseDto oneConverted = troopService.convertEntityToEntityResponseDTO(one);
+
+    Set<TroopEntityResponseDto> result = troopService.convertEntitySetToDTO(input);
+
+    Assert.assertEquals(output.size(), result.size());
+    Assert.assertEquals(output.size(), result.size());
+    Assert.assertFalse(result.isEmpty());
+    Assert.assertTrue(result.contains(oneConverted));
+    Assert.assertEquals(1, result.stream().filter(each -> each.getAttack() > 102).count());
+    Assert.assertEquals(0, result.stream().filter(each -> each.getAttack() > 103).count());
+
+  }
 
 
 }

@@ -1,23 +1,13 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -26,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "players")
 public class PlayerEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -42,12 +33,11 @@ public class PlayerEntity {
   @Column(name = "points")
   private int points = 0; //TODO: need to have proper point logic
 
-  @Column(name = "buildings")
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<BuildingEntity> listOfBuildings;
+  //TODO:ALTB-14,22-Petr - removed buildings from Player,they are enough in Kingdom
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
+
+  //TODO: ALTB-14,22-Petr - I redefined the mapping. Please reconsider
+  @OneToOne(mappedBy = "userId")
   private KingdomEntity kingdomEntity;
 
   public PlayerEntity(String username, String password, String email,
@@ -58,13 +48,14 @@ public class PlayerEntity {
     this.kingdomEntity = kingdomEntity;
   }
 
+  //TODO:ALTB-14,22-Petr - updated this constructor based on removing the Buildings
   public PlayerEntity(String username, String password, String email,
                       List<BuildingEntity> listOfBuildings,
                       KingdomEntity kingdomEntity) {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.listOfBuildings = listOfBuildings;
     this.kingdomEntity = kingdomEntity;
   }
 }
+

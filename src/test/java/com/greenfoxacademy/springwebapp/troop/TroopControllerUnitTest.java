@@ -19,23 +19,23 @@ public class TroopControllerUnitTest {
   private TroopController troopController;
   private TroopService troopService;
 
- @Before
- public void setUp(){
-   troopService = Mockito.mock(TroopService.class);
-   troopController = new TroopController(troopService);
- }
+  @Before
+  public void setUp() {
+    troopService = Mockito.mock(TroopService.class);
+    troopController = new TroopController(troopService);
+  }
 
- @Test
-  public void getKingdomTroops_returnsCorrectStatus_AndBodySize(){
+  @Test
+  public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
 
-   Set<TroopEntityResponseDto> dtos = new HashSet<>();
-   dtos.add(new TroopEntityResponseDto(1, 100,50,20,999,1111));
-   dtos.add(new TroopEntityResponseDto(1, 100,50,20,1111,1222));
+    Set<TroopEntityResponseDto> dtos = new HashSet<>();
+    dtos.add(new TroopEntityResponseDto(1, 100, 50, 20, 999, 1111));
+    dtos.add(new TroopEntityResponseDto(1, 100, 50, 20, 1111, 1222));
 
-   Mockito.when(troopService.findTroopEntitiesConvertToResponseDTO(1L))
-           .thenReturn(new TroopResponseDto(dtos));
-   ResponseEntity<TroopResponseDto> response = troopController.getTroopsOfKingdom(1L);
-   Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-   Assert.assertEquals(2, ((TroopResponseDto)response.getBody()).getTroops().size());
- }
+    Mockito.when(troopService.findTroopEntitiesConvertToResponseDTO(1L))
+            .thenReturn(new TroopResponseDto(dtos));
+    ResponseEntity<TroopResponseDto> response = troopController.getTroopsOfKingdom(1L);
+    Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    Assert.assertEquals(2, response.getBody().getTroops().size());
+  }
 }

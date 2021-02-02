@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TroopController {
   public static final String URI_GET_KINGDOM_TROOPS = "/kingdom/troops";
 
-  private TroopService troopService;
+  private final TroopService troopService;
 
   @GetMapping(TroopController.URI_GET_KINGDOM_TROOPS)
   public ResponseEntity<TroopResponseDto> getTroopsOfKingdom(Long id) {

@@ -24,9 +24,6 @@ public class BuildingsControllerIntegrationTest {
   @Autowired
   private MockMvc mockMvc;
 
-  private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-          MediaType.APPLICATION_JSON.getSubtype());
-
   @Test
   public void buildBuilding_BuildingCreated() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
@@ -37,7 +34,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.type", is("farm")));
   }
 
@@ -51,7 +48,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
@@ -65,7 +62,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
@@ -79,7 +76,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isNotAcceptable())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Invalid building type")));
   }
 
@@ -93,7 +90,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
@@ -107,7 +104,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
@@ -121,7 +118,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
@@ -135,7 +132,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
@@ -149,7 +146,7 @@ public class BuildingsControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isNotAcceptable())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
 }
