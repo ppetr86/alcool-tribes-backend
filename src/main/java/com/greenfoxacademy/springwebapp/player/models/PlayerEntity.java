@@ -32,8 +32,8 @@ public class PlayerEntity {
   private int points = 0; //TODO: need to have proper point logic
 
   //TODO:ALTB-14-Petr - removed buildings from Player,they are enough in Kingdom
-  //TODO: ALTB-14-Petr - I redefined the mapping. Please reconsider
-  @OneToOne(mappedBy = "userId")
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
   private KingdomEntity kingdomEntity;
 
   public PlayerEntity(String username, String password) {
