@@ -19,6 +19,7 @@ public class BuildingEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(updatable = false)
   private Long id;
+  @Enumerated(EnumType.STRING)
   @Column(updatable = false)
   private BuildingType type;
   private int level;
