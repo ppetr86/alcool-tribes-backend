@@ -81,6 +81,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public PlayerEntity findByUsernameAndPassword(String username, String password) {
+    return null;
+  }
+
+
   public PlayerEntity loginUser(PlayerEntity playerInput) {
     return null;
   }

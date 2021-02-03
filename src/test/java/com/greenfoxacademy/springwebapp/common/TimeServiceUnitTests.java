@@ -4,7 +4,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
-import com.greenfoxacademy.springwebapp.common.services.TimeServiceImp;
+import com.greenfoxacademy.springwebapp.common.services.TimeServiceImpl;
 import java.time.Instant;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,11 +12,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class TimeServiceUnitTests {
-  TimeServiceImp timeService;
+  TimeServiceImpl timeService;
 
   @Before
   public void setup() {
-    timeService = new TimeServiceImp();
+    timeService = new TimeServiceImpl();
   }
 
   @Test
@@ -32,7 +32,7 @@ public class TimeServiceUnitTests {
   @Test
   public void getTimeAfterReturnsCorrectFutureTimeInSeconds() {
     timeService = Mockito.spy(
-        TimeServiceImp.class);
+        TimeServiceImpl.class);
     Mockito.doReturn(100L).when(timeService)
         .getTime();
 
@@ -43,7 +43,7 @@ public class TimeServiceUnitTests {
 
   @Test
   public void getTimeAfterReturnsWrongFutureTimeInSeconds() {
-    timeService = Mockito.spy(TimeServiceImp.class);
+    timeService = Mockito.spy(TimeServiceImpl.class);
     Mockito.doReturn(100L).when(timeService).getTime();
 
     long timeAfter = timeService.getTimeAfter(400);
