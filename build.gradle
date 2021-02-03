@@ -26,7 +26,8 @@ jacocoTestReport {
     reports {
         xml.enabled false
         html.enabled true
-        html.destination file("${buildDir}/jacoco")    }
+        html.destination file("${buildDir}/jacoco")
+    }
 }
 
 repositories {
@@ -51,8 +52,9 @@ dependencies {
     compile 'junit:junit:4.12'
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-test'
-    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+    implementation 'org.springframework.security:spring-security-test'      //This is need for PasswordEncoder class
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'        //This is need for JwtProvider class
 
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
