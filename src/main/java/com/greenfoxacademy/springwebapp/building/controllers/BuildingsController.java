@@ -25,7 +25,7 @@ public class BuildingsController {
   public static final String URI_GET = "/kingdom/{id}/buildings";
 
   private final BuildingService buildingService;
-  private final KingdomService kingdmService;
+  private final KingdomService kingdomService;
   private final ResourceService resourceService;
 
   
