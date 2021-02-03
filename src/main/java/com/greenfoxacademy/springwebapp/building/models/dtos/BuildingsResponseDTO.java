@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-public class BuildingsInKingdomResponseDTO {
+public class BuildingsResponseDTO {
 
   private List<BuildingEntity> buildings;
 
-  public BuildingsInKingdomResponseDTO(List<BuildingEntity> buildings) {
+  public BuildingsResponseDTO(List<BuildingEntity> buildings) {
     this.buildings = buildings;
   }
 }

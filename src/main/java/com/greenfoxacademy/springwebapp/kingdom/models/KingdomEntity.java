@@ -19,7 +19,7 @@ public class KingdomEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany()
+  @OneToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "fk_buildings_kingdom")
   private List<BuildingEntity> building;
 

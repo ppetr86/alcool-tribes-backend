@@ -2,7 +2,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingsInKingdomResponseDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingsResponseDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.ErrorResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -21,7 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 public class BuildingsController {
 
-  //TODO: ALTB-15
   public static final String URI_POST = "/kingdom/buildings";
   public static final String URI_GET = "/kingdom/{id}/buildings";
 
@@ -29,12 +28,12 @@ public class BuildingsController {
   private final KingdomService kingdomService;
   private final ResourceService resourceService;
 
-  //TODO: ALTB-15
+  
   @GetMapping(URI_GET)
-  public ResponseEntity<BuildingsInKingdomResponseDTO> getKingdomBuildings(@PathVariable Long id) {
+  public ResponseEntity<BuildingsResponseDTO> getKingdomBuildings(@PathVariable Long id) {
 
     List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(id);
-    return ResponseEntity.status(HttpStatus.OK).body(new BuildingsInKingdomResponseDTO(list));
+    return ResponseEntity.status(HttpStatus.OK).body(new BuildingsResponseDTO(list));
   }
 
   @PostMapping(URI_POST)
