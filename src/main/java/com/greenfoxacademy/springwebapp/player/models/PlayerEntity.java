@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
+import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -14,9 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import javax.persistence.*;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "players")
 public class PlayerEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -49,6 +50,11 @@ public class PlayerEntity {
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
   private KingdomEntity kingdomEntity;
+
+  public PlayerEntity(String username, String password) {
+      this.username = username;
+      this.password = password;
+    }
 
   public PlayerEntity(String username, String password, String email,
                       KingdomEntity kingdomEntity) {
