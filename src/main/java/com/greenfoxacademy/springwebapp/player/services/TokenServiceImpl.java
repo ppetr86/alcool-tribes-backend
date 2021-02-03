@@ -7,12 +7,12 @@ import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TokenServiceImp implements TokenService{
+public class TokenServiceImpl implements TokenService{
 
   private PlayerService playerService;
   private JwtProvider jwtProvider;
 
-  public TokenServiceImp(PlayerService playerService, JwtProvider jwtProvider) {
+  public TokenServiceImpl(PlayerService playerService, JwtProvider jwtProvider) {
     this.playerService = playerService;
     this.jwtProvider = jwtProvider;
   }
