@@ -31,7 +31,7 @@ public class KingdomEntity {
   private String kingdomName;
 
   @OneToMany(cascade = CascadeType.PERSIST)
-  @JoinColumn(name = "FK_kingdom")
+  @JoinColumn(name = "fk_buildings_kingdom")
   private Set<BuildingEntity> setOfBuildings;
 
   //TODO: need to add rest of fields
