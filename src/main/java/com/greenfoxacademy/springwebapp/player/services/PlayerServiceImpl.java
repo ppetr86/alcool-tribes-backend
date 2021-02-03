@@ -6,7 +6,7 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationReq
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepo;
+import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +15,11 @@ import java.util.Set;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
-  private PlayerRepo playerRepo;
+  private PlayerRepository playerRepo;
   private PasswordEncoder passwordEncoder;
 
   public PlayerServiceImpl(
-      PlayerRepo playerRepo,
+      PlayerRepository playerRepo,
       PasswordEncoder passwordEncoder) {
     this.playerRepo = playerRepo;
     this.passwordEncoder = passwordEncoder;
@@ -83,7 +83,14 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
-  public PlayerEntity loginUser(PlayerEntity playerInput) {
+  public PlayerEntity findByUsernameAndPassword(String username, String password) {
+    PlayerEntity playerEntity = findByUsername(username);
+
+    if (playerEntity != null) {
+      if (passwordEncoder.matches(password, playerEntity.getPassword())) {
+        return playerEntity;
+      }
+    }
     return null;
   }
 }
