@@ -21,6 +21,7 @@ public class KingdomController {
   public static final String KINGDOM_GET = "/kingdom/{id}";
 
   private final KingdomService kingdomService;
+  //TODO:remove me
 
   @GetMapping
   public ResponseEntity<Object> getKingdomByID(@PathVariable Long id){

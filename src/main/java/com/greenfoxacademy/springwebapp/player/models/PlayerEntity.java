@@ -1,25 +1,12 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -45,23 +32,17 @@ public class PlayerEntity {
   private int points = 0; //TODO: need to have proper point logic
 
   //TODO:ALTB-14-Petr - removed buildings from Player,they are enough in Kingdom
-
-
   //TODO: ALTB-14-Petr - I redefined the mapping. Please reconsider
   @OneToOne(mappedBy = "userId")
   private KingdomEntity kingdomEntity;
 
-  public PlayerEntity(String username, String password, String email,
-                      KingdomEntity kingdomEntity) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.kingdomEntity = kingdomEntity;
-  }
+  public PlayerEntity(String username, String password) {
+      this.username = username;
+      this.password = password;
+    }
 
-  //TODO:ALTB-14-Petr - updated this constructor based on removing the Buildings
+  //TODO:ALTB-14-Petr - updated constructor based on removing the Buildings
   public PlayerEntity(String username, String password, String email,
-                      List<BuildingEntity> listOfBuildings,
                       KingdomEntity kingdomEntity) {
     this.username = username;
     this.password = password;
