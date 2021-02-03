@@ -25,26 +25,26 @@ public class KingdomEntity {
   private Long id;
 
   @OneToMany()
-  @JoinColumn(name = "fk_buildings_kingdom")
+  @JoinColumn(name = "fk_kingdom_id")
   private Set<BuildingEntity> buildings;
 
   @OneToMany
-  @JoinColumn(name = "fk_resources_kingdom")
+  @JoinColumn(name = "fk_kingdom_id")
   private Set<ResourceEntity> resources;
 
   @OneToMany
-  @JoinColumn(name = "fk_troops_kingdom")
+  @JoinColumn(name = "fk_kingdom_id")
   private Set<TroopEntity> troops;
 
   @Column(name = "kingdomname")
   private String kingdomName;
 
   @OneToOne
-  @JoinColumn(name = "fk_location_kingdom")
+  @JoinColumn(name = "fk_kingdom_id")
   private LocationEntity location;
 
   //TODO: ALTB-14-Petr - I redefined the mapping. Please reconsider
   @OneToOne
-  @JoinColumn(name = "fk_player_kingdom")
+  @JoinColumn(name = "fk_kingdom_id")
   private PlayerEntity userId;
 }
