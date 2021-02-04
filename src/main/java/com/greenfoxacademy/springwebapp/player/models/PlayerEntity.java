@@ -1,14 +1,12 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
@@ -40,17 +38,12 @@ public class PlayerEntity {
   @OneToOne(mappedBy = "userId")
   private KingdomEntity kingdomEntity;
 
-  public PlayerEntity(String username, String password, String email,
-                      KingdomEntity kingdomEntity) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.kingdomEntity = kingdomEntity;
-  }
+  public PlayerEntity(String username, String password) {
+      this.username = username;
+      this.password = password;
+    }
 
-  //TODO:ALTB-14,22-Petr - updated this constructor based on removing the Buildings
   public PlayerEntity(String username, String password, String email,
-                      List<BuildingEntity> listOfBuildings,
                       KingdomEntity kingdomEntity) {
     this.username = username;
     this.password = password;

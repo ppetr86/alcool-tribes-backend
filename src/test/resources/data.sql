@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 INSERT INTO players (id, avatar, email, password, points, username)
 VALUES (1,'http://avatar.loc/my.png', 'test@email.com', 'password', 1, 'user1');
 INSERT INTO players (id, avatar, email, password, points, username)
@@ -39,3 +40,4 @@ INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, fk_
 VALUES (5, 10, 20, 200, 100, 1, 100, 2);
 INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, fk_kingdom_id)
 VALUES (6, 20, 10, 200, 100, 1, 100, 2);
+
