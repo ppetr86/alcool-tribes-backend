@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,10 +42,6 @@ public class PlayerEntity {
   @Column(name = "points")
   private int points = 0; //TODO: need to have proper point logic
 
-  @Column(name = "buildings")
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<BuildingEntity> listOfBuildings;
-
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
   private KingdomEntity kingdomEntity;
@@ -55,16 +51,6 @@ public class PlayerEntity {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.kingdomEntity = kingdomEntity;
-  }
-
-  public PlayerEntity(String username, String password, String email,
-                      List<BuildingEntity> listOfBuildings,
-                      KingdomEntity kingdomEntity) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.listOfBuildings = listOfBuildings;
     this.kingdomEntity = kingdomEntity;
   }
 }

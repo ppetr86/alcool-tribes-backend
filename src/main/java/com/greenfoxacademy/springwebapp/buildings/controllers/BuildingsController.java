@@ -59,6 +59,7 @@ public class BuildingsController {
 
     if (actualBuilding == null) {
       if (id <= buildingService.countBuildings() && 0 < id) {
+
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorDTO("Forbidden action"));
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("Id not found"));

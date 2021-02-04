@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.player.models;
+package com.greenfoxacademy.springwebapp.kingdom.models;
 
 import javax.persistence.*;
 
@@ -18,6 +18,7 @@ public class KingdomEntity {
 
   @Column(name = "kingdomname")
   private String kingdomName;
+
 
   //TODO: need to add rest of fields
 }
