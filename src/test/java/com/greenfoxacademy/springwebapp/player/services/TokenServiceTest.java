@@ -34,7 +34,7 @@ public class TokenServiceTest {
       .thenReturn(playerEntity);
 
     Mockito
-      .when(mockJwtProvider.generateToken(playerEntity.getUsername()))
+      .when(mockJwtProvider.generateToken(playerEntity))
       .thenReturn("token");
 
     PlayerTokenDTO fakePlayerTokenDto = tokenService.generateTokenToLoggedInPlayer(playerRequestDTO);

@@ -1,8 +1,7 @@
-package com.greenfoxacademy.springwebapp.buildings.controllers;
+package com.greenfoxacademy.springwebapp.building.controllers;
 
-import com.greenfoxacademy.springwebapp.buildings.controllers.BuildingsController;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -28,8 +27,8 @@ public class BuildingControllerUnitTest {
 
   @Before
   public void setUp() {
-    Principal mockPrincipal = Mockito.mock(Principal.class);
-    Mockito.when(mockPrincipal.getName()).thenReturn("");
+    Principal principal = Mockito.mock(Principal.class);
+    Mockito.when(principal.getName()).thenReturn("");
     buildingService = Mockito.mock(BuildingService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);

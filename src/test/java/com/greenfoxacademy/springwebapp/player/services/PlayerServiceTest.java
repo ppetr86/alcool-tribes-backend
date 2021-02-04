@@ -1,9 +1,8 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
-import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

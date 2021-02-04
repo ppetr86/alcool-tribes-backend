@@ -39,22 +39,12 @@ public class PlayerControllerIT {
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(status().isCreated())
-<<<<<<< HEAD
-        .andExpect(content().json("{id: 3," +
-            "username: testUser," +
-            "email: email@email.com" +
-            "kingdomId: 1," +
-            "avatar: http://avatar.loc/my.png" +
-            "points: 0" +
-            "}"));
-=======
         .andExpect(jsonPath("$.id", is(greaterThan(0))))
         .andExpect(jsonPath("$.username", is("testUser")))
         .andExpect(jsonPath("$.email", is("email@email.com")))
         .andExpect(jsonPath("$.kingdomId", is(1)))
         .andExpect(jsonPath("$.avatar", is("http://avatar.loc/my.png")))
         .andExpect(jsonPath("$.points", is(0)));
->>>>>>> development
   }
 
   @Test

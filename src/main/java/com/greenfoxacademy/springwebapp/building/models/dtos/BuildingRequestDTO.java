@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.buildings.models.dtos;
+package com.greenfoxacademy.springwebapp.building.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

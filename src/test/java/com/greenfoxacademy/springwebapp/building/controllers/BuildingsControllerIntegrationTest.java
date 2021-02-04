@@ -1,18 +1,15 @@
-package com.greenfoxacademy.springwebapp.buildings.controllers;
+package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
-import com.greenfoxacademy.springwebapp.buildings.controllers.BuildingsController;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;

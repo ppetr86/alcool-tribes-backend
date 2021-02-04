@@ -1,10 +1,9 @@
 package com.greenfoxacademy.springwebapp.kingdom;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomEntityRepository;
+import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomServiceImpl;
-import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,11 +11,11 @@ import org.mockito.Mockito;
 
 public class KingdomServiceTest {
   private KingdomService kingdomService;
-  private KingdomEntityRepository kingdomEntityRepository;
+  private KingdomRepository kingdomEntityRepository;
 
   @Before
   public void init() {
-    kingdomEntityRepository = Mockito.mock(KingdomEntityRepository.class);
+    kingdomEntityRepository = Mockito.mock(KingdomRepository.class);
     kingdomService = new KingdomServiceImpl(kingdomEntityRepository);
   }
 
@@ -37,19 +36,4 @@ public class KingdomServiceTest {
     kingdom.setId(2L);
 
   }
-
-
 }
-
-
-
-
-  /*PlayerEntity player = new PlayerEntity();
-    player.setId(1L);
-
-            KingdomEntity kingdom = new KingdomEntity();
-            kingdom.setKingdomName("TEST_KINGDOM");
-            kingdom.setId(1L);
-            kingdom.setUserId(player);
-
-            KingdomResponseDTO dto = new KingdomResponseDTO(kingdom);*/

@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
@@ -16,9 +16,9 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
-  private PlayerRepository playerRepo;
-  private PasswordEncoder passwordEncoder;
-  private BuildingService buildingService;
+  private final PlayerRepository playerRepo;
+  private final PasswordEncoder passwordEncoder;
+  private final BuildingService buildingService;
 
   @Override
   public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO dto) {

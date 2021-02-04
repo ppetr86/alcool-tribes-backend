@@ -5,6 +5,7 @@ Content-Type: application/json
   "username": "furkesz",
   "password": "password"
 }
+
 ###
 
 POST http://localhost:8080/login
@@ -14,4 +15,5 @@ Content-Type: application/json
   "username": "furkesz",
   "password": "password"
 }
+
 ###

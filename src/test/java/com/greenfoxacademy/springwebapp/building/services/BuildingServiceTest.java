@@ -1,10 +1,8 @@
-package com.greenfoxacademy.springwebapp.buildings.services;
+package com.greenfoxacademy.springwebapp.building.services;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
-import com.greenfoxacademy.springwebapp.buildings.repositories.BuildingRepository;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingServiceImpl;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import org.junit.Assert;
 import org.junit.Before;

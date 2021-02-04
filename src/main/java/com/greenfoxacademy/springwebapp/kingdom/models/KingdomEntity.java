@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.models;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;

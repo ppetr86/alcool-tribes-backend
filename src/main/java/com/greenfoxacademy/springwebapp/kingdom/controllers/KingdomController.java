@@ -1,8 +1,7 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ExceptionResponseDTO;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,10 +23,10 @@ public class KingdomController {
   //TODO:remove me
 
   @GetMapping
-  public ResponseEntity<Object> getKingdomByID(@PathVariable Long id){
+  public ResponseEntity<Object> getKingdomByID(@PathVariable Long id) {
     KingdomEntity kingdom = kingdomService.findByID(id);
-    if (kingdom==null){
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDTO("Id not found"));
+    if (kingdom == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("Id not found"));
     }
     return ResponseEntity.status(HttpStatus.OK).body(kingdomService.kingdomResponseDTO(kingdom));
   }

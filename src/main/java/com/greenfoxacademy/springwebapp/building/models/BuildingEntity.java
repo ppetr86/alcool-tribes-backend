@@ -1,11 +1,10 @@
-package com.greenfoxacademy.springwebapp.buildings.models;
+package com.greenfoxacademy.springwebapp.building.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

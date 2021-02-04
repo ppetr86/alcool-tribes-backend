@@ -12,14 +12,13 @@ import java.util.Set;
 public class TroopServiceImpl implements TroopService {
 
   private final TroopEntityRepository repo;
+
   //TODO: ALTB-14
   @Override
   public Set<TroopEntity> findTroopsByKingdomID(Long id) {
 
     return repo.findAllByKingdomID(id);
   }
-
-
 
 
 }

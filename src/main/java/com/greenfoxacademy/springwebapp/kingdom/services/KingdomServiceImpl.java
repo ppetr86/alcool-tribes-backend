@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
-  private KingdomRepository kingdomRepository;
+  private final KingdomRepository kingdomRepository;
 
   @Override
   public boolean hasKingdomTownhall() {

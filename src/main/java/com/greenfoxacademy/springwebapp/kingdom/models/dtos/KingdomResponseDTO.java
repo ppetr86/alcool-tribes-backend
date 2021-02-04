@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.models.dtos;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
@@ -25,10 +25,10 @@ public class KingdomResponseDTO {
   private LocationEntity location;
 
 
-  public KingdomResponseDTO(KingdomEntity e){
+  public KingdomResponseDTO(KingdomEntity e) {
     this.id = e.getId();
     this.name = e.getKingdomName();
-    this.userId = e.getUserId().getId();
+    this.userId = e.getPlayer().getId();
 
     this.buildings = e.getBuildings();
     this.resources = e.getResources();
