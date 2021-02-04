@@ -10,11 +10,10 @@ public class TestNoSecurityConfig implements WebSecurityConfigurer<WebSecurity> 
   @Override
   public void init(WebSecurity builder) throws Exception {
     builder.ignoring().requestMatchers(
-            new AntPathRequestMatcher("/**"));
+        new AntPathRequestMatcher("/**"));
   }
 
   @Override
   public void configure(WebSecurity builder) throws Exception {
   }
-
 }

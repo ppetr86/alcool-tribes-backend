@@ -1,12 +1,13 @@
 package com.greenfoxacademy.springwebapp.kingdom.models;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Table
 @Entity
@@ -19,12 +20,13 @@ public class KingdomEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinColumn(name = "fk_buildings_kingdom")
-  private List<BuildingEntity> building;
+  @OneToOne
+  private PlayerEntity player;
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
+  private Set<BuildingEntity> buildings;
 
   @Column(name = "kingdomname")
   private String kingdomName;
 
-  //TODO: need to add rest of fields
 }

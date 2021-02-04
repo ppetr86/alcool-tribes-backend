@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.security;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 public class CustomUserDetails implements UserDetails {
   private String login;
   private String password;
+  private KingdomEntity kingdom;
   private Collection<? extends GrantedAuthority> grantedAuthorities;
 
   public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity playerEntity) {
@@ -23,6 +25,14 @@ public class CustomUserDetails implements UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return new HashSet<GrantedAuthority>(); //returns empty authorities since we dont use roles
+  }
+
+  public KingdomEntity getKingdom() {
+    return kingdom;
+  }
+
+  public void setKingdom(KingdomEntity kingdom) {
+    this.kingdom = kingdom;
   }
 
   @Override

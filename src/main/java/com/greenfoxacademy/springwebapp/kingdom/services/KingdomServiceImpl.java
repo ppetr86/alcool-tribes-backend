@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
-  private final KingdomRepository repo;
+  private KingdomRepository kingdomRepository;
 
   @Override
   public boolean hasKingdomTownhall() {
@@ -20,5 +20,10 @@ public class KingdomServiceImpl implements KingdomService {
   @Override
   public KingdomEntity findByPlayerId(Long id) {
     return null;
+  }
+
+  @Override
+  public KingdomEntity saveKingdom(KingdomEntity kingdom) {
+    return kingdomRepository.save(kingdom);
   }
 }

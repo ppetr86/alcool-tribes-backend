@@ -1,6 +1,5 @@
-package com.greenfoxacademy.springwebapp.building;
+package com.greenfoxacademy.springwebapp.building.controllers;
 
-import com.greenfoxacademy.springwebapp.building.controllers.BuildingsController;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
@@ -16,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
+import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BuildingControllerUnitTest {
@@ -27,8 +26,13 @@ public class BuildingControllerUnitTest {
   private KingdomService kingdomService;
   private ResourceService resourceService;
 
+  private Principal principal;
+
   @Before
   public void setUp() {
+    principal = Mockito.mock(Principal.class);
+    Mockito.when(principal.getName()).thenReturn("");
+
     buildingService = Mockito.mock(BuildingService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);
@@ -50,7 +54,7 @@ public class BuildingControllerUnitTest {
   public void buildBuildings_EmptyInput_BadRequest() {
     BuildingRequestDTO request = new BuildingRequestDTO("");
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-    ResponseEntity<?> response = buildingController.buildBuilding(request, bindingResult);
+    ResponseEntity<?> response = buildingController.buildBuilding(principal, request, bindingResult);
     Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
   }
 
@@ -59,7 +63,7 @@ public class BuildingControllerUnitTest {
   public void buildBuildings_BlankInput_BadRequest() {
     BuildingRequestDTO request = new BuildingRequestDTO(" ");
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-    ResponseEntity<?> response = buildingController.buildBuilding(request, bindingResult);
+    ResponseEntity<?> response = buildingController.buildBuilding(principal, request, bindingResult);
     Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
   }
 
@@ -69,7 +73,7 @@ public class BuildingControllerUnitTest {
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(false);
-    ResponseEntity<?> response = buildingController.buildBuilding(request, bindingResult);
+    ResponseEntity<?> response = buildingController.buildBuilding(principal, request, bindingResult);
     Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
   }
 
@@ -80,7 +84,7 @@ public class BuildingControllerUnitTest {
 
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(false);
-    ResponseEntity<?> response = buildingController.buildBuilding(request, bindingResult);
+    ResponseEntity<?> response = buildingController.buildBuilding(principal, request, bindingResult);
     Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
   }
 
@@ -92,7 +96,7 @@ public class BuildingControllerUnitTest {
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
-    ResponseEntity<?> response = buildingController.buildBuilding(request, bindingResult);
+    ResponseEntity<?> response = buildingController.buildBuilding(principal, request, bindingResult);
     Assert.assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
   }
 
@@ -104,7 +108,7 @@ public class BuildingControllerUnitTest {
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
-    ResponseEntity<?> response = buildingController.buildBuilding(request, bindingResult);
+    ResponseEntity<?> response = buildingController.buildBuilding(principal, request, bindingResult);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 }
