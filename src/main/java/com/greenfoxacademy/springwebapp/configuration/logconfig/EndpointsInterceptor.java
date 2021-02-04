@@ -13,23 +13,22 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @Component
 public class EndpointsInterceptor extends HandlerInterceptorAdapter {
 
-/*  @Override
+  @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
 
-    log.error(buildLogMessage(request, response));
+    log.info(buildLogMessage(request, response));
 
     return true;
-  }*/
+  }
 
-  @Override
+/*  @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                          ModelAndView modelAndView) throws Exception {
 
-    log.error(buildLogMessage(request, response));
+    log.info(buildLogMessage(request, response));
 
-  }
-
+  }*/
 
   private String buildLogMessage(HttpServletRequest request, HttpServletResponse response) {
     String method = request.getMethod();
