@@ -2,6 +2,9 @@ package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+
+import java.util.Set;
 
 public interface BuildingService {
 
@@ -16,5 +19,7 @@ public interface BuildingService {
   BuildingEntity createBuilding(BuildingRequestDTO dto);
 
   BuildingEntity defineHp(BuildingEntity entity);
+
+  Set<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
 
 }

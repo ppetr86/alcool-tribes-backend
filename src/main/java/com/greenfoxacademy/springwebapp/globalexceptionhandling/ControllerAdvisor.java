@@ -10,20 +10,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({InvalidBuildingTypeException.class, TownhallLevelException.class})
-  public ResponseEntity<ExceptionResponseDTO> handleExceptions(
+  public ResponseEntity<ErrorDTO> handleExceptions(
           Exception ex) {
-    return new ResponseEntity<>(new ExceptionResponseDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
 
   @ExceptionHandler(MissingParameterException.class)
-  public ResponseEntity<ExceptionResponseDTO> handleExceptions(
+  public ResponseEntity<ErrorDTO> handleExceptions(
           MissingParameterException ex) {
-    return new ResponseEntity<>(new ExceptionResponseDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(NotEnoughResourceException.class)
-  public ResponseEntity<ExceptionResponseDTO> handleExceptions(
+  public ResponseEntity<ErrorDTO> handleExceptions(
           NotEnoughResourceException ex) {
-    return new ResponseEntity<>(new ExceptionResponseDTO(ex.getMessage()), HttpStatus.CONFLICT);
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
   }
 }

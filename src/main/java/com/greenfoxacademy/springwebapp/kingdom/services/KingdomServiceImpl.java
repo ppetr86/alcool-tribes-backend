@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
-import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomEntityRepository;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,12 +9,21 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
-  private final KingdomEntityRepository repo;
+  private KingdomRepository kingdomRepository;
 
   @Override
   public boolean hasKingdomTownhall() {
     //TODO: hasKingdomTownhall
-    return true;
+    return false;
   }
 
+  @Override
+  public KingdomEntity findByPlayerId(Long id) {
+    return null;
+  }
+
+  @Override
+  public KingdomEntity saveKingdom(KingdomEntity kingdom) {
+    return kingdomRepository.save(kingdom);
+  }
 }

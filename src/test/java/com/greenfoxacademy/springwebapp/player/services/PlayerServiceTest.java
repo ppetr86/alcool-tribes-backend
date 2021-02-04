@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
@@ -14,12 +15,14 @@ public class PlayerServiceTest {
   private PlayerService playerService;
   private PlayerRepository playerRepository;
   private PasswordEncoder passwordEncoder;
+  private BuildingService buildingService;
 
   @Before
   public void setUp(){
     playerRepository = Mockito.mock(PlayerRepository.class);
     passwordEncoder = Mockito.mock(PasswordEncoder.class);
-    playerService = new PlayerServiceImp(playerRepository, passwordEncoder);
+    buildingService = Mockito.mock(BuildingService.class);
+    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService);
   }
 
   @Test

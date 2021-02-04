@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     Mockito
-      .when(jwtProviderMock.generateToken(request.getUsername()))
+      .when(jwtProviderMock.generateToken(new PlayerEntity(request.getUsername(), request.getPassword())))
       .thenReturn("12345");
 
     Mockito
