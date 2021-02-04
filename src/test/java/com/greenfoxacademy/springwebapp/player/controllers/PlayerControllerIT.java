@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,7 +39,7 @@ public class PlayerControllerIT {
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id", is(2)))
+        .andExpect(jsonPath("$.id", is(greaterThan(0))))
         .andExpect(jsonPath("$.username", is("testUser")))
         .andExpect(jsonPath("$.email", is("email@email.com")))
         .andExpect(jsonPath("$.kingdomId", is(1)))

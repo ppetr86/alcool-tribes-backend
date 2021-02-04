@@ -20,7 +20,7 @@ public class TokenServiceImpl implements TokenService{
   @Override
   public PlayerTokenDTO generateTokenToLoggedInPlayer(PlayerRequestDTO playerRequestDTO) {
     PlayerEntity loggedPlayer = playerService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword());
-    String token = jwtProvider.generateToken(loggedPlayer.getUsername());
+    String token = jwtProvider.generateToken(loggedPlayer);
     return new PlayerTokenDTO(token);
   }
 }

@@ -2,6 +2,8 @@ package com.greenfoxacademy.springwebapp.security.jwt;
 
 import static org.springframework.util.StringUtils.hasText;
 
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetailsService;
 import java.io.IOException;
@@ -10,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
+import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,18 +22,14 @@ import org.springframework.web.filter.GenericFilterBean;
 
 @Log
 @Component
+@AllArgsConstructor
 public class JwtFilter extends GenericFilterBean {
 
   public static final String AUTHORIZATION = "Authorization";
 
   private JwtProvider jwtProvider;
   private CustomUserDetailsService customUserDetailsService;
-
-  public JwtFilter(JwtProvider jwtProvider,
-                   CustomUserDetailsService customUserDetailsService) {
-    this.jwtProvider = jwtProvider;
-    this.customUserDetailsService = customUserDetailsService;
-  }
+  private PlayerService playerService;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -38,7 +38,9 @@ public class JwtFilter extends GenericFilterBean {
     String token = getTokenFromServletRequest((HttpServletRequest) servletRequest);
     if (token != null && jwtProvider.validateToken(token)) {
       String userLogin = jwtProvider.getLoginFromToken(token);
+      PlayerEntity player = playerService.findByUsername(userLogin);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
+      customUserDetails.setKingdom(player.getKingdom());
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
           null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
