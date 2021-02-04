@@ -5,9 +5,15 @@ import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO
 import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.buildings.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -67,5 +73,12 @@ public class BuildingServiceImpl implements BuildingService {
     result = defineHp(result);
     result = save(result);
     return result;
+  }
+
+  @Override
+  public Set<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
+    return Arrays.stream(BuildingType.values())
+        .map(type -> new BuildingEntity(kingdom, type, 1))
+        .collect(Collectors.toSet());
   }
 }

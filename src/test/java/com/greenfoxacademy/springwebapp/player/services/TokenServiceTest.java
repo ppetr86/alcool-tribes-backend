@@ -17,9 +17,9 @@ public class TokenServiceTest {
 
   @Before
   public void setUp() {
-    playerService = Mockito.mock(PlayerServiceImp.class);
+    playerService = Mockito.mock(PlayerServiceImpl.class);
     mockJwtProvider = Mockito.mock(JwtProvider.class);
-    tokenService = new TokenServiceImp(playerService, mockJwtProvider);
+    tokenService = new TokenServiceImpl(playerService, mockJwtProvider);
   }
 
   @Test
