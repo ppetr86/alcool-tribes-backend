@@ -33,7 +33,6 @@ public class BuildingsController {
 
   private final BuildingService buildingService;
   private final KingdomService kingdomService;
-  private final TimeService timeService;
   private final ResourceService resourceService;
 
   @PostMapping
