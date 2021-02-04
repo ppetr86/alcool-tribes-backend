@@ -1,0 +1,13 @@
+POST http://localhost:8080/kingdom/buildings
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI0Nzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.BaAFRBGsxOB-jbCERYV7pXnrPzb1NooV8eDJTP4ubQGa2qpgfTDruuNTX1sFuhDwm-bidWVEg6D7TLDT9koBGg
+
+{
+  "type": "farm"
+}
+
+### Get buildings
+
+GET http://localhost:8080/kingdom/1/buildings
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrb25kZm94Iiwia2luZ2RvbUlkIjoxLCJleHAiOjE2MTIzMDY4MDB9.hhyJ95Jdj61vDLPb-Qzi5j3_brvGoYZ-c7iCMk0yrK3ktF1XgZKKTPialacyys8zgDispQmX1Mx0FjOwjer1VA
+Accept: application/json

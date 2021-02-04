@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
-//TODO: ALTB-14-Petr renamed the table
 @Table(name = "kingdoms")
 @Entity
 @NoArgsConstructor
@@ -23,10 +22,6 @@ public class KingdomEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @OneToMany()
-  @JoinColumn(name = "fk_kingdom_id")
-  private Set<BuildingEntity> buildings;
 
   @OneToMany
   @JoinColumn(name = "fk_kingdom_id")
@@ -43,8 +38,9 @@ public class KingdomEntity {
   @JoinColumn(name = "fk_kingdom_id")
   private LocationEntity location;
 
-  //TODO: ALTB-14-Petr - I redefined the mapping. Please reconsider
   @OneToOne
-  @JoinColumn(name = "fk_kingdom_id")
-  private PlayerEntity userId;
+  private PlayerEntity player;
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
+  private Set<BuildingEntity> buildings;
 }

@@ -2,7 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
-import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomEntityRepository;
+import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
-  private final KingdomEntityRepository repo;
+  private KingdomRepository kingdomRepository;
 
   @Override
   public boolean hasKingdomTownhall() {
@@ -21,7 +21,7 @@ public class KingdomServiceImpl implements KingdomService {
   //TODO: ALTB-14
   @Override
   public KingdomEntity findByID(Long id) {
-    return repo.findById(id).orElse(null);
+    return kingdomRepository.findById(id).orElse(null);
   }
 
   //TODO: ALTB-14
@@ -29,4 +29,10 @@ public class KingdomServiceImpl implements KingdomService {
   public KingdomResponseDTO kingdomResponseDTO(KingdomEntity kingdom) {
     return new KingdomResponseDTO(kingdom);
   }
+
+  @Override
+  public KingdomEntity saveKingdom(KingdomEntity kingdom) {
+    return kingdomRepository.save(kingdom);
+  }
+
 }
