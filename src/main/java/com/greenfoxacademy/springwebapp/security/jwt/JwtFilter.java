@@ -22,7 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class JwtFilter extends /*GenericFilterBean*/ OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
   public static final String AUTHORIZATION = "Authorization";
 
@@ -48,7 +48,7 @@ public class JwtFilter extends /*GenericFilterBean*/ OncePerRequestFilter {
       ));
     }
 
-    if (token != null && tokenIsValid /*jwtProvider.validateToken(token)*/) {
+    if (token != null && tokenIsValid) {
       String userLogin = jwtProvider.getLoginFromToken(token);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
