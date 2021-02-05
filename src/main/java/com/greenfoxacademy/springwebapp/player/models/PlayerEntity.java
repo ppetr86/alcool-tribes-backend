@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,14 +17,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "players")
 public class PlayerEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -41,16 +39,17 @@ public class PlayerEntity {
   private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
   @Column(name = "points")
   private int points = 0; //TODO: need to have proper point logic
+  @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
+  private KingdomEntity kingdom;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
-  private KingdomEntity kingdomEntity;
+  public PlayerEntity(String username, String password) {
+      this.username = username;
+      this.password = password;
+    }
 
-  public PlayerEntity(String username, String password, String email,
-                      KingdomEntity kingdomEntity) {
+  public PlayerEntity(String username, String password, String email) {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.kingdomEntity = kingdomEntity;
   }
 }

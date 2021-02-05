@@ -13,5 +13,6 @@ public interface PlayerService {
 
   PlayerEntity findByUsername(String username);
 
-  PlayerEntity loginUser(PlayerEntity playerInput);
+  PlayerEntity findByUsernameAndPassword(String username, String password);
+
 }

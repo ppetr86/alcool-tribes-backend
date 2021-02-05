@@ -1,16 +1,19 @@
-package com.greenfoxacademy.springwebapp.buildings.models;
+package com.greenfoxacademy.springwebapp.building.models;
 
 
-import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "buildings")
 public class BuildingEntity {
@@ -20,6 +23,7 @@ public class BuildingEntity {
   @Column(updatable = false)
   private Long id;
   @Column(updatable = false)
+  @Enumerated(EnumType.STRING)
   private BuildingType type;
   private int level;
   private int hp;
@@ -27,6 +31,9 @@ public class BuildingEntity {
   private long startedAt;
   @Column(updatable = false)
   private long finishedAt;
+  @JsonIgnore
+  @ManyToOne
+  private KingdomEntity kingdom;
 
   public BuildingEntity(BuildingType type) {
     this.type = type;
@@ -37,15 +44,10 @@ public class BuildingEntity {
     this.startedAt = startedAt;
   }
 
-  public BuildingEntity(BuildingType type, int hp, long startedAt) {
-    this.type = type;
-    this.hp = hp;
-    this.startedAt = startedAt;
-  }
-
-  public BuildingEntity(BuildingType type, int level) {
+  public BuildingEntity(KingdomEntity kingdom, BuildingType type, int level) {
     this.type = type;
     this.level = level;
+    this.kingdom = kingdom;
   }
 }
 
