@@ -10,7 +10,6 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,6 @@ public class JwtProvider {
   private String jwtSecret;
 
   public String generateToken(PlayerEntity playerEntity){
-    //creating Expiration date - by using LocalDate, which is preferred
     Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
         .setClaims(new HashMap<String, Object>(){{

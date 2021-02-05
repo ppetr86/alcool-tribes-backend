@@ -39,7 +39,7 @@ public class EndpointsInterceptor extends HandlerInterceptorAdapter {
     return String.format("HTTP Method: %s | URI: %s | Params: %s | Response Status Code: %s",
         method, uri, params, responseStatusCode);
   }
-
+  //Specific message related to authentication failure. Otherwise when wrong token no log is created by interceptor at all.
   public String buildSecurityErrorLogMessage(HttpServletRequest request, HttpServletResponse response, int statusCode, String text) {
     String method = request.getMethod();
     String uri = request.getRequestURI();

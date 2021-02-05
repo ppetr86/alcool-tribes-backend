@@ -44,6 +44,8 @@ public class JwtFilter extends OncePerRequestFilter {
       tokenIsValid = jwtProvider.validateToken(token);
     } catch (Exception e) {
       SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
+
+      //Specific message related to authentication failure. Otherwise when wrong token no log is created by interceptor at all.
       log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
           request,
           response,
@@ -68,7 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
   private String getTokenFromServletRequest(HttpServletRequest servletRequest){
     String bearerToken = servletRequest.getHeader(AUTHORIZATION);
-    if (hasText(bearerToken) && bearerToken.startsWith("Bearer ")){ //hasText means "is not null or empty"
+    if (hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
       return bearerToken.substring(7);
     }
     return null;
