@@ -12,6 +12,7 @@ public interface PlayerService {
   PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO playerRegistrationRequestDTO);
 
   PlayerEntity findByUsername(String username);
+
   PlayerEntity findByUsernameAndPassword(String username, String password);
 
 }

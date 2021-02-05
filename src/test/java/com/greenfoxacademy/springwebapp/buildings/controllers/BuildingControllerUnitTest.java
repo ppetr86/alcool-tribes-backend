@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.buildings;
+package com.greenfoxacademy.springwebapp.buildings.controllers;
 
 import com.greenfoxacademy.springwebapp.buildings.controllers.BuildingsController;
 import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
@@ -30,14 +30,6 @@ public class BuildingControllerUnitTest {
     resourceService = Mockito.mock(ResourceService.class);
     timeService = Mockito.mock(TimeService.class);
     buildingController = new BuildingsController(buildingService, kingdomService,timeService,resourceService);
-  }
-
-  @Test
-  public void buildBuildings_EmptyInput_BadRequest() {
-    BuildingRequestDTO request = new BuildingRequestDTO(" ");
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-    ResponseEntity<?> response = buildingController.buildBuilding(request,bindingResult);
-    Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
 
   @Test

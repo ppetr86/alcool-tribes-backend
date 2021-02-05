@@ -2,6 +2,8 @@ package com.greenfoxacademy.springwebapp.security.jwt;
 
 import static org.springframework.util.StringUtils.hasText;
 
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 
 import com.greenfoxacademy.springwebapp.configuration.logconfig.EndpointsInterceptor;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -11,8 +13,9 @@ import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import lombok.AllArgsConstructor;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private JwtProvider jwtProvider;
   private CustomUserDetailsService customUserDetailsService;
   private EndpointsInterceptor endpointsInterceptor;
+  private PlayerService playerService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -50,7 +54,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     if (token != null && tokenIsValid) {
       String userLogin = jwtProvider.getLoginFromToken(token);
+      PlayerEntity player = playerService.findByUsername(userLogin);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
+      customUserDetails.setKingdom(player.getKingdom());
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
           null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);

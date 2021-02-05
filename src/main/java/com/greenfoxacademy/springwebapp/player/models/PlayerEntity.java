@@ -42,31 +42,18 @@ public class PlayerEntity {
   private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
   @Column(name = "points")
   private int points = 0; //TODO: need to have proper point logic
-
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "kingdomId", referencedColumnName = "Id")
-  private KingdomEntity kingdomEntity;
+  @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
+  private KingdomEntity kingdom;
 
   public PlayerEntity(String username, String password) {
       this.username = username;
       this.password = password;
     }
 
-  public PlayerEntity(String username, String password, String email,
-                      KingdomEntity kingdomEntity) {
+  public PlayerEntity(String username, String password, String email) {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.kingdomEntity = kingdomEntity;
   }
 
-  public PlayerEntity(String username, String password, String email,
-                      Set<BuildingEntity> listOfBuildings,
-                      KingdomEntity kingdomEntity) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.kingdomEntity = kingdomEntity;
-    this.kingdomEntity.setSetOfBuildings(listOfBuildings);
-  }
 }

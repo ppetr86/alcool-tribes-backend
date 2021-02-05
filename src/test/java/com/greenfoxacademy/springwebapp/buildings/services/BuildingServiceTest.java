@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.buildings;
+package com.greenfoxacademy.springwebapp.buildings.services;
 
 import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
