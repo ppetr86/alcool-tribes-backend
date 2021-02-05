@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BuildingsControllerIntegrationTest {
+public class BuildingControllerIntegrationTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -42,7 +42,7 @@ public class BuildingsControllerIntegrationTest {
 
   @Test
   public void getKingdomBuildings() throws Exception {
-    String URI = BuildingsController.URI+"/{id}".replace("{id}", "2");
+    String URI = BuildingController.URI+"/{id}".replace("{id}", "2");
     mockMvc.perform(get(URI)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -61,7 +61,7 @@ public class BuildingsControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isOk())
@@ -76,7 +76,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isBadRequest())
@@ -90,7 +90,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isNotAcceptable())
@@ -104,7 +104,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isNotAcceptable())
@@ -123,7 +123,7 @@ public class BuildingsControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
@@ -142,7 +142,7 @@ public class BuildingsControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
@@ -161,7 +161,7 @@ public class BuildingsControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
@@ -180,7 +180,7 @@ public class BuildingsControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isConflict())
@@ -200,7 +200,7 @@ public class BuildingsControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(false);
 
-    mockMvc.perform(post(BuildingsController.URI)
+    mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isNotAcceptable())

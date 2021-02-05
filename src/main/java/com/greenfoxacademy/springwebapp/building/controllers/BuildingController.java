@@ -12,20 +12,18 @@ import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(BuildingsController.URI)
-public class BuildingsController {
+@RequestMapping(BuildingController.URI)
+public class BuildingController {
 
   public static final String URI = "/kingdom/buildings";
 

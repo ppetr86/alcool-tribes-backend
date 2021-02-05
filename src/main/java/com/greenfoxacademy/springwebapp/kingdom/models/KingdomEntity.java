@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -24,7 +25,7 @@ public class KingdomEntity {
   private PlayerEntity player;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
-  private Set<BuildingEntity> buildings;
+  private List<BuildingEntity> buildings;
 
   @Column(name = "kingdomname")
   private String kingdomName;

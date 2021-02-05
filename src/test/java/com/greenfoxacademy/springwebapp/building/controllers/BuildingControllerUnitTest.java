@@ -25,7 +25,7 @@ import java.util.List;
 
 public class BuildingControllerUnitTest {
 
-  private BuildingsController buildingController;
+  private BuildingController buildingController;
   private BuildingService buildingService;
   private KingdomService kingdomService;
   private ResourceService resourceService;
@@ -35,7 +35,7 @@ public class BuildingControllerUnitTest {
     buildingService = Mockito.mock(BuildingService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);
-    buildingController = new BuildingsController(buildingService, kingdomService, resourceService);
+    buildingController = new BuildingController(buildingService, kingdomService, resourceService);
   }
 
   public Authentication createAuth(String userName, Long kingdomId) {
@@ -56,8 +56,8 @@ public class BuildingControllerUnitTest {
   public void getKingdomBuildings_ReturnsCorrectStatusCode() {
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 1, 2));
-    ResponseEntity result = ResponseEntity.status(HttpStatus.OK).body(fakeList);
-    Mockito.when(buildingController.getKingdomBuildings(createAuth("furkesz", 1L))).thenReturn(result);
+    //ResponseEntity result = ResponseEntity.status(HttpStatus.OK).body(fakeList);
+    Mockito.when(buildingService.findBuildingsByKingdomId(1L)).thenReturn(fakeList);
     ResponseEntity<?> response = buildingController.getKingdomBuildings(createAuth("test", 1L));
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }

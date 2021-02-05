@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,7 +24,7 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO dto) {
     KingdomEntity kingdom = assignKingdomName(dto);
-    Set<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
+    List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
     kingdom.setBuildings(defaultBuildings);
 
     PlayerEntity player =

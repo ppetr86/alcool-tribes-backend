@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,9 +80,9 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public Set<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
+  public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
         .map(type -> new BuildingEntity(kingdom, type, 1))
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
   }
 }

@@ -5,7 +5,6 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 
 import java.util.List;
-import java.util.Set;
 
 public interface BuildingService {
 
@@ -23,6 +22,6 @@ public interface BuildingService {
 
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 
-  Set<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
+  List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
 
 }
