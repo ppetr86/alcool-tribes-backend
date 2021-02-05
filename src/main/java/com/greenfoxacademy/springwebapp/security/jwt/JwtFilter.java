@@ -47,7 +47,6 @@ public class JwtFilter extends GenericFilterBean {
       logger.info("Following player was authenticated: " + customUserDetails.getUsername());
     }
     filterChain.doFilter(servletRequest, servletResponse);
-
   }
 
   private String getTokenFromServletRequest(HttpServletRequest servletRequest){
