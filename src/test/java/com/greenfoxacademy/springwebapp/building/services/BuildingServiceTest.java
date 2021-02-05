@@ -52,7 +52,7 @@ public class BuildingServiceTest {
     fakeList.add(new BuildingEntity(3L, BuildingType.FARM, 1, 100, 100, 200));
     fakeList.add(new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100, 200));
 
-    Mockito.when(buildingRepository.findBuildingsByKingdomID(1L)).thenReturn(fakeList);
+    Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(fakeList);
   }
   
   @Test

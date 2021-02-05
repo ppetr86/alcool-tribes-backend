@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface BuildingRepository extends JpaRepository<BuildingEntity, Long> {
 
-  @Query(value = "SELECT * FROM buildings WHERE fk_kingdom_id = :kingdomID", nativeQuery = true)
-  List<BuildingEntity> findBuildingsByKingdomID(Long kingdomID);
+  List<BuildingEntity> findAllByKingdomId(Long kingdomID);
 }

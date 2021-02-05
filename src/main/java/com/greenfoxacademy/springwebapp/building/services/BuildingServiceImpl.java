@@ -44,7 +44,7 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
-    return repo.findBuildingsByKingdomID(id);
+    return repo.findAllByKingdomId(id);
   }
 
   @Override
