@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -33,19 +34,20 @@ public class BuildingsController {
   private final ResourceService resourceService;
 
 
-  @GetMapping(URI + "/{id}")
-  public ResponseEntity<BuildingsResponseDTO> getKingdomBuildings(@PathVariable Long id) {
+  @GetMapping
+  public ResponseEntity<BuildingsResponseDTO> getKingdomBuildings(Authentication auth) {
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(id);
+    List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(kingdom.getId());
     return ResponseEntity.status(HttpStatus.OK).body(new BuildingsResponseDTO(list));
   }
 
   @PostMapping
-  public ResponseEntity<?> buildBuilding(Principal principal,
+  public ResponseEntity<?> buildBuilding(Authentication auth,
                                          @RequestBody @Valid BuildingRequestDTO dto, BindingResult bindingResult) {
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
-    KingdomEntity kingdom = ((CustomUserDetails) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getKingdom();
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     if (!errorList.isEmpty()) {
       String error = errorList.get(0).getDefaultMessage();
       return ResponseEntity.badRequest().body(new ErrorDTO(error));

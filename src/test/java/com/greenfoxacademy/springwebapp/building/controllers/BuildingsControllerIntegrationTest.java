@@ -33,9 +33,13 @@ public class BuildingsControllerIntegrationTest {
 
   @MockBean
   private KingdomService kingdomService;
+
+  /*@MockBean
+  private ResourceService mockResourceService;*/
+
   @MockBean
   private ResourceService resourceService;
-  //TODO: ALTB-15
+
   @Test
   public void getKingdomBuildings() throws Exception {
     String URI = BuildingsController.URI+"/{id}".replace("{id}", "2");
@@ -46,19 +50,13 @@ public class BuildingsControllerIntegrationTest {
             .andExpect(jsonPath("$.buildings[0].finishedAt", is(978)));
   }
 
-  private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-          MediaType.APPLICATION_JSON.getSubtype());
-  @MockBean
-  private ResourceService mockResourceService;
-
   @Test
   public void buildBuilding_BuildingCreated() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(true);
-
+    //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(true);
 
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
@@ -68,7 +66,7 @@ public class BuildingsControllerIntegrationTest {
             .content(json))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.type", is("FARM")));
   }
 
@@ -120,7 +118,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
+    //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
@@ -139,7 +137,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
+    //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
@@ -158,7 +156,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
+    //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
@@ -177,7 +175,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
+    //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
@@ -197,7 +195,7 @@ public class BuildingsControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(true);
+    //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(true);
 
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(false);

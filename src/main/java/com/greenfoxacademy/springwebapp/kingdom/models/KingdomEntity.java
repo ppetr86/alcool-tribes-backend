@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
-@Table
+@Data
 @Entity
 @NoArgsConstructor
-@Data
 @AllArgsConstructor
+@Table(name = "kingdoms")
 public class KingdomEntity {
 
   @Id
