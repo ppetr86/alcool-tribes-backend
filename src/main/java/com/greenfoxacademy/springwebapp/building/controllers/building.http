@@ -1,6 +1,6 @@
 POST http://localhost:8080/kingdom/buildings
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI2NTI0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.YEVtkNHKS91BESvjPVliDAE3BD88qS02OmTfhvMkL4F6nNaHsddHsk7_z6me7vU1epa1XfKC6si4BvHacGpMWw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI2NTI0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.2uZ5nNne0-9ZCw2Ryig8DwtDoNmh2uhghnQqtxOEli70C3oc1ClFmqSlt_Ehox0kl-eL_FOZBAcRoZ8c4d9eyg
 {
   "type": "farm"
 }
@@ -8,5 +8,5 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI2NTI0MDAsImtpbmdkb21JZ
 ### Get buildings
 
 GET http://localhost:8080/kingdom/buildings
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI2NTI0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.YEVtkNHKS91BESvjPVliDAE3BD88qS02OmTfhvMkL4F6nNaHsddHsk7_z6me7vU1epa1XfKC6si4BvHacGpMWw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI2NTI0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.2uZ5nNne0-9ZCw2Ryig8DwtDoNmh2uhghnQqtxOEli70C3oc1ClFmqSlt_Ehox0kl-eL_FOZBAcRoZ8c4d9eyg
 Accept: application/json

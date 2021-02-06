@@ -18,6 +18,7 @@ public class ResourceEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  @Enumerated(EnumType.STRING)
   private ResourceType type;
   private int amount;
   private int generation;

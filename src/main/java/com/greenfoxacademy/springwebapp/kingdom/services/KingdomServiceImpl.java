@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
@@ -17,15 +18,14 @@ public class KingdomServiceImpl implements KingdomService {
     return null;
   }
 
-  //TODO: ALTB-14
   @Override
   public KingdomEntity findByID(Long id) {
     return kingdomRepository.findById(id).orElse(null);
   }
 
-  //TODO: ALTB-14
   @Override
-  public KingdomResponseDTO kingdomResponseDTO(KingdomEntity kingdom) {
+  public KingdomResponseDTO entityToKingdomResponseDTO(KingdomEntity kingdom)throws IdNotFoundException {
+    if (kingdom==null) throw new IdNotFoundException();
     return new KingdomResponseDTO(kingdom);
   }
 

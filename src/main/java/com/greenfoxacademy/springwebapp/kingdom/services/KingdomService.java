@@ -7,7 +7,7 @@ public interface KingdomService {
 
   KingdomEntity findByID(Long id);
 
-  KingdomResponseDTO kingdomResponseDTO(KingdomEntity kingdom);
+  KingdomResponseDTO entityToKingdomResponseDTO(KingdomEntity kingdom);
 
   KingdomEntity findByPlayerId(Long id);
 

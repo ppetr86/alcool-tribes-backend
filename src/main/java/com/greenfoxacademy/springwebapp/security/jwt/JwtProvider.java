@@ -26,7 +26,7 @@ public class JwtProvider {
 
   public String generateToken(PlayerEntity playerEntity){
     //creating Expiration date - by using LocalDate, which is preferred
-    Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date date = Date.from(LocalDate.now().plusDays(199).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
             .setClaims(new HashMap<String, Object>(){{
               put("username", playerEntity.getUsername());

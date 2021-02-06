@@ -37,7 +37,7 @@ public class KingdomControllerUnitTest {
     KingdomResponseDTO dto = new KingdomResponseDTO(kingdom);
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
-    Mockito.when(kingdomService.kingdomResponseDTO(kingdom)).thenReturn(dto);
+    Mockito.when(kingdomService.entityToKingdomResponseDTO(kingdom)).thenReturn(dto);
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1L);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }

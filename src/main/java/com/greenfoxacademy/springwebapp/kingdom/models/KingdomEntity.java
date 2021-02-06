@@ -42,7 +42,6 @@ public class KingdomEntity {
 
 
   @OneToOne
-  @JoinColumn(name="fk_kingdom_id")
   private LocationEntity location;
 
 }
