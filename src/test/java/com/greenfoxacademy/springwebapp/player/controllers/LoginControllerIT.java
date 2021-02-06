@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Test;
@@ -16,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,32 +34,17 @@ public class LoginControllerIT {
   @Autowired
   private MockMvc mockMvc;
 
-  @MockBean
-  private JwtProvider jwtProviderMock;
-
-  @MockBean
-  private PasswordEncoder passwordEncoder;  //Have to Mock the .matches method
-
   @Test
   public void postLoginShouldReturn200AndOkMessage() throws Exception {
-    PlayerRequestDTO request = new PlayerRequestDTO("Mark", "markmark");
-
+    PlayerRequestDTO request = new PlayerRequestDTO("furkesz", "password");
     String json = new ObjectMapper().writeValueAsString(request);
-
-    Mockito
-      .when(jwtProviderMock.generateToken(request.getUsername()))
-      .thenReturn("12345");
-
-    Mockito
-      .when(passwordEncoder.matches(request.getPassword(), "markmark"))
-      .thenReturn(true);
 
     mockMvc.perform(post("/login")
       .contentType(MediaType.APPLICATION_JSON)
       .content(json))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.status", is("ok")))
-      .andExpect(jsonPath("$.token", is("12345")));
+      .andExpect(jsonPath("$.token", matchesPattern(".+\\..+\\..+")));
   }
 
   @Test
@@ -66,6 +54,7 @@ public class LoginControllerIT {
 
     mockMvc.perform(post("/login")
       .contentType(MediaType.APPLICATION_JSON)
+      .principal(createAuth("Mark", 1L))
       .content(json))
       .andExpect(status().isUnauthorized())
       .andExpect(jsonPath("$.status", is("error")))

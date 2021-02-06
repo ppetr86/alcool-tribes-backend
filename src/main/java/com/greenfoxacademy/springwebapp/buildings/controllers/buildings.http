@@ -1,9 +1,0 @@
-POST http://localhost:8080/kingdom/buildings
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI0Nzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.BaAFRBGsxOB-jbCERYV7pXnrPzb1NooV8eDJTP4ubQGa2qpgfTDruuNTX1sFuhDwm-bidWVEg6D7TLDT9koBGg
-
-{
-  "type": "farm"
-}
-
-###

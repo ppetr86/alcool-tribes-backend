@@ -1,18 +1,25 @@
-package com.greenfoxacademy.springwebapp.buildings.services;
+package com.greenfoxacademy.springwebapp.building.services;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.buildings.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
-import com.greenfoxacademy.springwebapp.buildings.repositories.BuildingRepository;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +29,7 @@ public class BuildingServiceImpl implements BuildingService {
   private final Environment env;
   private final BuildingRepository repo;
   private final TimeService timeService;
+  private final ResourceService resourceService;
 
   @Override
   public BuildingEntity save(BuildingEntity entity) {
@@ -40,6 +48,11 @@ public class BuildingServiceImpl implements BuildingService {
     String hp = env.getProperty(String.format("building.%s.hp", entity.getType().buildingType.toLowerCase()));
     entity.setHp(Integer.parseInt(hp));
     return entity;
+  }
+
+  @Override
+  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
+    return repo.findAllByKingdomId(id);
   }
 
   @Override
@@ -66,7 +79,12 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingEntity createBuilding(BuildingRequestDTO dto) {
+  public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
+      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
+    if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
+    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
+    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
+    if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
@@ -76,9 +94,16 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public Set<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
+  public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
         .map(type -> new BuildingEntity(kingdom, type, 1))
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public boolean hasKingdomTownhall(KingdomEntity kingdom) {
+    if (kingdom.getBuildings() == null) return false;
+    return kingdom.getBuildings().stream()
+        .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
 }

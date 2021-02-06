@@ -42,7 +42,7 @@ public class PlayerControllerIT {
         .andExpect(jsonPath("$.id", is(greaterThan(0))))
         .andExpect(jsonPath("$.username", is("testUser")))
         .andExpect(jsonPath("$.email", is("email@email.com")))
-        .andExpect(jsonPath("$.kingdomId", is(1)))
+        .andExpect(jsonPath("$.kingdomId", is(greaterThan(0))))
         .andExpect(jsonPath("$.avatar", is("http://avatar.loc/my.png")))
         .andExpect(jsonPath("$.points", is(0)));
   }
@@ -84,7 +84,7 @@ public class PlayerControllerIT {
   public void postRegisterRequestShouldReturn409AndUsernameExistsError() throws Exception {
 
     PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
-    playerRegistrationRequestDTO.setUsername("user1");
+    playerRegistrationRequestDTO.setUsername("occupied_username");
     playerRegistrationRequestDTO.setPassword("12345678");
     playerRegistrationRequestDTO.setEmail("email@email.com");
 

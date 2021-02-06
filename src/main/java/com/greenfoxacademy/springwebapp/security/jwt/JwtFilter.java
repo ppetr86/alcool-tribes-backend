@@ -33,7 +33,7 @@ public class JwtFilter extends GenericFilterBean {
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-      throws IOException, ServletException {
+          throws IOException, ServletException {
 
     String token = getTokenFromServletRequest((HttpServletRequest) servletRequest);
     if (token != null && jwtProvider.validateToken(token)) {
@@ -42,12 +42,11 @@ public class JwtFilter extends GenericFilterBean {
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
       customUserDetails.setKingdom(player.getKingdom());
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
-          null, customUserDetails.getAuthorities());
+              null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
       logger.info("Following player was authenticated: " + customUserDetails.getUsername());
     }
     filterChain.doFilter(servletRequest, servletResponse);
-
   }
 
   private String getTokenFromServletRequest(HttpServletRequest servletRequest){

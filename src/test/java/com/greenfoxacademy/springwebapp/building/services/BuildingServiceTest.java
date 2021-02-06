@@ -1,23 +1,24 @@
-package com.greenfoxacademy.springwebapp.buildings.services;
+package com.greenfoxacademy.springwebapp.building.services;
 
-import com.greenfoxacademy.springwebapp.buildings.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.buildings.models.enums.BuildingType;
-import com.greenfoxacademy.springwebapp.buildings.repositories.BuildingRepository;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingService;
-import com.greenfoxacademy.springwebapp.buildings.services.BuildingServiceImpl;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.building.services.BuildingServiceImpl;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BuildingServiceTest {
 
-
-  private Environment env;
   private BuildingService buildingService;
-  private TimeService timeService;
 
   @Before
   public void init() {
@@ -25,6 +26,9 @@ public class BuildingServiceTest {
     BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
     Environment env = Mockito.mock(Environment.class);
+    ResourceService resourceService = Mockito.mock(ResourceService.class);
+
+    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
 
     Mockito.when(env.getProperty("building.townhall.buildingTime"))
             .thenReturn("120");
@@ -44,7 +48,23 @@ public class BuildingServiceTest {
     Mockito.when(env.getProperty("building.academy.hp"))
             .thenReturn("150");
 
-    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(2L, BuildingType.ACADEMY, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(3L, BuildingType.FARM, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100, 200));
+
+    Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(fakeList);
+  }
+  
+  @Test
+  public void findBuildingsByKingdomId_correct() {
+    Assert.assertEquals(4, buildingService.findBuildingsByKingdomId(1L).size());
+  }
+  
+  @Test
+  public void findBuildingsByKingdomId_wrong() {
+    Assert.assertNotEquals(999, buildingService.findBuildingsByKingdomId(1L).size());
   }
 
   @Test
