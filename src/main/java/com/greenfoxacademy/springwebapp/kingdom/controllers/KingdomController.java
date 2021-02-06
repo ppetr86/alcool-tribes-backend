@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(KingdomController.KINGDOM)
+@RequestMapping(KingdomController.URI)
 public class KingdomController {
 
-  public static final String KINGDOM = "/kingdom";
+  public static final String URI = "/kingdom";
 
   private final KingdomService kingdomService;
 
