@@ -34,6 +34,12 @@ public class BuildingEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
+  public BuildingEntity(Long id, BuildingType type, KingdomEntity kingdom) {
+    this.id = id;
+    this.type = type;
+    this.kingdom = kingdom;
+  }
+
   public BuildingEntity(BuildingType type, long startedAt) {
     this.type = type;
     this.startedAt = startedAt;

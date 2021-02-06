@@ -23,4 +23,8 @@ public class TroopEntity {
   private int defence;
   private long startedAt;
   private long finishedAt;
+
+  public TroopEntity(Long id) {
+    this.id = id;
+  }
 }

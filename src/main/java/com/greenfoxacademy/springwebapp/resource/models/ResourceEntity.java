@@ -23,4 +23,9 @@ public class ResourceEntity {
   private int amount;
   private int generation;
   private long updatedAt;
+
+  public ResourceEntity(Long id, ResourceType type) {
+    this.id = id;
+    this.type = type;
+  }
 }

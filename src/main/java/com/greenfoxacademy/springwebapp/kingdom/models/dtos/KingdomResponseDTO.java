@@ -1,28 +1,30 @@
 package com.greenfoxacademy.springwebapp.kingdom.models.dtos;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
-import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
+import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class KingdomResponseDTO {
+public class KingdomResponseDTO implements Serializable {
 
   private long id;
   private String name;
   private long userId;
-  private List<BuildingEntity> buildings;
-  private List<ResourceEntity> resources;
-  private List<TroopEntity> troops;
-  private LocationEntity location;
+  private List<BuildingSingleResponseDTO> buildings;
+  private List<ResourceResponseDTO> resources;
+  private List<TroopResponseDTO> troops;
+  private LocationEntityDTO location;
 
 
   public KingdomResponseDTO(KingdomEntity e) {
@@ -30,9 +32,18 @@ public class KingdomResponseDTO {
     this.name = e.getKingdomName();
     this.userId = e.getPlayer().getId();
 
-    this.buildings = e.getBuildings();
-    this.resources = e.getResources();
-    this.troops = e.getTroops();
-    this.location = e.getLocation();
+    this.buildings = e.getBuildings().stream()
+            .map(BuildingSingleResponseDTO::new)
+            .collect(Collectors.toList());
+
+    this.resources = e.getResources().stream()
+            .map(ResourceResponseDTO::new)
+            .collect(Collectors.toList());
+
+    this.troops = e.getTroops().stream()
+            .map(TroopResponseDTO::new)
+            .collect(Collectors.toList());
+
+    this.location = new LocationEntityDTO(e.getLocation());
   }
 }

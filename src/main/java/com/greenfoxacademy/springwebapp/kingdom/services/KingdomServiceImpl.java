@@ -24,8 +24,8 @@ public class KingdomServiceImpl implements KingdomService {
   }
 
   @Override
-  public KingdomResponseDTO entityToKingdomResponseDTO(KingdomEntity kingdom)throws IdNotFoundException {
-    if (kingdom==null) throw new IdNotFoundException();
+  public KingdomResponseDTO entityToKingdomResponseDTO(KingdomEntity kingdom) throws IdNotFoundException {
+    if (kingdom == null) throw new IdNotFoundException();
     return new KingdomResponseDTO(kingdom);
   }
 

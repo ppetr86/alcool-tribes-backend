@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-public class BuildingsResponseDTO {
+public class BuildingResponseDTO {
 
   private List<BuildingEntity> buildings;
 
-  public BuildingsResponseDTO(List<BuildingEntity> buildings) {
+  public BuildingResponseDTO(List<BuildingEntity> buildings) {
     this.buildings = buildings;
   }
 }
