@@ -4,8 +4,6 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 
 public interface KingdomService {
 
-  boolean hasKingdomTownhall();
-
   KingdomEntity findByPlayerId(Long id);
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);

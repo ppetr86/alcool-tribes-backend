@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
@@ -23,6 +24,9 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
+import static org.mockito.ArgumentMatchers.any;
+
 public class BuildingControllerUnitTest {
 
   private BuildingController buildingController;
@@ -35,81 +39,18 @@ public class BuildingControllerUnitTest {
     buildingService = Mockito.mock(BuildingService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);
-    buildingController = new BuildingController(buildingService, kingdomService, resourceService);
-  }
-
-  public Authentication createAuth(String userName, Long kingdomId) {
-
-    CustomUserDetails userDetails = new CustomUserDetails();
-    PlayerEntity player = new PlayerEntity();
-    player.setUsername(userName);
-    KingdomEntity kingdom = new KingdomEntity();
-    kingdom.setId(kingdomId);
-
-    userDetails.setLogin(player);
-    userDetails.setKingdom(kingdom);
-
-    return new UsernamePasswordAuthenticationToken(userDetails, null, null);
+    buildingController = new BuildingController(buildingService);
   }
 
   @Test
   public void getKingdomBuildings_ReturnsCorrectStatusCode() {
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 1, 2));
-    //ResponseEntity result = ResponseEntity.status(HttpStatus.OK).body(fakeList);
     Mockito.when(buildingService.findBuildingsByKingdomId(1L)).thenReturn(fakeList);
+
     ResponseEntity<?> response = buildingController.getKingdomBuildings(createAuth("test", 1L));
+
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-  }
-
-  @Test
-  public void buildBuildings_EmptyInput_BadRequest() {
-    BuildingRequestDTO request = new BuildingRequestDTO("");
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-    ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request, bindingResult);
-    Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
-  }
-
-
-  @Test
-  public void buildBuildings_BlankInput_BadRequest() {
-    BuildingRequestDTO request = new BuildingRequestDTO(" ");
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-    ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request, bindingResult);
-    Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
-  }
-
-  @Test
-  public void buildBuildings_WrongType_NotAcceptable() {
-    BuildingRequestDTO request = new BuildingRequestDTO("faaarm");
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-
-    Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(false);
-    ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request, bindingResult);
-    Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
-  }
-
-  @Test
-  public void buildBuildings_NoTownhall_NotAcceptable() {
-    BuildingRequestDTO request = new BuildingRequestDTO("farm");
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-
-    Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
-    Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(false);
-    ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request, bindingResult);
-    Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
-  }
-
-  @Test
-  public void buildBuildings_LowResource_NotAcceptable() {
-    BuildingRequestDTO request = new BuildingRequestDTO("farm");
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-
-    Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
-    Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
-    ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request, bindingResult);
-    Assert.assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
   }
 
   @Test
@@ -118,9 +59,10 @@ public class BuildingControllerUnitTest {
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
-    Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
-    ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request, bindingResult);
+
+    ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request);
+
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 }
