@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,9 +19,9 @@ public class KingdomResponseDTO {
   private long id;
   private String name;
   private long userId;
-  private Set<BuildingEntity> buildings;
-  private Set<ResourceEntity> resources;
-  private Set<TroopEntity> troops;
+  private List<BuildingEntity> buildings;
+  private List<ResourceEntity> resources;
+  private List<TroopEntity> troops;
   private LocationEntity location;
 
 
