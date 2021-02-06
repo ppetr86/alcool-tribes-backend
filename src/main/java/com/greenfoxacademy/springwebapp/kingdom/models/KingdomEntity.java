@@ -8,27 +8,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "kingdoms")
 public class KingdomEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
+
   @OneToOne
   private PlayerEntity player;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
-  private Set<BuildingEntity> buildings;
+  private List<BuildingEntity> buildings;
 
   @Column(name = "kingdomname")
   private String kingdomName;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
-  private Set<TroopEntity> troops;
+  private List<TroopEntity> troops;
 
 }

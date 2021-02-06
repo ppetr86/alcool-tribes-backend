@@ -48,4 +48,3 @@ public class PlayerController {
         .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
   }
 }
-

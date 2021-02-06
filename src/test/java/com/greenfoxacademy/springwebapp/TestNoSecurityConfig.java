@@ -16,5 +16,4 @@ public class TestNoSecurityConfig implements WebSecurityConfigurer<WebSecurity> 
   @Override
   public void configure(WebSecurity builder) throws Exception {
   }
-
 }

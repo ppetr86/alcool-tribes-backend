@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

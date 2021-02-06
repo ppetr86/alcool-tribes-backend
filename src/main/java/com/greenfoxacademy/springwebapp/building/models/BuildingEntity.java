@@ -45,5 +45,13 @@ public class BuildingEntity {
     this.kingdom = kingdom;
   }
 
+  public BuildingEntity(Long id,BuildingType type, int level, int hp, long startedAt, long finishedAt) {
+    this.id = id;
+    this.type = type;
+    this.level = level;
+    this.hp = hp;
+    this.startedAt = startedAt;
+    this.finishedAt = finishedAt;
+  }
 }
 
