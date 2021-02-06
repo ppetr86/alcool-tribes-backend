@@ -12,9 +12,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private JwtFilter jwtFilter;
-  private AuthenticationExceptionHandler authenticationExceptionHandler;
-  public SecurityConfig (JwtFilter jwtFilter, AuthenticationExceptionHandler authenticationExceptionHandler) {
+  private final JwtFilter jwtFilter;
+  private final AuthenticationExceptionHandler authenticationExceptionHandler;
+
+  public SecurityConfig(JwtFilter jwtFilter, AuthenticationExceptionHandler authenticationExceptionHandler) {
     this.jwtFilter = jwtFilter;
     this.authenticationExceptionHandler = authenticationExceptionHandler;
   }
@@ -33,5 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling()
         .authenticationEntryPoint(authenticationExceptionHandler); //here i put custom json together with 401
+
   }
 }

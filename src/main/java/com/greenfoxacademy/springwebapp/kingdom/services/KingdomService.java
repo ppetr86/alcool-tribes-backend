@@ -11,6 +11,8 @@ public interface KingdomService {
 
   KingdomResponseDTO kingdomResponseDTO(KingdomEntity kingdom);
 
+  KingdomEntity findByPlayerId(Long id);
+
   KingdomEntity saveKingdom(KingdomEntity kingdom);
 
 }

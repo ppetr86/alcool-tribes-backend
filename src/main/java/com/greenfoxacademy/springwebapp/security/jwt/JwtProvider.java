@@ -28,13 +28,13 @@ public class JwtProvider {
     //creating Expiration date - by using LocalDate, which is preferred
     Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
-        .setClaims(new HashMap<String, Object>(){{
-          put("username", playerEntity.getUsername());
-          put("kingdomId", playerEntity.getKingdom().getId());
-        }})
-        .setExpiration(date)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .compact();
+            .setClaims(new HashMap<String, Object>(){{
+              put("username", playerEntity.getUsername());
+              put("kingdomId", playerEntity.getKingdom().getId());
+            }})
+            .setExpiration(date)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
   }
 
   public boolean validateToken(String token) {
@@ -59,5 +59,4 @@ public class JwtProvider {
     Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     return claims.get("username", String.class);
   }
-
 }

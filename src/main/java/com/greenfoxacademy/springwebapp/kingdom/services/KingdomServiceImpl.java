@@ -15,7 +15,12 @@ public class KingdomServiceImpl implements KingdomService {
   @Override
   public boolean hasKingdomTownhall() {
     //TODO: hasKingdomTownhall
-    return true;
+    return false;
+  }
+
+  @Override
+  public KingdomEntity findByPlayerId(Long id) {
+    return null;
   }
 
   //TODO: ALTB-14
@@ -34,5 +39,4 @@ public class KingdomServiceImpl implements KingdomService {
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
     return kingdomRepository.save(kingdom);
   }
-
 }

@@ -10,37 +10,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
-@Table(name = "kingdoms")
+@Data
 @Entity
 @NoArgsConstructor
-@Data
 @AllArgsConstructor
+@Table(name = "kingdoms")
 public class KingdomEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany
-  @JoinColumn(name = "fk_kingdom_id")
-  private Set<ResourceEntity> resources;
-
-  @OneToMany
-  @JoinColumn(name = "fk_kingdom_id")
-  private Set<TroopEntity> troops;
-
-  @Column(name = "kingdomname")
-  private String kingdomName;
-
-  @OneToOne
-  @JoinColumn(name = "fk_kingdom_id")
-  private LocationEntity location;
-
   @OneToOne
   private PlayerEntity player;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
-  private Set<BuildingEntity> buildings;
+  private List<BuildingEntity> buildings;
+
+  @Column(name = "kingdomname")
+  private String kingdomName;
+
+  @OneToMany
+  @JoinColumn(name = "fk_kingdom_id")
+  private List<ResourceEntity> resources;
+
+  @OneToMany
+  @JoinColumn(name = "fk_kingdom_id")
+  private List<TroopEntity> troops;
+
+
+  @OneToOne
+  @JoinColumn(name="fk_kingdom_id")
+  private LocationEntity location;
+
 }
