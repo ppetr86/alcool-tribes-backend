@@ -7,7 +7,6 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-
 import java.util.List;
 
 public interface BuildingService {
