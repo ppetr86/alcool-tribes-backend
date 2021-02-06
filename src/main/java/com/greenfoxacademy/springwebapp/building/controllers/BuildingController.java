@@ -49,14 +49,16 @@ public class BuildingController {
     if (!errorList.isEmpty()) {
       String error = errorList.get(0).getDefaultMessage();
       return ResponseEntity.badRequest().body(new ErrorDTO(error));
+    } else if (dto.getType() == null || dto.getType().isEmpty()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDTO(
+              "Missing parameter(s): type!"));
     } else if (!buildingService.isBuildingTypeInRequestOk(dto)) {
       return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorDTO(
               "Invalid building type"));
     } else if (!kingdomService.hasKingdomTownhall()) {
       return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorDTO(
               "Cannot build buildings with higher level than the Townhall"));
-    }
-    if (resourceService.hasResourcesForBuilding()) {
+    } else if (resourceService.hasResourcesForBuilding()) {
       BuildingEntity building = buildingService.createBuilding(dto);
       return ResponseEntity.ok(building);
     } else {

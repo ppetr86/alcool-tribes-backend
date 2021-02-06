@@ -3,10 +3,15 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
+import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Import(TestNoSecurityConfig.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,20 +42,32 @@ public class BuildingControllerIntegrationTest {
   @MockBean
   private KingdomService kingdomService;
 
-  /*@MockBean
-  private ResourceService mockResourceService;*/
-
   @MockBean
   private ResourceService resourceService;
 
+
+  public Authentication createAuth(String userName, Long kingdomId) {
+
+    CustomUserDetails userDetails = new CustomUserDetails();
+    PlayerEntity player = new PlayerEntity();
+    player.setUsername(userName);
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setId(kingdomId);
+
+    userDetails.setLogin(player);
+    userDetails.setKingdom(kingdom);
+
+    return new UsernamePasswordAuthenticationToken(userDetails, null, null);
+  }
+
   @Test
   public void getKingdomBuildings() throws Exception {
-    String URI = BuildingController.URI+"/{id}".replace("{id}", "2");
-    mockMvc.perform(get(URI)
-            .contentType(MediaType.APPLICATION_JSON))
+    Authentication authentication = createAuth("Furkesz", 1L);
+    mockMvc.perform(get(BuildingController.URI)
+            .principal(authentication))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.buildings[0].finishedAt", is(978)));
+            .andExpect(jsonPath("$.buildings[0].finishedAt", is(0)));
   }
 
   @Test
@@ -55,6 +75,8 @@ public class BuildingControllerIntegrationTest {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     // TODO: remove this when ResourceService is implemented
     //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(true);
 
@@ -63,9 +85,9 @@ public class BuildingControllerIntegrationTest {
 
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.type", is("FARM")));
   }
@@ -76,26 +98,49 @@ public class BuildingControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
   @Test
-  public void buildBuilding_EmptyInputV2() throws Exception {
+  public void buildBuilding_EmptyInputV2_NoTypeProvidedReturnsMissingType() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO();
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isNotAcceptable())
+            .content(json)
+            .principal(authentication))
+            .andExpect(status().isBadRequest())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Invalid building type")));
+            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
+  }
+
+  @Test
+  public void buildBuilding_EmptyInputV3_WhitespaceInputReturnsMissingType() throws Exception {
+    BuildingRequestDTO request = new BuildingRequestDTO("  ");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    Authentication authentication = createAuth("Furkesz", 1L);
+
+    mockMvc.perform(post(BuildingController.URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json)
+            .principal(authentication))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
   @Test
@@ -104,9 +149,12 @@ public class BuildingControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isNotAcceptable())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Invalid building type")));
@@ -120,12 +168,15 @@ public class BuildingControllerIntegrationTest {
     // TODO: remove this when ResourceService is implemented
     //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isConflict())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
@@ -139,12 +190,15 @@ public class BuildingControllerIntegrationTest {
     // TODO: remove this when ResourceService is implemented
     //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isConflict())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
@@ -158,12 +212,15 @@ public class BuildingControllerIntegrationTest {
     // TODO: remove this when ResourceService is implemented
     //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isConflict())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
@@ -177,12 +234,15 @@ public class BuildingControllerIntegrationTest {
     // TODO: remove this when ResourceService is implemented
     //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(false);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isConflict())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Not enough resource")));
@@ -197,12 +257,15 @@ public class BuildingControllerIntegrationTest {
     // TODO: remove this when ResourceService is implemented
     //Mockito.when(mockResourceService.hasResourcesForBuilding()).thenReturn(true);
 
+    Authentication authentication = createAuth("Furkesz", 1L);
+
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(kingdomService.hasKingdomTownhall()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+            .content(json)
+            .principal(authentication))
             .andExpect(status().isNotAcceptable())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
