@@ -12,14 +12,12 @@ public class KingdomServiceImpl implements KingdomService {
   private KingdomRepository kingdomRepository;
 
   @Override
-  public boolean hasKingdomTownhall() {
-    //TODO: hasKingdomTownhall
-    return true;
+  public KingdomEntity findByPlayerId(Long id) {
+    return null;
   }
 
   @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
     return kingdomRepository.save(kingdom);
   }
-
 }

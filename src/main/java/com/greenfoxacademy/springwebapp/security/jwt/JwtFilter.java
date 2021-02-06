@@ -65,7 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
       customUserDetails.setKingdom(player.getKingdom());
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
-          null, customUserDetails.getAuthorities());
+              null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
       log.info("Authenticated player: {}", customUserDetails.getUsername());
     }
