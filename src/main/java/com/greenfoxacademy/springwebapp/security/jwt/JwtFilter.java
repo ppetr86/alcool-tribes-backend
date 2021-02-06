@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.security.jwt;
 
 import static org.springframework.util.StringUtils.hasText;
 
+
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 
@@ -37,6 +38,11 @@ public class JwtFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
+    if(request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register")){
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     String token = getTokenFromServletRequest(request);
     Boolean tokenIsValid = false;
 
@@ -44,12 +50,11 @@ public class JwtFilter extends OncePerRequestFilter {
       tokenIsValid = jwtProvider.validateToken(token);
     } catch (Exception e) {
       SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
-
       //Specific message related to authentication failure. Otherwise when wrong token no log is created by interceptor at all.
       log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
           request,
           response,
-          SecurityConfig.AUTHENTICATIONFAILURESTATUSCODE,
+          SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
           "Token validation error"
       ));
     }

@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-  public static final int AUTHENTICATIONFAILURESTATUSCODE = 401;
+  public static final int AUTHENTICATION_FAILURE_STATUSCODE = 401;
 
   private JwtFilter jwtFilter;
   private AuthenticationExceptionHandler authenticationExceptionHandler;
