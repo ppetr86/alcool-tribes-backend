@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.building.services.BuildingServiceImpl;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +26,9 @@ public class BuildingServiceTest {
     BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
     Environment env = Mockito.mock(Environment.class);
+    ResourceService resourceService = Mockito.mock(ResourceService.class);
 
-    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService);
+    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
 
     Mockito.when(env.getProperty("building.townhall.buildingTime"))
             .thenReturn("120");
