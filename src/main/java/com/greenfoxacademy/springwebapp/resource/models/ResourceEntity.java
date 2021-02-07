@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.resource.models;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,8 @@ public class ResourceEntity {
   private int amount;
   private int generation;
   private long updatedAt;
+  @ManyToOne
+  private KingdomEntity kingdom;
 
   public ResourceEntity(Long id, ResourceType type) {
     this.id = id;

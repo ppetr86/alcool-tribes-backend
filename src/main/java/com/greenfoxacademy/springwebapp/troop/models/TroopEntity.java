@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop.models;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ public class TroopEntity {
   private int defence;
   private long startedAt;
   private long finishedAt;
+  @ManyToOne
+  private KingdomEntity kingdom;
 
   public TroopEntity(Long id) {
     this.id = id;

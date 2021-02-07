@@ -3,13 +3,12 @@ package com.greenfoxacademy.springwebapp.kingdom.models.dtos;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceResponseDTO;
+import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -36,8 +36,7 @@ public class KingdomEntity {
   private List<TroopEntity> troops;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
-  private List<TroopEntity> troops;
-
+  private List<ResourceEntity> resources;
 
   @OneToOne
   private LocationEntity location;
