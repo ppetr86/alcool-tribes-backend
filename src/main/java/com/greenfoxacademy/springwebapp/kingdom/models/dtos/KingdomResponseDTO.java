@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class KingdomResponseDTO implements Serializable {
+public class KingdomResponseDTO {
 
   private long id;
   private String name;

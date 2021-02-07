@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class TroopResponseDTO implements Serializable {
+public class TroopResponseDTO {
 
   private int level;
   private int hp;

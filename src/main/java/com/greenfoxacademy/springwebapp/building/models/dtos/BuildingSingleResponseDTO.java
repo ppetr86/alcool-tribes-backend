@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BuildingSingleResponseDTO implements Serializable {
+public class BuildingSingleResponseDTO {
 
   private long id;
   private String type;
