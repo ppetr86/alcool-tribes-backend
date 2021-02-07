@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
-import com.greenfoxacademy.springwebapp.player.models.dtos.ErrorDTO;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
@@ -48,4 +48,3 @@ public class PlayerController {
         .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
   }
 }
-

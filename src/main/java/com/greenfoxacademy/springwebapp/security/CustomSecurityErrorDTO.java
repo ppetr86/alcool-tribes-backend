@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.security;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
