@@ -1,0 +1,5 @@
+### Get kingdom troops
+
+GET http://localhost:8080/kingdom/troops
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTI2NTI0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.YEVtkNHKS91BESvjPVliDAE3BD88qS02OmTfhvMkL4F6nNaHsddHsk7_z6me7vU1epa1XfKC6si4BvHacGpMWw
+Accept: application/json

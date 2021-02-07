@@ -1,20 +1,20 @@
 package com.greenfoxacademy.springwebapp.troop.services;
 
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDto;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
 
-import java.util.Set;
+import java.util.List;
 
 public interface TroopService {
 
-  Set<TroopEntity> findTroopsByKingdomID(Long id);
+  List<TroopEntity> findTroopsByKingdomID(Long id);
 
-  Set<TroopEntityResponseDto> convertEntitySetToDTO(Set<TroopEntity> entities);
+  List<TroopEntityResponseDTO> convertEntityListToDTO(List<TroopEntity> entities);
 
-  TroopResponseDto convertDTOSetToDTO(Set<TroopEntityResponseDto> set);
+  TroopResponseDto convertDTOListToDTO(List<TroopEntityResponseDTO> set);
 
-  TroopEntityResponseDto convertEntityToEntityResponseDTO(TroopEntity entity);
+  TroopEntityResponseDTO convertEntityToEntityResponseDTO(TroopEntity entity);
 
   TroopResponseDto findTroopEntitiesConvertToResponseDTO(Long id);
 }

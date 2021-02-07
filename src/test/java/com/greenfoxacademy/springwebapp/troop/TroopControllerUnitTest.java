@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.troop;
 
 import com.greenfoxacademy.springwebapp.troop.controllers.TroopController;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDto;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import org.junit.Assert;
@@ -11,8 +11,10 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
 public class TroopControllerUnitTest {
 
@@ -28,13 +30,15 @@ public class TroopControllerUnitTest {
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
 
-    Set<TroopEntityResponseDto> dtos = new HashSet<>();
-    dtos.add(new TroopEntityResponseDto(1, 100, 50, 20, 999, 1111));
-    dtos.add(new TroopEntityResponseDto(1, 100, 50, 20, 1111, 1222));
+    List<TroopEntityResponseDTO> dtos = new ArrayList<>();
+    dtos.add(new TroopEntityResponseDTO(1, 100, 50, 20, 999, 1111));
+    dtos.add(new TroopEntityResponseDTO(1, 100, 50, 20, 1111, 1222));
 
     Mockito.when(troopService.findTroopEntitiesConvertToResponseDTO(1L))
             .thenReturn(new TroopResponseDto(dtos));
-    ResponseEntity<TroopResponseDto> response = troopController.getTroopsOfKingdom(1L);
+
+    ResponseEntity<TroopResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));
+
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assert.assertEquals(2, response.getBody().getTroops().size());
   }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class TroopEntityResponseDto {
+public class TroopEntityResponseDTO {
 
   private int level;
   private int hp;
@@ -15,4 +15,6 @@ public class TroopEntityResponseDto {
   private int defence;
   private long startedAt;
   private long finishedAt;
+
+
 }

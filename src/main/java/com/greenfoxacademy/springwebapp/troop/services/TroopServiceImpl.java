@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.troop.services;
 
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDto;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
 import com.greenfoxacademy.springwebapp.troop.repositories.TroopEntityRepository;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,39 +19,36 @@ public class TroopServiceImpl implements TroopService {
   private final TroopEntityRepository repo;
   private final ModelMapper modelMapper;
 
-  //TODO: ALTB-14 and ALTB-22
   @Override
-  public Set<TroopEntity> findTroopsByKingdomID(Long id) {
+  public List<TroopEntity> findTroopsByKingdomID(Long id) {
     //TODO: needs to implement the Kingdom Entity
     return repo.findAllByKingdomID(id);
   }
 
-  @Override
-  public Set<TroopEntityResponseDto> convertEntitySetToDTO(Set<TroopEntity> entities) {
+  public List<TroopEntityResponseDTO> convertEntityListToDTO(List<TroopEntity> entities) {
     return entities
             .stream()
             .map(this::convertEntityToEntityResponseDTO)
-            .collect(Collectors.toSet());
+            .collect(Collectors.toList());
+  }
+
+  public TroopResponseDto convertDTOListToDTO(List<TroopEntityResponseDTO> list) {
+    return new TroopResponseDto(list);
   }
 
   @Override
-  public TroopResponseDto convertDTOSetToDTO(Set<TroopEntityResponseDto> set) {
-    return new TroopResponseDto(set);
-  }
-
-  @Override
-  public TroopEntityResponseDto convertEntityToEntityResponseDTO(TroopEntity entity) {
+  public TroopEntityResponseDTO convertEntityToEntityResponseDTO(TroopEntity entity) {
     modelMapper.getConfiguration()
             .setMatchingStrategy(MatchingStrategies.LOOSE);
-    TroopEntityResponseDto result = modelMapper
-            .map(entity, TroopEntityResponseDto.class);
+    TroopEntityResponseDTO result = modelMapper
+            .map(entity, TroopEntityResponseDTO.class);
     return result;
   }
 
   @Override
   public TroopResponseDto findTroopEntitiesConvertToResponseDTO(Long id) {
-    Set<TroopEntity> troopEntities = findTroopsByKingdomID(id);
-    Set<TroopEntityResponseDto> entityResponseDTOs = convertEntitySetToDTO(troopEntities);
-    return convertDTOSetToDTO(entityResponseDTOs);
+    List<TroopEntity> troopEntities = findTroopsByKingdomID(id);
+    List<TroopEntityResponseDTO> entityResponseDTOs = convertEntityListToDTO(troopEntities);
+    return convertDTOListToDTO(entityResponseDTOs);
   }
 }

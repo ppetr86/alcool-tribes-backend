@@ -11,11 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
-=======
 import java.util.List;
->>>>>>> ALTB-15-Petr
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +27,7 @@ public class PlayerServiceImpl implements PlayerService {
     kingdom.setBuildings(defaultBuildings);
 
     PlayerEntity player =
-        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
+            new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
     playerRepo.save(player);
