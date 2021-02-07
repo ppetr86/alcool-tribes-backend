@@ -2,16 +2,18 @@ POST http://localhost:8080/register
 Content-Type: application/json
 
 {
-  "username": "PetrWillSleep",
-  "password": "password222"
+  "username": "furkesz",
+  "password": "password"
 }
+
 ###
 
 POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "username": "user1",
+  "username": "furkesz",
   "password": "password"
 }
+
 ###

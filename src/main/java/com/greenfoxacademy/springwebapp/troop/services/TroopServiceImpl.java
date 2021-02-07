@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop.services;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
@@ -20,9 +21,9 @@ public class TroopServiceImpl implements TroopService {
   private final ModelMapper modelMapper;
 
   @Override
-  public List<TroopEntity> findTroopsByKingdomID(Long id) {
+  public List<TroopEntity> findTroopsByKingdom(KingdomEntity entity) {
     //TODO: needs to implement the Kingdom Entity
-    return repo.findAllByKingdomID(id);
+    return repo.findAllByKingdom(entity);
   }
 
   public List<TroopEntityResponseDTO> convertEntityListToDTO(List<TroopEntity> entities) {
@@ -46,8 +47,8 @@ public class TroopServiceImpl implements TroopService {
   }
 
   @Override
-  public TroopResponseDto findTroopEntitiesConvertToResponseDTO(Long id) {
-    List<TroopEntity> troopEntities = findTroopsByKingdomID(id);
+  public TroopResponseDto findTroopEntitiesConvertToResponseDTO(KingdomEntity entity) {
+    List<TroopEntity> troopEntities = findTroopsByKingdom(entity);
     List<TroopEntityResponseDTO> entityResponseDTOs = convertEntityListToDTO(troopEntities);
     return convertDTOListToDTO(entityResponseDTOs);
   }

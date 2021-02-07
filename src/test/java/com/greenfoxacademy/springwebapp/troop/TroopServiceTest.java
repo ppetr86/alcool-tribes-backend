@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
@@ -53,7 +54,7 @@ public class TroopServiceTest {
 
   @Test
   public void findTroopsByKingdomID_ReturnsCorrectList() {
-    Mockito.when(troopEntityRepository.findAllByKingdomID(1L)).thenReturn(inputTroopEntities);
+    Mockito.when(troopEntityRepository.findAllByKingdom(new KingdomEntity(1L))).thenReturn(inputTroopEntities);
     Assert.assertEquals(3, inputTroopEntities.size());
   }
 

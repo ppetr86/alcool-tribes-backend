@@ -24,7 +24,7 @@ public class KingdomEntity {
   @OneToOne
   private PlayerEntity player;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
   private List<BuildingEntity> buildings;
 
   @Column(name = "kingdomname")
@@ -33,4 +33,7 @@ public class KingdomEntity {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
   private List<TroopEntity> troops;
 
+  public KingdomEntity(long l) {
+    this.id = l;
+  }
 }

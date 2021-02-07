@@ -21,6 +21,6 @@ public class TroopController {
 
     return ResponseEntity.ok(troopService
             .findTroopEntitiesConvertToResponseDTO(
-                    ((CustomUserDetails) auth.getPrincipal()).getKingdom().getId()));
+                    ((CustomUserDetails) auth.getPrincipal()).getKingdom()));
   }
 }

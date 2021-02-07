@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.controllers.TroopController;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
@@ -34,7 +35,7 @@ public class TroopControllerUnitTest {
     dtos.add(new TroopEntityResponseDTO(1, 100, 50, 20, 999, 1111));
     dtos.add(new TroopEntityResponseDTO(1, 100, 50, 20, 1111, 1222));
 
-    Mockito.when(troopService.findTroopEntitiesConvertToResponseDTO(1L))
+    Mockito.when(troopService.findTroopEntitiesConvertToResponseDTO( new KingdomEntity(1L)))
             .thenReturn(new TroopResponseDto(dtos));
 
     ResponseEntity<TroopResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));
