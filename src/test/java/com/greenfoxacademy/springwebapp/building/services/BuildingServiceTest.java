@@ -3,23 +3,24 @@ package com.greenfoxacademy.springwebapp.building.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.building.services.BuildingServiceImpl;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class BuildingServiceTest {
 
-
-  private Environment env;
   private BuildingService buildingService;
-  private TimeService timeService;
   private BuildingRepository buildingRepository;
 
   @Before
@@ -28,26 +29,45 @@ public class BuildingServiceTest {
     buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
     Environment env = Mockito.mock(Environment.class);
+    ResourceService resourceService = Mockito.mock(ResourceService.class);
+
+    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
 
     Mockito.when(env.getProperty("building.townhall.buildingTime"))
-            .thenReturn("120");
+      .thenReturn("120");
     Mockito.when(env.getProperty("building.farm.buildingTime"))
-            .thenReturn("60");
+      .thenReturn("60");
     Mockito.when(env.getProperty("building.mine.buildingTime"))
-            .thenReturn("60");
+      .thenReturn("60");
     Mockito.when(env.getProperty("building.academy.buildingTime"))
-            .thenReturn("90");
+      .thenReturn("90");
 
     Mockito.when(env.getProperty("building.townhall.hp"))
-            .thenReturn("200");
+      .thenReturn("200");
     Mockito.when(env.getProperty("building.farm.hp"))
-            .thenReturn("100");
+      .thenReturn("100");
     Mockito.when(env.getProperty("building.mine.hp"))
-            .thenReturn("100");
+      .thenReturn("100");
     Mockito.when(env.getProperty("building.academy.hp"))
-            .thenReturn("150");
+      .thenReturn("150");
 
-    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(2L, BuildingType.ACADEMY, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(3L, BuildingType.FARM, 1, 100, 100, 200));
+    fakeList.add(new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100, 200));
+
+    Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(fakeList);
+  }
+
+  @Test
+  public void findBuildingsByKingdomId_correct() {
+    Assert.assertEquals(4, buildingService.findBuildingsByKingdomId(1L).size());
+  }
+
+  @Test
+  public void findBuildingsByKingdomId_wrong() {
+    Assert.assertNotEquals(999, buildingService.findBuildingsByKingdomId(1L).size());
   }
 
   @Test
@@ -134,32 +154,32 @@ public class BuildingServiceTest {
   @Test
   public void isTypeOkRequest_Mine_ShouldTrue_LowerCase() {
     Assert.assertEquals(BuildingType.MINE,
-            buildingService.setBuildingTypeOnEntity("mine").getType());
+      buildingService.setBuildingTypeOnEntity("mine").getType());
   }
 
   @Test
   public void isTypeOkRequest_Academy_ShouldTrue_VariousCase() {
     Assert.assertEquals(BuildingType.ACADEMY,
-            buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
+      buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
   }
 
 
   //Mark's tests
   @Test
-  public void countMethodShouldReturnWithCorrectValue(){
+  public void countMethodShouldReturnWithCorrectValue() {
     List<BuildingEntity> buildings = Arrays.asList(
       new BuildingEntity(),
       new BuildingEntity(),
       new BuildingEntity()
     );
 
-    Mockito.when(buildingService.countBuildings()).thenReturn((long)buildings.size());
+    Mockito.when(buildingService.countBuildings()).thenReturn((long) buildings.size());
 
     Assert.assertEquals(3, buildingService.countBuildings());
   }
 
   @Test
-  public void countMethodShouldReturnWithUnCorrectValue(){
+  public void countMethodShouldReturnWithUnCorrectValue() {
     List<BuildingEntity> buildings = Arrays.asList(
       new BuildingEntity(),
       new BuildingEntity(),
@@ -168,13 +188,13 @@ public class BuildingServiceTest {
       new BuildingEntity()
     );
 
-    Mockito.when(buildingService.countBuildings()).thenReturn((long)buildings.size());
+    Mockito.when(buildingService.countBuildings()).thenReturn((long) buildings.size());
 
     Assert.assertNotEquals(3, buildingService.countBuildings());
   }
 
   @Test
-  public void findByIdShouldReturnWithCorrectBuildingType(){
+  public void findByIdShouldReturnWithCorrectBuildingType() {
     BuildingEntity buildingEntity = new BuildingEntity(BuildingType.FARM);
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
@@ -184,7 +204,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void findByIdShouldReturnWithUnCorrectBuildingType(){
+  public void findByIdShouldReturnWithUnCorrectBuildingType() {
     BuildingEntity buildingEntity = new BuildingEntity(BuildingType.MINE);
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));

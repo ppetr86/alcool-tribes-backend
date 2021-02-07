@@ -2,10 +2,11 @@ package com.greenfoxacademy.springwebapp.security;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import java.util.Collection;
-import java.util.HashSet;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 public class CustomUserDetails implements UserDetails {
   private String login;
@@ -13,11 +14,11 @@ public class CustomUserDetails implements UserDetails {
   private KingdomEntity kingdom;
   private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-  public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity playerEntity){
+  public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity playerEntity) {
     CustomUserDetails details = new CustomUserDetails();
     details.login = playerEntity.getUsername();
     details.password = playerEntity.getPassword();
-    details.grantedAuthorities= details.getAuthorities();//returning empty authorities since we dont use roles
+    details.grantedAuthorities = details.getAuthorities();//returning empty authorities since we dont use roles
     return details;
   }
 
@@ -33,6 +34,9 @@ public class CustomUserDetails implements UserDetails {
   public void setKingdom(KingdomEntity kingdom) {
     this.kingdom = kingdom;
   }
+
+  public void setLogin(PlayerEntity player){
+    this.login = player.getUsername() ;}
 
   @Override
   public String getPassword() {

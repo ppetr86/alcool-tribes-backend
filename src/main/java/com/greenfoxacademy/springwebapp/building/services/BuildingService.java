@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 
+import java.util.List;
 import java.util.Set;
 
 public interface BuildingService {
@@ -16,7 +17,7 @@ public interface BuildingService {
 
   BuildingEntity setBuildingTypeOnEntity(String type);
 
-  BuildingEntity createBuilding(BuildingRequestDTO dto);
+  BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto);
 
   BuildingEntity defineHp(BuildingEntity entity);
 
@@ -24,6 +25,9 @@ public interface BuildingService {
 
   long countBuildings();
 
-  Set<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
+  boolean hasKingdomTownhall (KingdomEntity kingdom);
 
+  List<BuildingEntity> findBuildingsByKingdomId(Long id);
+
+  List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
 }

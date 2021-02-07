@@ -8,26 +8,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "kingdoms")
 public class KingdomEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-
-  @Column(name = "kingdomname")
-  private String kingdomName;
+  private Long id;
 
   @OneToOne
   private PlayerEntity player;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
-  private Set<BuildingEntity> buildings;
+  private List<BuildingEntity> buildings;
 
-  //TODO: need to add rest of fields
+  @Column(name = "kingdomname")
+  private String kingdomName;
+
 }

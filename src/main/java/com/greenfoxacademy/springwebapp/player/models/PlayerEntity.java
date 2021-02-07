@@ -1,21 +1,13 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -43,9 +35,9 @@ public class PlayerEntity {
   private KingdomEntity kingdom;
 
   public PlayerEntity(String username, String password) {
-      this.username = username;
-      this.password = password;
-    }
+    this.username = username;
+    this.password = password;
+  }
 
   public PlayerEntity(String username, String password, String email) {
     this.username = username;
@@ -53,3 +45,4 @@ public class PlayerEntity {
     this.email = email;
   }
 }
+
