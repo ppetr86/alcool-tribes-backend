@@ -24,20 +24,24 @@ public class TroopEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(updatable = false)
   private Long id;
-  private int level;
-  private int hp;
+  private Integer level;
+  private Integer hp;
+  private Integer attack;
+  private Integer defense;
   @Column(updatable = false)
-  private long startedAt;
+  private Long startedAt;
   @Column(updatable = false)
-  private long finishedAt;
+  private Long finishedAt;
   @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "fk_kingdomId")
   private KingdomEntity kingdomEntity;
 
-  public TroopEntity(int level, int hp, long startedAt, long finishedAt,
+  public TroopEntity(Integer level, Integer hp, Integer attack, Integer defense, Long startedAt, Long finishedAt,
                      KingdomEntity kingdomEntity) {
     this.level = level;
     this.hp = hp;
+    this.attack = attack;
+    this.defense = defense;
     this.startedAt = startedAt;
     this.finishedAt = finishedAt;
     this.kingdomEntity = kingdomEntity;
