@@ -39,4 +39,9 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
   }
 
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<ErrorDTO> handleExceptions(ForbiddenException ex) {
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
+  }
+
 }
