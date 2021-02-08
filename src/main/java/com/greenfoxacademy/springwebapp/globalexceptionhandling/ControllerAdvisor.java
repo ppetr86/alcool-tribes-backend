@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Slf4j
 @RestControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
@@ -41,6 +43,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(ForbiddenException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(ForbiddenException ex) {
+    log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
   }
 
