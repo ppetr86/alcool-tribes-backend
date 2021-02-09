@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourc
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDTO;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
