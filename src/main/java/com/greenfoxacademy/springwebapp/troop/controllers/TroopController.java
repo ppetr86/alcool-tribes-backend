@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -26,7 +26,7 @@ public class TroopController {
 
   @PostMapping
   public ResponseEntity<?> createTroop(@RequestBody @Valid TroopRequestDTO requestDTO, Authentication auth)
-      throws ForbiddenException, InvalidInputException, NotEnoughResourceException {
+      throws ForbiddenCustomException, InvalidInputException, NotEnoughResourceException {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     TroopResponseDTO responseDTO = troopService.createTroop(kingdom, requestDTO);
