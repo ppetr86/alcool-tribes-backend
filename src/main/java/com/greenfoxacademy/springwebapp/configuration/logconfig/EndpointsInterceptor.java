@@ -34,7 +34,7 @@ public class EndpointsInterceptor extends HandlerInterceptorAdapter {
     String method = request.getMethod();
     String uri = request.getRequestURI();
     String params = request.getQueryString();
-    if(!hasText(params)) {params = "NULL";}
+    if(!hasText(params)) params = "NULL";
     String responseStatusCode = String.valueOf(response.getStatus());
     return String.format("HTTP Method: %s | URI: %s | Params: %s | Response Status Code: %s",
         method, uri, params, responseStatusCode);
@@ -44,7 +44,7 @@ public class EndpointsInterceptor extends HandlerInterceptorAdapter {
     String method = request.getMethod();
     String uri = request.getRequestURI();
     String params = request.getQueryString();
-    if(!hasText(params)) {params = "NULL";}
+    if(!hasText(params)) params = "NULL";
     String responseStatusCode = String.valueOf(response.getStatus());
     return String.format("HTTP Method: %s | URI: %s | Params: %s | Response Status Code: %s | Message: %s",
         method, uri, params, statusCode, text);
