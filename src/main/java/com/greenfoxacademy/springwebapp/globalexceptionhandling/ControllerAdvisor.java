@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

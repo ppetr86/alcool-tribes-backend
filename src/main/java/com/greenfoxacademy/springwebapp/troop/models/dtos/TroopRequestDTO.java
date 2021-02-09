@@ -1,6 +1,8 @@
 package com.greenfoxacademy.springwebapp.troop.models.dtos;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TroopRequestDTO {
 
-  @Min(value=1L,message = "Provide correct buildingId!")
+  @NotNull(message = "Building Id cannot be null!")
+  @Min(value=1L,message = "Building ID must be higher than 0!")
   private Long buildingId;
 }
