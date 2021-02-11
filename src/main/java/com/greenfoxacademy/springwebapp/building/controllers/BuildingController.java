@@ -43,8 +43,25 @@ public class BuildingController {
 
   @PostMapping
   public ResponseEntity<?> buildBuilding(Authentication auth, @RequestBody @Valid BuildingRequestDTO dto)
-      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
+    throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(buildingService.createBuilding(kingdom, dto));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getBuildingById(@PathVariable Long id,
+                                           Authentication auth) {
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+
+    BuildingEntity actualBuilding = buildingService.findBuildingById(id);
+
+    if (actualBuilding == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("Id not found"));
+    } else if (buildingService.kingdomIsContainTheGivenBuilding(kingdom, actualBuilding)) {
+                //kingdom.getBuildings().contains(actualBuilding)
+      return ResponseEntity.ok().body(actualBuilding);
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorDTO("Forbidden action"));
+    }
   }
 }

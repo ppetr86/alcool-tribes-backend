@@ -92,8 +92,8 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public long countBuildings() {
-    return repo.count();
+  public boolean kingdomIsContainTheGivenBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity) {
+    return kingdomEntity.getBuildings().contains(buildingEntity);
   }
 
   @Override

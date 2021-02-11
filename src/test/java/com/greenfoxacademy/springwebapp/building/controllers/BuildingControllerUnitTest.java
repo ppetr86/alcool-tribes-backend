@@ -22,6 +22,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
@@ -64,5 +65,23 @@ public class BuildingControllerUnitTest {
     ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
+
+  @Test
+  public void getBuildingByIdShouldShowTheGivenBuildingDetails(){
+
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+
+    KingdomEntity kingdomEntity = new KingdomEntity(1L, new PlayerEntity(), Arrays.asList(buildingEntity), "TestKingdom");
+
+
+    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
+    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(new KingdomEntity(), buildingEntity)).thenReturn(true);
+
+    ResponseEntity<?> response = buildingController.getBuildingById(1L, createAuth("test", 1L));
+
+    Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    Assert.assertEquals("FARM", ((BuildingEntity)response.getBody()).getType());
+    Assert.assertEquals(1, ((BuildingEntity)response.getBody()).getLevel());
   }
 }

@@ -166,34 +166,6 @@ public class BuildingServiceTest {
 
   //Mark's tests
   @Test
-  public void countMethodShouldReturnWithCorrectValue() {
-    List<BuildingEntity> buildings = Arrays.asList(
-      new BuildingEntity(),
-      new BuildingEntity(),
-      new BuildingEntity()
-    );
-
-    Mockito.when(buildingService.countBuildings()).thenReturn((long) buildings.size());
-
-    Assert.assertEquals(3, buildingService.countBuildings());
-  }
-
-  @Test
-  public void countMethodShouldReturnWithUnCorrectValue() {
-    List<BuildingEntity> buildings = Arrays.asList(
-      new BuildingEntity(),
-      new BuildingEntity(),
-      new BuildingEntity(),
-      new BuildingEntity(),
-      new BuildingEntity()
-    );
-
-    Mockito.when(buildingService.countBuildings()).thenReturn((long) buildings.size());
-
-    Assert.assertNotEquals(3, buildingService.countBuildings());
-  }
-
-  @Test
   public void findByIdShouldReturnWithCorrectBuildingType() {
     BuildingEntity buildingEntity = new BuildingEntity(BuildingType.FARM);
 

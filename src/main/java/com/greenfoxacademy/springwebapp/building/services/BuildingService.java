@@ -22,8 +22,7 @@ public interface BuildingService {
   BuildingEntity defineHp(BuildingEntity entity);
 
   BuildingEntity findBuildingById(Long id);
-
-  long countBuildings();
+  boolean kingdomIsContainTheGivenBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
 
   boolean hasKingdomTownhall (KingdomEntity kingdom);
 
