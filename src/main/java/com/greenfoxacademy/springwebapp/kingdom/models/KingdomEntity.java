@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.models;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,8 @@ public class KingdomEntity {
 
   @Column(name = "kingdomname")
   private String kingdomName;
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdomEntity")
+  private List<TroopEntity> troops;
 
 }

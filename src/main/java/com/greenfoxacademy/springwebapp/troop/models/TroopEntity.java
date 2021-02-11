@@ -27,13 +27,12 @@ public class TroopEntity {
   private Integer level;
   private Integer hp;
   private Integer attack;
-  private Integer defense;
+  private Integer defence;
   @Column(updatable = false)
   private Long startedAt;
   @Column(updatable = false)
   private Long finishedAt;
-  @ManyToOne(cascade = CascadeType.PERSIST)
-  @JoinColumn(name = "fk_kingdomId")
+  @ManyToOne
   private KingdomEntity kingdomEntity;
 
   public TroopEntity(Integer level, Integer hp, Integer attack, Integer defense, Long startedAt, Long finishedAt,
@@ -41,7 +40,7 @@ public class TroopEntity {
     this.level = level;
     this.hp = hp;
     this.attack = attack;
-    this.defense = defense;
+    this.defence = defense;
     this.startedAt = startedAt;
     this.finishedAt = finishedAt;
     this.kingdomEntity = kingdomEntity;

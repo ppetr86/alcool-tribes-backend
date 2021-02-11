@@ -1,15 +1,18 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.Authentication;
@@ -23,14 +26,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(TroopController.URI)
 public class TroopController {
   public static final String URI = "/kingdom/troops";
-  TroopService troopService;
+  private TroopService troopService;
 
   @PostMapping
   public ResponseEntity<?> createTroop(@RequestBody @Valid TroopRequestDTO requestDTO, Authentication auth)
-      throws ForbiddenCustomException, InvalidInputException, NotEnoughResourceException {
+      throws ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+
     TroopResponseDTO responseDTO = troopService.createTroop(kingdom, requestDTO);
+
     return ResponseEntity.ok(responseDTO);
   }
 }

@@ -25,7 +25,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   @ExceptionHandler({
       InvalidBuildingTypeException.class,
       TownhallLevelException.class,
-      InvalidInputException.class})
+      InvalidInputException.class,
+      InvalidAcademyIdException.class})
   public ResponseEntity<ErrorDTO> handleExceptions(Exception ex) {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
