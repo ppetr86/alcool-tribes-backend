@@ -71,8 +71,11 @@ public class BuildingControllerUnitTest {
   public void getBuildingByIdShouldShowTheGivenBuildingDetails(){
 
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
-
-    KingdomEntity kingdomEntity = new KingdomEntity(1L, new PlayerEntity(), Arrays.asList(buildingEntity), "TestKingdom");
+    List<BuildingEntity> fakeList = Arrays.asList(
+      buildingEntity,
+      new BuildingEntity()
+    );
+    KingdomEntity kingdomEntity = new KingdomEntity(1L, new PlayerEntity(), fakeList, "TestKingdom");
 
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
