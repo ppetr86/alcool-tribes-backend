@@ -51,6 +51,47 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
+  public BuildingEntity findBuildingById(Long id) {
+    return repo.findById(id).orElse(null);
+  }
+
+  @Override
+  public String increaseTheGivenBuildingLevel(KingdomEntity kingdomEntity, BuildingEntity buildingEntity) {
+
+    BuildingEntity townHall = kingdomEntity.getBuildings().stream()
+      .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
+      .findFirst()
+      .get();
+
+    if (buildingEntity == null) {
+      return "no id";
+    } else if (buildingEntity.getId() == null ||
+      buildingEntity.getType() == null ||
+      buildingEntity.getLevel() == 0 ||
+      buildingEntity.getHp() == 0 ||
+      buildingEntity.getStartedAt() == 0 ||
+      buildingEntity.getFinishedAt() == 0 ||
+      buildingEntity.getKingdom() == null) {
+      return "parameter missing";
+    } else if (townHall.getLevel() <= buildingEntity.getLevel()){
+      return "town hall need higher level";
+    } else if (!resourceService.hasResourcesForBuilding()){
+      return "no resource";
+    } else {
+      return "building details";
+    }
+  }
+
+  @Override
+  public BuildingEntity updateBuilding(BuildingEntity buildingEntity) {
+    buildingEntity.setLevel(buildingEntity.getLevel() + 1);
+    //set building HP?
+    buildingEntity.setStartedAt(timeService.getTime());
+    defineFinishedAt(buildingEntity);
+    return repo.save(buildingEntity);
+  }
+
+  @Override
   public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
     return repo.findAllByKingdomId(id);
   }
@@ -80,7 +121,7 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
-      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
+    throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
     if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
@@ -96,14 +137,14 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
-        .map(type -> new BuildingEntity(kingdom, type, 1))
-        .collect(Collectors.toList());
+      .map(type -> new BuildingEntity(kingdom, type, 1))
+      .collect(Collectors.toList());
   }
 
   @Override
   public boolean hasKingdomTownhall(KingdomEntity kingdom) {
     if (kingdom.getBuildings() == null) return false;
     return kingdom.getBuildings().stream()
-        .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
+      .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
 }
