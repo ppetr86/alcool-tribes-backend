@@ -33,17 +33,17 @@ public class TroopEntity {
   @Column(updatable = false)
   private Long finishedAt;
   @ManyToOne
-  private KingdomEntity kingdomEntity;
+  private KingdomEntity kingdom;
 
   public TroopEntity(Integer level, Integer hp, Integer attack, Integer defense, Long startedAt, Long finishedAt,
-                     KingdomEntity kingdomEntity) {
+                     KingdomEntity kingdom) {
     this.level = level;
     this.hp = hp;
     this.attack = attack;
     this.defence = defense;
     this.startedAt = startedAt;
     this.finishedAt = finishedAt;
-    this.kingdomEntity = kingdomEntity;
+    this.kingdom = kingdom;
   }
 
 

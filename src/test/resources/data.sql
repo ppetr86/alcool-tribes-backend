@@ -14,3 +14,7 @@ INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
 VALUES (3, 0, 0, 1, 0, 'ACADEMY', 1);
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
  VALUES (4, 0, 0, 1, 0, 'FARM', 1);
+
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
+VALUES (1,10, 5, 1613070182, 20, 1, 1613070152, 1);
+

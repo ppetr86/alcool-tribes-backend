@@ -31,7 +31,7 @@ public class KingdomEntity {
   @Column(name = "kingdomname")
   private String kingdomName;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdomEntity")
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
   private List<TroopEntity> troops;
 
 }
