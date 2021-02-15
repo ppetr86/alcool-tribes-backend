@@ -12,5 +12,5 @@ public interface ResourceService {
 
   ResourceEntity saveResource(ResourceEntity resourceEntity);
 
-  List<ResourceEntity> findAllResources();
+  List<ResourceEntity> findResourcesByKingdomId(Long id);
 }

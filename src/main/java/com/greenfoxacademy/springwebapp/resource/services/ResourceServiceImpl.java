@@ -19,7 +19,6 @@ public class ResourceServiceImpl implements ResourceService {
   public boolean hasResourcesForBuilding() {
     // TODO: hasResourcesForBuilding
     return false;
-<<<<<<< HEAD
   }
 
   @Override
@@ -28,9 +27,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public List<ResourceEntity> findAllResources() {
-    return resourceRepository.findAll();
-=======
->>>>>>> cb8251b9dbd875363981660cd7af425fafa75a78
+  public List<ResourceEntity> findResourcesByKingdomId(Long id) {
+    return resourceRepository.findAllByKingdomId(id);
   }
 }
