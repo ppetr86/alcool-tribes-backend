@@ -13,8 +13,7 @@ public class BuildingFactory {
         new BuildingEntity(null, BuildingType.TOWNHALL, 1),
         new BuildingEntity(null, BuildingType.ACADEMY, 1),
         new BuildingEntity(null, BuildingType.FARM, 1),
-        new BuildingEntity(null, BuildingType.MINE, 1),
-        new BuildingEntity(10L,BuildingType.ACADEMY,1,1,1L,2L)
+        new BuildingEntity(null, BuildingType.MINE, 1)
     );
   }
   public static List<BuildingEntity> createDefaultLevel1BuildingsWithAllData() {
