@@ -93,7 +93,9 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public boolean kingdomIsContainTheGivenBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity) {
-    return kingdomEntity.getBuildings().contains(buildingEntity);
+    return kingdomEntity.getBuildings().stream()
+      .anyMatch(building -> building.getId().equals(buildingEntity.getId()));
+    //return kingdomEntity.getBuildings().contains(buildingEntity);
   }
 
   @Override

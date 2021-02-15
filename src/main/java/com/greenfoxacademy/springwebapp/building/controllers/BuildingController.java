@@ -57,6 +57,7 @@ public class BuildingController {
 
     if (actualBuilding == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("Id not found"));
+    //try to change string return type instead of boolean
     } else if (buildingService.kingdomIsContainTheGivenBuilding(kingdom, actualBuilding)) {
                 //kingdom.getBuildings().contains(actualBuilding)
       return ResponseEntity.ok().body(actualBuilding);

@@ -2,7 +2,10 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -43,6 +46,9 @@ public class BuildingControllerIntegrationTest {
 
   @MockBean
   private KingdomService kingdomService;
+
+  @MockBean
+  private BuildingService buildingService;
 
   @MockBean
   private ResourceService resourceService;
@@ -232,5 +238,18 @@ public class BuildingControllerIntegrationTest {
             .andExpect(status().isNotAcceptable())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+  }
+
+  //Mark tests
+  @Test
+  public void getBuildingByIdShouldReturnOk() throws Exception{
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 200, 300);
+
+    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
+
+    mockMvc.perform(get(BuildingController.URI + "/1")
+    .principal(authentication))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.level", is(1)));
   }
 }

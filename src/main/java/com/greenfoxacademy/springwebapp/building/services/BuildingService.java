@@ -22,9 +22,10 @@ public interface BuildingService {
   BuildingEntity defineHp(BuildingEntity entity);
 
   BuildingEntity findBuildingById(Long id);
+
   boolean kingdomIsContainTheGivenBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
 
-  boolean hasKingdomTownhall (KingdomEntity kingdom);
+  boolean hasKingdomTownhall(KingdomEntity kingdom);
 
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 
