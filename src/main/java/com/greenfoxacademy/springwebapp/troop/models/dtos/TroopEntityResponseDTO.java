@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class TroopEntityResponseDTO {
 
-  private long id;
-  private int level;
-  private int hp;
-  private int attack;
-  private int defence;
-  private long startedAt;
-  private long finishedAt;
+  private Long id;
+  private Integer level;
+  private Integer hp;
+  private Integer attack;
+  private Integer defence;
+  private Long startedAt;
+  private Long finishedAt;
 
   public TroopEntityResponseDTO(TroopEntity entity) {
 
