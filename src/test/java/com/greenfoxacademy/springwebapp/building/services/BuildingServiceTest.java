@@ -69,56 +69,56 @@ public class BuildingServiceTest {
   public void defineFinishedAt_Townhall() {
     BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(120, b.getFinishedAt());
+    Assert.assertEquals(120, (long)b.getFinishedAt());
   }
 
   @Test
   public void defineFinishedAt_Farm() {
     BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(60, b.getFinishedAt());
+    Assert.assertEquals(60, (long)b.getFinishedAt());
   }
 
   @Test
   public void defineFinishedAt_Mine() {
     BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(60, b.getFinishedAt());
+    Assert.assertEquals(60, (long)b.getFinishedAt());
   }
 
   @Test
   public void defineFinishedAt_Academy() {
     BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(90, b.getFinishedAt());
+    Assert.assertEquals(90, (long)b.getFinishedAt());
   }
 
   @Test
   public void defineHP_Townhall() {
     BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(200, b.getHp());
+    Assert.assertEquals(200, (long)b.getHp());
   }
 
   @Test
   public void defineHP_Farm() {
     BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(100, b.getHp());
+    Assert.assertEquals(100, (long)b.getHp());
   }
 
   @Test
   public void defineHP_Mine() {
     BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(100, b.getHp());
+    Assert.assertEquals(100, (long)b.getHp());
   }
 
   @Test
   public void defineHP_Academy() {
     BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(150, b.getHp());
+    Assert.assertEquals(150, (long)b.getHp());
   }
 
   @Test

@@ -8,8 +8,9 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class TroopResponseDTO {
+public class TroopEntityResponseDTO {
 
+  private long id;
   private int level;
   private int hp;
   private int attack;
@@ -17,8 +18,8 @@ public class TroopResponseDTO {
   private long startedAt;
   private long finishedAt;
 
-  public TroopResponseDTO(TroopEntity entity) {
-
+  public TroopEntityResponseDTO(TroopEntity entity) {
+    this.id = entity.getId();
     this.level = entity.getLevel();
     this.hp = entity.getHp();
     this.attack = entity.getAttack();

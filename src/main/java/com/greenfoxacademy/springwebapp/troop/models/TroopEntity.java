@@ -7,23 +7,22 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "troops")
-@Entity
-@NoArgsConstructor
 @Data
+@Entity
+@Table(name = "troops")
+@NoArgsConstructor
 @AllArgsConstructor
 public class TroopEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  private int level;
-  private int hp;
-  private int attack;
-  private int defence;
-  private long startedAt;
-  private long finishedAt;
+  private Integer level;
+  private Integer hp;
+  private Integer attack;
+  private Integer defence;
+  private Long startedAt;
+  private Long finishedAt;
   @ManyToOne
   private KingdomEntity kingdom;
 

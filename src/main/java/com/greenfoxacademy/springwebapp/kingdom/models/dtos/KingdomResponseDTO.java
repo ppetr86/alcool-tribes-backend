@@ -4,7 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleRespo
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class KingdomResponseDTO {
   private long userId;
   private List<BuildingSingleResponseDTO> buildings;
   private List<ResourceResponseDTO> resources;
-  private List<TroopResponseDTO> troops;
+  private List<TroopEntityResponseDTO> troops;
   private LocationEntityDTO location;
 
 
@@ -40,7 +40,7 @@ public class KingdomResponseDTO {
             .collect(Collectors.toList());
 
     this.troops = e.getTroops().stream()
-            .map(TroopResponseDTO::new)
+            .map(TroopEntityResponseDTO::new)
             .collect(Collectors.toList());
 
     this.location = new LocationEntityDTO(e.getLocation());
