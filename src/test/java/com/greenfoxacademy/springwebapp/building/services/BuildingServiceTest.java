@@ -163,13 +163,18 @@ public class BuildingServiceTest {
 
   @Test
   public void increaseTheGivenBuildingLevelMethodShouldReturnNoId() {
+    //AAA
+
+    //1.Arrange
+    //kingdom need townhall
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity();
 
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdomEntity, buildingEntity)).thenReturn("no id");
-    //Mockito.when(kingdomEntity.getBuildings().stream().filter(building -> building.getType().equals(BuildingType.TOWNHALL)).findFirst().get()).thenReturn(new BuildingEntity());
-    //Have to mock the stream part of the method
+    //Mock resource method
+    //2.Act
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdomEntity, buildingEntity);
 
-    Assert.assertEquals("no id", buildingService.increaseTheGivenBuildingLevel(kingdomEntity, buildingEntity));
+    //3.Assert
+    Assert.assertEquals("no id", result);
   }
 }
