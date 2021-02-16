@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -232,4 +233,6 @@ public class BuildingControllerIntegrationTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
+
+
 }

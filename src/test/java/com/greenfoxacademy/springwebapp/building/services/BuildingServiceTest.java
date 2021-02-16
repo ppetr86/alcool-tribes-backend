@@ -15,19 +15,22 @@ import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BuildingServiceTest {
 
   private BuildingService buildingService;
+  private ResourceService resourceService;
+  private TimeService timeService;
 
   @Before
   public void init() {
 
     BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
-    TimeService timeService = Mockito.mock(TimeService.class);
+    timeService = Mockito.mock(TimeService.class);
     Environment env = Mockito.mock(Environment.class);
-    ResourceService resourceService = Mockito.mock(ResourceService.class);
+    resourceService = Mockito.mock(ResourceService.class);
 
     buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
 
@@ -163,18 +166,171 @@ public class BuildingServiceTest {
 
   @Test
   public void increaseTheGivenBuildingLevelMethodShouldReturnNoId() {
-    //AAA
-
-    //1.Arrange
-    //kingdom need townhall
     KingdomEntity kingdomEntity = new KingdomEntity();
-    BuildingEntity buildingEntity = new BuildingEntity();
+    BuildingEntity townHall = new BuildingEntity(BuildingType.TOWNHALL,200L );
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(townHall);
+    kingdomEntity.setBuildings(fakeList);
 
-    //Mock resource method
-    //2.Act
-    String result = buildingService.increaseTheGivenBuildingLevel(kingdomEntity, buildingEntity);
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
-    //3.Assert
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdomEntity, null);
+
     Assert.assertEquals("no id", result);
+  }
+
+  @Test
+  public void increaseTheGivenBuildingLevelMethodShouldReturnParameterMissingIdLevelHpFinishedAtKingdom(){
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity townHall = new BuildingEntity(BuildingType.TOWNHALL, 3000L);
+    BuildingEntity building = new BuildingEntity(BuildingType.FARM, 4000L);
+    List<BuildingEntity> fakeList = Arrays.asList(
+      townHall,
+      building
+    );
+    kingdom.setBuildings(fakeList);
+
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
+
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+
+    Assert.assertEquals("parameter missing", result);
+  }
+
+  @Test
+  public void increaseTheGivenBuildingLevelMethodShouldReturnParameterMissingIdHpStatedAtFinishedAt(){
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity townHall = new BuildingEntity(BuildingType.TOWNHALL, 3000L);
+    BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
+    List<BuildingEntity> fakeList = Arrays.asList(
+      townHall,
+      building
+    );
+    kingdom.setBuildings(fakeList);
+
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
+
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+
+    Assert.assertEquals("parameter missing", result);
+  }
+
+  @Test
+  public void increaseTheGivenBuildingLevelMethodShouldReturnParameterMissingKingdom(){
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity townHall = new BuildingEntity(BuildingType.TOWNHALL, 3000L);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L);
+    List<BuildingEntity> fakeList = Arrays.asList(
+      townHall,
+      building
+    );
+    kingdom.setBuildings(fakeList);
+
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
+
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+
+    Assert.assertEquals("parameter missing", result);
+  }
+
+  @Test
+  public void increaseTheGivenBuildingLevelMethodShouldReturnTownHallNeedHigherLevelIfLevelsAreEquals(){
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 1);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
+    List<BuildingEntity> fakeList = Arrays.asList(
+      townHall,
+      building
+    );
+    kingdom.setBuildings(fakeList);
+
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
+
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+
+    Assert.assertEquals("town hall need higher level", result);
+  }
+
+  @Test
+  public void increaseTheGivenBuildingLevelMethodShouldReturnTownHallNeedHigherLevelIfTownHallsLevelSmaller(){
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 1);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 2, 100, 3000L, 4000L, kingdom);
+    List<BuildingEntity> fakeList = Arrays.asList(
+      townHall,
+      building
+    );
+    kingdom.setBuildings(fakeList);
+
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
+
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+
+    Assert.assertEquals("town hall need higher level", result);
+  }
+
+  @Test
+  public void increaseTheGivenBuildingLevelMethodShouldReturnNoResource(){
+    //Arrange
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
+    List<BuildingEntity> fakeList = Arrays.asList(
+      townHall,
+      building
+    );
+    kingdom.setBuildings(fakeList);
+
+    //TODO: have to modify hasResourcesForBuilding method
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
+
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+
+    Assert.assertEquals("no resource", result);
+  }
+
+  @Test
+  public void increaseTheGivenBuildingLevelMethodShouldReturnBuildingDetails(){
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
+    List<BuildingEntity> fakeList = Arrays.asList(
+      townHall,
+      building
+    );
+    kingdom.setBuildings(fakeList);
+
+    //TODO: have to modify hasResourcesForBuilding method
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+
+    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+
+    Assert.assertEquals("building details", result);
+  }
+
+  @Test
+  public void updateBuildingShouldReturnWithUpdatedBuilding(){
+    BuildingEntity building = new BuildingEntity(new KingdomEntity(), BuildingType.FARM, 1);
+
+    Mockito.when(timeService.getTime()).thenReturn(1060L);
+
+    buildingService.updateBuilding(building);
+
+    Assert.assertEquals(2, building.getLevel());
+    Assert.assertEquals(1060, building.getStartedAt());
+    Assert.assertEquals(1120, building.getFinishedAt());
+  }
+
+  @Test
+  public void updateBuildingShouldNotReturnWithUpdatedBuilding(){
+    BuildingEntity building = new BuildingEntity(new KingdomEntity(), BuildingType.FARM, 1);
+
+    Mockito.when(timeService.getTime()).thenReturn(1060L);
+
+    buildingService.updateBuilding(building);
+
+    Assert.assertNotEquals(3, building.getLevel());
+    Assert.assertEquals(1060, building.getStartedAt());
+    Assert.assertNotEquals(1060, building.getFinishedAt());
   }
 }

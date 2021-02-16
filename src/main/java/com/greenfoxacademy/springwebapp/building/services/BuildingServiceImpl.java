@@ -63,29 +63,29 @@ public class BuildingServiceImpl implements BuildingService {
       .findFirst()
       .get();
 
-    if (buildingEntity == null) {
-      return "no id";
-    } else if (buildingEntity.getId() == null ||
-      buildingEntity.getType() == null ||
-      buildingEntity.getLevel() == 0 ||
-      buildingEntity.getHp() == 0 ||
-      buildingEntity.getStartedAt() == 0 ||
-      buildingEntity.getFinishedAt() == 0 ||
-      buildingEntity.getKingdom() == null) {
-      return "parameter missing";
-    } else if (townHall.getLevel() <= buildingEntity.getLevel()){
-      return "town hall need higher level";
-    } else if (!resourceService.hasResourcesForBuilding()){
-      return "no resource";
-    } else {
-      return "building details";
-    }
+      if (buildingEntity == null) {
+        return "no id";
+      } else if (buildingEntity.getId() == null ||
+        buildingEntity.getType() == null ||
+        buildingEntity.getLevel() == 0 ||
+        buildingEntity.getHp() == 0 ||
+        buildingEntity.getStartedAt() == 0 ||
+        buildingEntity.getFinishedAt() == 0 ||
+        buildingEntity.getKingdom() == null) {
+        return "parameter missing";
+      } else if (townHall.getLevel() <= buildingEntity.getLevel()) {
+        return "town hall need higher level";
+      } else if (!resourceService.hasResourcesForBuilding()) {
+        return "no resource";
+      } else {
+        return "building details";
+      }
   }
 
   @Override
   public BuildingEntity updateBuilding(BuildingEntity buildingEntity) {
     buildingEntity.setLevel(buildingEntity.getLevel() + 1);
-    //set building HP?
+    //TODO: modify building HP?
     buildingEntity.setStartedAt(timeService.getTime());
     defineFinishedAt(buildingEntity);
     return repo.save(buildingEntity);
