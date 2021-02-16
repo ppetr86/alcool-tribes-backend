@@ -3,8 +3,8 @@ package com.greenfoxacademy.springwebapp.troop.services;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
-import com.greenfoxacademy.springwebapp.troop.repositories.TroopEntityRepository;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
+import com.greenfoxacademy.springwebapp.troop.repositories.TroopRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -17,28 +17,21 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TroopServiceImpl implements TroopService {
 
-  private final TroopEntityRepository repo;
+  private final TroopRepository repo;
   private final ModelMapper modelMapper;
 
-  @Override
-  public List<TroopEntity> findTroopsByKingdom(KingdomEntity entity) {
-    //TODO: needs to implement the Kingdom Entity
-    return repo.findAllByKingdom(entity);
-  }
-
-  public List<TroopEntityResponseDTO> convertEntityListToDTO(List<TroopEntity> entities) {
+  private List<TroopEntityResponseDTO> convertEntityListToDTO(List<TroopEntity> entities) {
     return entities
             .stream()
             .map(this::convertEntityToEntityResponseDTO)
             .collect(Collectors.toList());
   }
 
-  public TroopResponseDto convertDTOListToDTO(List<TroopEntityResponseDTO> list) {
-    return new TroopResponseDto(list);
+  private TroopListResponseDto convertDTOListToDTO(List<TroopEntityResponseDTO> list) {
+    return new TroopListResponseDto(list);
   }
 
-  @Override
-  public TroopEntityResponseDTO convertEntityToEntityResponseDTO(TroopEntity entity) {
+  private TroopEntityResponseDTO convertEntityToEntityResponseDTO(TroopEntity entity) {
     modelMapper.getConfiguration()
             .setMatchingStrategy(MatchingStrategies.LOOSE);
     TroopEntityResponseDTO result = modelMapper
@@ -47,9 +40,7 @@ public class TroopServiceImpl implements TroopService {
   }
 
   @Override
-  public TroopResponseDto findTroopEntitiesConvertToResponseDTO(KingdomEntity entity) {
-    List<TroopEntity> troopEntities = findTroopsByKingdom(entity);
-    List<TroopEntityResponseDTO> entityResponseDTOs = convertEntityListToDTO(troopEntities);
-    return convertDTOListToDTO(entityResponseDTOs);
+  public TroopListResponseDto troopEntitiesConvertToResponseDTO(KingdomEntity entity) {
+    return convertDTOListToDTO(convertEntityListToDTO(entity.getTroops()));
   }
 }

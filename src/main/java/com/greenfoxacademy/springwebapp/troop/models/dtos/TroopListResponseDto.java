@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class TroopResponseDto {
+public class TroopListResponseDto {
 
   private List<TroopEntityResponseDTO> troops;
 }

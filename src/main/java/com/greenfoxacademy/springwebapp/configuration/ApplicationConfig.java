@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp;
+package com.greenfoxacademy.springwebapp.configuration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

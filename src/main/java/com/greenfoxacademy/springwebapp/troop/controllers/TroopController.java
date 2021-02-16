@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 public class TroopController {
-  public static final String URI_KINGDOM_TROOPS = "/kingdom/troops";
+  public static final String URI = "/kingdom/troops";
 
   private final TroopService troopService;
 
-  @GetMapping(TroopController.URI_KINGDOM_TROOPS)
-  public ResponseEntity<TroopResponseDto> getTroopsOfKingdom(Authentication auth) {
+  @GetMapping(TroopController.URI)
+  public ResponseEntity<TroopListResponseDto> getTroopsOfKingdom(Authentication auth) {
 
     return ResponseEntity.ok(troopService
-            .findTroopEntitiesConvertToResponseDTO(
+            .troopEntitiesConvertToResponseDTO(
                     ((CustomUserDetails) auth.getPrincipal()).getKingdom()));
   }
 }

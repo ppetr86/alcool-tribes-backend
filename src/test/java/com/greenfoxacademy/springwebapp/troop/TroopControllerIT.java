@@ -1,8 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop;
 
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.troop.controllers.TroopController;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +24,7 @@ import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TroopControllerIntegrationTest {
+public class TroopControllerIT {
 
   @Autowired
   private MockMvc mockMvc;
@@ -40,7 +38,7 @@ public class TroopControllerIntegrationTest {
 
   @Test
   public void getTroopsOfKingdom_ReturnsCorrectBodyAndStatus() throws Exception {
-    mockMvc.perform(get(TroopController.URI_KINGDOM_TROOPS)
+    mockMvc.perform(get(TroopController.URI)
             .principal(authentication))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

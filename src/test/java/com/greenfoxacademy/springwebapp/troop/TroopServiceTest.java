@@ -3,8 +3,8 @@ package com.greenfoxacademy.springwebapp.troop;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDto;
-import com.greenfoxacademy.springwebapp.troop.repositories.TroopEntityRepository;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
+import com.greenfoxacademy.springwebapp.troop.repositories.TroopRepository;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import com.greenfoxacademy.springwebapp.troop.services.TroopServiceImpl;
 import org.junit.Assert;
@@ -20,7 +20,7 @@ public class TroopServiceTest {
 
   private final ModelMapper modelMapper = new ModelMapper();
   private TroopService troopService;
-  private TroopEntityRepository troopEntityRepository;
+  private TroopRepository troopEntityRepository;
 
   List<TroopEntity> inputTroopEntities = new ArrayList<>();
   List<TroopEntityResponseDTO> inputTroopEntityResponseDTO = new ArrayList<>();
@@ -33,7 +33,7 @@ public class TroopServiceTest {
 
   @Before
   public void init() {
-    troopEntityRepository = Mockito.mock(TroopEntityRepository.class);
+    troopEntityRepository = Mockito.mock(TroopRepository.class);
     troopService = new TroopServiceImpl(troopEntityRepository, modelMapper);
 
     troopEntity1 = new TroopEntity(1L, 1, 101, 101, 101, 101L, 101L);
@@ -43,9 +43,9 @@ public class TroopServiceTest {
     inputTroopEntities.add(troopEntity2);
     inputTroopEntities.add(troopEntity3);
 
-    entityResponseDTO1 = new TroopEntityResponseDTO(1, 101, 101, 101, 101, 101);
-    entityResponseDTO2 = new TroopEntityResponseDTO(2, 102, 102, 102, 102, 102);
-    entityResponseDTO3 = new TroopEntityResponseDTO(3, 103, 103, 103, 103, 103);
+    entityResponseDTO1 = new TroopEntityResponseDTO(1,1, 101, 101, 101, 101, 101);
+    entityResponseDTO2 = new TroopEntityResponseDTO(2,2, 102, 102, 102, 102, 102);
+    entityResponseDTO3 = new TroopEntityResponseDTO(3,3, 103, 103, 103, 103, 103);
 
     inputTroopEntityResponseDTO.add(entityResponseDTO1);
     inputTroopEntityResponseDTO.add(entityResponseDTO2);
@@ -53,17 +53,11 @@ public class TroopServiceTest {
   }
 
   @Test
-  public void findTroopsByKingdomID_ReturnsCorrectList() {
-    Mockito.when(troopEntityRepository.findAllByKingdom(new KingdomEntity(1L))).thenReturn(inputTroopEntities);
-    Assert.assertEquals(3, inputTroopEntities.size());
-  }
-
-  @Test
   public void convertDTOListToDTO_ReturnsCorrectResult() {
-    TroopResponseDto output = new TroopResponseDto();
+    TroopListResponseDto output = new TroopListResponseDto();
     output.setTroops(inputTroopEntityResponseDTO);
 
-    TroopResponseDto result = troopService.convertDTOListToDTO(inputTroopEntityResponseDTO);
+    TroopListResponseDto result = troopService.convertDTOListToDTO(inputTroopEntityResponseDTO);
 
     Assert.assertEquals(output.getTroops().size(), result.getTroops().size());
     Assert.assertEquals(output.getTroops().contains(entityResponseDTO3), result.getTroops().contains(entityResponseDTO3));

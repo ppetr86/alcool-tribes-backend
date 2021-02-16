@@ -17,7 +17,6 @@ public class TroopEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   private int level;
   private int hp;
   private int attack;
