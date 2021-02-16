@@ -18,9 +18,7 @@ import java.util.List;
 
 public class TroopServiceTest {
 
-  private final ModelMapper modelMapper = new ModelMapper();
   private TroopService troopService;
-  private TroopRepository troopEntityRepository;
 
   List<TroopEntity> inputTroopEntities = new ArrayList<>();
   List<TroopEntityResponseDTO> inputTroopEntityResponseDTO = new ArrayList<>();
@@ -33,8 +31,7 @@ public class TroopServiceTest {
 
   @Before
   public void init() {
-    troopEntityRepository = Mockito.mock(TroopRepository.class);
-    troopService = new TroopServiceImpl(troopEntityRepository, modelMapper);
+    troopService = new TroopServiceImpl();
 
     troopEntity1 = new TroopEntity(1L, 1, 101, 101, 101, 101L, 101L);
     troopEntity2 = new TroopEntity(2L, 2, 102, 102, 102, 102L, 102L);

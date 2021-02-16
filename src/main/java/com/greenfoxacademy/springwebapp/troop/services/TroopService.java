@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface TroopService {
 
-  TroopListResponseDto troopEntitiesConvertToResponseDTO(KingdomEntity entity);
+  TroopListResponseDto troopsToListDTO(KingdomEntity entity);
 }

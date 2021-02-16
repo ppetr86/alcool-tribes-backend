@@ -17,30 +17,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TroopServiceImpl implements TroopService {
 
-  private final TroopRepository repo;
-  private final ModelMapper modelMapper;
-
-  private List<TroopEntityResponseDTO> convertEntityListToDTO(List<TroopEntity> entities) {
-    return entities
-            .stream()
-            .map(this::convertEntityToEntityResponseDTO)
-            .collect(Collectors.toList());
-  }
-
-  private TroopListResponseDto convertDTOListToDTO(List<TroopEntityResponseDTO> list) {
-    return new TroopListResponseDto(list);
-  }
-
-  private TroopEntityResponseDTO convertEntityToEntityResponseDTO(TroopEntity entity) {
-    modelMapper.getConfiguration()
-            .setMatchingStrategy(MatchingStrategies.LOOSE);
-    TroopEntityResponseDTO result = modelMapper
-            .map(entity, TroopEntityResponseDTO.class);
-    return result;
-  }
-
   @Override
-  public TroopListResponseDto troopEntitiesConvertToResponseDTO(KingdomEntity entity) {
-    return convertDTOListToDTO(convertEntityListToDTO(entity.getTroops()));
+  public TroopListResponseDto troopsToListDTO(KingdomEntity entity) {
+    return new TroopListResponseDto(entity.getTroops().stream()
+            .map(TroopEntityResponseDTO::new)
+            .collect(Collectors.toList())
+    );
   }
 }
