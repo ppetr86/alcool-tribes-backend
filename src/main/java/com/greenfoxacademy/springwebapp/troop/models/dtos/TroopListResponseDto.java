@@ -12,4 +12,5 @@ import java.util.List;
 public class TroopListResponseDto {
 
   private List<TroopEntityResponseDTO> troops;
+
 }

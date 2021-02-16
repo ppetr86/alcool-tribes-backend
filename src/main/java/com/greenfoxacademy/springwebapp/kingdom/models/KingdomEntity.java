@@ -30,10 +30,14 @@ public class KingdomEntity {
   @Column(name = "kingdomname")
   private String kingdomName;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
   private List<TroopEntity> troops;
 
   public KingdomEntity(long l) {
     this.id = l;
+  }
+
+  public KingdomEntity(List<TroopEntity> troops) {
+    this.troops = troops;
   }
 }

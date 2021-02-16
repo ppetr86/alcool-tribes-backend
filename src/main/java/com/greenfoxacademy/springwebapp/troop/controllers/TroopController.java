@@ -18,9 +18,7 @@ public class TroopController {
 
   @GetMapping(TroopController.URI)
   public ResponseEntity<TroopListResponseDto> getTroopsOfKingdom(Authentication auth) {
-
-    return ResponseEntity.ok(troopService
-            .troopEntitiesConvertToResponseDTO(
+    return ResponseEntity.ok(troopService.troopsToListDTO(
                     ((CustomUserDetails) auth.getPrincipal()).getKingdom()));
   }
 }

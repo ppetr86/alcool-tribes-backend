@@ -1,7 +1,8 @@
-package com.greenfoxacademy.springwebapp.troop;
+package com.greenfoxacademy.springwebapp.troop.controllers;
 
+import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.troop.controllers.TroopController;
+import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
@@ -12,12 +13,12 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
-public class TroopControllerUnitTest {
+public class TroopControllerUT {
 
   private TroopController troopController;
   private TroopService troopService;
@@ -31,16 +32,18 @@ public class TroopControllerUnitTest {
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
 
-    List<TroopEntityResponseDTO> dtos = new ArrayList<>();
-    dtos.add(new TroopEntityResponseDTO(1,1, 100, 50, 20, 999, 1111));
-    dtos.add(new TroopEntityResponseDTO(2,1, 100, 50, 20, 1111, 1222));
+    KingdomEntity ke = TroopFactory.createDefaultKingdomWithTroops();
+    List<TroopEntityResponseDTO> list = ke.getTroops()
+            .stream()
+            .map(TroopEntityResponseDTO::new)
+            .collect(Collectors.toList());
 
-    Mockito.when(troopService.troopEntitiesConvertToResponseDTO( new KingdomEntity(1L)))
-            .thenReturn(new TroopListResponseDto(dtos));
+    Mockito.when(troopService.troopsToListDTO(new KingdomEntity(1L)))
+            .thenReturn(new TroopListResponseDto(list));
 
     ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assert.assertEquals(2, response.getBody().getTroops().size());
+    Assert.assertEquals(3, response.getBody().getTroops().size());
   }
 }
