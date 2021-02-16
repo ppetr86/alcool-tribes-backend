@@ -2,11 +2,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
-import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -48,9 +44,6 @@ public class BuildingControllerIntegrationTest {
   private KingdomService kingdomService;
 
   @MockBean
-  private BuildingService buildingService;
-
-  @MockBean
   private ResourceService resourceService;
 
   private Authentication authentication;
@@ -65,10 +58,10 @@ public class BuildingControllerIntegrationTest {
   @Test
   public void getKingdomBuildings() throws Exception {
     mockMvc.perform(get(BuildingController.URI)
-            .principal(authentication))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.buildings[0].finishedAt", is(0)));
+      .principal(authentication))
+      .andExpect(status().isOk())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.buildings[0].finishedAt", is(0)));
   }
 
   @Test
@@ -81,12 +74,12 @@ public class BuildingControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.type", is("FARM")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isOk())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.type", is("FARM")));
   }
 
   @Test
@@ -96,12 +89,12 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isBadRequest())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
   @Test
@@ -111,12 +104,12 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isBadRequest())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
   @Test
@@ -126,12 +119,12 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isBadRequest())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
   @Test
@@ -141,12 +134,12 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isNotAcceptable())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Invalid building type")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isNotAcceptable())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Invalid building type")));
   }
 
   @Test
@@ -159,12 +152,12 @@ public class BuildingControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isConflict())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Not enough resource")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isConflict())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
   @Test
@@ -177,12 +170,12 @@ public class BuildingControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isConflict())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Not enough resource")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isConflict())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
   @Test
@@ -194,12 +187,12 @@ public class BuildingControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isConflict())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Not enough resource")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isConflict())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
   @Test
@@ -212,12 +205,12 @@ public class BuildingControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isConflict())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Not enough resource")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isConflict())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
   @Test
@@ -232,24 +225,11 @@ public class BuildingControllerIntegrationTest {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .principal(authentication))
-            .andExpect(status().isNotAcceptable())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
-  }
-
-  //Mark tests
-  @Test
-  public void getBuildingByIdShouldReturnOk() throws Exception{
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 200, 300);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-
-    mockMvc.perform(get(BuildingController.URI + "/1")
-    .principal(authentication))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.level", is(1)));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isNotAcceptable())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
 }

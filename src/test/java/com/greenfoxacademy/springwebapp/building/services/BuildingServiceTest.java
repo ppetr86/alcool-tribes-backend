@@ -172,6 +172,7 @@ public class BuildingServiceTest {
     BuildingEntity buildingEntity = new BuildingEntity(BuildingType.FARM);
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+
     String buildingType = buildingService.findBuildingById(1L).getType().toString();
 
     Assert.assertEquals("FARM", buildingType);
@@ -182,8 +183,37 @@ public class BuildingServiceTest {
     BuildingEntity buildingEntity = new BuildingEntity(BuildingType.MINE);
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+
     String buildingType = buildingService.findBuildingById(1L).getType().toString();
 
     Assert.assertNotEquals("FARM", buildingType);
   }
+
+  @Test
+  public void kingdomIsContainTheGivenBuildingShouldReturnTrue() {
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
+
+    boolean result = buildingService.kingdomIsContainTheGivenBuilding(kingdomEntity, buildingEntity);
+
+    Assert.assertTrue(result);
+  }
+
+  @Test
+  public void kingdomIsContainTheGivenBuildingShouldReturnFalse() {
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    BuildingEntity buildingEntity2 = new BuildingEntity(2L, BuildingType.FARM, 1, 100, 100L, 200L);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
+
+    boolean result = buildingService.kingdomIsContainTheGivenBuilding(kingdomEntity, buildingEntity2);
+
+    Assert.assertFalse(result);
+  }
+
 }

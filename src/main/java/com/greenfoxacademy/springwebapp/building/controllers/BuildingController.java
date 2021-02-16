@@ -58,7 +58,6 @@ public class BuildingController {
     if (actualBuilding == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("Id not found"));
     } else if (buildingService.kingdomIsContainTheGivenBuilding(kingdom, actualBuilding)) {
-                //kingdom.getBuildings().contains(actualBuilding)
       return ResponseEntity.ok().body(actualBuilding);
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorDTO("Forbidden action"));

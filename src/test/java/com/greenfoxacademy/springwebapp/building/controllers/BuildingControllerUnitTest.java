@@ -35,10 +35,12 @@ public class BuildingControllerUnitTest {
   private BuildingService buildingService;
   private KingdomService kingdomService;
   private ResourceService resourceService;
-  pr
+  private Authentication authentication;
 
   @Before
   public void setUp() {
+    authentication = createAuth("test", 1L);
+
     buildingService = Mockito.mock(BuildingService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);
@@ -69,27 +71,32 @@ public class BuildingControllerUnitTest {
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
-  //Mark tests
   @Test
   public void getBuildingByIdShouldShowTheGivenBuildingDetails(){
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(new KingdomEntity(), buildingEntity)).thenReturn(true);
+    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(kingdomEntity, buildingEntity)).thenReturn(true);
 
-    ResponseEntity<?> response = buildingController.getBuildingById(1L, createAuth("test", 1L));
+    ResponseEntity<?> response = buildingController.getBuildingById(1L, authentication);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assert.assertEquals("FARM", ((BuildingEntity)response.getBody()).getType());
+    Assert.assertEquals("FARM", ((BuildingEntity)response.getBody()).getType().toString());
     Assert.assertEquals(1, ((BuildingEntity)response.getBody()).getLevel());
+    Assert.assertEquals(100,((BuildingEntity)response.getBody()).getHp());
   }
 
   @Test
   public void getBuildingByIdShouldReturn404(){
+
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(null);
     Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(new KingdomEntity(), new BuildingEntity())).thenReturn(true);
 
-    ResponseEntity<?> response = buildingController.getBuildingById(1L, createAuth("test", 1L));
+    ResponseEntity<?> response = buildingController.getBuildingById(1L, authentication);
 
     Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     Assert.assertEquals("Id not found", ((ErrorDTO)response.getBody()).getMessage());
@@ -98,11 +105,16 @@ public class BuildingControllerUnitTest {
   @Test
   public void getBuildingByIdShouldReturn403(){
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    BuildingEntity buildingEntity2 = new BuildingEntity(2L, BuildingType.FARM, 1, 100, 100L, 200L);
+    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
 
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(new KingdomEntity(), new BuildingEntity())).thenReturn(false);
+    Mockito.when(buildingService.findBuildingById(2L)).thenReturn(buildingEntity2);
+    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(kingdomEntity, buildingEntity2)).thenReturn(false);
 
-    ResponseEntity<?> response = buildingController.getBuildingById(1L, createAuth("test", 1L));
+    ResponseEntity<?> response = buildingController.getBuildingById(2L, authentication);
 
     Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     Assert.assertEquals("Forbidden action", ((ErrorDTO)response.getBody()).getMessage());
