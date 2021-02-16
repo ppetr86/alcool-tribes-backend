@@ -6,7 +6,7 @@ import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createD
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopPostResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
-public class TroopsControllerUnitTests {
+public class TroopsControllerUnitTest {
   private TroopController troopController;
   private TroopService troopService;
 
@@ -34,7 +34,8 @@ public class TroopsControllerUnitTests {
   @Test
   public void createTroop_troopIsCreated() {
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
-    TroopPostResponseDTO responseDTO = new TroopPostResponseDTO(1L, 1, 200, 50, 20, 10000L, 20000L);
+    TroopEntityResponseDTO
+        responseDTO = new TroopEntityResponseDTO(1L, 1, 200, 50, 20, 10000L, 20000L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
     Mockito.when(troopService.createTroop(kingdom, requestDTO)).thenReturn(responseDTO);
@@ -42,12 +43,12 @@ public class TroopsControllerUnitTests {
     ResponseEntity<?> response = troopController.createTroop(requestDTO, authentication);
 
     Assert.assertEquals(200, response.getStatusCodeValue());
-    Assert.assertEquals(1, ((TroopPostResponseDTO) response.getBody()).getId().intValue());
-    Assert.assertEquals(1, ((TroopPostResponseDTO) response.getBody()).getLevel().intValue());
-    Assert.assertEquals(200, ((TroopPostResponseDTO) response.getBody()).getHp().intValue());
-    Assert.assertEquals(50, ((TroopPostResponseDTO) response.getBody()).getAttack().intValue());
-    Assert.assertEquals(20, ((TroopPostResponseDTO) response.getBody()).getDefence().intValue());
-    Assert.assertEquals(10000, ((TroopPostResponseDTO) response.getBody()).getStartedAt().intValue());
-    Assert.assertEquals(20000, ((TroopPostResponseDTO) response.getBody()).getFinishedAt().intValue());
+    Assert.assertEquals(1, ((TroopEntityResponseDTO) response.getBody()).getId().intValue());
+    Assert.assertEquals(1, ((TroopEntityResponseDTO) response.getBody()).getLevel().intValue());
+    Assert.assertEquals(200, ((TroopEntityResponseDTO) response.getBody()).getHp().intValue());
+    Assert.assertEquals(50, ((TroopEntityResponseDTO) response.getBody()).getAttack().intValue());
+    Assert.assertEquals(20, ((TroopEntityResponseDTO) response.getBody()).getDefence().intValue());
+    Assert.assertEquals(10000, ((TroopEntityResponseDTO) response.getBody()).getStartedAt().intValue());
+    Assert.assertEquals(20000, ((TroopEntityResponseDTO) response.getBody()).getFinishedAt().intValue());
   }
 }

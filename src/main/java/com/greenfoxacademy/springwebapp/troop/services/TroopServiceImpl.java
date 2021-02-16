@@ -10,7 +10,7 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopPostResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.repositories.TroopRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
@@ -19,13 +19,13 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class TroopServiceImpl implements TroopService {
-  ResourceService resourceService;
-  TimeService timeService;
-  TroopRepository troopRepository;
+  private ResourceService resourceService;
+  private TimeService timeService;
+  private TroopRepository troopRepository;
   private final Environment env;
 
   @Override
-  public TroopPostResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
+  public TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
       ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException {
 
     BuildingEntity academy = kingdom.getBuildings().stream()
@@ -50,7 +50,7 @@ public class TroopServiceImpl implements TroopService {
     TroopEntity troop = troopRepository.save(
         new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom));
 
-    return new TroopPostResponseDTO(
+    return new TroopEntityResponseDTO(
         troop.getId(), troop.getLevel(), troop.getHp(), troop.getAttack(),
         troop.getDefence(), troop.getStartedAt(), troop.getFinishedAt());
   }

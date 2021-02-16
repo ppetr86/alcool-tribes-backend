@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TroopPostResponseDTO {
+public class TroopEntityResponseDTO {
   private Long id;
   private Integer level;
   private Integer hp;

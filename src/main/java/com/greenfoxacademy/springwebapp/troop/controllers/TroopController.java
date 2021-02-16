@@ -6,7 +6,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourc
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopPostResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ public class TroopController {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    TroopPostResponseDTO responseDTO = troopService.createTroop(kingdom, requestDTO);
+    TroopEntityResponseDTO responseDTO = troopService.createTroop(kingdom, requestDTO);
 
     return ResponseEntity.ok(responseDTO);
   }
