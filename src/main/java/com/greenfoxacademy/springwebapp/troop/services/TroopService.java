@@ -5,9 +5,9 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyId
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopPostResponseDTO;
 
 public interface TroopService {
-  TroopResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
+  TroopPostResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
       ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException;
 }
