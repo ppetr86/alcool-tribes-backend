@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -41,6 +40,5 @@ public class KingdomEntity {
   private String kingdomName;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.LAZY)
-  private Set<ResourceEntity> resources;
-
+  private List<ResourceEntity> resources;
 }

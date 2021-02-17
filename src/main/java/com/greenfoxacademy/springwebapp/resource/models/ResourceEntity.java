@@ -26,9 +26,9 @@ public class ResourceEntity {
   private Long id;
   @Enumerated(EnumType.STRING)
   private ResourceType type;
-  private int amount;
-  private int generation;
-  private long updatedAt;
+  private Integer amount;
+  private Integer generation;
+  private Long updatedAt;
   @ManyToOne
   private KingdomEntity kingdom;
 
