@@ -3,8 +3,6 @@ package com.greenfoxacademy.springwebapp.building.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
-import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.building.services.BuildingServiceImpl;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
@@ -56,12 +54,12 @@ public class BuildingServiceTest {
 
     Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(fakeList);
   }
-  
+
   @Test
   public void findBuildingsByKingdomId_correct() {
     Assert.assertEquals(4, buildingService.findBuildingsByKingdomId(1L).size());
   }
-  
+
   @Test
   public void findBuildingsByKingdomId_wrong() {
     Assert.assertNotEquals(999, buildingService.findBuildingsByKingdomId(1L).size());
@@ -71,56 +69,56 @@ public class BuildingServiceTest {
   public void defineFinishedAt_Townhall() {
     BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(120, b.getFinishedAt());
+    Assert.assertEquals(120, b.getFinishedAt().longValue());
   }
 
   @Test
   public void defineFinishedAt_Farm() {
     BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(60, b.getFinishedAt());
+    Assert.assertEquals(60, b.getFinishedAt().longValue());
   }
 
   @Test
   public void defineFinishedAt_Mine() {
     BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(60, b.getFinishedAt());
+    Assert.assertEquals(60, b.getFinishedAt().longValue());
   }
 
   @Test
   public void defineFinishedAt_Academy() {
     BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(90, b.getFinishedAt());
+    Assert.assertEquals(90, b.getFinishedAt().longValue());
   }
 
   @Test
   public void defineHP_Townhall() {
     BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(200, b.getHp());
+    Assert.assertEquals(200, b.getHp().longValue());
   }
 
   @Test
   public void defineHP_Farm() {
     BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(100, b.getHp());
+    Assert.assertEquals(100, b.getHp().longValue());
   }
 
   @Test
   public void defineHP_Mine() {
     BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(100, b.getHp());
+    Assert.assertEquals(100,  b.getHp().longValue());
   }
 
   @Test
   public void defineHP_Academy() {
     BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
     buildingService.defineHp(b);
-    Assert.assertEquals(150, b.getHp());
+    Assert.assertEquals(150, b.getHp().longValue());
   }
 
   @Test

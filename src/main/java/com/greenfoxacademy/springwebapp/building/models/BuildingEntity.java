@@ -24,12 +24,12 @@ public class BuildingEntity {
   @Column(updatable = false)
   @Enumerated(EnumType.STRING)
   private BuildingType type;
-  private int level;
-  private int hp;
+  private Integer level;
+  private Integer hp;
   @Column(updatable = false)
-  private long startedAt;
+  private Long startedAt;
   @Column(updatable = false)
-  private long finishedAt;
+  private Long finishedAt;
   @JsonIgnore
   @ManyToOne
   private KingdomEntity kingdom;
