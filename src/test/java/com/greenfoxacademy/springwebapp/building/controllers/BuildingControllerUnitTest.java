@@ -80,10 +80,13 @@ public class BuildingControllerUnitTest {
 
     ResponseEntity<?> response = buildingController.getBuildingById(1L, authentication);
 
+    Integer level = 1;
+    Integer hp = 100;
+
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assert.assertEquals("FARM", ((BuildingEntity)response.getBody()).getType().toString());
-    Assert.assertEquals(1, ((BuildingEntity)response.getBody()).getLevel());
-    Assert.assertEquals(100,((BuildingEntity)response.getBody()).getHp());
+    Assert.assertEquals(level, ((BuildingEntity)response.getBody()).getLevel());
+    Assert.assertEquals(hp,((BuildingEntity)response.getBody()).getHp());
   }
 
   @Test
@@ -116,3 +119,4 @@ public class BuildingControllerUnitTest {
     Assert.assertEquals("Forbidden action", ((ErrorDTO)response.getBody()).getMessage());
   }
 }
+

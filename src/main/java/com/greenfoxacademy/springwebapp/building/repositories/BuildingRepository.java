@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface BuildingRepository extends JpaRepository<BuildingEntity, Long> {
   List<BuildingEntity> findAllByKingdomId(Long kingdomID);
+
 }

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +30,7 @@ public class PlayerServiceImpl implements PlayerService {
     kingdom.setBuildings(defaultBuildings);
 
     PlayerEntity player =
-        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
+            new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
     playerRepo.save(player);

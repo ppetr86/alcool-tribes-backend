@@ -4,11 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingsResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
@@ -39,7 +35,7 @@ public class BuildingController {
 
   @PostMapping
   public ResponseEntity<?> buildBuilding(Authentication auth, @RequestBody @Valid BuildingRequestDTO dto)
-    throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
+          throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(buildingService.createBuilding(kingdom, dto));
   }
