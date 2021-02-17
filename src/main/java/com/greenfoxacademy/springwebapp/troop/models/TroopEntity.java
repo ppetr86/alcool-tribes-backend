@@ -26,7 +26,4 @@ public class TroopEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
-  public TroopEntity(Long id) {
-    this.id = id;
-  }
 }

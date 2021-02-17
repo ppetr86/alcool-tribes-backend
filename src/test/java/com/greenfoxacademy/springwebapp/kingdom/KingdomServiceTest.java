@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
@@ -67,8 +68,8 @@ public class KingdomServiceTest {
     kingdom.setResources(resources);
 
     List<TroopEntity> troops = new ArrayList<>();
-    troops.add(new TroopEntity(1L));
-    troops.add(new TroopEntity(2L));
+    troops.add(TroopFactory.createTroopWithID(1L));
+    troops.add(TroopFactory.createTroopWithID(2L));
     kingdom.setTroops(troops);
 
     KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(kingdom);
