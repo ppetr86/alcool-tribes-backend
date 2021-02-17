@@ -15,6 +15,7 @@ public class TroopEntityResponseDTO {
   private long finishedAt;
 
   public TroopEntityResponseDTO(TroopEntity entity) {
+
     this.id = entity.getId();
     this.level = entity.getLevel();
     this.hp = entity.getHp();

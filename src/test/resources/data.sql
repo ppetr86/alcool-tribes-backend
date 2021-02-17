@@ -15,13 +15,13 @@ INSERT INTO kingdoms (id, kingdomname, player_id, location_id)
 VALUES (1, 'furkesz''s kingdom', 1, 1);
 
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
- VALUES (1, 0, 0, 1, 0, 'TOWNHALL', 1);
+VALUES (1, 0, 0, 1, 0, 'TOWNHALL', 1);
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
- VALUES (2, 0, 0, 1, 0, 'MINE', 1);
+VALUES (2, 0, 0, 1, 0, 'MINE', 1);
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
 VALUES (3, 0, 0, 1, 0, 'ACADEMY', 1);
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
- VALUES (4, 0, 0, 1, 0, 'FARM', 1);
+VALUES (4, 0, 0, 1, 0, 'FARM', 1);
 
 INSERT INTO resources (id, amount, generation, type, updated_at, kingdom_id)
 VALUES (1, 10, 10, 'FOOD', 111, 1);

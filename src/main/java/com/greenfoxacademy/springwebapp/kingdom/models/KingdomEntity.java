@@ -40,5 +40,4 @@ public class KingdomEntity {
 
   @OneToOne
   private LocationEntity location;
-
 }
