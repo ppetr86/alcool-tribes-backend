@@ -1,0 +1,5 @@
+GET http://localhost:8080/kingdom/resources
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM2MDI4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJ1c2VyMSJ9.8PtSNJyIn4mITFTE5ebe-9UAuCvj420xW2rwKjzetGdxRngvJ8cwmVYCjWOyUuBi86-1cct5ghHFCBz6M7QNjA
+Accept: application/json
+
+###

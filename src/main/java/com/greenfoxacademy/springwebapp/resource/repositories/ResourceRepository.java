@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ResourceRepository extends JpaRepository<ResourceEntity, Long> {
-  List<ResourceEntity> findAllByKingdomId(Long id);
+
+  List<ResourceEntity> findAllByKingdomId(long id);
 }
