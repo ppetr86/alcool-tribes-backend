@@ -57,8 +57,6 @@ dependencies {
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'        //This is need for JwtProvider class
 
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
-
-    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.9'
     }
 
 test {

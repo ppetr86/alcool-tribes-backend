@@ -1,8 +1,8 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
-public class TroopControllerUT {
+public class TroopControllerTest {
 
   private TroopController troopController;
   private TroopService troopService;
@@ -39,7 +39,7 @@ public class TroopControllerUT {
             .map(TroopEntityResponseDTO::new)
             .collect(Collectors.toList());
 
-    Mockito.when(troopService.troopsToListDTO(new KingdomEntity(1L)))
+    Mockito.when(troopService.troopsToListDTO(KingdomFactory.createKingdomEntityWithId(1l)))
             .thenReturn(new TroopListResponseDto(list));
 
     ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));

@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
@@ -18,7 +19,8 @@ public class TroopController {
 
   @GetMapping(TroopController.URI)
   public ResponseEntity<TroopListResponseDto> getTroopsOfKingdom(Authentication auth) {
-    return ResponseEntity.ok(troopService.troopsToListDTO(
-                    ((CustomUserDetails) auth.getPrincipal()).getKingdom()));
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    TroopListResponseDto troops = troopService.troopsToListDTO(kingdom);
+    return ResponseEntity.ok(troops);
   }
 }

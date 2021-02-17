@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.factories;
 
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 
 import java.util.Arrays;
