@@ -47,8 +47,8 @@ public class TroopServiceImpl implements TroopService {
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel*getAppPropertyAsInt("troop.buildingTime"));
 
-    TroopEntity troop = troopRepository.save(
-        new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom));
+    TroopEntity troop = new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
+    troopRepository.save(troop);
 
     return new TroopEntityResponseDTO(
         troop.getId(), troop.getLevel(), troop.getHp(), troop.getAttack(),
