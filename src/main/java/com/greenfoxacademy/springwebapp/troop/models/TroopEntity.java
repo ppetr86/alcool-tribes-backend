@@ -25,4 +25,5 @@ public class TroopEntity {
   private Long finishedAt;
   @ManyToOne
   private KingdomEntity kingdom;
+
 }

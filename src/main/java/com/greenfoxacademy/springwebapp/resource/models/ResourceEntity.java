@@ -25,4 +25,5 @@ public class ResourceEntity {
   private Long updatedAt;
   @ManyToOne
   private KingdomEntity kingdom;
+
 }

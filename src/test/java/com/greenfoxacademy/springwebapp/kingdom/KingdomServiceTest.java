@@ -2,7 +2,6 @@ package com.greenfoxacademy.springwebapp.kingdom;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
-import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
@@ -56,20 +55,20 @@ public class KingdomServiceTest {
     kingdom.setPlayer(pl);
 
     List<BuildingEntity> buildings = new ArrayList<>();
-    buildings.add(new BuildingEntity(1L, BuildingType.TOWNHALL, kingdom));
-    buildings.add(new BuildingEntity(2L, BuildingType.MINE, kingdom));
+    buildings.add(new BuildingEntity(1L, BuildingType.TOWNHALL,1,100,999L,1111L, kingdom));
+    buildings.add(new BuildingEntity(2L, BuildingType.MINE, 1,100,999L,1111L, kingdom));
     kingdom.setBuildings(buildings);
 
     kingdom.setLocation(new LocationEntity(1L,10,10));
 
     List<ResourceEntity> resources = new ArrayList<>();
-    resources.add(new ResourceEntity(1L, ResourceType.GOLD));
-    resources.add(new ResourceEntity(2L, ResourceType.FOOD));
+    resources.add(new ResourceEntity(1L, ResourceType.GOLD, 100,100,999L,kingdom));
+    resources.add(new ResourceEntity(2L, ResourceType.FOOD,100,100,999L,kingdom));
     kingdom.setResources(resources);
 
     List<TroopEntity> troops = new ArrayList<>();
-    troops.add(TroopFactory.createTroopWithID(1L));
-    troops.add(TroopFactory.createTroopWithID(2L));
+    troops.add(new TroopEntity(1L, 1,100,100,100,999L,1111L,kingdom));
+    troops.add(new TroopEntity(2L,1,100,100,100,999L,1111L,kingdom));
     kingdom.setTroops(troops);
 
     KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(kingdom);
