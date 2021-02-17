@@ -48,7 +48,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    implementation 'org.flywaydb:flyway-core'
+    //implementation 'org.flywaydb:flyway-core'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit:4.12'
