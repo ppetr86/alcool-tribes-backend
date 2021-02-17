@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class KingdomController {
@@ -24,6 +27,7 @@ public class KingdomController {
   @GetMapping("/kingdom/resources")
   public ResponseEntity<ResourceListResponseDTO> getKingdomResources(Authentication authentication){
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    List<ResourceEntity> listOfResources = kingdom.getResources();
     ResourceListResponseDTO allResources = resourceService.resourcesToListDTO(kingdom);
     return ResponseEntity.ok().body(allResources);
   }
