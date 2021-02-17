@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BuildingRepository extends JpaRepository<BuildingEntity, Long> {
-
   List<BuildingEntity> findAllByKingdomId(Long kingdomID);
+
 }

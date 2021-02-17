@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.troop.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -10,6 +11,7 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.repositories.TroopRepository;
 import java.util.ArrayList;
@@ -17,12 +19,11 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 public class TroopServiceTest {
+
   private TroopService troopService;
   private ResourceService resourceService;
   private TimeService timeService;
@@ -36,6 +37,17 @@ public class TroopServiceTest {
     troopRepository = Mockito.mock(TroopRepository.class);
     env = Mockito.mock(Environment.class);
     troopService = new TroopServiceImpl(resourceService,timeService,troopRepository,env);
+  }
+
+  @Test
+  public void troopsToListDTO_ReturnsCorrectResult() {
+    KingdomEntity ke = new KingdomEntity();
+    ke.setTroops(TroopFactory.createDefaultKingdomWithTroops());
+
+    TroopListResponseDto result = troopService.troopsToListDTO(ke);
+
+    Assert.assertEquals(3, result.getTroops().size());
+    Assert.assertEquals(101, (long) result.getTroops().get(0).getFinishedAt());
   }
 
   @Test(expected = ForbiddenCustomException.class)
@@ -82,7 +94,7 @@ public class TroopServiceTest {
     kingdom.setBuildings(buildings);
 
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(false);
-  // TODO: after resources are defined, this method will be updated, so test should be updated as well
+    // TODO: after resources are defined, this method will be updated, so test should be updated as well
 
     TroopEntityResponseDTO response = troopService.createTroop(kingdom,requestDTO);
   }

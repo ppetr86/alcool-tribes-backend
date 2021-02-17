@@ -9,20 +9,33 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourc
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
-import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
+import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.repositories.TroopRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class TroopServiceImpl implements TroopService {
+
   private ResourceService resourceService;
   private TimeService timeService;
   private TroopRepository troopRepository;
   private final Environment env;
+
+  @Override
+  public TroopListResponseDto troopsToListDTO(KingdomEntity entity) {
+    return new TroopListResponseDto(
+            entity.getTroops().stream()
+            .map(TroopEntityResponseDTO::new)
+            .collect(Collectors.toList())
+    );
+  }
 
   @Override
   public TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
@@ -47,7 +60,8 @@ public class TroopServiceImpl implements TroopService {
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel*getAppPropertyAsInt("troop.buildingTime"));
 
-    TroopEntity troop = new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
+    TroopEntity
+        troop = new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
     troopRepository.save(troop);
 
     return new TroopEntityResponseDTO(
