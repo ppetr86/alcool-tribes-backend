@@ -10,15 +10,11 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
-import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -57,7 +53,7 @@ public class BuildingController {
 
     if (actualBuilding == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("Id not found"));
-    } else if (buildingService.kingdomIsContainTheGivenBuilding(kingdom, actualBuilding)) {
+    } else if (buildingService.hasKingdomThisBuilding(kingdom, actualBuilding)) {
       return ResponseEntity.ok().body(actualBuilding);
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorDTO("Forbidden action"));

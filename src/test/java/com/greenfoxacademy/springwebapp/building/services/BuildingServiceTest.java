@@ -3,11 +3,8 @@ package com.greenfoxacademy.springwebapp.building.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
-import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.building.services.BuildingServiceImpl;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +13,6 @@ import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -190,20 +186,20 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void kingdomIsContainTheGivenBuildingShouldReturnTrue() {
+  public void hasKingdomThisBuildingShouldReturnTrue() {
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
 
-    boolean result = buildingService.kingdomIsContainTheGivenBuilding(kingdomEntity, buildingEntity);
+    boolean result = buildingService.hasKingdomThisBuilding(kingdomEntity, buildingEntity);
 
     Assert.assertTrue(result);
   }
 
   @Test
-  public void kingdomIsContainTheGivenBuildingShouldReturnFalse() {
+  public void hasKingdomThisBuildingShouldReturnFalse() {
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
     BuildingEntity buildingEntity2 = new BuildingEntity(2L, BuildingType.FARM, 1, 100, 100L, 200L);
@@ -211,7 +207,7 @@ public class BuildingServiceTest {
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
 
-    boolean result = buildingService.kingdomIsContainTheGivenBuilding(kingdomEntity, buildingEntity2);
+    boolean result = buildingService.hasKingdomThisBuilding(kingdomEntity, buildingEntity2);
 
     Assert.assertFalse(result);
   }

@@ -59,7 +59,7 @@ public class BuildingControllerIT2 {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(kingdom,buildingEntity)).thenReturn(true);
+    Mockito.when(buildingService.hasKingdomThisBuilding(kingdom,buildingEntity)).thenReturn(true);
 
     mockMvc.perform(get(BuildingController.URI + "/1")
       .principal(authentication))
@@ -80,7 +80,7 @@ public class BuildingControllerIT2 {
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
     //Is this need? Because the test, does not reach this point.
-    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(kingdom,buildingEntity)).thenReturn(false);
+    Mockito.when(buildingService.hasKingdomThisBuilding(kingdom,buildingEntity)).thenReturn(false);
 
     mockMvc.perform(get(BuildingController.URI + "/2")
       .principal(authentication))
@@ -98,7 +98,7 @@ public class BuildingControllerIT2 {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(2L)).thenReturn(buildingEntity2);
-    Mockito.when(buildingService.kingdomIsContainTheGivenBuilding(kingdom,buildingEntity2)).thenReturn(false);
+    Mockito.when(buildingService.hasKingdomThisBuilding(kingdom,buildingEntity2)).thenReturn(false);
 
     mockMvc.perform(get(BuildingController.URI + "/2")
       .principal(authentication))

@@ -23,7 +23,7 @@ public interface BuildingService {
 
   BuildingEntity findBuildingById(Long id);
 
-  boolean kingdomIsContainTheGivenBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
+  boolean hasKingdomThisBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
 
   boolean hasKingdomTownhall(KingdomEntity kingdom);
 
