@@ -18,7 +18,7 @@ import java.util.List;
 public class KingdomEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @OneToOne
   private PlayerEntity player;
