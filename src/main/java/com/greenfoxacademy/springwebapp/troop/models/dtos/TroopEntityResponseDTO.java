@@ -2,9 +2,6 @@ package com.greenfoxacademy.springwebapp.troop.models.dtos;
 
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @Data
 public class TroopEntityResponseDTO {
