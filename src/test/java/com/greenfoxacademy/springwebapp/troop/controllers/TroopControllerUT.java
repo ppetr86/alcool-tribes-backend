@@ -32,7 +32,8 @@ public class TroopControllerUT {
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
 
-    KingdomEntity ke = TroopFactory.createDefaultKingdomWithTroops();
+    KingdomEntity ke = new KingdomEntity();
+    ke.setTroops(TroopFactory.createDefaultKingdomWithTroops());
     List<TroopEntityResponseDTO> list = ke.getTroops()
             .stream()
             .map(TroopEntityResponseDTO::new)
