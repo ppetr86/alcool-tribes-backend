@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class TimeServiceUnitTests {
+public class TimeServiceUnitTest {
   TimeServiceImpl timeService;
 
   @Before

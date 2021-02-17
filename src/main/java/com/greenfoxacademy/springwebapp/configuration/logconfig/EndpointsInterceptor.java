@@ -13,15 +13,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @Component
 public class EndpointsInterceptor extends HandlerInterceptorAdapter {
 
-/*  @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-      throws Exception {
-
-    log.info(buildLogMessage(request, response));
-
-    return true;
-  }*/
-
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                          ModelAndView modelAndView) throws Exception {
