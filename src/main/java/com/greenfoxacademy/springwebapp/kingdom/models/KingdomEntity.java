@@ -24,13 +24,13 @@ public class KingdomEntity {
   @OneToOne
   private PlayerEntity player;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
   private List<BuildingEntity> buildings;
 
   @Column(name = "kingdomname")
   private String kingdomName;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
   private List<TroopEntity> troops;
 
   public KingdomEntity(List<TroopEntity> troops) {

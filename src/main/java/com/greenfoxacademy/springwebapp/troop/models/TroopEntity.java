@@ -26,6 +26,17 @@ public class TroopEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
+  public TroopEntity(Long id, int level, int hp, int attack,
+                     int defence, long startedAt, long finishedAt) {
+    this.id = id;
+    this.level = level;
+    this.hp = hp;
+    this.attack = attack;
+    this.defence = defence;
+    this.startedAt = startedAt;
+    this.finishedAt = finishedAt;
+  }
+
   public TroopEntity(Integer level, Integer hp, Integer attack, Integer defense, Long startedAt, Long finishedAt,
                      KingdomEntity kingdom) {
     this.level = level;
@@ -36,6 +47,7 @@ public class TroopEntity {
     this.finishedAt = finishedAt;
     this.kingdom = kingdom;
   }
+
 
 
 }
