@@ -43,7 +43,7 @@ public class KingdomEntity {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.EAGER)
   private List<ResourceEntity> resources;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom", fetch = FetchType.LAZY)
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
   private List<TroopEntity> troops;
 
   public KingdomEntity(List<TroopEntity> troops) {

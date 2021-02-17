@@ -10,4 +10,6 @@ public interface KingdomService {
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);
 
+  KingdomEntity findById(Long id);
+
 }
