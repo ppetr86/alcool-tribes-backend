@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-//TODO:ALTB-14
 
 @Data
 @NoArgsConstructor
@@ -26,9 +25,4 @@ public class ResourceEntity {
   private Long updatedAt;
   @ManyToOne
   private KingdomEntity kingdom;
-
-  public ResourceEntity(Long id, ResourceType type) {
-    this.id = id;
-    this.type = type;
-  }
 }

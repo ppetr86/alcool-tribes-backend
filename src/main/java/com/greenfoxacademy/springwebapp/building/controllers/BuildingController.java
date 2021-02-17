@@ -9,6 +9,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ public class BuildingController {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
     List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(kingdom.getId());
+
     return ResponseEntity.status(HttpStatus.OK).body(new BuildingResponseDTO(list));
   }
 

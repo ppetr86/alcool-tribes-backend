@@ -1,5 +1,5 @@
 ### Get kingdom
 ### kingdom/{id}
 GET http://localhost:8080/kingdom/1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Mjk4NDI0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.IVYohu-tGC2tkkQwIn3yKF50YhW2319lyNhoYNg2-5L6nJ_yskoZDwKBYYgi2l_T7mZZOSGiHdz2VdDqhIOcCA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM2MDI4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.pYjrBv1w7cwvi2HyDh7IiO6ODQLaPFzuW0gk7dq3m8PQJopGAXlbwdWUhf76gMeKEcJQAbsmR9GUz-SyZUPPSw
 Accept: application/json

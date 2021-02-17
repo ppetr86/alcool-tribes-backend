@@ -12,5 +12,4 @@ public interface KingdomService {
   KingdomEntity findByPlayerId(Long id);
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);
-
 }

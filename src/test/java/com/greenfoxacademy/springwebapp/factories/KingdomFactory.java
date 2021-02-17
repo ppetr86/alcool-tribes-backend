@@ -9,4 +9,15 @@ public class KingdomFactory {
     ke.setId(l);
     return ke;
   }
+
+  public static KingdomEntity createKingdomEntityFilledWithData(long kingdomAndUserID){
+    KingdomEntity ke = createKingdomEntityWithId(kingdomAndUserID);
+    ke.setTroops(TroopFactory.createDefaultTroops());
+    ke.setBuildings(BuildingFactory.createDefaultBuildings());
+    ke.setResources(ResourceFactory.createDefaultResources());
+    return ke;
+  }
+
+
+
 }
