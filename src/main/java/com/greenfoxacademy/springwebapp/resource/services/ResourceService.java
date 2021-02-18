@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface ResourceService {
 
   ResourceEntity saveResource(ResourceEntity resourceEntity);
 
-  List<ResourceEntity> findByKingdomId(Long id);
+  List<ResourceResponseDTO> findByKingdomId(Long id);
 }

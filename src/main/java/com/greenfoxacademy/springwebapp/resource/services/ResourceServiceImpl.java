@@ -1,6 +1,8 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
+import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.repositories.ResourceRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public List<ResourceEntity> findByKingdomId(Long id) {
+  public List<ResourceResponseDTO> findByKingdomId(Long id) {
     return resourceRepository.findAllByKingdomId(id);
   }
 
