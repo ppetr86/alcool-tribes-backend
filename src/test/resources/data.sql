@@ -11,7 +11,7 @@ VALUES (100, 'occupied_username', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21
 INSERT INTO locations (id, x, y)
 VALUES (1, 10, 10);
 
-INSERT INTO king.kingdoms (id, kingdomname, player_id, location_id)
+INSERT INTO kingdoms (id, kingdomname, player_id, location_id)
 VALUES (1, 'furkesz''s kingdom', 1, 1);
 
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
