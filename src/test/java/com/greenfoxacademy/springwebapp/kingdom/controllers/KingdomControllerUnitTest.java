@@ -42,6 +42,6 @@ public class KingdomControllerUnitTest {
     ResponseEntity<?> response = kingdomController.getKingdomResources(createAuth("test", 1L));
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-
+    
   }
 }
