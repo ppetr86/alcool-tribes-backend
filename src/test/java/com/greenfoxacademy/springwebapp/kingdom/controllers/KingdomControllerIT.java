@@ -41,7 +41,14 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void getKingdomResources() throws Exception {
+  public void getKingdomResourcesShouldReturnOkStatus() throws Exception {
+    mockMvc.perform(get("/kingdom/resources")
+        .principal(authentication))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  public void getKingdomResourcesShouldReturnCorrectAmount() throws Exception {
     mockMvc.perform(get("/kingdom/resources")
         .principal(authentication))
         .andExpect(status().isOk())
