@@ -23,7 +23,7 @@ public class JwtProvider {
 
   @Value("${jwt.secret}")
   private String jwtSecret;
-  @Value("${JWT_EXPIRE_DAYS}")
+  @Value("${jwt.expire-days}")
   private int jwtExpireDays;
 
   public String generateToken(PlayerEntity playerEntity){
