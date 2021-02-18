@@ -38,7 +38,7 @@ public class BuildingControllerUnitTest {
   @Test
   public void getKingdomBuildings_ReturnsCorrectStatusCode() {
     List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 1, 2));
+    fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 1L, 2L, null));
     Mockito.when(buildingService.findBuildingsByKingdomId(1L)).thenReturn(fakeList);
 
     ResponseEntity<?> response = buildingController.getKingdomBuildings(createAuth("test", 1L));
