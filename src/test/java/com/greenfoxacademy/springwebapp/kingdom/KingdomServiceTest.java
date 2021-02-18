@@ -52,11 +52,11 @@ public class KingdomServiceTest {
 
     Assert.assertEquals("testKingdom", result.getName());
     Assert.assertEquals(1, result.getUserId());
-    Assert.assertEquals(2, result.getBuildings().size());
+    Assert.assertEquals(4, result.getBuildings().size());
     Assert.assertEquals(2, result.getTroops().size());
     Assert.assertEquals(2, result.getResources().size());
     Assert.assertEquals("gold", result.getResources().get(0).getType());
-    Assert.assertEquals("mine", result.getBuildings().get(1).getType());
+    Assert.assertEquals("mine", result.getBuildings().get(3).getType());
   }
 
   @Test(expected = IdNotFoundException.class)
