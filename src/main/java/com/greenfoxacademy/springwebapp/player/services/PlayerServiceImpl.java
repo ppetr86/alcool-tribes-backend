@@ -10,6 +10,7 @@ import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
