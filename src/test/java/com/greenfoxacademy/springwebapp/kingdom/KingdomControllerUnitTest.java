@@ -1,27 +1,18 @@
 package com.greenfoxacademy.springwebapp.kingdom;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.controllers.KingdomController;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
-import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
-import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
-import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class KingdomControllerUnitTest {
 
@@ -40,10 +31,10 @@ public class KingdomControllerUnitTest {
     PlayerEntity pl = new PlayerEntity(1L, "testUser", "password", "test@test.com",null,null,kingdom );
     kingdom.setPlayer(pl);
 
-    KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(kingdom);
+    KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(1L);
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
-    Mockito.when(kingdomService.entityToKingdomResponseDTO(kingdom)).thenReturn(result);
+    Mockito.when(kingdomService.entityToKingdomResponseDTO(1L)).thenReturn(result);
   }
 
   @Test
@@ -55,7 +46,7 @@ public class KingdomControllerUnitTest {
 
   @Test(expected = IdNotFoundException.class)
   public void non_existingKingdomReturns400_AndRelevantReponse(){
-    Mockito.when(kingdomService.findKingdomByIDAndReturnKingdomResponseDTO(1111L)).thenThrow(IdNotFoundException.class);
+    Mockito.when(kingdomService.entityToKingdomResponseDTO(1111L)).thenThrow(IdNotFoundException.class);
 
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1111L);
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

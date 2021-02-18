@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,6 @@ public class KingdomController {
 
   @GetMapping("/{id}")
   public ResponseEntity<Object> getKingdomByID(@PathVariable Long id) throws IdNotFoundException {
-    return ResponseEntity.ok(kingdomService.findKingdomByIDAndReturnKingdomResponseDTO(id));
+    return ResponseEntity.ok(kingdomService.entityToKingdomResponseDTO(id));
   }
 }

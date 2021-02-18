@@ -30,19 +30,10 @@ public class KingdomServiceImpl implements KingdomService {
   }
 
   @Override
-  public KingdomResponseDTO entityToKingdomResponseDTO(KingdomEntity kingdom) throws IdNotFoundException {
+  public KingdomResponseDTO entityToKingdomResponseDTO(Long id) throws IdNotFoundException {
+    KingdomEntity kingdom = findByID(id);
     if (kingdom == null) throw new IdNotFoundException();
     return convert(kingdom);
-  }
-
-  @Override
-  public KingdomResponseDTO findKingdomByIDAndReturnKingdomResponseDTO(Long id) {
-    return entityToKingdomResponseDTO(findByID(id));
-  }
-
-  @Override
-  public KingdomEntity saveKingdom(KingdomEntity kingdom) {
-    return kingdomRepository.save(kingdom);
   }
 
   public KingdomResponseDTO convert(KingdomEntity e) {
@@ -61,5 +52,10 @@ public class KingdomServiceImpl implements KingdomService {
             .collect(Collectors.toList()))
         .withLocation(new LocationEntityDTO(e.getLocation()))
         .build();
+  }
+
+  @Override
+  public KingdomEntity saveKingdom(KingdomEntity kingdom) {
+    return kingdomRepository.save(kingdom);
   }
 }
