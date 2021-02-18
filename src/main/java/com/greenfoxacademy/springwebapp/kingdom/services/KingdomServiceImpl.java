@@ -30,6 +30,11 @@ public class KingdomServiceImpl implements KingdomService {
   }
 
   @Override
+  public KingdomResponseDTO findKingdomByIDAndReturnKingdomResponseDTO(Long id){
+    return entityToKingdomResponseDTO(findByID(id));
+  }
+
+  @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
     return kingdomRepository.save(kingdom);
   }

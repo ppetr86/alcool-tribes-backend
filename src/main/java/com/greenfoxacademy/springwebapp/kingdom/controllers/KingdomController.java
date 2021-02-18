@@ -21,7 +21,6 @@ public class KingdomController {
 
   @GetMapping("/{id}")
   public ResponseEntity<Object> getKingdomByID(@PathVariable Long id) throws IdNotFoundException {
-    KingdomEntity kingdom = kingdomService.findByID(id);
-    return ResponseEntity.ok(kingdomService.entityToKingdomResponseDTO(kingdom));
+    return ResponseEntity.ok(kingdomService.findKingdomByIDAndReturnKingdomResponseDTO(id));
   }
 }
