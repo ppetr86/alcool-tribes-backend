@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class TroopRequestDTO {
 
   @NotNull(message = "Building Id cannot be null!")
-  @Min(value=1L,message = "Building ID must be higher than 0!")
+  @Min(value=1,message = "Building ID must be higher than 0!")
   private Long buildingId;
 }
