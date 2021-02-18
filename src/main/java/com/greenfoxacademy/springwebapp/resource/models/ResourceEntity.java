@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.resource.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "resources")
 public class ResourceEntity {
-  @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -32,7 +30,6 @@ public class ResourceEntity {
   private Integer generation;
   private Long updatedAt;
   @ManyToOne
-  @JsonIgnore
   private KingdomEntity kingdom;
 
   public ResourceEntity(ResourceType type, int amount, int generation, long updatedAt) {
