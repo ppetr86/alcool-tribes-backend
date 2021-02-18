@@ -1,10 +1,17 @@
-DELETE FROM buildings;
-DELETE FROM troops;
-DELETE FROM kingdoms;
-DELETE FROM players;
+DELETE
+FROM buildings;
+DELETE
+FROM resources;
+DELETE
+FROM troops;
+DELETE
+FROM kingdoms;
+DELETE
+FROM players;
 
 INSERT INTO players (id, avatar, email, password, points, username)
-VALUES (1, 'http://avatar.loc/my.png', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0, 'furkesz');
+VALUES (1, 'http://avatar.loc/my.png', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG',
+        0, 'furkesz');
 INSERT INTO players (id, username, email, password, points)
 VALUES (100, 'occupied_username', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0);
 
@@ -24,3 +31,6 @@ INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kin
 VALUES (1, 1, 1, 0, 100, 1, 1, 1);
 INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
 VALUES (2, 2, 2, 1, 100, 1, 1, 1);
+
+INSERT INTO resources (id, amount, generation, type, updated_at, kingdom_id)
+VALUES (1, 20, 20, 'FOOD', 1645789L, 1);
