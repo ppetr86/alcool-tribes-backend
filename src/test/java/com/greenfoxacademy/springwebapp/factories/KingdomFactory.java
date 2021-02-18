@@ -1,6 +1,8 @@
 package com.greenfoxacademy.springwebapp.factories;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 
 public class KingdomFactory {
 
@@ -10,14 +12,21 @@ public class KingdomFactory {
     return ke;
   }
 
-  public static KingdomEntity createKingdomEntityFilledWithData(long kingdomAndUserID){
-    KingdomEntity ke = createKingdomEntityWithId(kingdomAndUserID);
-    ke.setTroops(TroopFactory.createDefaultTroops());
-    ke.setBuildings(BuildingFactory.createDefaultBuildings());
-    ke.setResources(ResourceFactory.createDefaultResources());
-    return ke;
-  }
+  public static KingdomEntity createFullKingdom(Long kingdomID, Long userID) {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setKingdomName("testKingdom");
+    kingdom.setId(kingdomID);
 
+    PlayerEntity pl = PlayerFactory.createPlayer(userID, kingdom);
+    kingdom.setPlayer(pl);
+
+    kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10));
+    kingdom.setResources(ResourceFactory.createResources(kingdom));
+    kingdom.setTroops(TroopFactory.createTroops(kingdom));
+
+    return kingdom;
+  }
 
 
 }

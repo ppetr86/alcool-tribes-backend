@@ -37,11 +37,7 @@ public class KingdomControllerUnitTest {
     kingdom.setKingdomName("testKingdom");
     kingdom.setId(1L);
 
-    PlayerEntity pl = new PlayerEntity();
-    pl.setUsername("testUser");
-    pl.setPassword("password");
-    pl.setEmail("test@test.com");
-    pl.setId(1L);
+    PlayerEntity pl = new PlayerEntity(1L, "testUser", "password", "test@test.com",null,null,kingdom );
     kingdom.setPlayer(pl);
 
     KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(kingdom);
@@ -53,14 +49,14 @@ public class KingdomControllerUnitTest {
   @Test
   public void existingKingdomReturns200Status(){
 
-
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1L);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
   @Test(expected = IdNotFoundException.class)
   public void non_existingKingdomReturns400_AndRelevantReponse(){
-    Mockito.when(kingdomService.findByID(1111L)).thenThrow(IdNotFoundException.class);
+    Mockito.when(kingdomService.findKingdomByIDAndReturnKingdomResponseDTO(1111L)).thenThrow(IdNotFoundException.class);
+
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1111L);
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     Assert.assertEquals("Id not found", ((ErrorDTO)response.getBody()).getMessage());
