@@ -8,6 +8,8 @@ import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,15 +29,18 @@ public class KingdomEntity {
   private PlayerEntity player;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
+  @LazyCollection(LazyCollectionOption.FALSE)
   private List<BuildingEntity> buildings;
 
   @Column(name = "kingdomname")
   private String kingdomName;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
+  @LazyCollection(LazyCollectionOption.FALSE)
   private List<TroopEntity> troops;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "kingdom")
+  @LazyCollection(LazyCollectionOption.FALSE)
   private List<ResourceEntity> resources;
 
   @OneToOne
