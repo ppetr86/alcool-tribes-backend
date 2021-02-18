@@ -1,6 +1,7 @@
 DELETE FROM buildings;
 DELETE FROM troops;
 DELETE FROM kingdoms;
+DELETE FROM locations;
 DELETE FROM players;
 
 INSERT INTO players (id, avatar, email, password, points, username)
