@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -16,13 +15,11 @@ import java.util.List;
 @RestController
 public class KingdomController {
   private ResourceService resourceService;
-  private KingdomService kingdomService;
 
-  public KingdomController(ResourceService resourceService,
-                           KingdomService kingdomService) {
+  public KingdomController(ResourceService resourceService) {
     this.resourceService = resourceService;
-    this.kingdomService = kingdomService;
   }
+
 
   @GetMapping("/kingdom/resources")
   public ResponseEntity<?> getKingdomResources(Authentication authentication){
