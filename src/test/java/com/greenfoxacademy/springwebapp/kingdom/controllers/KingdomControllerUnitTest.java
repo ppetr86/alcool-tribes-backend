@@ -26,8 +26,8 @@ public class KingdomControllerUnitTest {
 
   @Before
   public void setUp() throws Exception {
-    kingdomController = Mockito.mock(KingdomController.class);
     resourceService = Mockito.mock(ResourceService.class);
+    kingdomController = new KingdomController(resourceService);
   }
 
   @Test
