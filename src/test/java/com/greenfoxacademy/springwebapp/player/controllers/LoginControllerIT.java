@@ -38,7 +38,6 @@ public class LoginControllerIT {
   public void postLoginShouldReturn200AndOkMessage() throws Exception {
     PlayerRequestDTO request = new PlayerRequestDTO("furkesz", "password");
     String json = new ObjectMapper().writeValueAsString(request);
-
     mockMvc.perform(post("/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))

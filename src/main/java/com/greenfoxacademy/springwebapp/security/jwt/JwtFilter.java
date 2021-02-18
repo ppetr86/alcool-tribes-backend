@@ -2,6 +2,8 @@ package com.greenfoxacademy.springwebapp.security.jwt;
 
 import static org.springframework.util.StringUtils.hasText;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -29,7 +31,6 @@ public class JwtFilter extends GenericFilterBean {
 
   private JwtProvider jwtProvider;
   private CustomUserDetailsService customUserDetailsService;
-  private PlayerService playerService;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -38,9 +39,7 @@ public class JwtFilter extends GenericFilterBean {
     String token = getTokenFromServletRequest((HttpServletRequest) servletRequest);
     if (token != null && jwtProvider.validateToken(token)) {
       String userLogin = jwtProvider.getLoginFromToken(token);
-      PlayerEntity player = playerService.findByUsername(userLogin);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
-      customUserDetails.setKingdom(player.getKingdom());
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
               null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);

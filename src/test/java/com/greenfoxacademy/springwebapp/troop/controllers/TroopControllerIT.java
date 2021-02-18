@@ -40,7 +40,7 @@ public class TroopControllerIT {
   @Test
   public void getTroopsOfKingdom_ReturnsCorrectBodyAndStatus() throws Exception {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setTroops(TroopFactory.createDefaultKingdomWithTroops());
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
 
     mockMvc.perform(get(TroopController.URI)
             .principal(authentication))
