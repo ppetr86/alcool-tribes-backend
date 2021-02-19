@@ -12,6 +12,7 @@ import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -19,9 +20,9 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
-  private PlayerRepository playerRepo;
-  private PasswordEncoder passwordEncoder;
-  private BuildingService buildingService;
+  private final PlayerRepository playerRepo;
+  private final PasswordEncoder passwordEncoder;
+  private final BuildingService buildingService;
 
   @Override
   public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO dto) {

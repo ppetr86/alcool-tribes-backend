@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
-import org.junit.Ignore;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +39,9 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(IdNotFoundException.class)
-  public ResponseEntity<ErrorDTO> handleIdException(Exception ex) {
+  public ResponseEntity<ErrorDTO> handleExceptions(IdNotFoundException ex) {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
+
   }
 
   @ExceptionHandler(ForbiddenActionException.class)
@@ -49,3 +49,4 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
   }
 }
+

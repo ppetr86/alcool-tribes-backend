@@ -19,7 +19,7 @@ public class TroopServiceTest {
   @Test
   public void troopsToListDTO_ReturnsCorrectResult() {
     KingdomEntity ke = new KingdomEntity();
-    ke.setTroops(TroopFactory.createDefaultKingdomWithTroops());
+    ke.setTroops(TroopFactory.createDefaultTroops());
 
     TroopListResponseDto result = troopService.troopsToListDTO(ke);
 

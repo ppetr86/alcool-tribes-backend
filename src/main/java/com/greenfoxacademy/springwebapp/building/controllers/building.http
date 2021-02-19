@@ -1,14 +1,19 @@
-### Create building
 POST http://localhost:8080/kingdom/buildings
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MjgyMDA4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.6R3LTLgzDtY0mPn0B34hRfByKX2vj0uO3CEZSeAW2Iw8Ts9eku2H3dcZIQLLARzJOUgOiNG4fA_jVDvLRNLrDw
 
 {
+  "type": "farm"
 }
-
 
 ### Get buildings
 
 GET http://localhost:8080/kingdom/buildings
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MjgyMDA4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.6R3LTLgzDtY0mPn0B34hRfByKX2vj0uO3CEZSeAW2Iw8Ts9eku2H3dcZIQLLARzJOUgOiNG4fA_jVDvLRNLrDw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM3NzU2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.DtUdBear4jyYArWfPOCmvbxwFqY0lXPkxyGP8Kqs_2KrVLs_q1oF7Q6VWiaUgWyTNqyIKSjGEQyLcrXDB7X5_w
+Accept: application/json
+
+### Get buildings
+
+GET http://localhost:8080/kingdom/buildings/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM3NzU2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.DtUdBear4jyYArWfPOCmvbxwFqY0lXPkxyGP8Kqs_2KrVLs_q1oF7Q6VWiaUgWyTNqyIKSjGEQyLcrXDB7X5_w
 Accept: application/json

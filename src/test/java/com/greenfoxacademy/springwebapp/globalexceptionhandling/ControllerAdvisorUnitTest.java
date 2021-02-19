@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +25,9 @@ public class ControllerAdvisorUnitTest {
             result.getBody().getMessage());
   }
 
-  @Ignore
   @Test
   public void missingParameterException_ReturnsBADREQUESTandCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new MissingParameterException("id"));
+    ResponseEntity<ErrorDTO> result = ca.handleBadRequestExceptions(new MissingParameterException("id"));
     Assert.assertEquals(HttpStatus.valueOf(400), result.getStatusCode());
     Assert.assertEquals("Missing parameter(s): id!", result.getBody().getMessage());
   }
@@ -43,7 +41,7 @@ public class ControllerAdvisorUnitTest {
 
   @Test
   public void idNotFoundExceptionShouldReturnNotFoundAndCorrectMessage(){
-    ResponseEntity<ErrorDTO> response = ca.handleIdException(new IdNotFoundException());
+    ResponseEntity<ErrorDTO> response = ca.handleExceptions(new IdNotFoundException());
     Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     Assert.assertEquals("Id not found", response.getBody().getMessage());
   }

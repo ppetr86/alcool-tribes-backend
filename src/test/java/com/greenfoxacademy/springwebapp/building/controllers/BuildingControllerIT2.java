@@ -40,77 +40,36 @@ public class BuildingControllerIT2 {
   @Autowired
   private MockMvc mockMvc;
 
-  @MockBean
-  private BuildingService buildingService;
-
   private Authentication authentication;
 
   @Before
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setBuildings(createDefaultBuildings());
   }
 
   @Test
-  public void getBuildingByIdShouldReturnOk() throws Exception{
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 200, 300);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(buildingEntity);
-    kingdom.setBuildings(fakeList);
-    BuildingDetailsDTO buildingDetailsDTO = new BuildingDetailsDTO();
-    buildingDetailsDTO.setType(buildingEntity.getType().toString().toLowerCase());
-    buildingDetailsDTO.setLevel(buildingEntity.getLevel());
-    buildingDetailsDTO.setHp(buildingEntity.getHp());
-    buildingDetailsDTO.setStartedAt(buildingEntity.getStartedAt());
-    buildingDetailsDTO.setFinishedAt(buildingEntity.getFinishedAt());
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    Mockito.when(buildingService.kingdomHasThisBuilding(kingdom,buildingEntity)).thenReturn(true);
-    Mockito.when(buildingService.showActualBuildingDetails(kingdom, buildingEntity)).thenReturn(buildingDetailsDTO);
-
-    mockMvc.perform(get(BuildingController.URI + "/{id}", 1)
+  public void getBuildingByIdShouldReturnOk() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/1")
       .principal(authentication))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.level", is(1)))
-      .andExpect(jsonPath("$.hp", is(100)))
-      .andExpect(jsonPath("$.startedAt", is(200)))
-      .andExpect(jsonPath("$.finishedAt", is(300)));
+      .andExpect(jsonPath("$.hp", is(0)))
+      .andExpect(jsonPath("$.startedAt", is(0)))
+      .andExpect(jsonPath("$.finishedAt", is(0)))
+      .andExpect(jsonPath("$.type", is("townhall")));
   }
 
-  @Test(expected = IdNotFoundException.class)
-  public void getBuildingByIdShouldReturn404() throws Exception{
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 200, 300);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(buildingEntity);
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    //Is this need? Because the test, does not reach this point.
-    Mockito.when(buildingService.kingdomHasThisBuilding(kingdom,buildingEntity)).thenReturn(false);
-    //Mockito.when(buildingService.showActualBuildingDetails(kingdom, buildingEntity)).thenReturn(new IdNotFoundException());
-
-    mockMvc.perform(get(BuildingController.URI + "/2")
+  @Test
+  public void getBuildingByIdShouldReturn404() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/16")
       .principal(authentication))
       .andExpect(status().isNotFound())
       .andExpect(jsonPath("$.message", is("Id not found")));
   }
 
   @Test
-  public void getBuildingByIdShouldReturn403() throws Exception{
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 200, 300);
-    BuildingEntity buildingEntity2 = new BuildingEntity(2L, BuildingType.FARM, 1, 100, 200, 300);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(buildingEntity);
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(2L)).thenReturn(buildingEntity2);
-    Mockito.when(buildingService.kingdomHasThisBuilding(kingdom,buildingEntity2)).thenReturn(false);
-
-    mockMvc.perform(get(BuildingController.URI + "/2")
+  public void getBuildingByIdShouldReturn403() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/5")
       .principal(authentication))
       .andExpect(status().isForbidden())
       .andExpect(jsonPath("$.message", is("Forbidden action")));

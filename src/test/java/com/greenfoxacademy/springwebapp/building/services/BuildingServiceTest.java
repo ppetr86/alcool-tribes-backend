@@ -5,7 +5,7 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
@@ -17,6 +17,7 @@ import org.springframework.core.env.Environment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 public class BuildingServiceTest {
 
@@ -51,13 +52,7 @@ public class BuildingServiceTest {
     Mockito.when(env.getProperty("building.academy.hp"))
       .thenReturn("150");
 
-    List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 100, 200));
-    fakeList.add(new BuildingEntity(2L, BuildingType.ACADEMY, 1, 100, 100, 200));
-    fakeList.add(new BuildingEntity(3L, BuildingType.FARM, 1, 100, 100, 200));
-    fakeList.add(new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100, 200));
-
-    Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(fakeList);
+    Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(BuildingFactory.createBuildings(null));
   }
 
   @Test
@@ -72,56 +67,56 @@ public class BuildingServiceTest {
 
   @Test
   public void defineFinishedAt_Townhall() {
-    BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(0);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(120, b.getFinishedAt().longValue());
+    Assert.assertEquals(120, b.getFinishedAt() - b.getStartedAt());
   }
 
   @Test
   public void defineFinishedAt_Farm() {
-    BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(2);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(60, b.getFinishedAt().longValue());
+    Assert.assertEquals(60, b.getFinishedAt() - b.getStartedAt());
   }
 
   @Test
   public void defineFinishedAt_Mine() {
-    BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(3);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(60, b.getFinishedAt().longValue());
+    Assert.assertEquals(60, b.getFinishedAt() - b.getStartedAt());
   }
 
   @Test
   public void defineFinishedAt_Academy() {
-    BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(1);
     buildingService.defineFinishedAt(b);
-    Assert.assertEquals(90, b.getFinishedAt().longValue());
+    Assert.assertEquals(90, b.getFinishedAt() - b.getStartedAt());
   }
 
   @Test
   public void defineHP_Townhall() {
-    BuildingEntity b = new BuildingEntity(BuildingType.TOWNHALL, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(0);
     buildingService.defineHp(b);
     Assert.assertEquals(200, b.getHp().longValue());
   }
 
   @Test
   public void defineHP_Farm() {
-    BuildingEntity b = new BuildingEntity(BuildingType.FARM, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(2);
     buildingService.defineHp(b);
     Assert.assertEquals(100, b.getHp().longValue());
   }
 
   @Test
   public void defineHP_Mine() {
-    BuildingEntity b = new BuildingEntity(BuildingType.MINE, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(3);
     buildingService.defineHp(b);
     Assert.assertEquals(100,  b.getHp().longValue());
   }
 
   @Test
   public void defineHP_Academy() {
-    BuildingEntity b = new BuildingEntity(BuildingType.ACADEMY, 0L);
+    BuildingEntity b = BuildingFactory.createBuildings(null).get(1);
     buildingService.defineHp(b);
     Assert.assertEquals(150, b.getHp().longValue());
   }
@@ -167,7 +162,7 @@ public class BuildingServiceTest {
   //Mark's tests
   @Test
   public void findByIdShouldReturnWithCorrectBuildingType() {
-    BuildingEntity buildingEntity = new BuildingEntity(BuildingType.FARM);
+    BuildingEntity buildingEntity = new BuildingEntity(null, BuildingType.FARM, 0);
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
 
@@ -178,7 +173,7 @@ public class BuildingServiceTest {
 
   @Test
   public void findByIdShouldReturnWithUnCorrectBuildingType() {
-    BuildingEntity buildingEntity = new BuildingEntity(BuildingType.MINE);
+    BuildingEntity buildingEntity = new BuildingEntity(null, BuildingType.MINE, 0);
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
 
@@ -190,7 +185,7 @@ public class BuildingServiceTest {
   @Test
   public void hasKingdomThisBuildingShouldReturnTrue() {
     KingdomEntity kingdomEntity = new KingdomEntity();
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
@@ -203,8 +198,8 @@ public class BuildingServiceTest {
   @Test
   public void hasKingdomThisBuildingShouldReturnFalse() {
     KingdomEntity kingdomEntity = new KingdomEntity();
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
-    BuildingEntity buildingEntity2 = new BuildingEntity(2L, BuildingType.FARM, 1, 100, 100L, 200L);
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
+    BuildingEntity buildingEntity2 = new BuildingEntity(2L, BuildingType.FARM, 1, 100, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
@@ -217,12 +212,14 @@ public class BuildingServiceTest {
   @Test
   public void showActualBuildingDetailsShouldReturnBuildingDetails(){
     KingdomEntity kingdomEntity = new KingdomEntity();
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
 
-    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, buildingEntity);
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+
+    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, 1L);
 
     Assert.assertEquals(1, result.getId());
     Assert.assertEquals(1, result.getLevel());
@@ -233,16 +230,18 @@ public class BuildingServiceTest {
   @Test
   public void showActualBuildingDetailsShouldNotReturnWithWronBuildingDetails(){
     KingdomEntity kingdomEntity = new KingdomEntity();
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
 
-    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, buildingEntity);
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.of(buildingEntity));
 
-    Assert.assertNotEquals(2, result.getId());
-    Assert.assertNotEquals(2, result.getLevel());
-    Assert.assertNotEquals("FARM", result.getType());
-    Assert.assertNotEquals(200, result.getHp());
+    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, 2L);
+
+    Assert.assertNotEquals(1, result.getId());
+    Assert.assertNotEquals(1, result.getLevel());
+    Assert.assertNotEquals("farm", result.getType());
+    Assert.assertNotEquals(100, result.getHp());
   }
 }

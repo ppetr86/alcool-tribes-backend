@@ -1,16 +1,16 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TokenServiceImpl implements TokenService{
+public class TokenServiceImpl implements TokenService {
 
-  private PlayerService playerService;
-  private JwtProvider jwtProvider;
+  private final PlayerService playerService;
+  private final JwtProvider jwtProvider;
 
   public TokenServiceImpl(PlayerService playerService, JwtProvider jwtProvider) {
     this.playerService = playerService;

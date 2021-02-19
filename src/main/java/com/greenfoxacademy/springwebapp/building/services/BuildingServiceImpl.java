@@ -3,6 +3,8 @@ package com.greenfoxacademy.springwebapp.building.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingResponseDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
@@ -13,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,8 +99,10 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdom, BuildingEntity building)
+  public BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdom, Long id)
     throws IdNotFoundException, ForbiddenActionException {
+
+    BuildingEntity building = findBuildingById(id);
 
     if (building == null) {
       throw new IdNotFoundException();
@@ -132,6 +137,7 @@ public class BuildingServiceImpl implements BuildingService {
     return kingdom.getBuildings().stream()
       .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
+
 }
 
 
