@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
-import org.junit.Ignore;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +21,9 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({
-      InvalidBuildingTypeException.class,
-      TownhallLevelException.class,
-      InvalidInputException.class})
+          InvalidBuildingTypeException.class,
+          TownhallLevelException.class,
+          InvalidInputException.class})
   public ResponseEntity<ErrorDTO> handleExceptions(Exception ex) {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
@@ -39,4 +38,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
   }
 
+  @ExceptionHandler(IdNotFoundException.class)
+  public ResponseEntity<ErrorDTO> handleExceptions(IdNotFoundException ex) {
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
+  }
 }

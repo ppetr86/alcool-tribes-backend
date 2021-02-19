@@ -2,13 +2,14 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingsResponseDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,11 +30,12 @@ public class BuildingController {
   private final BuildingService buildingService;
 
   @GetMapping
-  public ResponseEntity<BuildingsResponseDTO> getKingdomBuildings(Authentication auth) {
+  public ResponseEntity<BuildingResponseDTO> getKingdomBuildings(Authentication auth) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
     List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(kingdom.getId());
-    return ResponseEntity.status(HttpStatus.OK).body(new BuildingsResponseDTO(list));
+
+    return ResponseEntity.status(HttpStatus.OK).body(new BuildingResponseDTO(list));
   }
 
   @PostMapping

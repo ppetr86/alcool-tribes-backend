@@ -14,10 +14,11 @@ public class CustomUserDetails implements UserDetails {
   private KingdomEntity kingdom;
   private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-  public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity playerEntity) {
+  public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity player) {
     CustomUserDetails details = new CustomUserDetails();
-    details.login = playerEntity.getUsername();
-    details.password = playerEntity.getPassword();
+    details.login = player.getUsername();
+    details.password = player.getPassword();
+    details.kingdom = player.getKingdom();
     details.grantedAuthorities = details.getAuthorities();//returning empty authorities since we dont use roles
     return details;
   }

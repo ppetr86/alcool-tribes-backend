@@ -6,21 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
-@Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(name = "resources")
 public class ResourceEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -32,10 +26,4 @@ public class ResourceEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
-  public ResourceEntity(ResourceType type, int amount, int generation, long updatedAt) {
-    this.type = type;
-    this.amount = amount;
-    this.generation = generation;
-    this.updatedAt = updatedAt;
-  }
 }
