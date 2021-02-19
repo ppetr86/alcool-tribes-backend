@@ -30,11 +30,11 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public ResourceListResponseDTO convertKingdomRessourcesToListResponseDTO(KingdomEntity kingdom) {
+  public ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom) {
     return convert(kingdom);
   }
 
-  public ResourceListResponseDTO convert(KingdomEntity kingdom) {
+  private ResourceListResponseDTO convert(KingdomEntity kingdom) {
     return ResourceListResponseDTO.builder()
             .withResources(kingdom.getResources().stream()
                     .map(ResourceResponseDTO::new)

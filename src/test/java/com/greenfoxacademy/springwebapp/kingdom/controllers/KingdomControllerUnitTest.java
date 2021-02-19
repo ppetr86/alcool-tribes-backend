@@ -54,7 +54,7 @@ public class KingdomControllerUnitTest {
   }
 
   @Test(expected = IdNotFoundException.class)
-  public void non_existingKingdomReturns400_AndRelevantReponse() {
+  public void non_existingKingdomReturns400_AndRelevantResponse() {
     Mockito.when(kingdomService.entityToKingdomResponseDTO(1111L)).thenThrow(IdNotFoundException.class);
 
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1111L);
