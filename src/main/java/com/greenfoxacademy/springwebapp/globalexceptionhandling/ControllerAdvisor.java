@@ -23,22 +23,31 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({
-      InvalidBuildingTypeException.class,
-      TownhallLevelException.class,
-      InvalidInputException.class,
-      InvalidAcademyIdException.class})
+          InvalidBuildingTypeException.class,
+          TownhallLevelException.class,
+          InvalidInputException.class,
+          InvalidAcademyIdException.class})})
   public ResponseEntity<ErrorDTO> handleExceptions(Exception ex) {
+    log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
 
   @ExceptionHandler(MissingParameterException.class)
   public ResponseEntity<ErrorDTO> handleBadRequestExceptions(Exception ex) {
+    log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(NotEnoughResourceException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
+    log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(IdNotFoundException.class)
+  public ResponseEntity<ErrorDTO> handleExceptions(IdNotFoundException ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(ForbiddenCustomException.class)
@@ -46,5 +55,4 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
   }
-
 }

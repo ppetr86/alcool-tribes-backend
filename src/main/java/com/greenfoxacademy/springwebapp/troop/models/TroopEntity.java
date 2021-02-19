@@ -47,7 +47,4 @@ public class TroopEntity {
     this.finishedAt = finishedAt;
     this.kingdom = kingdom;
   }
-
-
-
 }
