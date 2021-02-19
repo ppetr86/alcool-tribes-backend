@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -57,11 +58,18 @@ public class BuildingControllerIT2 {
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(buildingEntity);
     kingdom.setBuildings(fakeList);
+    BuildingDetailsDTO buildingDetailsDTO = new BuildingDetailsDTO();
+    buildingDetailsDTO.setType(buildingEntity.getType().toString().toLowerCase());
+    buildingDetailsDTO.setLevel(buildingEntity.getLevel());
+    buildingDetailsDTO.setHp(buildingEntity.getHp());
+    buildingDetailsDTO.setStartedAt(buildingEntity.getStartedAt());
+    buildingDetailsDTO.setFinishedAt(buildingEntity.getFinishedAt());
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    Mockito.when(buildingService.hasKingdomThisBuilding(kingdom,buildingEntity)).thenReturn(true);
+    Mockito.when(buildingService.kingdomHasThisBuilding(kingdom,buildingEntity)).thenReturn(true);
+    Mockito.when(buildingService.showActualBuildingDetails(kingdom, buildingEntity)).thenReturn(buildingDetailsDTO);
 
-    mockMvc.perform(get(BuildingController.URI + "/1")
+    mockMvc.perform(get(BuildingController.URI + "/{id}", 1)
       .principal(authentication))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.level", is(1)))
@@ -80,7 +88,7 @@ public class BuildingControllerIT2 {
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
     //Is this need? Because the test, does not reach this point.
-    Mockito.when(buildingService.hasKingdomThisBuilding(kingdom,buildingEntity)).thenReturn(false);
+    Mockito.when(buildingService.kingdomHasThisBuilding(kingdom,buildingEntity)).thenReturn(false);
 
     mockMvc.perform(get(BuildingController.URI + "/2")
       .principal(authentication))
@@ -98,7 +106,7 @@ public class BuildingControllerIT2 {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(2L)).thenReturn(buildingEntity2);
-    Mockito.when(buildingService.hasKingdomThisBuilding(kingdom,buildingEntity2)).thenReturn(false);
+    Mockito.when(buildingService.kingdomHasThisBuilding(kingdom,buildingEntity2)).thenReturn(false);
 
     mockMvc.perform(get(BuildingController.URI + "/2")
       .principal(authentication))

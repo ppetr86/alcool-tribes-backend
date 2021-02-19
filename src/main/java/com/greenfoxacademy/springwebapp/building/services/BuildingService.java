@@ -1,11 +1,11 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 
 import java.util.List;
-import java.util.Set;
 
 public interface BuildingService {
 
@@ -23,7 +23,9 @@ public interface BuildingService {
 
   BuildingEntity findBuildingById(Long id);
 
-  boolean hasKingdomThisBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
+  boolean kingdomHasThisBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
+
+  BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
 
   boolean hasKingdomTownhall(KingdomEntity kingdom);
 

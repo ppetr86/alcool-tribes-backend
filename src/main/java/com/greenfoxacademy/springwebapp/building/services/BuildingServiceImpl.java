@@ -1,14 +1,12 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,10 +89,30 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public boolean hasKingdomThisBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity) {
+  public boolean kingdomHasThisBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity) {
     return kingdomEntity.getBuildings().stream()
       .anyMatch(building -> building.getId().equals(buildingEntity.getId()));
     //return kingdomEntity.getBuildings().contains(buildingEntity);
+  }
+
+  @Override
+  public BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdom, BuildingEntity building)
+    throws IdNotFoundException, ForbiddenActionException {
+
+    if (building == null) {
+      throw new IdNotFoundException();
+    } else if (kingdomHasThisBuilding(kingdom, building)) {
+      BuildingDetailsDTO actualBuilding = new BuildingDetailsDTO();
+      actualBuilding.setId(building.getId());
+      actualBuilding.setType(building.getType().toString().toLowerCase());
+      actualBuilding.setLevel(building.getLevel());
+      actualBuilding.setHp(building.getHp());
+      actualBuilding.setStartedAt(building.getStartedAt());
+      actualBuilding.setFinishedAt(building.getFinishedAt());
+      return actualBuilding;
+    } else {
+     throw new ForbiddenActionException();
+    }
   }
 
   @Override

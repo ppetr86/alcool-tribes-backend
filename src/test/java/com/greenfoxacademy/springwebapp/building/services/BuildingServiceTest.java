@@ -1,9 +1,11 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
@@ -193,7 +195,7 @@ public class BuildingServiceTest {
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
 
-    boolean result = buildingService.hasKingdomThisBuilding(kingdomEntity, buildingEntity);
+    boolean result = buildingService.kingdomHasThisBuilding(kingdomEntity, buildingEntity);
 
     Assert.assertTrue(result);
   }
@@ -207,9 +209,40 @@ public class BuildingServiceTest {
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
 
-    boolean result = buildingService.hasKingdomThisBuilding(kingdomEntity, buildingEntity2);
+    boolean result = buildingService.kingdomHasThisBuilding(kingdomEntity, buildingEntity2);
 
     Assert.assertFalse(result);
   }
 
+  @Test
+  public void showActualBuildingDetailsShouldReturnBuildingDetails(){
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
+
+    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, buildingEntity);
+
+    Assert.assertEquals(1, result.getId());
+    Assert.assertEquals(1, result.getLevel());
+    Assert.assertEquals("farm", result.getType());
+    Assert.assertEquals(100, result.getHp());
+  }
+
+  @Test
+  public void showActualBuildingDetailsShouldNotReturnWithWronBuildingDetails(){
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
+
+    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, buildingEntity);
+
+    Assert.assertNotEquals(2, result.getId());
+    Assert.assertNotEquals(2, result.getLevel());
+    Assert.assertNotEquals("FARM", result.getType());
+    Assert.assertNotEquals(200, result.getHp());
+  }
 }

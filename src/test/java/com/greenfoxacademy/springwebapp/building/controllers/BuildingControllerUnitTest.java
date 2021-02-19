@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
@@ -74,49 +75,21 @@ public class BuildingControllerUnitTest {
     List<BuildingEntity> fakeList = new ArrayList<>();
     fakeList.add(buildingEntity);
     kingdomEntity.setBuildings(fakeList);
+    BuildingDetailsDTO buildingDetailsDTO = new BuildingDetailsDTO();
+    buildingDetailsDTO.setType(buildingEntity.getType().toString().toLowerCase());
+    buildingDetailsDTO.setLevel(buildingEntity.getLevel());
+    buildingDetailsDTO.setHp(buildingEntity.getHp());
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    Mockito.when(buildingService.hasKingdomThisBuilding(kingdomEntity, buildingEntity)).thenReturn(true);
+    Mockito.when(buildingService.kingdomHasThisBuilding(kingdomEntity, buildingEntity)).thenReturn(true);
+    Mockito.when(buildingService.showActualBuildingDetails(kingdomEntity, buildingEntity)).thenReturn(buildingDetailsDTO);
 
     ResponseEntity<?> response = buildingController.getBuildingById(1L, authentication);
-
-    Integer level = 1;
-    Integer hp = 100;
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assert.assertEquals("FARM", ((BuildingEntity)response.getBody()).getType().toString());
-    Assert.assertEquals(level, ((BuildingEntity)response.getBody()).getLevel());
-    Assert.assertEquals(hp,((BuildingEntity)response.getBody()).getHp());
-  }
-
-  @Test
-  public void getBuildingByIdShouldReturn404(){
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(null);
-    Mockito.when(buildingService.hasKingdomThisBuilding(new KingdomEntity(), new BuildingEntity())).thenReturn(true);
-
-    ResponseEntity<?> response = buildingController.getBuildingById(1L, authentication);
-
-    Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    Assert.assertEquals("Id not found", ((ErrorDTO)response.getBody()).getMessage());
-  }
-
-  @Test
-  public void getBuildingByIdShouldReturn403(){
-    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L);
-    BuildingEntity buildingEntity2 = new BuildingEntity(2L, BuildingType.FARM, 1, 100, 100L, 200L);
-    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(buildingEntity);
-    kingdomEntity.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(2L)).thenReturn(buildingEntity2);
-    Mockito.when(buildingService.hasKingdomThisBuilding(kingdomEntity, buildingEntity2)).thenReturn(false);
-
-    ResponseEntity<?> response = buildingController.getBuildingById(2L, authentication);
-
-    Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    Assert.assertEquals("Forbidden action", ((ErrorDTO)response.getBody()).getMessage());
+    Assert.assertEquals("farm", ((BuildingDetailsDTO)response.getBody()).getType().toString());
+    Assert.assertEquals(1, ((BuildingDetailsDTO)response.getBody()).getLevel());
+    Assert.assertEquals(100,((BuildingDetailsDTO)response.getBody()).getHp());
   }
 }
 
