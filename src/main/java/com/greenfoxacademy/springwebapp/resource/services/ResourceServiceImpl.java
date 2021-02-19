@@ -30,6 +30,7 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public List<ResourceResponseDTO> findByKingdomId(Long id) {
+
     return resourceRepository.findAllByKingdomId(id);
   }
 

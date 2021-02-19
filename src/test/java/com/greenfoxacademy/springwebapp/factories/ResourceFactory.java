@@ -19,7 +19,6 @@ public class ResourceFactory {
     );
   }
 
-
   public static List<ResourceEntity> createResources(KingdomEntity kingdom) {
     return Arrays.asList(
             new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom),
