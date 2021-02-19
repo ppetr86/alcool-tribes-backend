@@ -50,27 +50,27 @@ public class TroopControllerUnitTest {
     ResponseEntity<?> response = troopController.createTroop(requestDTO, authentication);
 
     Assert.assertEquals(200, response.getStatusCodeValue());
-    Assert.assertEquals(1, ((TroopEntityResponseDTO) response.getBody()).getId().intValue());
-    Assert.assertEquals(1, ((TroopEntityResponseDTO) response.getBody()).getLevel().intValue());
-    Assert.assertEquals(200, ((TroopEntityResponseDTO) response.getBody()).getHp().intValue());
-    Assert.assertEquals(50, ((TroopEntityResponseDTO) response.getBody()).getAttack().intValue());
-    Assert.assertEquals(20, ((TroopEntityResponseDTO) response.getBody()).getDefence().intValue());
-    Assert.assertEquals(10000, ((TroopEntityResponseDTO) response.getBody()).getStartedAt().intValue());
-    Assert.assertEquals(20000, ((TroopEntityResponseDTO) response.getBody()).getFinishedAt().intValue());
+    Assert.assertEquals(1L, ((TroopEntityResponseDTO) response.getBody()).getId().longValue());
+    Assert.assertEquals(1, ((TroopEntityResponseDTO) response.getBody()).getLevel());
+    Assert.assertEquals(200, ((TroopEntityResponseDTO) response.getBody()).getHp());
+    Assert.assertEquals(50, ((TroopEntityResponseDTO) response.getBody()).getAttack());
+    Assert.assertEquals(20, ((TroopEntityResponseDTO) response.getBody()).getDefence());
+    Assert.assertEquals(10000, ((TroopEntityResponseDTO) response.getBody()).getStartedAt());
+    Assert.assertEquals(20000, ((TroopEntityResponseDTO) response.getBody()).getFinishedAt());
   }
 
-  @Test
+@Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
 
     KingdomEntity ke = new KingdomEntity();
-    ke.setTroops(TroopFactory.createDefaultKingdomWithTroops());
+    ke.setTroops(TroopFactory.createDefaultTroops());
     List<TroopEntityResponseDTO> list = ke.getTroops()
-        .stream()
-        .map(TroopEntityResponseDTO::new)
-        .collect(Collectors.toList());
+            .stream()
+            .map(TroopEntityResponseDTO::new)
+            .collect(Collectors.toList());
 
     Mockito.when(troopService.troopsToListDTO(KingdomFactory.createKingdomEntityWithId(1l)))
-        .thenReturn(new TroopListResponseDto(list));
+            .thenReturn(new TroopListResponseDto(list));
 
     ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));
 

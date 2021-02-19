@@ -84,7 +84,7 @@ public class TroopControllerIT {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity academy =
-        new BuildingEntity(1L, BuildingType.ACADEMY, 10, 150, 1613303221, 1613303371);
+        new BuildingEntity(1L, BuildingType.ACADEMY, 10, 150, 1613303221L, 1613303371L);
     buildings.add(academy);
     kingdom.setBuildings(buildings);
 

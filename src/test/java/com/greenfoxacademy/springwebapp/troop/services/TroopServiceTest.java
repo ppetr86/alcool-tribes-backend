@@ -59,7 +59,7 @@ public class TroopServiceTest {
     // but  building has different id then requested building
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
-    BuildingEntity building = new BuildingEntity(2L, BuildingType.ACADEMY,1,1,1,1);
+    BuildingEntity building = new BuildingEntity(2L, BuildingType.ACADEMY,1,1,1L,1L);
     buildings.add(building);
     kingdom.setBuildings(buildings);
 
@@ -74,7 +74,7 @@ public class TroopServiceTest {
     //preparing kingdom with building matching requested id, but it is not ACADEMY
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.TOWNHALL,1,1,1,1);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.TOWNHALL,1,1,1L,1L);
     buildings.add(building);
     kingdom.setBuildings(buildings);
 
@@ -89,7 +89,7 @@ public class TroopServiceTest {
     //preparing kingdom with matching ACADEMY
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY,1,1,1,1);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY,1,1,1L,1L);
     buildings.add(building);
     kingdom.setBuildings(buildings);
 
@@ -107,7 +107,7 @@ public class TroopServiceTest {
     //preparing kingdom with matching ACADEMY
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY,1,1,1,1);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY,1,1,1L,1L);
     buildings.add(building);
     kingdom.setBuildings(buildings);
 
@@ -127,13 +127,12 @@ public class TroopServiceTest {
     Mockito.when(troopRepository.save(fakeTroop)).thenReturn(fakeTroop);
 
     TroopEntityResponseDTO response = troopService.createTroop(kingdom,requestDTO);
-
-    Assert.assertEquals(1, response.getLevel().intValue());
-    Assert.assertEquals(20, response.getHp().intValue());
-    Assert.assertEquals(10, response.getAttack().intValue());
-    Assert.assertEquals(5, response.getDefence().intValue());
-    Assert.assertEquals(1, response.getStartedAt().intValue());
-    Assert.assertEquals(30, response.getFinishedAt().intValue());
+    Assert.assertEquals(1, response.getLevel());
+    Assert.assertEquals(20, response.getHp());
+    Assert.assertEquals(10, response.getAttack());
+    Assert.assertEquals(5, response.getDefence());
+    Assert.assertEquals(1, response.getStartedAt());
+    Assert.assertEquals(30, response.getFinishedAt());
 
   }
 }

@@ -47,5 +47,17 @@ public class BuildingEntity {
     this.level = level;
     this.kingdom = kingdom;
   }
+
+  //constructor for tests building factory
+  public BuildingEntity(Long id,
+                        BuildingType type, Integer level, Integer hp, Long startedAt,
+                        Long finishedAt) {
+    this.id = id;
+    this.type = type;
+    this.level = level;
+    this.hp = hp;
+    this.startedAt = startedAt;
+    this.finishedAt = finishedAt;
+  }
 }
 

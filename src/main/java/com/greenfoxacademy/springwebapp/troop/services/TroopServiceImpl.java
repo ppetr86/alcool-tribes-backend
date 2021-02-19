@@ -64,9 +64,7 @@ public class TroopServiceImpl implements TroopService {
         troop = new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
     troopRepository.save(troop);
 
-    return new TroopEntityResponseDTO(
-        troop.getId(), troop.getLevel(), troop.getHp(), troop.getAttack(),
-        troop.getDefence(), troop.getStartedAt(), troop.getFinishedAt());
+    return new TroopEntityResponseDTO(troop);
   }
 
   private Integer getAppPropertyAsInt (String propertyName) {
