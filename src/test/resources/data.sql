@@ -33,4 +33,4 @@ INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kin
 VALUES (2, 2, 2, 1, 100, 1, 1, 1);
 
 INSERT INTO resources (id, amount, generation, type, updated_at, kingdom_id)
-VALUES (1, 20, 20, 'FOOD', 1645789L, 1);
+VALUES (1, 20, 20, 'FOOD', 1645789, 1);
