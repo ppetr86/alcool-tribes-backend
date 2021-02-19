@@ -50,13 +50,6 @@ public class KingdomControllerUnitTest {
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(kingdomService.entityToKingdomResponseDTO(1L)).thenReturn(result);
 
-    List<ResourceResponseDTO> dtos = Arrays.asList(
-            new ResourceResponseDTO("GOLD",10,10,10),
-            new ResourceResponseDTO("FOOD",10,10,10));
-
-    ResourceListResponseDTO dto = new ResourceListResponseDTO(dtos);
-
-    Mockito.when(resourceService.convertKingdomRessourcesToListResponseDTO(kingdom)).thenReturn(dto);
   }
 
   @Test
@@ -65,37 +58,8 @@ public class KingdomControllerUnitTest {
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
-  /*@Test
-  public void getKingdomResourcesShouldReturnCorrectResourceType() {
-    KingdomEntity kingdomEntity = new KingdomEntity();
-    kingdomEntity.setId(1L);
-    ResourceEntity resourceEntityList = new ResourceEntity(1L, ResourceType.FOOD, 20, 10, 1678456L, kingdomEntity);
-    List<ResourceResponseDTO> testList = new ArrayList<>();
-    testList.add(new ResourceResponseDTO(resourceEntityList));
-    Mockito.when(resourceService.convertKingdomRessourcesToListResponseDTO(1L)).thenReturn(testList);
-
-    ResponseEntity<?> response = kingdomController.getKingdomResources(createAuth("test", 1L));
-
-    Assert.assertEquals("food", ((ResourceListResponseDTO) response.getBody()).getResources().get(0).getType());
-  }*/
-
-  /*@Test
-  public void getKingdomResourcesShouldReturnIncorrectResourceType() {
-    KingdomEntity kingdomEntity = new KingdomEntity();
-    kingdomEntity.setId(1L);
-    ResourceEntity resourceEntityList = new ResourceEntity(1L, ResourceType.FOOD, 20, 10, 1678456L, kingdomEntity);
-    List<ResourceResponseDTO> testList = new ArrayList<>();
-    testList.add(new ResourceResponseDTO(resourceEntityList));
-    Mockito.when(resourceService.findByKingdomId(1L)).thenReturn(testList);
-
-    ResponseEntity<?> response = kingdomController.getKingdomResources(createAuth("test", 1L));
-
-    Assert.assertNotEquals("gold", ((ResourceListResponseDTO) response.getBody()).getResources().get(0).getType());
-  }*/
-
   @Test
   public void existingKingdomReturns200Status() {
-
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1L);
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
