@@ -26,4 +26,9 @@ public class ResourceEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
+  public ResourceEntity(KingdomEntity kingdomEntity, ResourceType type, Integer amount) {
+  this.kingdom = kingdomEntity;
+  this.type = type;
+  this.amount = amount;
+  }
 }
