@@ -34,16 +34,6 @@ public class KingdomController {
     return ResponseEntity.ok(kingdomService.entityToKingdomResponseDTO(id));
   }
 
-
-
-  /*@GetMapping("/resources")
-  public ResponseEntity<?> getKingdomResources(Authentication authentication) {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    List<ResourceResponseDTO> listOfResources = resourceService.findByKingdomId(kingdom.getId());
-    ResourceListResponseDTO allResources = new ResourceListResponseDTO(listOfResources);
-    return ResponseEntity.ok().body(allResources);
-  }*/
-
   @GetMapping("/resources")
   public ResponseEntity<?> getKingdomResources(Authentication authentication) {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();

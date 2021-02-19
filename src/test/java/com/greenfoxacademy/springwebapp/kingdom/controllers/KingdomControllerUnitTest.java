@@ -1,17 +1,11 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
-import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
-import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
-import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
-import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
-import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,10 +13,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
@@ -49,7 +39,6 @@ public class KingdomControllerUnitTest {
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(kingdomService.entityToKingdomResponseDTO(1L)).thenReturn(result);
-
   }
 
   @Test
@@ -72,5 +61,4 @@ public class KingdomControllerUnitTest {
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     Assert.assertEquals("Id not found", ((ErrorDTO) response.getBody()).getMessage());
   }
-
 }

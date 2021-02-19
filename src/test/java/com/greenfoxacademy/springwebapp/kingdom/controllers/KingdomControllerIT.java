@@ -1,6 +1,9 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
+import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultBuildings;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,13 +37,8 @@ public class KingdomControllerIT {
   @Before
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
-  }
-
-  @Test
-  public void getKingdomResourcesShouldReturnOkStatus() throws Exception {
-    mockMvc.perform(get(KingdomController.URI + "/resources")
-            .principal(authentication))
-            .andExpect(status().isOk());
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResources(null));
   }
 
   @Test
@@ -48,6 +47,6 @@ public class KingdomControllerIT {
             .principal(authentication))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.resources[0].amount", is(10)));
+            .andExpect(jsonPath("$.resources[0].amount", is(100)));
   }
 }
