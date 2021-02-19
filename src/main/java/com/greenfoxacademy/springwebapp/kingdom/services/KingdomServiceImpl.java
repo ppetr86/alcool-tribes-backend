@@ -63,9 +63,4 @@ public class KingdomServiceImpl implements KingdomService {
     return kingdomRepository.save(kingdom);
   }
 
-  @Override
-  public KingdomEntity findById(Long id) {
-    return kingdomRepository.findById(id).orElse(null);
-  }
-
 }

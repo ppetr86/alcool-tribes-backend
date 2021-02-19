@@ -38,7 +38,7 @@ public class KingdomControllerIntegrationTest {
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setResources(ResourceFactory.createResources(null));
+    kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
   }
 
   @Test

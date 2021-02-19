@@ -20,7 +20,7 @@ public class ResourceFactory {
   }
 
 
-  public static List<ResourceEntity> createResources(KingdomEntity kingdom) {
+  public static List<ResourceEntity> createResourcesWithAllData(KingdomEntity kingdom) {
     return Arrays.asList(
             new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom),
             new ResourceEntity(2L, ResourceType.FOOD, 100, 100, 999L, kingdom)
