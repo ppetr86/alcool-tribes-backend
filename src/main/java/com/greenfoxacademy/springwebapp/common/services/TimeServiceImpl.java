@@ -1,7 +1,8 @@
 package com.greenfoxacademy.springwebapp.common.services;
 
-import java.time.Instant;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 public class TimeServiceImpl implements TimeService {
@@ -19,9 +20,8 @@ public class TimeServiceImpl implements TimeService {
 
   @Override
   public int getTimeBetween(long from, long to) {
-    if(to > from) {
+    if (to > from) {
       return (int) (to - from);
-    }
-    else return 0;
+    } else return 0;
   }
 }

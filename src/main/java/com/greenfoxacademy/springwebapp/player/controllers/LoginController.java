@@ -1,8 +1,8 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
-import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.player.services.TokenService;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ import java.util.List;
 @RestController
 public class LoginController {
 
-  private PlayerService playerService;
-  private TokenService tokenService;
+  private final PlayerService playerService;
+  private final TokenService tokenService;
 
   public LoginController(PlayerService playerService, TokenService tokenService) {
     this.playerService = playerService;

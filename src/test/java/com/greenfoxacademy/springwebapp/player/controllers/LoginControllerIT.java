@@ -38,13 +38,12 @@ public class LoginControllerIT {
   public void postLoginShouldReturn200AndOkMessage() throws Exception {
     PlayerRequestDTO request = new PlayerRequestDTO("furkesz", "password");
     String json = new ObjectMapper().writeValueAsString(request);
-
     mockMvc.perform(post("/login")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.status", is("ok")))
-      .andExpect(jsonPath("$.token", matchesPattern(".+\\..+\\..+")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status", is("ok")))
+            .andExpect(jsonPath("$.token", matchesPattern(".+\\..+\\..+")));
   }
 
   @Test
@@ -53,12 +52,12 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-      .contentType(MediaType.APPLICATION_JSON)
-      .principal(createAuth("Mark", 1L))
-      .content(json))
-      .andExpect(status().isUnauthorized())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .principal(createAuth("Mark", 1L))
+            .content(json))
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.status", is("error")))
+            .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
   }
 
   @Test
@@ -67,11 +66,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json))
-      .andExpect(status().isUnauthorized())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.status", is("error")))
+            .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
   }
 
   @Test
@@ -81,11 +80,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json))
-      .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Username is required.")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status", is("error")))
+            .andExpect(jsonPath("$.message", is("Username is required.")));
   }
 
   @Test
@@ -94,11 +93,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json))
-      .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Password is required.")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status", is("error")))
+            .andExpect(jsonPath("$.message", is("Password is required.")));
   }
 
   @Test
@@ -107,11 +106,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json))
-      .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Username and password are required.")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status", is("error")))
+            .andExpect(jsonPath("$.message", is("Username and password are required.")));
   }
 
   @Test
@@ -120,11 +119,10 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json))
-      .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Password has to contain at least 8 letters.")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status", is("error")))
+            .andExpect(jsonPath("$.message", is("Password has to contain at least 8 letters.")));
   }
 }
-

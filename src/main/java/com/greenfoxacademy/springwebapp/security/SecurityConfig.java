@@ -13,10 +13,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public static final int AUTHENTICATION_FAILURE_STATUSCODE = 401;
 
-  private JwtFilter jwtFilter;
-  private AuthenticationExceptionHandler authenticationExceptionHandler;
+  private final JwtFilter jwtFilter;
+  private final AuthenticationExceptionHandler authenticationExceptionHandler;
 
-  public SecurityConfig (JwtFilter jwtFilter, AuthenticationExceptionHandler authenticationExceptionHandler) {
+  public SecurityConfig(JwtFilter jwtFilter, AuthenticationExceptionHandler authenticationExceptionHandler) {
     this.jwtFilter = jwtFilter;
     this.authenticationExceptionHandler = authenticationExceptionHandler;
   }

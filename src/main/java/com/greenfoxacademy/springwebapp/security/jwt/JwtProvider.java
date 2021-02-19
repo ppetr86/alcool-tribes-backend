@@ -19,9 +19,12 @@ public class JwtProvider {
 
   @Value("${jwt.secret}")
   private String jwtSecret;
+  @Value("${jwt.expire-days}")
+  private int jwtExpireDays;
 
   public String generateToken(PlayerEntity playerEntity){
-    Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    //creating Expiration date - by using LocalDate, which is preferred
+    Date date = Date.from(LocalDate.now().plusDays(jwtExpireDays).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
             .setClaims(new HashMap<String, Object>(){{
               put("username", playerEntity.getUsername());
