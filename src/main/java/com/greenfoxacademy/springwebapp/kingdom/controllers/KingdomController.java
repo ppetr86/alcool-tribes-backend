@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -35,11 +36,18 @@ public class KingdomController {
 
 
 
-  @GetMapping("/resources")
+  /*@GetMapping("/resources")
   public ResponseEntity<?> getKingdomResources(Authentication authentication) {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     List<ResourceResponseDTO> listOfResources = resourceService.findByKingdomId(kingdom.getId());
     ResourceListResponseDTO allResources = new ResourceListResponseDTO(listOfResources);
+    return ResponseEntity.ok().body(allResources);
+  }*/
+
+  @GetMapping("/resources")
+  public ResponseEntity<?> getKingdomResources(Authentication authentication) {
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    ResourceListResponseDTO allResources = resourceService.convertKingdomRessourcesToListResponseDTO(kingdom);
     return ResponseEntity.ok().body(allResources);
   }
 }
