@@ -101,18 +101,17 @@ public class BuildingServiceImpl implements BuildingService {
 
     if (building == null) {
       throw new IdNotFoundException();
-    } else if (kingdomHasThisBuilding(kingdom, building)) {
-      BuildingDetailsDTO actualBuilding = new BuildingDetailsDTO();
-      actualBuilding.setId(building.getId());
-      actualBuilding.setType(building.getType().toString().toLowerCase());
-      actualBuilding.setLevel(building.getLevel());
-      actualBuilding.setHp(building.getHp());
-      actualBuilding.setStartedAt(building.getStartedAt());
-      actualBuilding.setFinishedAt(building.getFinishedAt());
-      return actualBuilding;
-    } else {
-     throw new ForbiddenActionException();
+    } else if (!kingdomHasThisBuilding(kingdom, building)) {
+      throw new ForbiddenActionException();
     }
+    BuildingDetailsDTO actualBuilding = new BuildingDetailsDTO();
+    actualBuilding.setId(building.getId());
+    actualBuilding.setType(building.getType().toString().toLowerCase());
+    actualBuilding.setLevel(building.getLevel());
+    actualBuilding.setHp(building.getHp());
+    actualBuilding.setStartedAt(building.getStartedAt());
+    actualBuilding.setFinishedAt(building.getFinishedAt());
+    return actualBuilding;
   }
 
   @Override

@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
@@ -78,7 +79,7 @@ public class BuildingControllerIT2 {
       .andExpect(jsonPath("$.finishedAt", is(300)));
   }
 
-  @Test
+  @Test(expected = IdNotFoundException.class)
   public void getBuildingByIdShouldReturn404() throws Exception{
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 200, 300);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
@@ -89,6 +90,7 @@ public class BuildingControllerIT2 {
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
     //Is this need? Because the test, does not reach this point.
     Mockito.when(buildingService.kingdomHasThisBuilding(kingdom,buildingEntity)).thenReturn(false);
+    //Mockito.when(buildingService.showActualBuildingDetails(kingdom, buildingEntity)).thenReturn(new IdNotFoundException());
 
     mockMvc.perform(get(BuildingController.URI + "/2")
       .principal(authentication))
