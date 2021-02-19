@@ -1,9 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
-import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,14 +37,14 @@ public class KingdomControllerIT {
 
   @Test
   public void getKingdomResourcesShouldReturnOkStatus() throws Exception {
-    mockMvc.perform(get(KingdomController.URI+"/resources")
+    mockMvc.perform(get(KingdomController.URI + "/resources")
             .principal(authentication))
             .andExpect(status().isOk());
   }
 
   @Test
   public void getKingdomResourcesShouldReturnCorrectAmount() throws Exception {
-    mockMvc.perform(get(KingdomController.URI+"/resources")
+    mockMvc.perform(get(KingdomController.URI + "/resources")
             .principal(authentication))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))

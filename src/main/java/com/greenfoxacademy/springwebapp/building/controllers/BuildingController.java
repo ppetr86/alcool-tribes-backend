@@ -32,9 +32,7 @@ public class BuildingController {
   @GetMapping
   public ResponseEntity<BuildingResponseDTO> getKingdomBuildings(Authentication auth) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-
-    List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(kingdom.getId());
-
+    List<BuildingEntity> list = kingdom.getBuildings();
     return ResponseEntity.status(HttpStatus.OK).body(new BuildingResponseDTO(list));
   }
 
