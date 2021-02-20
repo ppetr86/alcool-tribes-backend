@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class TimeServiceUnitTest {
+
   TimeServiceImp timeService;
 
   @Before
@@ -31,8 +32,7 @@ public class TimeServiceUnitTest {
 
   @Test
   public void getTimeAfterReturnsCorrectFutureTimeInSeconds() {
-    timeService = Mockito.spy(
-        TimeServiceImp.class);
+    timeService = Mockito.spy(TimeServiceImp.class);
     Mockito.doReturn(100L).when(timeService)
         .getTime();
 
