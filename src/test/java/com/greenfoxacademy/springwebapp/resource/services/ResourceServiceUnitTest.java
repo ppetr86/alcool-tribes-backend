@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-public class ResourceServiceTest {
+public class ResourceServiceUnitTest {
   private ResourceService resourceService;
   private ResourceRepository resourceRepository;
 
