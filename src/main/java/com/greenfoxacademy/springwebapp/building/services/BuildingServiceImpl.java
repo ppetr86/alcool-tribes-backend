@@ -7,7 +7,6 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleRespo
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;

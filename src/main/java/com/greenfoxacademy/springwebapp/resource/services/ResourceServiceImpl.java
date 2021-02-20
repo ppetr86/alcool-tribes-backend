@@ -10,4 +10,10 @@ public class ResourceServiceImpl implements ResourceService {
     // TODO: hasResourcesForBuilding
     return false;
   }
+
+  @Override
+  public boolean hasResourcesForTroop() {
+    // TODO: has Resources For Troops creation
+    return true;
+  }
 }

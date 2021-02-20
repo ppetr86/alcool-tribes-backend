@@ -27,5 +27,13 @@ public class BuildingFactory {
             new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100L, 200L, kingdom)
     );
   }
+  public static List<BuildingEntity> createDefaultLevel1BuildingsWithAllData() {
+    return Arrays.asList(
+        new BuildingEntity(1L,BuildingType.TOWNHALL,1,200,1613303221L,1613303341L),
+        new BuildingEntity(2L,BuildingType.FARM,1,100,1613303221L,1613303281L),
+        new BuildingEntity(3L,BuildingType.MINE,1,100,1613303221L,1613303281L),
+        new BuildingEntity(4L,BuildingType.ACADEMY,1,150,1613303221L,1613303371L)
+    );
+  }
 
 }
