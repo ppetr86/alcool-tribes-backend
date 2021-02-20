@@ -99,7 +99,7 @@ public class BuildingControllerIT2 {
   @Test
   public void increaseTheGivenBuildingLevelShouldReturn400WithParameterMissingIdLevelHpFinishedAtKingdom() throws Exception {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(BuildingType.FARM, 300L);
+    BuildingEntity building = new BuildingEntity(null, BuildingType.FARM, 1);
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
     List<BuildingEntity> fakeList = Arrays.asList(
       building,
@@ -143,7 +143,7 @@ public class BuildingControllerIT2 {
   @Test
   public void increaseTheGivenBuildingLevelShouldReturn400WithParameterMissingKingdom() throws Exception {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.MINE, 1, 100, 200L, 300L);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.MINE, 1, 100, 200L, 300L, null);
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
     List<BuildingEntity> fakeList = Arrays.asList(
       building,

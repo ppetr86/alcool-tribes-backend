@@ -5,17 +5,11 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -56,30 +50,31 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public String increaseTheGivenBuildingLevel(KingdomEntity kingdomEntity, BuildingEntity buildingEntity) {
+  public String increaseTheGivenBuildingLevel(KingdomEntity kingdomEntity, BuildingEntity buildingEntity)
+    throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
     BuildingEntity townHall = kingdomEntity.getBuildings().stream()
       .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
       .findFirst()
       .get();
 
-      if (buildingEntity == null) {
-        return "no id";
-      } else if (buildingEntity.getId() == null ||
-        buildingEntity.getType() == null ||
-        buildingEntity.getLevel() == 0 ||
-        buildingEntity.getHp() == 0 ||
-        buildingEntity.getStartedAt() == 0 ||
-        buildingEntity.getFinishedAt() == 0 ||
-        buildingEntity.getKingdom() == null) {
-        return "parameter missing";
-      } else if (townHall.getLevel() <= buildingEntity.getLevel()) {
-        return "town hall need higher level";
-      } else if (!resourceService.hasResourcesForBuilding()) {
-        return "no resource";
-      } else {
-        return "building details";
-      }
+    if (buildingEntity == null) {
+      throw new IdNotFoundException();
+    } else if (buildingEntity.getId() == null ||
+      buildingEntity.getType() == null ||
+      buildingEntity.getLevel() == 0 ||
+      buildingEntity.getHp() == 0 ||
+      buildingEntity.getStartedAt() == 0 ||
+      buildingEntity.getFinishedAt() == 0 ||
+      buildingEntity.getKingdom() == null) {
+      throw new MissingParameterException("type");
+    } else if (townHall.getLevel() <= buildingEntity.getLevel()) {
+      throw new TownhallLevelException();
+    } else if (!resourceService.hasResourcesForBuilding()) {
+      throw new NotEnoughResourceException();
+    } else {
+      return "building details";
+    }
   }
 
   @Override
@@ -147,4 +142,5 @@ public class BuildingServiceImpl implements BuildingService {
     return kingdom.getBuildings().stream()
       .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
+
 }
