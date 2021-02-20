@@ -6,13 +6,24 @@ import lombok.Data;
 @Data
 public class TroopEntityResponseDTO {
 
-  private long id;
+  private Long id;
   private int level;
   private int hp;
   private int attack;
   private int defence;
   private long startedAt;
   private long finishedAt;
+
+  public TroopEntityResponseDTO(long id, int level, int hp, int attack, int defence, long startedAt,
+                                long finishedAt) {
+    this.id = id;
+    this.level = level;
+    this.hp = hp;
+    this.attack = attack;
+    this.defence = defence;
+    this.startedAt = startedAt;
+    this.finishedAt = finishedAt;
+  }
 
   public TroopEntityResponseDTO(TroopEntity entity) {
 

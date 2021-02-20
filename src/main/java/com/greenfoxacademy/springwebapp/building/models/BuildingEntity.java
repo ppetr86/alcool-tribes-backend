@@ -3,12 +3,20 @@ package com.greenfoxacademy.springwebapp.building.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -38,6 +46,18 @@ public class BuildingEntity {
     this.type = type;
     this.level = level;
     this.kingdom = kingdom;
+  }
+
+  //constructor for tests building factory
+  public BuildingEntity(Long id,
+                        BuildingType type, Integer level, Integer hp, Long startedAt,
+                        Long finishedAt) {
+    this.id = id;
+    this.type = type;
+    this.level = level;
+    this.hp = hp;
+    this.startedAt = startedAt;
+    this.finishedAt = finishedAt;
   }
 }
 
