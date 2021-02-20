@@ -18,6 +18,11 @@ public class ResourceServiceImpl implements ResourceService {
     this.resourceRepository = resourceRepository;
   }
 
+  public boolean hasResourcesForTroop() {
+    // TODO: has Resources For Troops creation
+    return true;
+  }
+
   @Override
   public boolean hasResourcesForBuilding() {
     // TODO: hasResourcesForBuilding
@@ -31,14 +36,11 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom) {
-    return convert(kingdom);
+    return ResourceListResponseDTO.builder()
+        .withResources(kingdom.getResources().stream()
+            .map(ResourceResponseDTO::new)
+            .collect(Collectors.toList()))
+        .build();
   }
 
-  private ResourceListResponseDTO convert(KingdomEntity kingdom) {
-    return ResourceListResponseDTO.builder()
-            .withResources(kingdom.getResources().stream()
-                    .map(ResourceResponseDTO::new)
-                    .collect(Collectors.toList()))
-            .build();
-  }
 }
