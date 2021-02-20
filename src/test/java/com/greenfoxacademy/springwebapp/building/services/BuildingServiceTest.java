@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,11 +21,12 @@ public class BuildingServiceTest {
   private BuildingService buildingService;
   private ResourceService resourceService;
   private TimeService timeService;
+  private BuildingRepository buildingRepository;
 
   @Before
   public void init() {
 
-    BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
+    buildingRepository = Mockito.mock(BuildingRepository.class);
     timeService = Mockito.mock(TimeService.class);
     Environment env = Mockito.mock(Environment.class);
     resourceService = Mockito.mock(ResourceService.class);
@@ -158,7 +158,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void increaseTheGivenBuildingLevelMethodShouldReturnBuildingDetails(){
+  public void checkBuildingDetailsShouldReturnBuildingDetails(){
     KingdomEntity kingdom = new KingdomEntity();
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
     BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
@@ -169,33 +169,34 @@ public class BuildingServiceTest {
     kingdom.setBuildings(fakeList);
 
     //TODO: have to modify hasResourcesForBuilding method
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
-    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, building);
+    String result = buildingService.checkBuildingDetails(kingdom, 1L);
 
     Assert.assertEquals("building details", result);
   }
 
   @Test
   public void updateBuildingShouldReturnWithUpdatedBuilding(){
-    BuildingEntity buildingEntity = new BuildingEntity(new KingdomEntity(), BuildingType.FARM, 1);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, null);
 
     Mockito.when(timeService.getTime()).thenReturn(1060L);
 
-    BuildingEntity building = buildingService.updateBuilding(buildingEntity);
+    BuildingEntity updatedBuilding = buildingService.updateBuilding(1L);
 
-    //Assert.assertEquals(2, building.getLevel());
-    //Assert.assertEquals(1060, building.getStartedAt());
-    //Assert.assertEquals(1120, building.getFinishedAt());
+    //Assert.assertEquals(2, updatedBuilding.getLevel());
+    //Assert.assertEquals(1060, updatedBuilding.getStartedAt());
+    //Assert.assertEquals(1120, updatedBuilding.getFinishedAt());
   }
 
   @Test
   public void updateBuildingShouldNotReturnWithUpdatedBuilding(){
-    BuildingEntity building = new BuildingEntity(new KingdomEntity(), BuildingType.FARM, 1);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, null);
 
     Mockito.when(timeService.getTime()).thenReturn(1060L);
 
-    buildingService.updateBuilding(building);
+    buildingService.updateBuilding(1L);
 
     //Assert.assertNotEquals(3, building.getLevel());
     //Assert.assertEquals(1060, building.getStartedAt());

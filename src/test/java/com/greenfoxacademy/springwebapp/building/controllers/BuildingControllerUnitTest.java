@@ -1,10 +1,11 @@
 package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -40,7 +41,7 @@ public class BuildingControllerUnitTest {
     buildingService = Mockito.mock(BuildingService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);
-    buildingController = new BuildingController(buildingService);
+    buildingController = new BuildingController(buildingService, kingdomService);
   }
 
   @Test
@@ -68,8 +69,9 @@ public class BuildingControllerUnitTest {
   }
 
   @Test
-  public void increaseTheGivenBuildingLevelShouldReturnNoId(){
+  public void increaseTheGivenBuildingLevelShouldReturnNoId() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    BuildingLevelDTO level = new BuildingLevelDTO(3);
     BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
     List<BuildingEntity> fakeList = Arrays.asList(
@@ -79,18 +81,19 @@ public class BuildingControllerUnitTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(3L)).thenReturn(null);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, null)).thenReturn("no id");
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, null)).thenReturn(String.valueOf(new IdNotFoundException()));
 
-    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication);
+    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication, level);
 
     Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    Assert.assertEquals("Id not found", ((ErrorDTO)response.getBody()).getMessage());
+    Assert.assertEquals("Id not found", ((ErrorDTO) response.getBody()).getMessage());
   }
 
   @Test
-  public void increaseTheGivenBuildingLevelShouldReturnParameterMissing(){
+  public void increaseTheGivenBuildingLevelShouldReturnParameterMissing() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
+    BuildingLevelDTO level = new BuildingLevelDTO(3);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
     List<BuildingEntity> fakeList = Arrays.asList(
       building,
@@ -99,18 +102,19 @@ public class BuildingControllerUnitTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("parameter missing");
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L)).thenReturn(String.valueOf(new MissingParameterException("type")));
+    Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
 
-    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication);
+    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication, level);
 
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    Assert.assertEquals("Missing parameter(s): <type>!", ((ErrorDTO)response.getBody()).getMessage());
+    Assert.assertEquals("Missing parameter(s): type!", ((ErrorDTO) response.getBody()).getMessage());
   }
 
   @Test
-  public void increaseTheGivenBuildingLevelShouldReturnTownHallNeedHigherLevel(){
-    //Arrange
+  public void increaseTheGivenBuildingLevelShouldReturnTownHallNeedHigherLevel() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    BuildingLevelDTO level = new BuildingLevelDTO(3);
     BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 1);
     List<BuildingEntity> fakeList = Arrays.asList(
@@ -120,19 +124,20 @@ public class BuildingControllerUnitTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("town hall need higher level");
-    //Act
-    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication);
-    //Assert
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L)).thenReturn(String.valueOf(new TownhallLevelException()));
+    Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
+
+    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication, level);
 
     Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
-    Assert.assertEquals("Invalid building level || Cannot build buildings with higher level than the Townhall", ((ErrorDTO)response.getBody()).getMessage());
+    Assert.assertEquals("Cannot build buildings with higher level than the Townhall", ((ErrorDTO) response.getBody()).getMessage());
   }
 
   @Test
-  public void increaseTheGivenBuildingLevelShouldReturnNoResource(){
+  public void increaseTheGivenBuildingLevelShouldReturnNoResource() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
+    BuildingLevelDTO level = new BuildingLevelDTO(3);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
     List<BuildingEntity> fakeList = Arrays.asList(
       building,
@@ -141,19 +146,20 @@ public class BuildingControllerUnitTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("no resource");
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L)).thenReturn(String.valueOf(new NotEnoughResourceException()));
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
-    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication);
+    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication, level);
 
     Assert.assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-    Assert.assertEquals("Not enough resource", ((ErrorDTO)response.getBody()).getMessage());
+    Assert.assertEquals("Not enough resource", ((ErrorDTO) response.getBody()).getMessage());
   }
 
   @Test
-  public void increaseTheGivenBuildingLevelShouldReturnOkWithUpdatedBuildings(){
+  public void increaseTheGivenBuildingLevelShouldReturnOkWithUpdatedBuildings() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
+    BuildingLevelDTO level = new BuildingLevelDTO(3);
+    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
     BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
     List<BuildingEntity> fakeList = Arrays.asList(
       building,
@@ -162,18 +168,18 @@ public class BuildingControllerUnitTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("building details");
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L)).thenReturn("building details");
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     building.setLevel(2);
     building.setStartedAt(100L);
     building.setFinishedAt(160L);
-    Mockito.when(buildingService.updateBuilding(building)).thenReturn(building);
+    Mockito.when(buildingService.updateBuilding(1L)).thenReturn(building);
 
-    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication);
+    ResponseEntity<?> response = buildingController.increaseTheGivenBuildingLevel(1L, authentication, level);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    //Assert.assertEquals(2, ((BuildingEntity)response.getBody()).getLevel());
-    //Assert.assertEquals(100, ((BuildingEntity)response.getBody()).getStartedAt());
-    //Assert.assertEquals(160, ((BuildingEntity)response.getBody()).getFinishedAt());
+    // Assert.assertEquals(2, ((BuildingEntity)response.getBody()).getLevel());
+    // Assert.assertEquals(100, ((BuildingEntity)response.getBody()).getStartedAt());
+    // Assert.assertEquals(160, ((BuildingEntity)response.getBody()).getFinishedAt());
   }
 }

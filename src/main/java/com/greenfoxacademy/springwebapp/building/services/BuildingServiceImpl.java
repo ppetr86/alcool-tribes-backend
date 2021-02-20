@@ -50,7 +50,7 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public String increaseTheGivenBuildingLevel(KingdomEntity kingdomEntity, BuildingEntity buildingEntity)
+  public String checkBuildingDetails(KingdomEntity kingdomEntity, Long id)
     throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
     BuildingEntity townHall = kingdomEntity.getBuildings().stream()
@@ -58,32 +58,37 @@ public class BuildingServiceImpl implements BuildingService {
       .findFirst()
       .get();
 
-    if (buildingEntity == null) {
+    BuildingEntity building = repo.findById(id).orElse(null);
+
+    if (building == null) {
       throw new IdNotFoundException();
-    } else if (buildingEntity.getId() == null ||
-      buildingEntity.getType() == null ||
-      buildingEntity.getLevel() == 0 ||
-      buildingEntity.getHp() == 0 ||
-      buildingEntity.getStartedAt() == 0 ||
-      buildingEntity.getFinishedAt() == 0 ||
-      buildingEntity.getKingdom() == null) {
+    } else if (building.getId() == null ||
+      building.getType() == null ||
+      building.getLevel() == 0 ||
+      building.getHp() == 0 ||
+      building.getStartedAt() == 0 ||
+      building.getFinishedAt() == 0 ||
+      building.getKingdom() == null) {
       throw new MissingParameterException("type");
-    } else if (townHall.getLevel() <= buildingEntity.getLevel()) {
-      throw new TownhallLevelException();
     } else if (!resourceService.hasResourcesForBuilding()) {
       throw new NotEnoughResourceException();
+    } else if (building == townHall) {
+      return "townhall";
+    } else if (townHall.getLevel() <= building.getLevel()) {
+      throw new TownhallLevelException();
     } else {
       return "building details";
     }
   }
 
   @Override
-  public BuildingEntity updateBuilding(BuildingEntity buildingEntity) {
-    buildingEntity.setLevel(buildingEntity.getLevel() + 1);
+  public BuildingEntity updateBuilding(Long id) {
+    BuildingEntity building = repo.findById(id).orElse(null);
+    building.setLevel(building.getLevel() + 1);
     //TODO: modify building HP?
-    buildingEntity.setStartedAt(timeService.getTime());
-    defineFinishedAt(buildingEntity);
-    return repo.save(buildingEntity);
+    building.setStartedAt(timeService.getTime());
+    defineFinishedAt(building);
+    return repo.save(building);
   }
 
   @Override

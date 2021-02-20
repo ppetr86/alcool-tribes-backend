@@ -4,6 +4,9 @@ import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -40,9 +43,6 @@ public class BuildingControllerIT2 {
   private MockMvc mockMvc;
 
   @MockBean
-  private BuildingService buildingService;
-
-  @MockBean
   private ResourceService resourceService;
 
   private Authentication authentication;
@@ -54,19 +54,7 @@ public class BuildingControllerIT2 {
 
   @Test
   public void increaseTheGivenBuildingLevel404WithShouldReturnNoId() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity();
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(null);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, null)).thenReturn("no id");
-
-    mockMvc.perform(put(BuildingController.URI + "/1")
+    mockMvc.perform(put(BuildingController.URI + "/1123")
       .principal(authentication))
       .andExpect(status().isNotFound())
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -75,128 +63,27 @@ public class BuildingControllerIT2 {
   }
 
   @Test
-  public void increaseTheGivenBuildingLevelShouldReturn400WithParameterMissingAll() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity();
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("parameter missing");
-
-    mockMvc.perform(put(BuildingController.URI + "/1")
-      .principal(authentication))
-      .andExpect(status().isBadRequest())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Missing parameter(s): <type>!")));
-  }
-
-  @Test
-  public void increaseTheGivenBuildingLevelShouldReturn400WithParameterMissingIdLevelHpFinishedAtKingdom() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(null, BuildingType.FARM, 1);
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("parameter missing");
-
-    mockMvc.perform(put(BuildingController.URI + "/1")
-      .principal(authentication))
-      .andExpect(status().isBadRequest())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Missing parameter(s): <type>!")));
-  }
-
-  @Test
-  public void increaseTheGivenBuildingLevelShouldReturn400WithParameterMissingIdHpStartedAtFinishedAt() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("parameter missing");
-
-    mockMvc.perform(put(BuildingController.URI + "/1")
-      .principal(authentication))
-      .andExpect(status().isBadRequest())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Missing parameter(s): <type>!")));
-  }
-
-  @Test
   public void increaseTheGivenBuildingLevelShouldReturn400WithParameterMissingKingdom() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.MINE, 1, 100, 200L, 300L, null);
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("parameter missing");
-
-    mockMvc.perform(put(BuildingController.URI + "/1")
+    mockMvc.perform(put(BuildingController.URI + "/6")
       .principal(authentication))
       .andExpect(status().isBadRequest())
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Missing parameter(s): <type>!")));
+      .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
   }
 
   @Test
   public void increaseTheGivenBuildingLevelShouldReturn406withTownHallNeedHigherLevel() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("town hall need higher level");
-
-    mockMvc.perform(put(BuildingController.URI + "/1")
+    mockMvc.perform(put(BuildingController.URI + "/2")
       .principal(authentication))
       .andExpect(status().isNotAcceptable())
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Invalid building level || Cannot build buildings with higher level than the Townhall")));
+      .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
 
   @Test
   public void increaseTheGivenBuildingLevelShouldReturn409WithNoResource() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(kingdom, BuildingType.FARM, 1);
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("no resource");
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(put(BuildingController.URI + "/1")
@@ -209,29 +96,14 @@ public class BuildingControllerIT2 {
 
   @Test
   public void increaseTheGivenBuildingLevelShouldReturn200WithBuildingDetails() throws Exception {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 200L, 260L, kingdom);
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
-
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.increaseTheGivenBuildingLevel(kingdom, building)).thenReturn("building details");
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
-    building.setLevel(2);
-    building.setStartedAt(300L);
-    building.setFinishedAt(360L);
-    Mockito.when(buildingService.updateBuilding(building)).thenReturn(building);
 
     mockMvc.perform(put(BuildingController.URI + "/1")
       .principal(authentication))
       .andExpect(status().isOk())
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(jsonPath("$.id", is(1)))
-      .andExpect(jsonPath("$.type", is("FARM")))
+      .andExpect(jsonPath("$.type", is("TOWNHALL")))
       .andExpect(jsonPath("$.level", is(2)))
       .andExpect(jsonPath("$.hp", is(100)))
       .andExpect(jsonPath("$.startedAt", is(300)))

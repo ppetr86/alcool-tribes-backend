@@ -25,10 +25,10 @@ public interface BuildingService {
 
   BuildingEntity findBuildingById(Long id);
 
-  String increaseTheGivenBuildingLevel(KingdomEntity kingdomEntity, BuildingEntity buildingEntity)
+  String checkBuildingDetails(KingdomEntity kingdomEntity, Long id)
     throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
 
-  BuildingEntity updateBuilding(BuildingEntity buildingEntity);
+  BuildingEntity updateBuilding(Long id);
 
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 

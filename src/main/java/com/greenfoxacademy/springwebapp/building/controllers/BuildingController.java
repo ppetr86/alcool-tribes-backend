@@ -1,11 +1,13 @@
 package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class BuildingController {
   public static final String URI = "/kingdom/buildings";
 
   private final BuildingService buildingService;
+  private final KingdomService kingdomService;
 
   @GetMapping
   public ResponseEntity<BuildingResponseDTO> getKingdomBuildings(Authentication auth) {
@@ -43,19 +46,21 @@ public class BuildingController {
 
   @PutMapping("/{id}")
   public ResponseEntity<?> increaseTheGivenBuildingLevel(@PathVariable Long id,
-                                                         Authentication auth)
+                                                         Authentication auth,
+                                                         @RequestBody @Valid BuildingLevelDTO level)
     throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    //KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    BuildingEntity actualBuilding = buildingService.findBuildingById(id);
+    Long idd = ((CustomUserDetails) auth.getPrincipal()).getKingdom().getId();
+    KingdomEntity kingdom = kingdomService.findByID(idd);
 
-    String result = buildingService.increaseTheGivenBuildingLevel(kingdom, actualBuilding);
+    String result = buildingService.checkBuildingDetails(kingdom, id);
 
-    if (!result.equals("building details")) {
+    if (!result.equals("building details") && !result.equals("townhall")) {
       return ResponseEntity.ok(result);
     }
-    BuildingEntity updatedBuilding = buildingService.updateBuilding(actualBuilding);
+    BuildingEntity updatedBuilding = buildingService.updateBuilding(id);
     return ResponseEntity.ok().body(updatedBuilding);
   }
 }
