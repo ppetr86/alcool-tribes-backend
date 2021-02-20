@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
-public class PlayerControllerTest {
+public class PlayerControllerUnitTest {
 
   private PlayerController playerController;
   private PlayerService registrationService;

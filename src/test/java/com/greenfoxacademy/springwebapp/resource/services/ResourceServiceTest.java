@@ -27,7 +27,7 @@ public class ResourceServiceTest {
 
     List<ResourceEntity> result = resourceService.createDefaultResources(kingdomEntity);
 
-    Assert.assertEquals("FOOD", result.get(0).getKingdom().getResources().get(0).getType());
+    Assert.assertEquals("food", result.get(0).getType().resourceType);
 
   }
 }
