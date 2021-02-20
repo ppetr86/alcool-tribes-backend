@@ -18,6 +18,9 @@ public class CustomUserDetailsService implements UserDetailsService {
   @Override
   public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     PlayerEntity player = playerService.findByUsername(username);
+    if(player == null){
+      throw new UsernameNotFoundException("Player with username " + username + " was not found!");
+    }
     return CustomUserDetails.fromPlayerToCustomUserDetails(player);
   }
 }
