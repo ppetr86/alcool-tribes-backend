@@ -2,13 +2,14 @@ package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
-import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
-import org.springframework.stereotype.Service;
-import java.util.Arrays;
-import java.util.List;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
+import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.repositories.ResourceRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,9 +35,10 @@ public class ResourceServiceImpl implements ResourceService {
   @Override
   public List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity) {
     return Arrays.stream(ResourceType.values())
-        .map(type -> new ResourceEntity(kingdomEntity, type, 100))
+        .map(type -> new ResourceEntity(kingdomEntity, type, 100, 10, 123456L)) //TODO: update with local time now
         .collect(Collectors.toList());
   }
+
   public ResourceEntity saveResource(ResourceEntity resourceEntity) {
     return resourceRepository.save(resourceEntity);
   }

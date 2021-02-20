@@ -26,11 +26,11 @@ public class ResourceEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
-  public ResourceEntity(KingdomEntity kingdomEntity, ResourceType type, Integer amount) {
+  public ResourceEntity(KingdomEntity kingdomEntity, ResourceType type, Integer amount, Integer generation, Long updatedAt) {
   this.kingdom = kingdomEntity;
   this.type = type;
   this.amount = amount;
-  this.generation = 10; //generation for both types is 10 per minute.
-    this.updatedAt = 12345678L; //TODO: update with local time now
+  this.generation = generation;
+    this.updatedAt = updatedAt;
   }
 }
