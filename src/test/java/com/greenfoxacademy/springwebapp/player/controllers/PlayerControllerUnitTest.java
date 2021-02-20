@@ -83,7 +83,7 @@ public class PlayerControllerUnitTest {
   }
 
   @Test
-  public void registerPlayerShouldSaveNewPlayerAndReturnCorrectResponses() {
+  public void registerPlayerShouldSaveNewPlayerAndReturnCorrectStatusCode() {
 
     PlayerEntity
         fakePlayerEntity = new PlayerEntity("user1", "password");
