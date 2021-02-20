@@ -5,11 +5,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BuildingResponseDTO {
+public class BuildingListResponseDTO {
 
   private List<BuildingEntity> buildings;
 
-  public BuildingResponseDTO(List<BuildingEntity> buildings) {
+  public BuildingListResponseDTO(List<BuildingEntity> buildings) {
     this.buildings = buildings;
   }
 }

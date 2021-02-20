@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.kingdom;
+package com.greenfoxacademy.springwebapp.kingdom.services;
 
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
