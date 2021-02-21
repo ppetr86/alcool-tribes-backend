@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -69,5 +70,29 @@ public class TroopServiceImpl implements TroopService {
 
   private Integer getAppPropertyAsInt (String propertyName) {
     return Integer.parseInt(env.getProperty(propertyName));
+  }
+
+  @Override
+  public TroopEntityResponseDTO getTroop(KingdomEntity kingdom, Long troopId)
+      throws ForbiddenCustomException, IdNotFoundException {
+
+    TroopEntity myTroop = kingdom.getTroops().stream()
+        .filter(a -> a.getId() == troopId)
+        .findFirst()
+        .orElse(null);
+
+    if (myTroop == null) {
+      TroopEntity existingTroop = findTroopById(troopId);
+      if(existingTroop == null) {
+        throw new IdNotFoundException();
+      } else throw new ForbiddenCustomException();
+    }
+
+    return new TroopEntityResponseDTO(myTroop);
+  }
+
+  @Override
+  public TroopEntity findTroopById(Long id) {
+    return troopRepository.findById(id).orElse(null);
   }
 }
