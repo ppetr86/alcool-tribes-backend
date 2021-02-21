@@ -180,4 +180,49 @@ public class TroopControllerIT {
         .andExpect(jsonPath("$.troops[0].level", is(1)))
         .andExpect(jsonPath("$.troops[0].hp", is(101)));
   }
+
+  @Test
+  public void returnTroop_ReturnsCorrectBodyAndStatus() throws Exception {
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    mockMvc.perform(get(TroopController.URI + "/2")
+        .principal(authentication))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(2)))
+        .andExpect(jsonPath("$.id", is(2)))
+        .andExpect(jsonPath("$.hp", is(102)));
+  }
+
+  @Test
+  public void returnTroop_ReturnsForbiddenExceptionDTO() throws Exception {
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    mockMvc.perform(get(TroopController.URI + "/6")
+        .principal(authentication))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Forbidden action")));
+  }
+
+  @Test
+  public void returnTroop_ReturnsIdNotFoundException() throws Exception {
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    mockMvc.perform(get(TroopController.URI + "/9999")
+        .principal(authentication))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(404))
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Id not found")));
+  }
+
+
 }
