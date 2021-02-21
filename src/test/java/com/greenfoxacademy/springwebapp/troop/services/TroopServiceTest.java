@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -16,6 +17,7 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.repositories.TroopRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,4 +137,69 @@ public class TroopServiceTest {
     Assert.assertEquals(30, response.getFinishedAt());
 
   }
+
+  @Test (expected = ForbiddenCustomException.class)
+  public void getTroopThrowsForbiddenCustomException() {
+    // preparing kingdom with 1 troop
+    // but requested troop has different ID from the troop in kingdom
+    // and requested troop ID exists in database, just is not in my kingdom
+
+    //prepared fakeTroops
+    TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
+    TroopEntity fakeTroop2 = new TroopEntity(10L,100,200,300,400,10L,20L);
+
+    //prepared kingdom with fakeTroop
+    KingdomEntity kingdom = new KingdomEntity();
+    List<TroopEntity> troops = new ArrayList<>();
+    troops.add(fakeTroop);
+    kingdom.setTroops(troops);
+
+    //it finds fakeTroop2 based on Id, but it does not belongs to my kingdom
+    Mockito.when(troopRepository.findById(10L)).thenReturn(Optional.of(fakeTroop2));
+
+    TroopEntityResponseDTO response = troopService.getTroop(kingdom,10L);
+  }
+
+  @Test (expected = IdNotFoundException.class)
+  public void getTroopThrowsIdNotFoundException() {
+    // preparing kingdom with 1 troop
+    // but requested troop has different ID from the troop in kingdom
+    // and requested troop ID does not exists in database
+
+    //prepared fakeTroop
+    TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
+
+    //prepared kingdom with fakeTroop
+    KingdomEntity kingdom = new KingdomEntity();
+    List<TroopEntity> troops = new ArrayList<>();
+    troops.add(fakeTroop);
+    kingdom.setTroops(troops);
+
+    //it doesnt find any troop based on set ID
+    Mockito.when(troopRepository.findById(10L)).thenReturn(Optional.ofNullable(null));
+
+    TroopEntityResponseDTO response = troopService.getTroop(kingdom,10L);
+  }
+
+  @Test
+  public void getTroopReturnsCorrectTroopEntityResponseDTO() {
+    //prepared fakeTroop
+    TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
+
+    //prepared kingdom with fakeTroop
+    KingdomEntity kingdom = new KingdomEntity();
+    List<TroopEntity> troops = new ArrayList<>();
+    troops.add(fakeTroop);
+    kingdom.setTroops(troops);
+
+    Mockito.when(troopRepository.findById(1L)).thenReturn(Optional.of(fakeTroop));
+
+    TroopEntityResponseDTO response = troopService.getTroop(kingdom,1L);
+
+    Assert.assertEquals(1L, response.getId().longValue());
+    Assert.assertEquals(10, response.getLevel());
+    Assert.assertEquals(40, response.getDefence());
+
+  }
+
 }

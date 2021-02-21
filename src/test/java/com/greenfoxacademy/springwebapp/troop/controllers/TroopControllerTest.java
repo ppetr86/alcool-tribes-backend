@@ -24,7 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
-public class TroopControllerUnitTest {
+public class TroopControllerTest {
   private TroopController troopController;
   private TroopService troopService;
 
