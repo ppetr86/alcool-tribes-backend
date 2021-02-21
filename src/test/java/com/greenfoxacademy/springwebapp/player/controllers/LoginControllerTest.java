@@ -19,7 +19,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.List;
 
-public class LoginControllerUnitTest {
+public class LoginControllerTest {
 
   private BindingResult bindingResult;
   private LoginController loginController;
