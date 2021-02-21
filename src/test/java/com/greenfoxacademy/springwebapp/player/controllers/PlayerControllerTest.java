@@ -24,7 +24,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerControllerUnitTest {
+public class PlayerControllerTest {
 
   private PlayerController playerController;
   private PlayerService registrationService;

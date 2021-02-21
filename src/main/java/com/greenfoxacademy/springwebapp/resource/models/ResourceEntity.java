@@ -31,6 +31,6 @@ public class ResourceEntity {
   this.type = type;
   this.amount = amount;
   this.generation = generation;
-    this.updatedAt = updatedAt;
+  this.updatedAt = updatedAt;
   }
 }

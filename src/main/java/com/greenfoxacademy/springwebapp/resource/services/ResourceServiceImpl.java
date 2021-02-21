@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
+import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class ResourceServiceImpl implements ResourceService {
   private ResourceRepository resourceRepository;
+  private TimeService timeService;
 
   public ResourceServiceImpl(
-          ResourceRepository resourceRepository) {
+      ResourceRepository resourceRepository, TimeService timeService) {
     this.resourceRepository = resourceRepository;
+    this.timeService = timeService;
   }
 
   public boolean hasResourcesForTroop() {
@@ -35,7 +38,7 @@ public class ResourceServiceImpl implements ResourceService {
   @Override
   public List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity) {
     return Arrays.stream(ResourceType.values())
-        .map(type -> new ResourceEntity(kingdomEntity, type, 100, 10, 123456L)) //TODO: update with local time now
+        .map(type -> new ResourceEntity(kingdomEntity, type, 100, 10, timeService.getTime()))
         .collect(Collectors.toList());
   }
 
