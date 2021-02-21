@@ -3,7 +3,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingResponseDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingListResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -29,12 +29,10 @@ public class BuildingController {
   private KingdomService kingdomService;
 
   @GetMapping
-  public ResponseEntity<BuildingResponseDTO> getKingdomBuildings(Authentication auth) {
+  public ResponseEntity<BuildingListResponseDTO> getKingdomBuildings(Authentication auth) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-
-    List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(kingdom.getId());
-
-    return ResponseEntity.status(HttpStatus.OK).body(new BuildingResponseDTO(list));
+    List<BuildingEntity> list = kingdom.getBuildings();
+    return ResponseEntity.status(HttpStatus.OK).body(new BuildingListResponseDTO(list));
   }
 
   @PostMapping

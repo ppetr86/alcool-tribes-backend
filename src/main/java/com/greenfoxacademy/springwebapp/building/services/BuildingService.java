@@ -8,7 +8,6 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleRespo
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-
 import java.util.List;
 
 public interface BuildingService {

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 @Service
-public class TimeServiceImp implements TimeService {
+public class TimeServiceImpl implements TimeService {
 
   @Override
   public long getTime() {

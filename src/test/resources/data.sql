@@ -41,3 +41,6 @@ INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kin
 VALUES (1, 1, 1, 0, 100, 1, 1, 1);
 INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
 VALUES (2, 2, 2, 1, 100, 1, 1, 1);
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
+VALUES (3, 10, 5, 1613070182, 20, 1, 1613070152, 1);
+
