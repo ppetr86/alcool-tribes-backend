@@ -3,7 +3,6 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -48,7 +47,7 @@ public class BuildingControllerIntegrationTest {
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom = KingdomFactory.createFullKingdom(kingdom.getId(), kingdom.getPlayer().getId());
+    kingdom.setBuildings(createBuildings(kingdom));
   }
 
   @Test
@@ -227,5 +226,33 @@ public class BuildingControllerIntegrationTest {
       .andExpect(status().isNotAcceptable())
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturnOk() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/1")
+      .principal(authentication))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.level", is(1)))
+      .andExpect(jsonPath("$.hp", is(100)))
+      .andExpect(jsonPath("$.startedAt", is(100)))
+      .andExpect(jsonPath("$.finishedAt", is(200)))
+      .andExpect(jsonPath("$.type", is("townhall")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturn404() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/16")
+      .principal(authentication))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.message", is("Id not found")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturn403() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/5")
+      .principal(authentication))
+      .andExpect(status().isForbidden())
+      .andExpect(jsonPath("$.message", is("Forbidden action")));
   }
 }
