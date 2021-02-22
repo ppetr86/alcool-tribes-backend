@@ -4,7 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -52,7 +52,7 @@ public class TroopServiceTest {
     Assert.assertEquals(101, (long) result.getTroops().get(0).getFinishedAt());
   }
 
-  @Test(expected = ForbiddenCustomException.class)
+  @Test(expected = ForbiddenActionException.class)
   public void createTroopThrowsForbiddenCustomException() {
     //preparing requestDTO
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
@@ -138,8 +138,8 @@ public class TroopServiceTest {
 
   }
 
-  @Test (expected = ForbiddenCustomException.class)
-  public void getTroopThrowsForbiddenCustomException() {
+  @Test (expected = ForbiddenActionException.class)
+  public void getTroopThrowsForbiddenActionException() {
     // preparing kingdom with 1 troop
     // but requested troop has different ID from the troop in kingdom
     // and requested troop ID exists in database, just is not in my kingdom

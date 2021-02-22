@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -37,7 +37,7 @@ public class TroopController {
 
   @PostMapping
   public ResponseEntity<?> createTroop(@RequestBody @Valid TroopRequestDTO requestDTO, Authentication auth)
-      throws ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException {
+      throws ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
@@ -48,7 +48,7 @@ public class TroopController {
 
   @GetMapping ("/{id}")
   public ResponseEntity<?> returnTroop(@PathVariable("id") Long troopId, Authentication auth)
-      throws ForbiddenCustomException, IdNotFoundException {
+      throws ForbiddenActionException, IdNotFoundException {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 

@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop.services;
 
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -15,10 +15,10 @@ public interface TroopService {
   TroopListResponseDto troopsToListDTO(KingdomEntity entity);
 
   TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
-      ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException;
+      ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException;
 
   TroopEntityResponseDTO getTroop(KingdomEntity kingdom, Long troopId) throws
-      ForbiddenCustomException, IdNotFoundException;
+      ForbiddenActionException, IdNotFoundException;
 
   TroopEntity findTroopById(Long id);
 }

@@ -3,7 +3,7 @@ package com.greenfoxacademy.springwebapp.troop.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -40,14 +40,14 @@ public class TroopServiceImpl implements TroopService {
 
   @Override
   public TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
-      ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException {
+      ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException {
 
     BuildingEntity academy = kingdom.getBuildings().stream()
         .filter(building -> building.getId() == requestDTO.getBuildingId())
         .findFirst()
         .orElse(null);
 
-    if(academy == null) throw new ForbiddenCustomException();
+    if(academy == null) throw new ForbiddenActionException();
 
     if (!academy.getType().equals(BuildingType.ACADEMY)) throw new InvalidAcademyIdException();
 
@@ -74,7 +74,7 @@ public class TroopServiceImpl implements TroopService {
 
   @Override
   public TroopEntityResponseDTO getTroop(KingdomEntity kingdom, Long troopId)
-      throws ForbiddenCustomException, IdNotFoundException {
+      throws ForbiddenActionException, IdNotFoundException {
 
     TroopEntity myTroop = kingdom.getTroops().stream()
         .filter(a -> a.getId() == troopId)
@@ -85,7 +85,7 @@ public class TroopServiceImpl implements TroopService {
       TroopEntity existingTroop = findTroopById(troopId);
       if(existingTroop == null) {
         throw new IdNotFoundException();
-      } else throw new ForbiddenCustomException();
+      } else throw new ForbiddenActionException();
     }
 
     return new TroopEntityResponseDTO(myTroop);
