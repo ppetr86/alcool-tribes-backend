@@ -63,4 +63,9 @@ public class KingdomServiceImpl implements KingdomService {
     return kingdomRepository.save(kingdom);
   }
 
+  @Override
+  public String kingdomNameByID(Long id) {
+    return kingdomRepository.findKingdomNameByID(id);
+  }
+
 }

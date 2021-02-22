@@ -4,5 +4,10 @@
       "name": "spring.logging.level.org.hibernate.SQL",
       "type": "java.lang.String",
       "description": "Description for spring.logging.level.org.hibernate.SQL."
-  }
-] }
+    },
+    {
+      "name": "validationUrl",
+      "type": "java.lang.String",
+      "description": "Description for validationUrl."
+    }
+  ] }

@@ -26,6 +26,9 @@ public class EmailConfig {
   @Value("${spring.mail.password}")
   private String password;
 
+  @Value("${validationUrl}")
+  private String validationUrl;
+
   @Bean
   public JavaMailSender getJavaMailSender() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -47,7 +50,7 @@ public class EmailConfig {
   @Bean
   public SimpleMailMessage emailTemplate() {
     SimpleMailMessage message = new SimpleMailMessage();
-    message.setTo("somebody@gmail.com");
+    message.setTo("you@gmail.com");
     message.setFrom("admin@gmail.com");
     message.setText("FATAL - Application crash. Save your job !!");
     return message;

@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.greenfoxacademy.springwebapp.configuration.email.EmailService;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
@@ -13,21 +14,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
+import javax.mail.MessagingException;
+
 public class PlayerControllerTest {
 
   private PlayerController playerController;
   private PlayerService registrationService;
   private EmailService emailService;
+  private KingdomService kingdomService;
 
   @Before
   public void setup() {
     registrationService = Mockito.mock(PlayerService.class);
     emailService = Mockito.mock(EmailService.class);
-    playerController = new PlayerController(registrationService,emailService);
+    kingdomService = Mockito.mock(KingdomService.class);
+    playerController = new PlayerController(registrationService,emailService,kingdomService);
   }
 
   @Test
-  public void registerUserShouldSaveUserAndReturn201() {
+  public void registerUserShouldSaveUserAndReturn201() throws MessagingException {
 
     PlayerResponseDTO
         playerResponseDTO = new PlayerResponseDTO(1, "user1", "email@email.com", 1, "avatar", 1);
@@ -48,7 +53,7 @@ public class PlayerControllerTest {
   }
 
   @Test
-  public void registerUserShouldSaveUserAndReturnCorrectKingdomId() {
+  public void registerUserShouldSaveUserAndReturnCorrectKingdomId() throws MessagingException {
 
     PlayerResponseDTO
         playerResponseDTO = new PlayerResponseDTO(1, "user1", "email@rmail.com", 1, "avatar", 1);

@@ -41,7 +41,7 @@ public class PlayerEntity {
   private KingdomEntity kingdom;
 
   @NonNull
-  private boolean isVerified;
+  private Boolean isVerified;
 
   public PlayerEntity(String username, String password) {
     this.username = username;

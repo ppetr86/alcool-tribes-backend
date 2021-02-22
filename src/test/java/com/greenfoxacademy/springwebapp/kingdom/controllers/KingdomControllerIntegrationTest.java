@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -38,7 +39,8 @@ public class KingdomControllerIntegrationTest {
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
+    //kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
+    kingdom = KingdomFactory.createFullKingdom(kingdom.getId(),kingdom.getPlayer().getId());
   }
 
   @Test
