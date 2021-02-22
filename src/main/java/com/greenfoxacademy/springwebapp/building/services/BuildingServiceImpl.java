@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public String checkBuildingDetails(KingdomEntity kingdomEntity, Long id)
+  public String checkBuildingDetails(KingdomEntity kingdomEntity, Long id, int level)
     throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
     BuildingEntity townHall = kingdomEntity.getBuildings().stream()
@@ -58,7 +59,7 @@ public class BuildingServiceImpl implements BuildingService {
       .findFirst()
       .get();
 
-    BuildingEntity building = repo.findById(id).orElse(null);
+    BuildingEntity building = findBuildingById(id);
 
     if (building == null) {
       throw new IdNotFoundException();
@@ -69,12 +70,30 @@ public class BuildingServiceImpl implements BuildingService {
       building.getStartedAt() == 0 ||
       building.getFinishedAt() == 0 ||
       building.getKingdom() == null) {
-      throw new MissingParameterException("type");
+      List<String> missingParameters = new ArrayList<>();
+      StringBuilder finalList = new StringBuilder();
+        if (building.getId() == null) {
+          missingParameters.add("id");
+        } else if (building.getLevel() == 0) {
+          missingParameters.add(" level");
+        } else if (building.getHp() == 0) {
+          missingParameters.add(" hp");
+        } else if (building.getStartedAt() == 0) {
+          missingParameters.add(" started at");
+        } else if (building.getFinishedAt() == 0) {
+          missingParameters.add(" finished at");
+        } else if (building.getKingdom() == null) {
+          missingParameters.add(" kingdom");
+        }
+      for (String missingParameter : missingParameters) {
+        finalList.append(missingParameter);
+      }
+      throw new MissingParameterException(finalList.toString());
     } else if (!resourceService.hasResourcesForBuilding()) {
       throw new NotEnoughResourceException();
     } else if (building == townHall) {
       return "townhall";
-    } else if (townHall.getLevel() <= building.getLevel()) {
+    } else if (townHall.getLevel() <= level) {
       throw new TownhallLevelException();
     } else {
       return "building details";
@@ -82,13 +101,28 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingEntity updateBuilding(Long id) {
-    BuildingEntity building = repo.findById(id).orElse(null);
-    building.setLevel(building.getLevel() + 1);
-    //TODO: modify building HP?
-    building.setStartedAt(timeService.getTime());
-    defineFinishedAt(building);
-    return repo.save(building);
+  public BuildingEntity updateBuilding(Long id, int level) {
+    BuildingEntity building = findBuildingById(id);
+
+    if (building.getType().equals(BuildingType.TOWNHALL)) {
+      building.setLevel(level);
+      building.setHp(building.getHp() + 200);
+      building.setStartedAt(timeService.getTime());
+      defineFinishedAt(building);
+      return repo.save(building);
+    } else if (building.getType().equals(BuildingType.ACADEMY)) {
+      building.setLevel(level);
+      building.setHp(building.getHp() + 150);
+      building.setStartedAt(timeService.getTime());
+      defineFinishedAt(building);
+      return repo.save(building);
+    } else {
+      building.setLevel(level);
+      building.setHp(building.getHp() + 100);
+      building.setStartedAt(timeService.getTime());
+      defineFinishedAt(building);
+      return repo.save(building);
+    }
   }
 
   @Override
