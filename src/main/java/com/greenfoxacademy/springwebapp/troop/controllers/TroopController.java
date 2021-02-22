@@ -9,15 +9,18 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
-import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -40,6 +43,16 @@ public class TroopController {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
     TroopEntityResponseDTO responseDTO = troopService.createTroop(kingdom, requestDTO);
+
+    return ResponseEntity.ok(responseDTO);
+  }
+
+  @PutMapping("/{troopId}")
+  public ResponseEntity<?> updateTroops(@PathVariable Long troopId, Authentication authentication,
+                                        @RequestBody @Valid TroopRequestDTO requestDTO) {
+    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+
+    TroopEntityResponseDTO responseDTO = troopService.updateTroopLevel(kingdomEntity, requestDTO);
 
     return ResponseEntity.ok(responseDTO);
   }
