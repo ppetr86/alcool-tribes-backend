@@ -87,6 +87,11 @@ public class BuildingServiceImpl implements BuildingService {
     result = defineFinishedAt(result);
     result = defineHp(result);
     result = save(result);
+
+    //updating Resource Generation
+    if(result.getType() == BuildingType.FARM || result.getType() == BuildingType.MINE)
+      resourceService.updateResourceGeneration(kingdom,result.getType(),result.getLevel());
+
     return result;
   }
 

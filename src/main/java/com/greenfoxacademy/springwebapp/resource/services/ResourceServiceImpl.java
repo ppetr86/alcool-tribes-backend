@@ -43,4 +43,9 @@ public class ResourceServiceImpl implements ResourceService {
         .build();
   }
 
+  @Override
+  public void updateResourceGeneration(KingdomEntity kingdom, Enum buildingType,
+                                       Integer buildingLevel) {
+
+  }
 }

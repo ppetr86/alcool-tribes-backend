@@ -16,4 +16,6 @@ public interface ResourceService {
 
   ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
 
+  void updateResourceGeneration(KingdomEntity kingdom, Enum buildingType, Integer buildingLevel);
+
 }
