@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
+import antlr.StringUtils;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
@@ -26,14 +27,27 @@ public class PlayerController {
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegistrationRequestDTO playerRegistrationRequestDTO,
                                         BindingResult bindingResult) {
+
+
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
     if (errorList.isEmpty()) {
       if (playerService.findByUsername(playerRegistrationRequestDTO.getUsername()) != null) {
         return ResponseEntity.status(HttpStatus.valueOf(409)).body(new ErrorDTO("Username is already taken."));
       }
+
       PlayerResponseDTO responsePlayerEntity = playerService.saveNewPlayer(playerRegistrationRequestDTO);
+
+      if (!playerRegistrationRequestDTO.getEmail().isEmpty()){
+        // send email
+        //
+      } else {
+        //dont send email
+        // user can not login
+      }
+        
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(responsePlayerEntity);
+
     } else if (playerRegistrationRequestDTO.getUsername() == null &&
             playerRegistrationRequestDTO.getPassword() == null) {
       return ResponseEntity.status(HttpStatus.valueOf(400))
@@ -47,4 +61,5 @@ public class PlayerController {
     return ResponseEntity.status(HttpStatus.valueOf(400))
             .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
   }
+
 }

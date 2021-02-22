@@ -1,23 +1,21 @@
 package com.greenfoxacademy.springwebapp.security.jwt;
 
-import com.greenfoxacademy.springwebapp.player.services.PlayerService;
-
 import com.greenfoxacademy.springwebapp.configuration.logconfig.EndpointsInterceptor;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetailsService;
 import com.greenfoxacademy.springwebapp.security.SecurityConfig;
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.AllArgsConstructor;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -43,16 +41,16 @@ public class JwtFilter extends OncePerRequestFilter {
     String token = getTokenFromServletRequest(request);
     Boolean tokenIsValid = false;
 
-    try{
+    try {
       tokenIsValid = jwtProvider.validateToken(token);
     } catch (Exception e) {
       SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
       //Specific message related to authentication failure. Otherwise when wrong token no log is created by interceptor at all.
       log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
-          request,
-          response,
-          SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
-          "Token validation error"
+              request,
+              response,
+              SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
+              "Token validation error"
       ));
     }
 
@@ -68,9 +66,9 @@ public class JwtFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private String getTokenFromServletRequest(HttpServletRequest servletRequest){
+  private String getTokenFromServletRequest(HttpServletRequest servletRequest) {
     String bearerToken = servletRequest.getHeader(AUTHORIZATION);
-    if (bearerToken.startsWith("Bearer ")){
+    if (bearerToken.startsWith("Bearer ")) {
       return bearerToken.substring(7);
     }
     return null;

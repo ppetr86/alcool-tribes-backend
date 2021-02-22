@@ -35,6 +35,8 @@ public class LoginController {
     if (errorList.isEmpty()) {
       if (playerService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword()) != null) {
         PlayerTokenDTO playerTokenDTO = tokenService.generateTokenToLoggedInPlayer(playerRequestDTO);
+
+        // if player isVerfified by clicking on email - allow login
         return ResponseEntity.ok().body(playerTokenDTO);
       } else {
         return ResponseEntity.status(401).body(new ErrorDTO("Username or password is incorrect."));
