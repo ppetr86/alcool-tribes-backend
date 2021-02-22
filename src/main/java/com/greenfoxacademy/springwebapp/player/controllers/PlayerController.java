@@ -1,10 +1,11 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
-import antlr.StringUtils;
+import com.greenfoxacademy.springwebapp.configuration.email.EmailService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,43 +18,43 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class PlayerController {
   private final PlayerService playerService;
+  private final EmailService emailService;
 
-  public PlayerController(PlayerService playerService) {
-    this.playerService = playerService;
-  }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegistrationRequestDTO playerRegistrationRequestDTO,
+  public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegistrationRequestDTO request,
                                         BindingResult bindingResult) {
 
 
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
     if (errorList.isEmpty()) {
-      if (playerService.findByUsername(playerRegistrationRequestDTO.getUsername()) != null) {
+      if (playerService.findByUsername(request.getUsername()) != null) {
         return ResponseEntity.status(HttpStatus.valueOf(409)).body(new ErrorDTO("Username is already taken."));
       }
 
-      PlayerResponseDTO responsePlayerEntity = playerService.saveNewPlayer(playerRegistrationRequestDTO);
+      PlayerResponseDTO response;
 
-      if (!playerRegistrationRequestDTO.getEmail().isEmpty()){
+      if (!request.getEmail().isEmpty()) {
         // send email
-        //
+        emailService.sendMail(request.getEmail(), "Confirm Email", "XXX");
+        response = playerService.saveNewPlayer(request);
       } else {
         //dont send email
         // user can not login
       }
-        
-      return ResponseEntity.status(HttpStatus.valueOf(201)).body(responsePlayerEntity);
 
-    } else if (playerRegistrationRequestDTO.getUsername() == null &&
-            playerRegistrationRequestDTO.getPassword() == null) {
+      return ResponseEntity.status(HttpStatus.valueOf(201)).body(response);
+
+    } else if (request.getUsername() == null &&
+            request.getPassword() == null) {
       return ResponseEntity.status(HttpStatus.valueOf(400))
               .body(new ErrorDTO("Username and password are required."));
-    } else if (playerRegistrationRequestDTO.getPassword() == null ||
-            playerRegistrationRequestDTO.getPassword().length() < 8) {
+    } else if (request.getPassword() == null ||
+            request.getPassword().length() < 8) {
       return ResponseEntity.status(HttpStatus.valueOf(406))
               .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
     }
