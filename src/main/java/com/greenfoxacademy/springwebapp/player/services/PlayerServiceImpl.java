@@ -4,13 +4,12 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,13 +21,13 @@ public class PlayerServiceImpl implements PlayerService {
   private final BuildingService buildingService;
 
   @Override
-  public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO dto) {
+  public PlayerResponseDTO saveNewPlayer(PlayerRegisterRequestDTO dto) {
     KingdomEntity kingdom = assignKingdomName(dto);
     List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
     kingdom.setBuildings(defaultBuildings);
 
     PlayerEntity player =
-            new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
+            new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), false);
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
     playerRepo.save(player);
@@ -38,7 +37,7 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
 
-  private KingdomEntity assignKingdomName(PlayerRegistrationRequestDTO dto) {
+  private KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
     KingdomEntity kingdom = new KingdomEntity();
     if (dto.getKingdomname() != null) {
       kingdom.setKingdomName(dto.getKingdomname());
@@ -74,5 +73,10 @@ public class PlayerServiceImpl implements PlayerService {
       }
     }
     return null;
+  }
+
+  @Override
+  public boolean findIsVerified(String username) {
+    return playerRepo.isVerifiedUsername(username);
   }
 }

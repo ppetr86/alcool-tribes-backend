@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.greenfoxacademy.springwebapp.configuration.email.EmailService;
-import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import org.junit.Assert;
@@ -31,8 +31,8 @@ public class PlayerControllerTest {
 
     PlayerResponseDTO
         playerResponseDTO = new PlayerResponseDTO(1, "user1", "email@email.com", 1, "avatar", 1);
-    PlayerRegistrationRequestDTO playerRegistrationRequestDTO =
-        new PlayerRegistrationRequestDTO("user1", "user1234", "email@email.com");
+    PlayerRegisterRequestDTO playerRegistrationRequestDTO =
+        new PlayerRegisterRequestDTO("user1", "user1234", "email@email.com");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
     Mockito.when(registrationService.saveNewPlayer(playerRegistrationRequestDTO)).thenReturn(playerResponseDTO);
@@ -52,8 +52,8 @@ public class PlayerControllerTest {
 
     PlayerResponseDTO
         playerResponseDTO = new PlayerResponseDTO(1, "user1", "email@rmail.com", 1, "avatar", 1);
-    PlayerRegistrationRequestDTO playerRegistrationRequestDTO =
-        new PlayerRegistrationRequestDTO("user1", "user1234", "email");
+    PlayerRegisterRequestDTO playerRegistrationRequestDTO =
+        new PlayerRegisterRequestDTO("user1", "user1234", "email");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
     Mockito.when(registrationService.saveNewPlayer(playerRegistrationRequestDTO)).thenReturn(playerResponseDTO);

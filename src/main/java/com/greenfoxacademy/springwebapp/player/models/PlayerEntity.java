@@ -2,18 +2,17 @@ package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
+@RequiredArgsConstructor
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "players")
 public class PlayerEntity {
 
@@ -21,11 +20,16 @@ public class PlayerEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @NonNull
   @Column(name = "username", unique = true, length = 20)
   private String username;
+
+  @NonNull
   @Column(name = "password")
   @JsonIgnore
   private String password;
+
+  @NonNull
   @Column(name = "email")
   private String email;
   @Column(name = "avatar")
@@ -36,15 +40,11 @@ public class PlayerEntity {
   @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
   private KingdomEntity kingdom;
 
+  @NonNull
+  private boolean isVerified;
 
   public PlayerEntity(String username, String password) {
     this.username = username;
     this.password = password;
-  }
-
-  public PlayerEntity(String username, String password, String email) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
   }
 }

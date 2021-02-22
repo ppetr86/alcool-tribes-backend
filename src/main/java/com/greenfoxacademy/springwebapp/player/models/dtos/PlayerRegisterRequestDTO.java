@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerRegistrationRequestDTO {
+public class PlayerRegisterRequestDTO {
 
   private long id;
   @NotBlank(message = "Username is required.")
@@ -30,16 +30,9 @@ public class PlayerRegistrationRequestDTO {
 
   private String kingdomname;
 
-  public PlayerRegistrationRequestDTO(String username, String password, String email) {
+  public PlayerRegisterRequestDTO(String username, String password, String email) {
     this.username = username;
     this.password = password;
     this.email = email;
-  }
-
-  public PlayerRegistrationRequestDTO(String username, String password, String email, String kingdomname) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.kingdomname = kingdomname;
   }
 }

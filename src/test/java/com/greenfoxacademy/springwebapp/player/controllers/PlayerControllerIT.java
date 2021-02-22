@@ -3,13 +3,12 @@ package com.greenfoxacademy.springwebapp.player.controllers;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
-import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,8 @@ public class PlayerControllerIT {
   @Test
   public void postRegisterRequestShouldReturn201() throws Exception {
 
-    PlayerRegistrationRequestDTO playerRegistrationRequestDTO =
-        new PlayerRegistrationRequestDTO("testUser", "testPassword", "email@email.com");
+    PlayerRegisterRequestDTO playerRegistrationRequestDTO =
+        new PlayerRegisterRequestDTO("testUser", "testPassword", "email@email.com");
 
     String requestJson = new ObjectMapper().writeValueAsString(playerRegistrationRequestDTO);
 
@@ -50,7 +49,7 @@ public class PlayerControllerIT {
   @Test
   public void postRegisterRequestShouldReturn400() throws Exception {
 
-    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
+    PlayerRegisterRequestDTO playerRegistrationRequestDTO = new PlayerRegisterRequestDTO();
     playerRegistrationRequestDTO.setEmail("email@email.com");
     playerRegistrationRequestDTO.setPassword("testPassword");
 
@@ -66,7 +65,7 @@ public class PlayerControllerIT {
   @Test
   public void postRegisterRequestShouldReturn406AndPasswordSizeError() throws Exception {
 
-    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
+    PlayerRegisterRequestDTO playerRegistrationRequestDTO = new PlayerRegisterRequestDTO();
     playerRegistrationRequestDTO.setUsername("usernameTest");
     playerRegistrationRequestDTO.setPassword("123");
     playerRegistrationRequestDTO.setEmail("email@email.com");
@@ -83,7 +82,7 @@ public class PlayerControllerIT {
   @Test
   public void postRegisterRequestShouldReturn409AndUsernameExistsError() throws Exception {
 
-    PlayerRegistrationRequestDTO playerRegistrationRequestDTO = new PlayerRegistrationRequestDTO();
+    PlayerRegisterRequestDTO playerRegistrationRequestDTO = new PlayerRegisterRequestDTO();
     playerRegistrationRequestDTO.setUsername("occupied_username");
     playerRegistrationRequestDTO.setPassword("12345678");
     playerRegistrationRequestDTO.setEmail("email@email.com");

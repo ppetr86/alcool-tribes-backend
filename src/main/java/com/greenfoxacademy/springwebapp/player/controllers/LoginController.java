@@ -27,23 +27,27 @@ public class LoginController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody @Valid PlayerRequestDTO playerRequestDTO,
+  public ResponseEntity<?> login(@RequestBody @Valid PlayerRequestDTO request,
                                  BindingResult bindingResult) {
 
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
     if (errorList.isEmpty()) {
-      if (playerService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword()) != null) {
-        PlayerTokenDTO playerTokenDTO = tokenService.generateTokenToLoggedInPlayer(playerRequestDTO);
+      if (playerService.findByUsernameAndPassword(request.getUsername(), request.getPassword()) != null) {
+        // if player isVerfified = false - dont allow login
+        // do what when not verified?? Login will not succeed
+        if (!playerService.findIsVerified(request.getUsername()))
+          return ResponseEntity.status(401).body(new ErrorDTO("Not verified username"));
 
-        // if player isVerfified by clicking on email - allow login
+        PlayerTokenDTO playerTokenDTO = tokenService.generateTokenToLoggedInPlayer(request);
         return ResponseEntity.ok().body(playerTokenDTO);
       } else {
+        System.out.println("test2");
         return ResponseEntity.status(401).body(new ErrorDTO("Username or password is incorrect."));
       }
     } else {
       String error = errorList.get(0).getCode(); //check in debug, what is the main error message if we have more
-      if (playerRequestDTO.getPassword() == null && playerRequestDTO.getUsername() == null) {
+      if (request.getPassword() == null && request.getUsername() == null) {
         return ResponseEntity.status(400).body(new ErrorDTO("Username and password are required."));
       }
       return ResponseEntity.status(400).body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
