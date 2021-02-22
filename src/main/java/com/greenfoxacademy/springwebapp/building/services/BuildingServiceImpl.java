@@ -89,31 +89,23 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public boolean kingdomHasThisBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity) {
-    return kingdomEntity.getBuildings().stream()
-      .anyMatch(building -> building.getId().equals(buildingEntity.getId()));
-    //return kingdomEntity.getBuildings().contains(buildingEntity);
-  }
-
-  @Override
   public BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdom, Long id)
     throws IdNotFoundException, ForbiddenActionException {
 
-    BuildingEntity building = findBuildingById(id);
+    BuildingEntity myBuilding = kingdom.getBuildings().stream()
+      .filter(b -> b.getId().equals(id))
+      .findFirst()
+      .orElse(null);
 
-    if (building == null) {
-      throw new IdNotFoundException();
-    } else if (!kingdomHasThisBuilding(kingdom, building)) {
-      throw new ForbiddenActionException();
+    if (myBuilding == null) {
+      BuildingEntity actualBuilding = findBuildingById(id);
+      if (actualBuilding == null)
+        throw new IdNotFoundException();
+      else {
+        throw new ForbiddenActionException();
+      }
     }
-    BuildingDetailsDTO actualBuilding = new BuildingDetailsDTO();
-    actualBuilding.setId(building.getId());
-    actualBuilding.setType(building.getType().toString().toLowerCase());
-    actualBuilding.setLevel(building.getLevel());
-    actualBuilding.setHp(building.getHp());
-    actualBuilding.setStartedAt(building.getStartedAt());
-    actualBuilding.setFinishedAt(building.getFinishedAt());
-    return actualBuilding;
+    return new BuildingDetailsDTO(myBuilding);
   }
 
   @Override

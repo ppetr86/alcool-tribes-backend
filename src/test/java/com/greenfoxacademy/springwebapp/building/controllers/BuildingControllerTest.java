@@ -24,7 +24,7 @@ import java.util.List;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
-public class BuildingControllerUnitTest {
+public class BuildingControllerTest {
 
   private BuildingController buildingController;
   private BuildingService buildingService;
@@ -78,8 +78,6 @@ public class BuildingControllerUnitTest {
     buildingDetailsDTO.setLevel(buildingEntity.getLevel());
     buildingDetailsDTO.setHp(buildingEntity.getHp());
 
-    Mockito.when(buildingService.findBuildingById(1L)).thenReturn(buildingEntity);
-    Mockito.when(buildingService.kingdomHasThisBuilding(kingdomEntity, buildingEntity)).thenReturn(true);
     Mockito.when(buildingService.showActualBuildingDetails(kingdomEntity, 1L)).thenReturn(buildingDetailsDTO);
     Mockito.when(kingdomService.findByID(kingdomEntity.getId())).thenReturn(kingdomEntity);
 

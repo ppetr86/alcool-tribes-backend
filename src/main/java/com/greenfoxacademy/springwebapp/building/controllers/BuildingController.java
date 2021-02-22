@@ -47,10 +47,7 @@ public class BuildingController {
                                            Authentication auth)
     throws IdNotFoundException, ForbiddenActionException {
 
-    //KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-
-    Long idd = ((CustomUserDetails) auth.getPrincipal()).getKingdom().getId();
-    KingdomEntity kingdom = kingdomService.findByID(idd);
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
     return ResponseEntity.ok(buildingService.showActualBuildingDetails(kingdom, id));
   }

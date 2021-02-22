@@ -21,13 +21,11 @@ public interface BuildingService {
   BuildingEntity setBuildingTypeOnEntity(String type);
 
   BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
-    throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException;;
+    throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException;
 
   BuildingEntity defineHp(BuildingEntity entity);
 
   BuildingEntity findBuildingById(Long id);
-
-  boolean kingdomHasThisBuilding(KingdomEntity kingdomEntity, BuildingEntity buildingEntity);
 
   BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdomEntity, Long id)
     throws IdNotFoundException, ForbiddenActionException;
