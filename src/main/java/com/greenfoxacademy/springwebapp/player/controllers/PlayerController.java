@@ -42,8 +42,8 @@ public class PlayerController {
       PlayerResponseDTO response = playerService.saveNewPlayer(request);
 
       if (!request.getEmail().isEmpty()) {
-        emailService.sendRegistrationEmailAsHTML(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByID(response.getId()));
-        emailService.sendReigstrationMail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByID(response.getId()));
+        //emailService.sendRegistrationEmailAsHTML(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
+        emailService.sendReigstrationMail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
       }
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(response);
 

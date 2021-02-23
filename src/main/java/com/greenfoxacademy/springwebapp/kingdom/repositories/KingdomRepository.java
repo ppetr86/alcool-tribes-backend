@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface KingdomRepository extends JpaRepository<KingdomEntity, Long> {
 
-  @Query(value = "select kingdomname from kingdoms where id = :id", nativeQuery = true)
-  String findKingdomNameByID(Long id);
+  @Query(value = "select kingdomname from kingdoms where player_id = :id", nativeQuery = true)
+  String findKingdomNameByPlayerID(Long id);
 
 }

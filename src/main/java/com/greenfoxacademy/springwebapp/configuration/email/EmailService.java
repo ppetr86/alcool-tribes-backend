@@ -22,7 +22,7 @@ public class EmailService {
     StringBuilder mailBody = new StringBuilder();
     mailBody.append("Welcome ").append(username).append("!\n");
     mailBody.append(kingdomName).append(" is ready! You just need to confirm your email address\n");
-    mailBody.append("and then you are ready to conquer the world :)");
+    mailBody.append("and then you are ready to conquer the world :)\n");
     mailBody.append(" Please confirm your email address by opening the following url: \n");
     mailBody.append(emailConfig.getValidationUrl()).append(username).append("\n");
     mailBody.append("Confirm Email Address\n\n");

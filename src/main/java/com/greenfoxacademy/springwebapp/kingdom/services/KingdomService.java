@@ -15,6 +15,6 @@ public interface KingdomService {
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);
 
-  String kingdomNameByID(Long id);
+  String kingdomNameByPlayerID(Long id);
 
 }
