@@ -18,4 +18,6 @@ public interface ResourceService {
 
   void updateResourceGeneration(KingdomEntity kingdom, Enum buildingType, Integer buildingLevel);
 
+  ResourceEntity findResourceBasedOnBuildingType(KingdomEntity kingdom, Enum buildingType);
+
 }
