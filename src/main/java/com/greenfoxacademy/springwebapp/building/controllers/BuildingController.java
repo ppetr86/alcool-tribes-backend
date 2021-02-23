@@ -26,7 +26,6 @@ public class BuildingController {
   public static final String URI = "/kingdom/buildings";
 
   private final BuildingService buildingService;
-  private KingdomService kingdomService;
 
   @GetMapping
   public ResponseEntity<BuildingListResponseDTO> getKingdomBuildings(Authentication auth) {

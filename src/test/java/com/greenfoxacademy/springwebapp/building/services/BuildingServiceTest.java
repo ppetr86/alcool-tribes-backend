@@ -185,7 +185,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void showActualBuildingDetailsShouldReturnBuildingDetails(){
+  public void showActualBuildingDetailsShouldReturnCorrectBuildingDetails(){
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -203,7 +203,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void showActualBuildingDetailsShouldNotReturnWithWrongBuildingDetails(){
+  public void showActualBuildingDetailsShouldNotReturnWithBuildingDetails(){
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -221,7 +221,7 @@ public class BuildingServiceTest {
   }
 
   @Test(expected = IdNotFoundException.class)
-  public void showActualBuildingDetailsShouldNotReturnWithIdNotFoundException(){
+  public void showActualBuildingDetailsShouldReturnWithIdNotFoundException(){
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -234,7 +234,7 @@ public class BuildingServiceTest {
   }
 
   @Test(expected = ForbiddenActionException.class)
-  public void showActualBuildingDetailsShouldNotReturnWithForbiddenException(){
+  public void showActualBuildingDetailsShouldReturnWithForbiddenException(){
     BuildingEntity fakeBuilding2 = new BuildingEntity(3L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity fakeBuilding = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
