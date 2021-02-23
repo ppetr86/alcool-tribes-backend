@@ -3,7 +3,6 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -24,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
-import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultBuildings;
+import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createBuildings;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,7 +47,7 @@ public class BuildingControllerIT {
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setBuildings(createDefaultBuildings());
+    kingdom.setBuildings(createBuildings(kingdom));
   }
 
   @Test
@@ -57,7 +56,7 @@ public class BuildingControllerIT {
             .principal(authentication))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.buildings[0].finishedAt", is(0)));
+            .andExpect(jsonPath("$.buildings[0].finishedAt", is(200)));
   }
 
   @Test

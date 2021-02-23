@@ -5,7 +5,6 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-
 import java.util.List;
 
 public interface BuildingService {

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TroopRepository extends JpaRepository<TroopEntity, Long> {
+
+  TroopEntity save (TroopEntity troop);
 }

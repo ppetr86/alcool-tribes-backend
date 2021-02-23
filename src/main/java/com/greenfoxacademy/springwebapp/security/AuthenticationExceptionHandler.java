@@ -22,6 +22,6 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint,
 
     response.getWriter().write(responseMsg);
     response.addHeader("Content-Type", "application/json");
-    response.setStatus(401);
+    response.setStatus(SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE);
   }
 }
