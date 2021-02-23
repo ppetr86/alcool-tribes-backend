@@ -15,4 +15,6 @@ public interface PlayerService {
   PlayerEntity findByUsernameAndPassword(String username, String password);
 
   boolean findIsVerified(String username);
+
+  void updateIsVerifiedOnPlayer(PlayerEntity player, boolean isVerified);
 }

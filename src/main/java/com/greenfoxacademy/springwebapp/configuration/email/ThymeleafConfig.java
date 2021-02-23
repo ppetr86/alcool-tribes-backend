@@ -10,14 +10,15 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class ThymeleafConfig {
-  @Bean
+  /*@Bean
   public SpringTemplateEngine springTemplateEngine() {
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.addTemplateResolver(htmlTemplateResolver());
     return templateEngine;
-  }
+  }*/
+
   @Bean
-  public SpringResourceTemplateResolver htmlTemplateResolver(){
+  public SpringResourceTemplateResolver htmlTemplateResolver() {
     SpringResourceTemplateResolver emailTemplateResolver = new SpringResourceTemplateResolver();
     emailTemplateResolver.setPrefix("/templates/");
     emailTemplateResolver.setSuffix(".html");

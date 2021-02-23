@@ -15,6 +15,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 
 public class PlayerControllerTest {
 
@@ -32,7 +33,7 @@ public class PlayerControllerTest {
   }
 
   @Test
-  public void registerUserShouldSaveUserAndReturn201() throws MessagingException {
+  public void registerUserShouldSaveUserAndReturn201() throws MessagingException, IOException {
 
     PlayerResponseDTO
         playerResponseDTO = new PlayerResponseDTO(1, "user1", "email@email.com", 1, "avatar", 1);
@@ -53,7 +54,7 @@ public class PlayerControllerTest {
   }
 
   @Test
-  public void registerUserShouldSaveUserAndReturnCorrectKingdomId() throws MessagingException {
+  public void registerUserShouldSaveUserAndReturnCorrectKingdomId() throws MessagingException, IOException {
 
     PlayerResponseDTO
         playerResponseDTO = new PlayerResponseDTO(1, "user1", "email@rmail.com", 1, "avatar", 1);

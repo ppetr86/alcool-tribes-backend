@@ -79,4 +79,9 @@ public class PlayerServiceImpl implements PlayerService {
   public boolean findIsVerified(String username) {
     return playerRepo.isVerifiedUsername(username);
   }
+
+  @Override
+  public void updateIsVerifiedOnPlayer(PlayerEntity player, boolean isVerified) {
+    playerRepo.updateIsVefifiedOnPlayer(player.getId(), isVerified);
+  }
 }
