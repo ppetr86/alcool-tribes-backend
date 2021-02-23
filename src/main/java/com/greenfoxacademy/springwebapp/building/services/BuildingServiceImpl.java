@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
@@ -51,7 +52,7 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public String checkBuildingDetails(KingdomEntity kingdom, Long id, int level)
+  public String checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO request)
     throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
     BuildingEntity townHall = kingdom.getBuildings().stream()
@@ -63,37 +64,13 @@ public class BuildingServiceImpl implements BuildingService {
 
     if (building == null) {
       throw new IdNotFoundException();
-    } else if (building.getId() == null ||
-      building.getType() == null ||
-      building.getLevel() == 0 ||
-      building.getHp() == 0 ||
-      building.getStartedAt() == 0 ||
-      building.getFinishedAt() == 0 ||
-      building.getKingdom() == null) {
-      List<String> missingParameters = new ArrayList<>();
-      StringBuilder finalList = new StringBuilder();
-        if (building.getId() == null) {
-          missingParameters.add("/id");
-        } else if (building.getLevel() == 0) {
-          missingParameters.add("/level");
-        } else if (building.getHp() == 0) {
-          missingParameters.add("/hp");
-        } else if (building.getStartedAt() == 0) {
-          missingParameters.add("/started at");
-        } else if (building.getFinishedAt() == 0) {
-          missingParameters.add("/finished at");
-        } else if (building.getKingdom() == null) {
-          missingParameters.add("/kingdom");
-        }
-      for (String missingParameter : missingParameters) {
-        finalList.append(missingParameter);
-      }
-      throw new MissingParameterException(finalList.toString());
+    } else if (request == null || request.getLevel() == 0) {
+      throw new MissingParameterException("level");
     } else if (!resourceService.hasResourcesForBuilding()) {
       throw new NotEnoughResourceException();
-    } else if (building == townHall) {
+    } else if (building.getType() == townHall.getType()) {
       return "townhall";
-    } else if (townHall.getLevel() < level) {
+    } else if (townHall.getLevel() < request.getLevel()) {
       throw new TownhallLevelException();
     } else {
       return "building details";
@@ -101,26 +78,26 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingEntity updateBuilding(Long id, int level) {
+  public BuildingEntity updateBuilding(Long id, BuildingLevelDTO levelDTO) {
     BuildingEntity building = findBuildingById(id);
 
     if (building.getType().equals(BuildingType.TOWNHALL)) {
-      building.setLevel(level);
-      building.setHp(level * 200);
+      building.setLevel(levelDTO.getLevel());
+      building.setHp(levelDTO.getLevel() * 200);
       building.setStartedAt(timeService.getTime());
-      building.setFinishedAt(building.getStartedAt() + (level * 120));
+      building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 120));
       return repo.save(building);
     } else if (building.getType().equals(BuildingType.ACADEMY)) {
-      building.setLevel(level);
-      building.setHp(level * 150);
+      building.setLevel(levelDTO.getLevel());
+      building.setHp(levelDTO.getLevel() * 150);
       building.setStartedAt(timeService.getTime());
-      building.setFinishedAt(building.getStartedAt() + (level * 90));
+      building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 90));
       return repo.save(building);
     } else {
-      building.setLevel(level);
-      building.setHp(level * 100);
+      building.setLevel(levelDTO.getLevel());
+      building.setHp(levelDTO.getLevel() * 100);
       building.setStartedAt(timeService.getTime());
-      building.setFinishedAt(building.getStartedAt() + (level * 60));
+      building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 60));
       return repo.save(building);
     }
   }

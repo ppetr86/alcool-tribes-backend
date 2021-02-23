@@ -10,6 +10,5 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BuildingLevelDTO {
-  @NotEmpty(message = "Missing parameter(s): level!")
   private int level;
 }

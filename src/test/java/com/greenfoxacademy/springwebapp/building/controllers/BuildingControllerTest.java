@@ -82,7 +82,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingRepository.findById(3L)).thenReturn(null);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 3L, 3)).thenThrow(IdNotFoundException.class);
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 3L, level)).thenThrow(IdNotFoundException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(3L, authentication, level);
 
@@ -103,7 +103,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenThrow(MissingParameterException.class);
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenThrow(MissingParameterException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 
@@ -124,7 +124,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenThrow(TownhallLevelException.class);
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenThrow(TownhallLevelException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 
@@ -145,7 +145,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenThrow(NotEnoughResourceException.class);
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenThrow(NotEnoughResourceException.class);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
@@ -167,12 +167,12 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenReturn("building details");
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenReturn("building details");
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     building.setLevel(3);
     building.setStartedAt(100L);
     building.setFinishedAt(280L);
-    Mockito.when(buildingService.updateBuilding(1L, 3)).thenReturn(building);
+    Mockito.when(buildingService.updateBuilding(1L, level)).thenReturn(building);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 

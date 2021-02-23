@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
@@ -24,10 +25,10 @@ public interface BuildingService {
 
   BuildingEntity findBuildingById(Long id);
 
-  String checkBuildingDetails(KingdomEntity kingdomEntity, Long id, int level)
+  String checkBuildingDetails(KingdomEntity kingdomEntity, Long id, BuildingLevelDTO levelDTO)
     throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
 
-  BuildingEntity updateBuilding(Long id, int level);
+  BuildingEntity updateBuilding(Long id, BuildingLevelDTO levelDTO);
 
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 

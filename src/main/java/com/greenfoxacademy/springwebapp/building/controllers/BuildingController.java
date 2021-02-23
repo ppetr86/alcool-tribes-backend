@@ -48,12 +48,12 @@ public class BuildingController {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    String result = buildingService.checkBuildingDetails(kingdom, id, level.getLevel());
+    String result = buildingService.checkBuildingDetails(kingdom, id, level);
 
     if (!result.equals("building details") && !result.equals("townhall")) {
       return ResponseEntity.ok(result);
     }
-    BuildingEntity updatedBuilding = buildingService.updateBuilding(id, level.getLevel());
+    BuildingEntity updatedBuilding = buildingService.updateBuilding(id, level);
     return ResponseEntity.ok().body(updatedBuilding);
   }
 }
