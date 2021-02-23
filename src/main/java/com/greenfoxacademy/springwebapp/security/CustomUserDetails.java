@@ -12,6 +12,7 @@ public class CustomUserDetails implements UserDetails {
   private String login;
   private String password;
   private KingdomEntity kingdom;
+  private Boolean isVerified;
   private Collection<? extends GrantedAuthority> grantedAuthorities;
 
   public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity player) {
@@ -19,6 +20,7 @@ public class CustomUserDetails implements UserDetails {
     details.login = player.getUsername();
     details.password = player.getPassword();
     details.kingdom = player.getKingdom();
+    details.isVerified = player.getIsAccountVerified();
     details.grantedAuthorities = details.getAuthorities();//returning empty authorities since we dont use roles
     return details;
   }

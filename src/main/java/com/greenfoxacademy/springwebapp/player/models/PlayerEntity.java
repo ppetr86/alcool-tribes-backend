@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.greenfoxacademy.springwebapp.configuration.email.SecureToken;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -41,7 +43,10 @@ public class PlayerEntity {
   private KingdomEntity kingdom;
 
   @NonNull
-  private Boolean isVerified;
+  private Boolean isAccountVerified;
+
+  @OneToMany(mappedBy = "player")
+  private Set<SecureToken> tokens;
 
   public PlayerEntity(String username, String password) {
     this.username = username;

@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.configuration.email;
 
 import org.springframework.context.annotation.Bean;
@@ -10,12 +11,14 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class ThymeleafConfig {
-  /*@Bean
+  */
+/*@Bean
   public SpringTemplateEngine springTemplateEngine() {
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.addTemplateResolver(htmlTemplateResolver());
     return templateEngine;
-  }*/
+  }*//*
+
 
   @Bean
   public SpringResourceTemplateResolver htmlTemplateResolver() {
@@ -26,4 +29,4 @@ public class ThymeleafConfig {
     emailTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
     return emailTemplateResolver;
   }
-}
+}*/

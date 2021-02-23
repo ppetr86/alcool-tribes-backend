@@ -59,6 +59,8 @@ dependencies {
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.4.3' // spring boot starter email
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
+
 
 }
 

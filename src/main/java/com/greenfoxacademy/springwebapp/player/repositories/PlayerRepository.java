@@ -16,4 +16,7 @@ public interface PlayerRepository extends JpaRepository<PlayerEntity, Long> {
   @Modifying
   @Query(value = "update players set is_verified = :isVerified where id = :id", nativeQuery = true)
   void updateIsVefifiedOnPlayer(long id, boolean isVerified);
+
+  @Query(value = "select id from players where username = :username", nativeQuery = true)
+  Long findPlayerIDByUsername(String username);
 }

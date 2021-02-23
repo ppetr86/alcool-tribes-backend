@@ -5,16 +5,21 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
-import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -25,22 +30,15 @@ public class PlayerController {
   private final PlayerService playerService;
   private final EmailService emailService;
   private final KingdomService kingdomService;
-
-  @PatchMapping("register/confirm")
-  public String confirmUserRegistration(@RequestParam String username){
-    PlayerEntity player = playerService.findByUsername(username);
-    if (player==null){
-      //something like no such player by this username
-    }
-    playerService.updateIsVerifiedOnPlayer(player, true);
-
-    return "user" + username + " was verified";
-  }
+  private ApplicationEventPublisher eventPublisher;
+  private MessageSource messages;
+  private Environment env;
 
 
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request,
-                                        BindingResult bindingResult) throws MessagingException, IOException {
+                                        BindingResult bindingResult, HttpServletRequest servletRequest)
+          throws MessagingException, IOException {
 
 
     List<ObjectError> errorList = bindingResult.getAllErrors();
@@ -50,13 +48,14 @@ public class PlayerController {
         return ResponseEntity.status(HttpStatus.valueOf(409)).body(new ErrorDTO("Username is already taken."));
       }
 
-      PlayerResponseDTO response = playerService.saveNewPlayer(request);
+      PlayerEntity savedPlayer = playerService.saveNewPlayer(request);
 
       if (!request.getEmail().isEmpty()) {
-        emailService.sendSimpleMessage(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
-        emailService.sendReigstrationMail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
+        //emailService.sendHtmlEmail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
+        //emailService.sendTextEmail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
+        playerService.sendRegistrationConfirmationEmail(savedPlayer);
       }
-      return ResponseEntity.status(HttpStatus.valueOf(201)).body(response);
+      return ResponseEntity.status(HttpStatus.valueOf(201)).body(playerService.playerToResponseDTO(savedPlayer));
 
     } else if (request.getUsername() == null &&
             request.getPassword() == null) {

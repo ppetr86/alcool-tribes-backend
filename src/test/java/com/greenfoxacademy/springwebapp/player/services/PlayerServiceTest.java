@@ -1,6 +1,9 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.configuration.email.EmailService;
+import com.greenfoxacademy.springwebapp.configuration.email.SecureTokenService;
+import com.greenfoxacademy.springwebapp.configuration.email.repository.SecureTokenRepository;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import org.junit.Assert;
@@ -12,16 +15,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PlayerServiceTest {
 
   private PlayerService playerService;
+
   private PlayerRepository playerRepository;
   private PasswordEncoder passwordEncoder;
   private BuildingService buildingService;
+  private EmailService emailService;
+  private SecureTokenService secureTokenService;
+  private SecureTokenRepository secureTokenRepository;
 
   @Before
   public void setUp() {
     playerRepository = Mockito.mock(PlayerRepository.class);
     passwordEncoder = Mockito.mock(PasswordEncoder.class);
     buildingService = Mockito.mock(BuildingService.class);
-    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService);
+    emailService = Mockito.mock(EmailService.class);
+    secureTokenService = Mockito.mock(SecureTokenService.class);
+    secureTokenRepository = Mockito.mock(SecureTokenRepository.class);
+    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService, secureTokenService,secureTokenRepository);
   }
 
   @Test

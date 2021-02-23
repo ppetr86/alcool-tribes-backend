@@ -2,17 +2,22 @@ package com.greenfoxacademy.springwebapp.configuration.email;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import java.util.Properties;
 
 @Configuration
 @Getter
-public class EmailConfig {
+public class EmailConfig implements WebMvcConfigurer {
 
   @Value("${spring.mail.host}")
   private String host;
@@ -25,9 +30,6 @@ public class EmailConfig {
 
   @Value("${spring.mail.password}")
   private String password;
-
-  @Value("${validationUrl}")
-  private String validationUrl;
 
   @Bean
   public JavaMailSender getJavaMailSender() {
@@ -48,11 +50,21 @@ public class EmailConfig {
   }
 
   @Bean
-  public SimpleMailMessage emailTemplate() {
-    SimpleMailMessage message = new SimpleMailMessage();
-    message.setTo("you@gmail.com");
-    message.setFrom("admin@gmail.com");
-    message.setText("FATAL - Application crash. Save your job !!");
-    return message;
+  public LocaleChangeInterceptor localeChangeInterceptor() {
+    LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+    localeChangeInterceptor.setParamName("lang");
+    return localeChangeInterceptor;
+  }
+
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(localeChangeInterceptor());
+  }
+
+  @Bean
+  public LocalValidatorFactoryBean validator(MessageSource messageSource) {
+    LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+    bean.setValidationMessageSource(messageSource);
+    return bean;
   }
 }

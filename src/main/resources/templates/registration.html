@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
 <head>
   <meta charset="UTF-8">
   <title>Registration Email</title>
@@ -13,7 +14,7 @@
 <p th:text="|${kingdomname} is ready! You just need to confirm your email address|"><br>
 <p>and then you are ready to conquer the world :)!</p><br>
 <p>Please confirm your email address by clicking this button:</p><br>
-  <a th:href="@{${url}+${username}}" th:text="|Confirm Email Address|" class="btn btn-primary"></a>
+  <a th:href="${verificationURL}" th:text="|Confirm Email Address|" class="btn btn-primary"></a>
 <p>Confirm Email Address</p><br>
 <p> — The Tribes Team</p><br><br>
 </body>

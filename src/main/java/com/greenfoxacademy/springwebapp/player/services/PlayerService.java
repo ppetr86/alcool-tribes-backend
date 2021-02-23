@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface PlayerService {
 
-  PlayerResponseDTO saveNewPlayer(PlayerRegisterRequestDTO playerRegistrationRequestDTO);
+  PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO playerRegistrationRequestDTO);
 
   PlayerEntity findByUsername(String username);
 
@@ -16,5 +17,13 @@ public interface PlayerService {
 
   boolean findIsVerified(String username);
 
-  void updateIsVerifiedOnPlayer(PlayerEntity player, boolean isVerified);
+  void updateIsVerifiedOnPlayer(long playerID, boolean isVerified);
+
+  Long getPlayerIDFromUsername(String username);
+
+  void sendRegistrationConfirmationEmail(final PlayerEntity user);
+
+  boolean verifyUser(final String token) throws InvalidTokenException;
+
+  PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity);
 }
