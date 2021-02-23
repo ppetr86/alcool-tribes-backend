@@ -2,9 +2,14 @@ package com.greenfoxacademy.springwebapp.building.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class BuildingLevelDTO {
+  @NotEmpty(message = "Missing parameter(s): level!")
   private int level;
 }

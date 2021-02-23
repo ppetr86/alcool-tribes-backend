@@ -26,7 +26,6 @@ public class BuildingController {
   public static final String URI = "/kingdom/buildings";
 
   private final BuildingService buildingService;
-  private final KingdomService kingdomService;
 
   @GetMapping
   public ResponseEntity<BuildingResponseDTO> getKingdomBuildings(Authentication auth) {
@@ -45,22 +44,19 @@ public class BuildingController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> increaseTheGivenBuildingLevel(@PathVariable Long id,
+  public ResponseEntity<?> updateTheGivenBuildingDetails(@PathVariable Long id,
                                                          Authentication auth,
                                                          @RequestBody @Valid BuildingLevelDTO level)
     throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
-    //KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    Long idd = ((CustomUserDetails) auth.getPrincipal()).getKingdom().getId();
-    KingdomEntity kingdom = kingdomService.findByID(idd);
-
-    String result = buildingService.checkBuildingDetails(kingdom, id);
+    String result = buildingService.checkBuildingDetails(kingdom, id, level.getLevel());
 
     if (!result.equals("building details") && !result.equals("townhall")) {
       return ResponseEntity.ok(result);
     }
-    BuildingEntity updatedBuilding = buildingService.updateBuilding(id);
+    BuildingEntity updatedBuilding = buildingService.updateBuilding(id, level.getLevel());
     return ResponseEntity.ok().body(updatedBuilding);
   }
 }
