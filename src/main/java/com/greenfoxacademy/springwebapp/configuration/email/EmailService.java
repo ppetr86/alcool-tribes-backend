@@ -24,7 +24,7 @@ public class EmailService {
     mailBody.append(kingdomName).append(" is ready! You just need to confirm your email address\n");
     mailBody.append("and then you are ready to conquer the world :)\n");
     mailBody.append(" Please confirm your email address by opening the following url: \n");
-    mailBody.append(emailConfig.getValidationUrl()).append(username).append("\n");
+    mailBody.append(emailConfig.getValidationUrl()).append(username).append("\n\n");
     mailBody.append("Confirm Email Address\n\n");
     mailBody.append(" — The Tribes Team\n");
     SimpleMailMessage message = new SimpleMailMessage();
