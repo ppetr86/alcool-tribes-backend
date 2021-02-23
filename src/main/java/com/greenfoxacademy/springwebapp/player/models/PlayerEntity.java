@@ -3,16 +3,14 @@ package com.greenfoxacademy.springwebapp.player.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.configuration.email.SecureToken;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "players")
@@ -51,5 +49,13 @@ public class PlayerEntity {
   public PlayerEntity(String username, String password) {
     this.username = username;
     this.password = password;
+  }
+
+  @Override
+  public String toString() {
+    return   "username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", email='" + email + '\'' +
+            ", points=" + points;
   }
 }

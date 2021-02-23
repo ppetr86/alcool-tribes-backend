@@ -60,7 +60,8 @@ public class KingdomServiceImpl implements KingdomService {
 
   @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
-    return kingdomRepository.save(kingdom);
+    kingdomRepository.saveAndFlush(kingdom);
+    return kingdomRepository.findKingdomEntityByPlayer(kingdom.getPlayer());
   }
 
   @Override

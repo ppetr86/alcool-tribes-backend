@@ -56,9 +56,9 @@ public class PlayerServiceImpl implements PlayerService {
     player.setKingdom(kingdom);
     player.setIsAccountVerified(false);
     kingdom.setPlayer(player);
-    playerRepo.save(player);
 
-    return player;
+    playerRepo.saveAndFlush(player);
+    return playerRepo.findByUsername(player.getUsername());
   }
 
 
