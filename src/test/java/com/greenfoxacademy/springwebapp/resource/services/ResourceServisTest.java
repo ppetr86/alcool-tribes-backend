@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -11,15 +12,21 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.core.env.Environment;
+
 
 public class ResourceServisTest {
   private ResourceService resourceService;
+  private TimeService timeService;
   private ResourceRepository resourceRepository;
+  private Environment env;
 
   @Before
   public void setUp() {
     resourceRepository = Mockito.mock(ResourceRepository.class);
-    resourceService = new ResourceServiceImpl(resourceRepository);
+    timeService = Mockito.mock(TimeService.class);
+    env = Mockito.mock(Environment.class);
+    resourceService = new ResourceServiceImpl(resourceRepository, timeService, env);
   }
 
   @Test

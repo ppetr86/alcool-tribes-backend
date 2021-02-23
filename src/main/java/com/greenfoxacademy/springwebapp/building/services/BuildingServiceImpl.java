@@ -91,7 +91,7 @@ public class BuildingServiceImpl implements BuildingService {
 
     //updating Resource Generation
     if(result.getType() == BuildingType.FARM || result.getType() == BuildingType.MINE)
-      resourceService.updateResourceGeneration(kingdom,result.getType(),result.getLevel());
+      resourceService.updateResourceGeneration(kingdom, result);
 
     return result;
   }
