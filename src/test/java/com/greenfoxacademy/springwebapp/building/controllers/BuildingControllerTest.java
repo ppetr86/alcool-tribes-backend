@@ -32,7 +32,6 @@ public class BuildingControllerTest {
   private BuildingController buildingController;
   private BuildingService buildingService;
   private BuildingRepository buildingRepository;
-  private KingdomService kingdomService;
   private ResourceService resourceService;
   private Authentication authentication;
 
@@ -42,7 +41,6 @@ public class BuildingControllerTest {
 
     buildingService = Mockito.mock(BuildingService.class);
     buildingRepository = Mockito.mock(BuildingRepository.class);
-    kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);
     buildingController = new BuildingController(buildingService);
   }
@@ -71,7 +69,7 @@ public class BuildingControllerTest {
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
-  @Test
+  @Test(expected = IdNotFoundException.class)
   public void updateTheGivenBuildingDetailsShouldReturnNoId() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     BuildingLevelDTO level = new BuildingLevelDTO(3);
@@ -84,7 +82,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingRepository.findById(3L)).thenReturn(null);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 3L, 3)).thenReturn(String.valueOf(new IdNotFoundException()));
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 3L, 3)).thenThrow(IdNotFoundException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(3L, authentication, level);
 
@@ -92,7 +90,7 @@ public class BuildingControllerTest {
     Assert.assertEquals("Id not found", ((ErrorDTO) response.getBody()).getMessage());
   }
 
-  @Test
+  @Test(expected = MissingParameterException.class)
   public void updateTheGivenBuildingDetailsShouldReturnParameterMissing() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     BuildingLevelDTO level = new BuildingLevelDTO(3);
@@ -105,8 +103,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenReturn(String.valueOf(new MissingParameterException("/hp")));
-    Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenThrow(MissingParameterException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 
@@ -114,7 +111,7 @@ public class BuildingControllerTest {
     Assert.assertEquals("Missing parameter(s): /hp!", ((ErrorDTO) response.getBody()).getMessage());
   }
 
-  @Test
+  @Test(expected = TownhallLevelException.class)
   public void updateTheGivenBuildingDetailsShouldReturnTownHallNeedHigherLevel() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     BuildingLevelDTO level = new BuildingLevelDTO(3);
@@ -127,8 +124,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenReturn(String.valueOf(new TownhallLevelException()));
-    Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenThrow(TownhallLevelException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 
@@ -136,7 +132,7 @@ public class BuildingControllerTest {
     Assert.assertEquals("Cannot build buildings with higher level than the Townhall", ((ErrorDTO) response.getBody()).getMessage());
   }
 
-  @Test
+  @Test(expected = NotEnoughResourceException.class)
   public void updateTheGivenBuildingDetailsShouldReturnNoResource() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     BuildingLevelDTO level = new BuildingLevelDTO(3);
@@ -149,7 +145,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenReturn(String.valueOf(new NotEnoughResourceException()));
+    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, 3)).thenThrow(NotEnoughResourceException.class);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
