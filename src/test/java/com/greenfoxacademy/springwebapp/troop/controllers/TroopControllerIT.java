@@ -192,7 +192,6 @@ public class TroopControllerIT {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(2)))
-        .andExpect(jsonPath("$.id", is(2)))
         .andExpect(jsonPath("$.hp", is(102)));
   }
 

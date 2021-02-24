@@ -43,7 +43,7 @@ public class TroopServiceImpl implements TroopService {
       ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException {
 
     BuildingEntity academy = kingdom.getBuildings().stream()
-        .filter(building -> building.getId() == requestDTO.getBuildingId())
+        .filter(building -> building.getId().equals(requestDTO.getBuildingId()))
         .findFirst()
         .orElse(null);
 
@@ -77,7 +77,7 @@ public class TroopServiceImpl implements TroopService {
       throws ForbiddenActionException, IdNotFoundException {
 
     TroopEntity myTroop = kingdom.getTroops().stream()
-        .filter(a -> a.getId() == troopId)
+        .filter(a -> a.getId().equals(troopId))
         .findFirst()
         .orElse(null);
 
