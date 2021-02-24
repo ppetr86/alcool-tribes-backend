@@ -17,7 +17,7 @@ public interface ResourceService {
 
   ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
 
-  void updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building);
+  ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building);
 
   ResourceEntity findResourceBasedOnBuildingType(KingdomEntity kingdom, Enum buildingType);
 

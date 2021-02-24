@@ -13,13 +13,14 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @AllArgsConstructor
 public class BuildingServiceImpl implements BuildingService {
@@ -90,8 +91,14 @@ public class BuildingServiceImpl implements BuildingService {
     result = save(result);
 
     //updating Resource Generation
-    if(result.getType() == BuildingType.FARM || result.getType() == BuildingType.MINE)
-      resourceService.updateResourceGeneration(kingdom, result);
+    if(result.getType() == BuildingType.FARM || result.getType() == BuildingType.MINE) {
+      ResourceEntity updatedResource = resourceService.updateResourceGeneration(kingdom, result);
+      log.info("Resource %s with ID % was updated. Actual amount is %, actual generation is %",
+          updatedResource.getType(),
+          updatedResource.getId(),
+          updatedResource.getAmount(),
+          updatedResource.getGeneration());
+    }
 
     return result;
   }
