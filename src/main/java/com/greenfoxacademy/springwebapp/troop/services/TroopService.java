@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.troop.services;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidBuildingTypeException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
@@ -18,6 +19,6 @@ public interface TroopService {
       ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException;
 
   TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) throws
-      MissingParameterException, ForbiddenCustomException, InvalidAcademyIdException,
+      MissingParameterException, ForbiddenCustomException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException;
 }

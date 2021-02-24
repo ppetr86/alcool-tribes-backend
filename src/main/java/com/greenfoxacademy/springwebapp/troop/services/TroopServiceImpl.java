@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidBuildingTypeException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
@@ -74,7 +75,7 @@ public class TroopServiceImpl implements TroopService {
 
   @Override
   public TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) throws
-      MissingParameterException, ForbiddenCustomException, InvalidAcademyIdException,
+      MissingParameterException, ForbiddenCustomException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException {
     BuildingEntity academy = findAcademy(kingdomEntity, requestDTO);
 
@@ -82,16 +83,18 @@ public class TroopServiceImpl implements TroopService {
       throw new MissingParameterException("buildingId");
     }
 
-    if (academy == null) {
+    TroopEntity existingTroop = troopRepository.findTroopEntityByKingdomId(kingdomEntity.getId());
+
+    if (academy == null && !existingTroop.getKingdom().equals(kingdomEntity)) {
       throw new ForbiddenCustomException();
     }
 
-    if (!academy.getId().equals(requestDTO.getBuildingId())) {
-      throw new InvalidAcademyIdException();
+    if (academy == null) {
+      throw new IdNotFoundException();
     }
 
     if (!academy.getType().equals(BuildingType.ACADEMY)) {
-      throw new InvalidBuildingTypeException();
+      throw new InvalidAcademyIdException();
     }
 
     if (!resourceService.hasResourcesForTroop()) {
