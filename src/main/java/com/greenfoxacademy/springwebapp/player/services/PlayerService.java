@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 @Service
 public interface PlayerService {
@@ -26,4 +27,6 @@ public interface PlayerService {
   boolean verifyUser(final String token) throws InvalidTokenException;
 
   PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity);
+
+  PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request, BindingResult bindingResult);
 }

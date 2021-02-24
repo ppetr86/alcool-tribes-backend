@@ -19,26 +19,44 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                                                                 HttpHeaders headers,
                                                                 HttpStatus status, WebRequest request) {
     String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+
+    if (ex.getBindingResult().getFieldErrors().stream().anyMatch(each -> each.toString().equals("Password is required.")))
+      return new ResponseEntity<>(new ErrorDTO(errorMessage), HttpStatus.BAD_REQUEST);
+
+    if (ex.getBindingResult().getFieldErrors().stream().anyMatch(each -> each.toString().equals("Username is required.")))
+      return new ResponseEntity<>(new ErrorDTO(errorMessage), HttpStatus.BAD_REQUEST);
+
+    if (ex.getBindingResult().getFieldErrors().stream().anyMatch(each -> each.toString().equals("Username is required.")) &&
+            ex.getBindingResult().getFieldErrors().stream().anyMatch(each -> each.toString().equals("Password is required.")))
+      return new ResponseEntity<>(new ErrorDTO("Username and password are required."), HttpStatus.CONFLICT);
+
+    if (ex.getBindingResult().getFieldErrors().stream().anyMatch(each -> each.toString().equals("Password must be 8 characters.")))
+      return new ResponseEntity<>(new ErrorDTO(errorMessage), HttpStatus.NOT_ACCEPTABLE);
+
     return new ResponseEntity<>(new ErrorDTO(errorMessage), HttpStatus.BAD_REQUEST);
   }
+
 
   @ExceptionHandler({
           InvalidBuildingTypeException.class,
           TownhallLevelException.class,
           InvalidInputException.class,
-          InvalidAcademyIdException.class})
+          InvalidAcademyIdException.class,
+          PasswordMissingOrTooShortException.class})
   public ResponseEntity<ErrorDTO> handleExceptions(Exception ex) {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
 
-  @ExceptionHandler(MissingParameterException.class)
+  @ExceptionHandler({MissingParameterException.class,
+          UsernameAndPasswordRequiredException.class,
+          PasswordIsRequiredException.class})
   public ResponseEntity<ErrorDTO> handleBadRequestExceptions(Exception ex) {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(NotEnoughResourceException.class)
+  @ExceptionHandler({NotEnoughResourceException.class, UsernameIsTakenException.class})
   public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);

@@ -8,6 +8,9 @@ import com.greenfoxacademy.springwebapp.configuration.email.SecureTokenService;
 import com.greenfoxacademy.springwebapp.configuration.email.context.AccountVerificationEmailContext;
 import com.greenfoxacademy.springwebapp.configuration.email.repository.SecureTokenRepository;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.PasswordIsRequiredException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameAndPasswordRequiredException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
@@ -17,6 +20,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
@@ -52,7 +58,7 @@ public class PlayerServiceImpl implements PlayerService {
     kingdom.setBuildings(defaultBuildings);
 
     PlayerEntity player = new PlayerEntity();
-    BeanUtils.copyProperties(dto,player);
+    BeanUtils.copyProperties(dto, player);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
     player.setKingdom(kingdom);
     player.setIsAccountVerified(false);
@@ -76,9 +82,41 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity) {
     PlayerResponseDTO responseDTO = new PlayerResponseDTO();
-    BeanUtils.copyProperties(playerEntity,responseDTO);
+    BeanUtils.copyProperties(playerEntity, responseDTO);
     responseDTO.setKingdomId(playerEntity.getKingdom().getId());
     return responseDTO;
+  }
+
+  @Override
+  public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request, BindingResult bindingResult)
+          throws UsernameAndPasswordRequiredException, UsernameIsTakenException {
+    List<ObjectError> errorList = bindingResult.getAllErrors();
+
+    if (!errorList.isEmpty()) {
+      // password empty, username ok. Password is required. 400
+      if (request.getPassword().isEmpty() && !request.getUsername().isEmpty())
+        throw new MethodArgumentNotValidException();
+      // username empty, password ok 400
+      if (request.getUsername().isEmpty() && !request.getPassword().isEmpty())
+        throw new MethodArgumentNotValidException();
+      //both empty 409
+      if (request.getUsername().isEmpty() && request.getPassword().isEmpty())
+        throw new MethodArgumentNotValidException();
+      // username is taken
+      if (findByUsername(request.getUsername()) != null) throw new UsernameIsTakenException();
+      // pwd at least 8 chars status 406 not acceptable
+      if (request.getPassword().isEmpty() || request.getPassword().length() < 8)
+        throw new InvalidTokenException(errorList.get(0).getDefaultMessage());
+    }
+
+    PlayerEntity savedPlayer = saveNewPlayer(request);
+
+    if (!request.getEmail().isEmpty()) {
+      //emailService.sendHtmlEmail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
+      //emailService.sendTextEmail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
+      sendRegistrationConfirmationEmail(savedPlayer);
+    }
+    return savedPlayer;
   }
 
   @Override
@@ -89,7 +127,7 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public void sendRegistrationConfirmationEmail(PlayerEntity user) {
-    SecureToken secureToken= secureTokenService.createSecureToken();
+    SecureToken secureToken = secureTokenService.createSecureToken();
     secureToken.setPlayer(user);
     secureTokenRepository.save(secureToken);
     AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
@@ -135,11 +173,11 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public boolean verifyUser(String token) throws InvalidTokenException {
     SecureToken secureToken = secureTokenService.findByToken(token);
-    if(Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()){
+    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
       throw new InvalidTokenException("Token is not valid");
     }
     PlayerEntity user = playerRepo.getOne(secureToken.getPlayer().getId());
-    if(Objects.isNull(user)){
+    if (Objects.isNull(user)) {
       return false;
     }
     user.setIsAccountVerified(true);
