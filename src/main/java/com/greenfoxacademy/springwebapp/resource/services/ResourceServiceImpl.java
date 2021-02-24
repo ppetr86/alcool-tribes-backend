@@ -25,7 +25,6 @@ public class ResourceServiceImpl implements ResourceService {
   private TimeService timeService;
   private Environment env;
 
-
   public boolean hasResourcesForTroop() {
     // TODO: has Resources For Troops creation
     return true;
@@ -35,11 +34,6 @@ public class ResourceServiceImpl implements ResourceService {
   public boolean hasResourcesForBuilding() {
     // TODO: hasResourcesForBuilding
     return false;
-  }
-
-  @Override
-  public ResourceEntity saveResource(ResourceEntity resourceEntity) {
-    return resourceRepository.save(resourceEntity);
   }
 
   @Override
@@ -57,7 +51,7 @@ public class ResourceServiceImpl implements ResourceService {
     ResourceEntity resource = findResourceBasedOnBuildingType(kingdom,building.getType());
 
     //2.calculating new resource generation value
-    Integer newResourceGeneration = recalculateResourceGeneration(resource, building);
+    Integer newResourceGeneration = calculateNewResourceGeneration(resource, building);
 
     //3.updating selected resource properties in Database in later time when building is finished
     int delay = timeService.getTimeBetween(building.getFinishedAt(),timeService.getTime())*1000;
@@ -67,7 +61,7 @@ public class ResourceServiceImpl implements ResourceService {
       public void run() {
         //fetching most recent version of resource from DTB since resource could be updated before my method is actually run
         ResourceEntity fetchedResource = resourceRepository.findById(resource.getId()).orElse(null);
-        log.info("Fetched resource ID: %s , type: %s", fetchedResource.getId(), fetchedResource.getType());
+        log.info("Fetched resource ID: {} , type: {}", fetchedResource.getId(), fetchedResource.getType());
 
         //calculating resources which were generated since last update of resource until new building is done/upgraded
         Integer generatedResourcesInMeantime = calculateResourcesUntilBuildingIsFinished(building, fetchedResource);
@@ -99,7 +93,7 @@ public class ResourceServiceImpl implements ResourceService {
     return resource;
   }
 
-  public Integer recalculateResourceGeneration(ResourceEntity resource, BuildingEntity building) {
+  public Integer calculateNewResourceGeneration(ResourceEntity resource, BuildingEntity building) {
     //distingushing food/gold in case the values differ in future
     Integer defaultFood = Integer.parseInt(env.getProperty("resourceEntity.food"));
     Integer defaultGold = Integer.parseInt(env.getProperty("resourceEntity.gold"));
@@ -121,11 +115,9 @@ public class ResourceServiceImpl implements ResourceService {
     Long finishedTime = building.getFinishedAt();
     int timeInSeconds = timeService.getTimeBetween(finishedTime, lastUpdateTime);
 
-    //new resource is created only when full minute (60s) has passed, therefore modulo
-    int timeInFullMinutes = timeInSeconds%60;
-
-    return timeInFullMinutes*fetchedResource.getGeneration();
+    //amount of generated resource is calculated as double based on total time in seconds and rounded down to whole int at the end
+    double resourcesGenerated = (double)(timeInSeconds)/60*fetchedResource.getGeneration();
+    return (int)resourcesGenerated;
   }
-
 
 }

@@ -13,8 +13,6 @@ public interface ResourceService {
 
   boolean hasResourcesForTroop();
 
-  ResourceEntity saveResource(ResourceEntity resourceEntity);
-
   ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
 
   ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building);
