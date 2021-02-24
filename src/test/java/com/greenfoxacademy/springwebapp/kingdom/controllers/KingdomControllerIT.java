@@ -1,8 +1,10 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,6 +41,7 @@ public class KingdomControllerIT {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
+    kingdom.setKingdomName("Test Name");
   }
 
   @Test
@@ -71,5 +74,20 @@ public class KingdomControllerIT {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.resources[0].amount", is(100)));
+  }
+
+  @Test
+  public void updateKingdomWithNameShouldReturnUpdatedKingdom() throws Exception{
+    KingdomNameDTO request = new KingdomNameDTO("New Kingdom");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(KingdomController.URI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(1)))
+        .andExpect(jsonPath("$.kingdomName", is("New Kingdom")));
   }
 }

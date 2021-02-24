@@ -3,16 +3,20 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
+import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
+import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
@@ -21,9 +25,13 @@ public class KingdomControllerTest {
   private KingdomController kingdomController;
   private KingdomService kingdomService;
   private ResourceService resourceService;
+  private KingdomRepository kingdomRepository;
+  private Authentication authentication;
 
   @Before
   public void setUp() {
+    authentication = createAuth("test", 1L);
+    kingdomRepository = Mockito.mock(KingdomRepository.class);
     resourceService = Mockito.mock(ResourceService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     kingdomController = new KingdomController(kingdomService, resourceService);
@@ -60,5 +68,22 @@ public class KingdomControllerTest {
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1111L);
     Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     Assert.assertEquals("Id not found", ((ErrorDTO) response.getBody()).getMessage());
+  }
+
+  @Test
+  public void updateKingdomWithNameShouldReturnUpdatedBuilding(){
+    KingdomNameDTO nameDTO = new KingdomNameDTO("New Kingdom");
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setId(1L);
+    kingdom.setKingdomName(nameDTO.getName());
+
+    Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
+    Mockito.when(kingdomService.changeKingdomName(kingdom, nameDTO)).thenReturn(kingdom);
+
+    ResponseEntity<KingdomEntity> response = kingdomController.updateKingdomByName(authentication, nameDTO);
+
+    Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    Assert.assertEquals(java.util.Optional.of(1L), java.util.Optional.ofNullable(response.getBody().getId()));
+    Assert.assertEquals("New Kingdom", response.getBody().getKingdomName());
   }
 }
