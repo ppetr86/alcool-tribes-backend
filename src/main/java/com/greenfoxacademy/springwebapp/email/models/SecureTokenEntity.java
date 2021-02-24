@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.configuration.email;
+package com.greenfoxacademy.springwebapp.configuration.email.models;
 
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "secureTokens")
-public class SecureToken {
+public class SecureTokenEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

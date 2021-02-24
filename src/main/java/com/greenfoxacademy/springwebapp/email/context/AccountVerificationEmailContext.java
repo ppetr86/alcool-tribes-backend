@@ -12,7 +12,7 @@ public class AccountVerificationEmailContext extends AbstractEmailContext {
   public <T> void init(T context) {
     //we can do any common configuration setup here
     // like setting up some base URL and context
-    PlayerEntity player = (PlayerEntity) context; // we pass the player informati
+    PlayerEntity player = (PlayerEntity) context; // we pass the player information
     put("firstName", player.getEmail());
     put("username", player.getUsername());
     put("kingdomname", player.getKingdom().getKingdomName());

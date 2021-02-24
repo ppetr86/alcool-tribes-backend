@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.configuration.email;
 
 
 
+import com.greenfoxacademy.springwebapp.configuration.email.models.SecureTokenEntity;
 import com.greenfoxacademy.springwebapp.configuration.email.repository.SecureTokenRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class DefaultSecureTokenService implements SecureTokenService {
   SecureTokenRepository secureTokenRepository;
 
   @Override
-  public SecureToken createSecureToken(){
+  public SecureTokenEntity createSecureToken(){
     String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII); // this is a sample, you can adapt as per your security need
-    SecureToken secureToken = new SecureToken();
+    SecureTokenEntity secureToken = new SecureTokenEntity();
     secureToken.setToken(tokenValue);
     secureToken.setExpireAt(LocalDateTime.now().plusSeconds(getTokenValidityInSeconds()));
     this.saveSecureToken(secureToken);
@@ -36,17 +37,17 @@ public class DefaultSecureTokenService implements SecureTokenService {
   }
 
   @Override
-  public void saveSecureToken(SecureToken token) {
+  public void saveSecureToken(SecureTokenEntity token) {
     secureTokenRepository.save(token);
   }
 
   @Override
-  public SecureToken findByToken(String token) {
+  public SecureTokenEntity findByToken(String token) {
     return secureTokenRepository.findByToken(token);
   }
 
   @Override
-  public void removeToken(SecureToken token) {
+  public void removeToken(SecureTokenEntity token) {
     secureTokenRepository.delete(token);
   }
 
