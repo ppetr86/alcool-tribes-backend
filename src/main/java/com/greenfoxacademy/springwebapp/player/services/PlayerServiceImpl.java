@@ -2,11 +2,11 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.configuration.email.EmailService;
-import com.greenfoxacademy.springwebapp.configuration.email.SecureToken;
-import com.greenfoxacademy.springwebapp.configuration.email.SecureTokenService;
-import com.greenfoxacademy.springwebapp.configuration.email.context.AccountVerificationEmailContext;
-import com.greenfoxacademy.springwebapp.configuration.email.repository.SecureTokenRepository;
+import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
+import com.greenfoxacademy.springwebapp.email.services.EmailService;
+import com.greenfoxacademy.springwebapp.email.services.SecureTokenService;
+import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmailContext;
+import com.greenfoxacademy.springwebapp.email.repository.SecureTokenRepository;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -89,8 +89,6 @@ public class PlayerServiceImpl implements PlayerService {
     if (existsByUsername(request.getUsername())) throw new UsernameIsTakenException();
     PlayerEntity savedPlayer = saveNewPlayer(request);
     if (!request.getEmail().isEmpty()) {
-      //emailService.sendHtmlEmail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
-      //emailService.sendTextEmail(request.getEmail(), request.getUsername(), kingdomService.kingdomNameByPlayerID(response.getId()));
       sendRegistrationConfirmationEmail(savedPlayer);
     }
     return savedPlayer;
@@ -108,16 +106,24 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public void sendRegistrationConfirmationEmail(PlayerEntity player) {
-    SecureToken secureToken = secureTokenService.createSecureToken();
+    SecureTokenEntity secureToken = secureTokenService.createSecureToken();
     secureToken.setPlayer(player);
     secureTokenRepository.save(secureToken);
+
     AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
     emailContext.init(player);
     emailContext.setToken(secureToken.getToken());
     emailContext.buildVerificationUrl(baseURL, secureToken.getToken());
+    emailContext.setRecipientEmail(player.getEmail());
+    emailContext.setKingdomName(player.getKingdom().getKingdomName());
+    emailContext.setUsername(player.getUsername());
+    emailContext.setTemplateLocation("registration");
+
+    System.out.println(emailContext);
+
     try {
-      //emailService.sendMail(emailContext, player.getUsername(), player.getKingdom().getKingdomName(), player.getEmail());
-      emailService.sendTextEmail(emailContext, player.getUsername(), player.getKingdom().getKingdomName(), player.getEmail());
+      emailService.sendHtmlMail(emailContext);
+      emailService.sendTextEmail(emailContext);
     } catch (MessagingException e) {
       e.printStackTrace();
     }
@@ -143,7 +149,7 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public boolean verifyUser(String token) throws InvalidTokenException {
-    SecureToken secureToken = secureTokenService.findByToken(token);
+    SecureTokenEntity secureToken = secureTokenService.findByToken(token);
     if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
       throw new InvalidTokenException("Token is not valid");
     }

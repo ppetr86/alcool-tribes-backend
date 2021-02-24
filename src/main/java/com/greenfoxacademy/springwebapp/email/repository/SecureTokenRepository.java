@@ -1,7 +1,7 @@
-package com.greenfoxacademy.springwebapp.configuration.email.repository;
+package com.greenfoxacademy.springwebapp.email.repository;
 
 
-import com.greenfoxacademy.springwebapp.configuration.email.models.SecureTokenEntity;
+import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.configuration.email.models;
+package com.greenfoxacademy.springwebapp.email.models;
 
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import lombok.Getter;

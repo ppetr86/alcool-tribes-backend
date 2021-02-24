@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.configuration.email.context;
+package com.greenfoxacademy.springwebapp.email.context;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,13 +11,12 @@ import java.util.Map;
 public abstract class AbstractEmailContext {
 
     private String from;
-    private String to;
+    private String recipientEmail;
     private String subject;
-    private String email;
-    private String attachment;
-    private String fromDisplayName;
+    private String senderEmail;
+    private String senderDisplayName;
     private String emailLanguage;
-    private String usernamePlayer;
+    private String username;
     private String templateLocation;
     private String kingdomName;
     private Map<String, Object> context;

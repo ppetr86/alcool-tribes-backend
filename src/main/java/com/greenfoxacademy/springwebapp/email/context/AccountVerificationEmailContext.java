@@ -1,7 +1,6 @@
-package com.greenfoxacademy.springwebapp.configuration.email.context;
+package com.greenfoxacademy.springwebapp.email.context;
 
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class AccountVerificationEmailContext extends AbstractEmailContext {
@@ -16,11 +15,16 @@ public class AccountVerificationEmailContext extends AbstractEmailContext {
     put("firstName", player.getEmail());
     put("username", player.getUsername());
     put("kingdomname", player.getKingdom().getKingdomName());
+    put("to", player.getEmail());
+    put("senderEmail","2abbedeb1d-3b2376@inbox.mailtrap.io");
+    put("senderDisplayName", "AlcoolGame");
+    put("emailLanguage", "English");
 
     //setTemplateLocation("templates/registration");
-    setSubject("Complete your registration");
+    setSubject("Verify your email for Alcool Game");
+    setFrom("AlcoolGame");
 
-    setTo(player.getEmail());
+    setRecipientEmail(player.getEmail());
   }
 
   public void setToken(String token) {

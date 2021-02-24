@@ -6,7 +6,6 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -77,8 +76,7 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
-      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
-    if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
+      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
     if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();

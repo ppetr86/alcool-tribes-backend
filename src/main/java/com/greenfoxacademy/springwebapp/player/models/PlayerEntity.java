@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.greenfoxacademy.springwebapp.configuration.email.SecureToken;
+import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.*;
 
@@ -44,7 +44,7 @@ public class PlayerEntity {
   private Boolean isAccountVerified;
 
   @OneToMany(mappedBy = "player")
-  private Set<SecureToken> tokens;
+  private Set<SecureTokenEntity> tokens;
 
   public PlayerEntity(String username, String password) {
     this.username = username;

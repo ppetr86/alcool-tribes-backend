@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.configuration.email.services;
+package com.greenfoxacademy.springwebapp.email.services;
 
 import com.greenfoxacademy.springwebapp.email.context.AbstractEmailContext;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,9 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 
 @Service("emailService")
 @AllArgsConstructor
@@ -23,9 +26,11 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendTextEmail(AbstractEmailContext email)throws MessagingException {
 
+    System.out.println(email.getContext().get("verificationURL"));
+
     SimpleMailMessage message = new SimpleMailMessage();
 
-    String mailBody = "Welcome " + email.getUsernamePlayer() + "!\n\n" +
+    String mailBody = "Welcome " + email.getUsername() + "!\n\n" +
             email.getKingdomName() + " is ready! You just need to confirm your email address\n" +
             "and then you are ready to conquer the world :)\n" +
             " Please confirm your email address by opening the following url: \n" +
@@ -33,12 +38,19 @@ public class EmailServiceImpl implements EmailService {
             "Confirm Email Address\n\n" +
             " — The Tribes Team\n";
 
-    email.setSenderEmail(mailBody);
+
+
+    message.setTo(email.getRecipientEmail());
+    message.setFrom(email.getSenderEmail());
+    message.setReplyTo(email.getSenderEmail());
+    message.setSentDate(Calendar.getInstance().getTime());
+    message.setSubject(email.getSubject());
+    message.setText(mailBody);
     mailSender.send(message);
   }
 
   @Override
-  public void sendMail(AbstractEmailContext email) throws MessagingException {
+  public void sendHtmlMail(AbstractEmailContext email) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,
             MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
@@ -49,8 +61,8 @@ public class EmailServiceImpl implements EmailService {
     String emailContent = templateEngine.process(email.getTemplateLocation(), context);
 
     mimeMessageHelper.setTo(email.getRecipientEmail());
-    mimeMessageHelper.setSubject("Verify your email for Alcool Game");
-    mimeMessageHelper.setFrom("Alcool Game");
+    mimeMessageHelper.setSubject(email.getSubject());
+    mimeMessageHelper.setFrom(email.getFrom());
     mimeMessageHelper.setText(emailContent, true);
     mailSender.send(message);
   }

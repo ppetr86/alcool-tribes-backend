@@ -1,9 +1,9 @@
-package com.greenfoxacademy.springwebapp.configuration.email;
+package com.greenfoxacademy.springwebapp.email.services;
 
 
 
-import com.greenfoxacademy.springwebapp.configuration.email.models.SecureTokenEntity;
-import com.greenfoxacademy.springwebapp.configuration.email.repository.SecureTokenRepository;
+import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
+import com.greenfoxacademy.springwebapp.email.repository.SecureTokenRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
 @Service
-public class DefaultSecureTokenService implements SecureTokenService {
+public class SecureTokenServiceImpl implements SecureTokenService {
 
   private static final BytesKeyGenerator DEFAULT_TOKEN_GENERATOR = KeyGenerators.secureRandom(15);
   private static final Charset US_ASCII = Charset.forName("US-ASCII");

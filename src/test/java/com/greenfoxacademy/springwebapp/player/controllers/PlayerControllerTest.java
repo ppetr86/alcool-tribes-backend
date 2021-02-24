@@ -2,7 +2,7 @@
    /*
 package com.greenfoxacademy.springwebapp.player.controllers;
 
-import com.greenfoxacademy.springwebapp.configuration.email.EmailService;
+import com.greenfoxacademy.springwebapp.configuration.email.services.EmailServiceImpl;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
@@ -23,13 +23,13 @@ public class PlayerControllerTest {
 
   private PlayerController playerController;
   private PlayerService registrationService;
-  private EmailService emailService;
+  private EmailServiceImpl emailService;
   private KingdomService kingdomService;
 
   @Before
   public void setup() {
     registrationService = Mockito.mock(PlayerService.class);
-    emailService = Mockito.mock(EmailService.class);
+    emailService = Mockito.mock(EmailServiceImpl.class);
     kingdomService = Mockito.mock(KingdomService.class);
     playerController = new PlayerController(registrationService,emailService,kingdomService);
   }

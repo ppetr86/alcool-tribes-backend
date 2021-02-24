@@ -1,7 +1,6 @@
-package com.greenfoxacademy.springwebapp.configuration.email;
+package com.greenfoxacademy.springwebapp.email.services;
 
-
-import com.greenfoxacademy.springwebapp.configuration.email.models.SecureTokenEntity;
+import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
 
 public interface SecureTokenService {
 

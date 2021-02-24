@@ -1,5 +1,5 @@
 /*
-package com.greenfoxacademy.springwebapp.configuration.email;
+package com.greenfoxacademy.springwebapp.email;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,14 +11,12 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class ThymeleafConfig {
-  */
-/*@Bean
+@Bean
   public SpringTemplateEngine springTemplateEngine() {
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.addTemplateResolver(htmlTemplateResolver());
     return templateEngine;
-  }*//*
-
+  }
 
   @Bean
   public SpringResourceTemplateResolver htmlTemplateResolver() {
