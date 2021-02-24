@@ -28,7 +28,7 @@ public class EmailService {
     mailBody.append(kingdomName).append(" is ready! You just need to confirm your email address\n");
     mailBody.append("and then you are ready to conquer the world :)\n");
     mailBody.append(" Please confirm your email address by opening the following url: \n");
-    mailBody.append(email.getContext().get("verificationURL")).append(username).append("\n\n");
+    mailBody.append(email.getContext().get("verificationURL")).append("\n\n");
     mailBody.append("Confirm Email Address\n\n");
     mailBody.append(" — The Tribes Team\n");
 

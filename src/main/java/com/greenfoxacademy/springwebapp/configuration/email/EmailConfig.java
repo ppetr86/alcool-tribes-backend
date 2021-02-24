@@ -10,10 +10,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import java.util.Locale;
 import java.util.Properties;
 
 @Configuration
@@ -48,6 +51,13 @@ public class EmailConfig implements WebMvcConfigurer {
     props.put("mail.debug", "true");
 
     return mailSender;
+  }
+
+  @Bean
+  public LocaleResolver localeResolver(){
+    SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+    localeResolver.setDefaultLocale(Locale.US);
+    return  localeResolver;
   }
 
   @Bean
