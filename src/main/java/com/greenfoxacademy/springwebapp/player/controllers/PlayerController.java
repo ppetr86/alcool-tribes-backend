@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.player.controllers;
 import com.greenfoxacademy.springwebapp.configuration.email.EmailService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
@@ -12,11 +13,13 @@ import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
+import org.springframework.core.MethodParameter;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -57,11 +60,12 @@ public class PlayerController {
 
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request,
-                                        BindingResult bindingResult)
-          throws MessagingException, IOException {
-
-    PlayerEntity newRegistration = playerService.registerNewPlayer(request, bindingResult);
+  public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request)
+          throws UsernameIsTakenException {
+    //if you want to use the text from validation annotation then you can not
+    // combine it with Binding result
+    // if you dont combine, default messages will be displayed and exception thrown automatically
+    PlayerEntity newRegistration = playerService.registerNewPlayer(request);
     return ResponseEntity.ok(playerService.playerToResponseDTO(newRegistration));
   }
 }
