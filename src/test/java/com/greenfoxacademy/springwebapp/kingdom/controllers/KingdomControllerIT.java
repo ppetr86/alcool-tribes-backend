@@ -72,6 +72,4 @@ public class KingdomControllerIT {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.resources[0].amount", is(100)));
   }
-
-
 }

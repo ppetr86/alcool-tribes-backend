@@ -56,5 +56,26 @@ public class KingdomServiceTest {
   @Test
   public void changeKingdomNameShouldReturnUpdatedKingdom(){
     KingdomNameDTO nameDTO = new KingdomNameDTO("New Kingdom");
+    KingdomEntity kingdom = new KingdomEntity(1L, null, null, "Old Kingdom", null, null, null);
+    kingdom.setKingdomName(nameDTO.getName());
+
+    Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
+
+    KingdomEntity result = kingdomService.changeKingdomName(kingdom, nameDTO);
+
+    Assert.assertEquals("New Kingdom", result.getKingdomName());
+  }
+
+  @Test
+  public void changeKingdomNameShouldNotReturnUpdatedKingdom(){
+    KingdomNameDTO nameDTO = new KingdomNameDTO("Not new Kingdom");
+    KingdomEntity kingdom = new KingdomEntity(1L, null, null, "Old Kingdom", null, null, null);
+    kingdom.setKingdomName(nameDTO.getName());
+
+    Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
+
+    KingdomEntity result = kingdomService.changeKingdomName(kingdom, nameDTO);
+
+    Assert.assertNotEquals("New Kingdom", result.getKingdomName());
   }
 }
