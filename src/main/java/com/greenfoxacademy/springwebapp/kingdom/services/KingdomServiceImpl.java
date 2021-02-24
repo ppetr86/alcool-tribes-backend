@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.kingdom.services;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
@@ -63,4 +64,9 @@ public class KingdomServiceImpl implements KingdomService {
     return kingdomRepository.save(kingdom);
   }
 
+  @Override
+  public KingdomEntity changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) {
+    kingdom.setKingdomName(nameDTO.getName());
+    return saveKingdom(kingdom);
+  }
 }

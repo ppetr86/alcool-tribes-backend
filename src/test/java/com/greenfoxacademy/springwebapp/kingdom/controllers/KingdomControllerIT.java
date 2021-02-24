@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class KingdomControllerIntegrationTest {
+public class KingdomControllerIT {
 
   @Autowired
   private MockMvc mockMvc;
@@ -72,4 +72,6 @@ public class KingdomControllerIntegrationTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.resources[0].amount", is(100)));
   }
+
+
 }

@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.kingdom.services;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -50,5 +51,10 @@ public class KingdomServiceTest {
   @Test(expected = IdNotFoundException.class)
   public void entityToKingdomResponseDTO_throwsIDNotFoundException() {
     KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(null);
+  }
+
+  @Test
+  public void changeKingdomNameShouldReturnUpdatedKingdom(){
+    KingdomNameDTO nameDTO = new KingdomNameDTO("New Kingdom");
   }
 }

@@ -103,5 +103,4 @@ public class BuildingServiceImpl implements BuildingService {
     return kingdom.getBuildings().stream()
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
-
 }

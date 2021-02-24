@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
-public class KingdomControllerUnitTest {
+public class KingdomControllerTest {
 
   private KingdomController kingdomController;
   private KingdomService kingdomService;
