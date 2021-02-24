@@ -78,9 +78,4 @@ public class EmailConfig implements WebMvcConfigurer {
     bean.setValidationMessageSource(messageSource);
     return bean;
   }
-
-  @Bean
-  public org.springframework.security.crypto.password.PasswordEncoder encoder() {
-    return new BCryptPasswordEncoder();
-  }
 }

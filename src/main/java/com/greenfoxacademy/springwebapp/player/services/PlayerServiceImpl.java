@@ -53,6 +53,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     PlayerEntity player = new PlayerEntity();
     BeanUtils.copyProperties(dto,player);
+    player.setPassword(passwordEncoder.encode(dto.getPassword()));
     player.setKingdom(kingdom);
     player.setIsAccountVerified(false);
     kingdom.setPlayer(player);
