@@ -35,41 +35,7 @@ public class SecureTokenEntity {
 
   private Boolean isExpired;
 
-
-  public String getToken() {
-    return token;
-  }
-
-  public void setToken(String token) {
-    this.token = token;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public LocalDateTime getExpireAt() {
-    return expireAt;
-  }
-
-  public void setExpireAt(LocalDateTime expireAt) {
-    this.expireAt = expireAt;
-  }
-
-  public Timestamp getTimeStamp() {
-    return timeStamp;
-  }
-
   public boolean isExpired() {
-
-    return getExpireAt().isBefore(LocalDateTime.now()); // this is generic implementation, you can always make it timezone specific
-  }
-
-  public PlayerEntity getPlayer() {
-    return player;
-  }
-
-  public void setPlayer(PlayerEntity user) {
-    this.player = user;
+    return getExpireAt().isBefore(LocalDateTime.now());
   }
 }

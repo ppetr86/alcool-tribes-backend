@@ -12,8 +12,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 
 @Service("emailService")
@@ -24,7 +22,7 @@ public class EmailServiceImpl implements EmailService {
   private final SpringTemplateEngine templateEngine;
 
   @Override
-  public void sendTextEmail(AbstractEmailContext email)throws MessagingException {
+  public void sendTextEmail(AbstractEmailContext email) throws MessagingException {
 
     System.out.println(email.getContext().get("verificationURL"));
 
@@ -37,8 +35,6 @@ public class EmailServiceImpl implements EmailService {
             email.getContext().get("verificationURL") + "\n\n" +
             "Confirm Email Address\n\n" +
             " — The Tribes Team\n";
-
-
 
     message.setTo(email.getRecipientEmail());
     message.setFrom(email.getSenderEmail());

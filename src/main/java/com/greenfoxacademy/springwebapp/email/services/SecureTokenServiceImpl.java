@@ -1,7 +1,5 @@
 package com.greenfoxacademy.springwebapp.email.services;
 
-
-
 import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
 import com.greenfoxacademy.springwebapp.email.repository.SecureTokenRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -31,6 +29,7 @@ public class SecureTokenServiceImpl implements SecureTokenService {
     String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII); // this is a sample, you can adapt as per your security need
     SecureTokenEntity secureToken = new SecureTokenEntity();
     secureToken.setToken(tokenValue);
+    secureToken.setIsExpired(false);
     secureToken.setExpireAt(LocalDateTime.now().plusSeconds(getTokenValidityInSeconds()));
     this.saveSecureToken(secureToken);
     return secureToken;
