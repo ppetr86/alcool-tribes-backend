@@ -24,8 +24,6 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendTextEmail(AbstractEmailContext email) throws MessagingException {
 
-    System.out.println(email.getContext().get("verificationURL"));
-
     SimpleMailMessage message = new SimpleMailMessage();
 
     String mailBody = "Welcome " + email.getUsername() + "!\n\n" +
@@ -46,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
   }
 
   @Override
-  public void sendHtmlMail(AbstractEmailContext email) throws MessagingException {
+  public void sendMailWithHtmlAndPlainText(AbstractEmailContext email) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,
             MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
@@ -56,10 +54,19 @@ public class EmailServiceImpl implements EmailService {
 
     String emailContent = templateEngine.process(email.getTemplateLocation(), context);
 
+    String mailBody = "Welcome " + email.getUsername() + "!\n\n" +
+            email.getKingdomName() + " is ready! You just need to confirm your email address\n" +
+            "and then you are ready to conquer the world :)\n" +
+            " Please confirm your email address by opening the following url: \n" +
+            email.getContext().get("verificationURL") + "\n\n" +
+            "Confirm Email Address\n\n" +
+            " — The Tribes Team\n";
+
     mimeMessageHelper.setTo(email.getRecipientEmail());
     mimeMessageHelper.setSubject(email.getSubject());
     mimeMessageHelper.setFrom(email.getFrom());
-    mimeMessageHelper.setText(emailContent, true);
+    //mimeMessageHelper.setText(emailContent, true);
+    mimeMessageHelper.setText(emailContent, mailBody);
     mailSender.send(message);
   }
 }

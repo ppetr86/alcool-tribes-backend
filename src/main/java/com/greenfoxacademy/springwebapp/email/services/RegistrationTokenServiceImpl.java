@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.email.services;
 
-import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
-import com.greenfoxacademy.springwebapp.email.repository.SecureTokenRepository;
+import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
+import com.greenfoxacademy.springwebapp.email.repository.RegistrationTokenRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
 @Service
-public class SecureTokenServiceImpl implements SecureTokenService {
+public class RegistrationTokenServiceImpl implements RegistrationTokenService {
 
   private static final BytesKeyGenerator DEFAULT_TOKEN_GENERATOR = KeyGenerators.secureRandom(15);
   private static final Charset US_ASCII = Charset.forName("US-ASCII");
@@ -22,12 +22,12 @@ public class SecureTokenServiceImpl implements SecureTokenService {
   private int tokenValidityInSeconds;
 
   @Autowired
-  SecureTokenRepository secureTokenRepository;
+  RegistrationTokenRepository secureTokenRepository;
 
   @Override
-  public SecureTokenEntity createSecureToken(){
+  public RegistrationTokenEntity createSecureToken(){
     String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII); // this is a sample, you can adapt as per your security need
-    SecureTokenEntity secureToken = new SecureTokenEntity();
+    RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken(tokenValue);
     secureToken.setIsExpired(false);
     secureToken.setExpireAt(LocalDateTime.now().plusSeconds(getTokenValidityInSeconds()));
@@ -36,17 +36,17 @@ public class SecureTokenServiceImpl implements SecureTokenService {
   }
 
   @Override
-  public void saveSecureToken(SecureTokenEntity token) {
+  public void saveSecureToken(RegistrationTokenEntity token) {
     secureTokenRepository.save(token);
   }
 
   @Override
-  public SecureTokenEntity findByToken(String token) {
+  public RegistrationTokenEntity findByToken(String token) {
     return secureTokenRepository.findByToken(token);
   }
 
   @Override
-  public void removeToken(SecureTokenEntity token) {
+  public void removeToken(RegistrationTokenEntity token) {
     secureTokenRepository.delete(token);
   }
 

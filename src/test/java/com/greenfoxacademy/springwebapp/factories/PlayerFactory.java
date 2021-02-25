@@ -6,7 +6,17 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 public class PlayerFactory {
 
   public static PlayerEntity createPlayer(Long playerID, KingdomEntity kingdom) {
-    PlayerEntity pl = new PlayerEntity(playerID, "testUser", "password", "test@test.com", null, null, kingdom);
+    PlayerEntity pl = PlayerEntity.builder()
+            .id(playerID)
+            .username("testUser")
+            .password("password")
+            .email("test@test.com")
+            .avatar(null)
+            .points(null)
+            .kingdom(kingdom)
+            .isAccountVerified(true)
+            .tokens(null)
+            .build();
     return pl;
   }
 }

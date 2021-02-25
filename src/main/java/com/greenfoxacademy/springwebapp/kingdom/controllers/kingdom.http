@@ -10,3 +10,13 @@ Accept: application/json
 GET http://localhost:8080/kingdom/999
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM2ODkyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.viq8mQL99hSTHs6huaDy_S3S21xYHEFwxDruvaQFrvaiIidQV6dUrwzWw_es0WpxwNfPZfXAhWQKHR_xuIlBXQ
 Accept: application/json
+
+### PUT kingdom
+### kingdom
+PUT http://localhost:8080/kingdom
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDU4MzAwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.qmnwrD4qeUup8DczlszDDM74BjqNGlZ8tA5RvuNqT-5mV3_6vFGy8piDWmfFL5UE_0rHtngja_XG_7oDlCDHjw
+Content-Type: application/json
+
+{
+  "name": "test"
+}

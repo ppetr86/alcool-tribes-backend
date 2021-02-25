@@ -16,12 +16,15 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @AllArgsConstructor
+@RequestMapping(PlayerController.URI)
 public class PlayerController {
   private final PlayerService playerService;
 
-  @GetMapping("/register/verify")
+  public static final String URI = "/register";
+
+  @GetMapping("/verify")
   @ResponseBody
-  public String verifyUser(@RequestParam(required = false) String token, RedirectAttributes redirAttr) {
+  public String verifyUser(@RequestParam(required = false) String token) {
 
     if (token.isEmpty()) {
       log.info(String.format("Verification token was incorrect. Used token: %s", token));
@@ -38,7 +41,7 @@ public class PlayerController {
   }
 
 
-  @PostMapping("/register")
+  @PostMapping
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request)
           throws UsernameIsTakenException {
     //if you want to use the text from validation annotation then you can not

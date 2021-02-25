@@ -3,3 +3,13 @@
 GET http://localhost:8080/kingdom/troops
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Mjg5Nzg0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.7RN7TcP7eWhXKwvU1VbQ9LXjq0o9MjuT_FKSSQlEqqr3LrPW5xR80EWCDCbEq7NSkpzXxk4yAT7TnMp79MyHYw
 Accept: application/json
+
+### POST kingdom createTroop
+
+POST http://localhost:8080/kingdom/troops
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDU3NDM2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.EbEppw_CfPvVhT7hz0Rs6GeQ33FmA_uyc13lE9BQbprhgkyA8qrVejSNfUptj3mC2a5oaeXrZXbDZ4oFAfemcg
+
+{
+  "buildingId": 3
+}

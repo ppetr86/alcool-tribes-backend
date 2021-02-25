@@ -1,14 +1,15 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IncorrectUsernameOrPwdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
-import org.springframework.core.MethodParameter;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
 public interface PlayerService {
@@ -30,4 +31,6 @@ public interface PlayerService {
   PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request) throws UsernameIsTakenException;
 
   boolean existsByUsername(String username);
+
+  PlayerTokenDTO loginPlayer(PlayerRequestDTO request) throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException;
 }

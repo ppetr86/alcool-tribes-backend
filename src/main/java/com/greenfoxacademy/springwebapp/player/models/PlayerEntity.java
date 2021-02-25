@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
+import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.*;
 
@@ -13,7 +13,9 @@ import java.util.Set;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "players")
+@Builder
 public class PlayerEntity {
 
   @Id
@@ -33,9 +35,9 @@ public class PlayerEntity {
   @Column(name = "email")
   private String email;
   @Column(name = "avatar")
-  private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
-  @Column(name = "points")
-  private Integer points = 0; //TODO: need to have proper point logic
+  private String avatar;
+  @Column(name = "points", columnDefinition = "integer default 0")
+  private Integer points;
 
   @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
   private KingdomEntity kingdom;
@@ -44,7 +46,7 @@ public class PlayerEntity {
   private Boolean isAccountVerified;
 
   @OneToMany(mappedBy = "player")
-  private Set<SecureTokenEntity> tokens;
+  private Set<RegistrationTokenEntity> tokens;
 
   public PlayerEntity(String username, String password) {
     this.username = username;
@@ -53,7 +55,7 @@ public class PlayerEntity {
 
   @Override
   public String toString() {
-    return   "username='" + username + '\'' +
+    return "username='" + username + '\'' +
             ", password='" + password + '\'' +
             ", email='" + email + '\'' +
             ", points=" + points;

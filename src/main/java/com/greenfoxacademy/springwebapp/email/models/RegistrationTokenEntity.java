@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "secureTokens")
-public class SecureTokenEntity {
+@Table(name = "registrationTokens")
+public class RegistrationTokenEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

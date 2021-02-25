@@ -52,25 +52,6 @@ public class EmailConfig implements WebMvcConfigurer {
   }
 
   @Bean
-  public LocaleResolver localeResolver(){
-    SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-    localeResolver.setDefaultLocale(Locale.US);
-    return  localeResolver;
-  }
-
-  @Bean
-  public LocaleChangeInterceptor localeChangeInterceptor() {
-    LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-    localeChangeInterceptor.setParamName("lang");
-    return localeChangeInterceptor;
-  }
-
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(localeChangeInterceptor());
-  }
-
-  @Bean
   public LocalValidatorFactoryBean validator(MessageSource messageSource) {
     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
     bean.setValidationMessageSource(messageSource);

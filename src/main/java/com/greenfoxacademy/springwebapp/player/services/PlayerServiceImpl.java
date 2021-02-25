@@ -2,18 +2,22 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.email.models.SecureTokenEntity;
-import com.greenfoxacademy.springwebapp.email.services.EmailService;
-import com.greenfoxacademy.springwebapp.email.services.SecureTokenService;
 import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmailContext;
-import com.greenfoxacademy.springwebapp.email.repository.SecureTokenRepository;
+import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
+import com.greenfoxacademy.springwebapp.email.services.EmailService;
+import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IncorrectUsernameOrPwdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,26 +29,18 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
 
   private final PlayerRepository playerRepo;
   private final PasswordEncoder passwordEncoder;
   private final BuildingService buildingService;
   private final EmailService emailService;
-  private final SecureTokenService secureTokenService;
-  private final SecureTokenRepository secureTokenRepository;
+  private final RegistrationTokenService registrationTokenService;
+  private final TokenService tokenService;
 
   @Value("${site.base.url.https}")
   private String baseURL;
-
-  public PlayerServiceImpl(PlayerRepository playerRepo, PasswordEncoder passwordEncoder, BuildingService buildingService, EmailService emailService, SecureTokenService secureTokenService, SecureTokenRepository secureTokenRepository) {
-    this.playerRepo = playerRepo;
-    this.passwordEncoder = passwordEncoder;
-    this.buildingService = buildingService;
-    this.emailService = emailService;
-    this.secureTokenService = secureTokenService;
-    this.secureTokenRepository = secureTokenRepository;
-  }
 
   @Override
   public PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO dto) {
@@ -62,7 +58,6 @@ public class PlayerServiceImpl implements PlayerService {
     playerRepo.saveAndFlush(player);
     return playerRepo.findByUsername(player.getUsername());
   }
-
 
   private KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
     KingdomEntity kingdom = new KingdomEntity();
@@ -87,11 +82,22 @@ public class PlayerServiceImpl implements PlayerService {
           throws UsernameIsTakenException {
 
     if (existsByUsername(request.getUsername())) throw new UsernameIsTakenException();
+
     PlayerEntity savedPlayer = saveNewPlayer(request);
-    if (!request.getEmail().isEmpty()) {
-      sendRegistrationConfirmationEmail(savedPlayer);
-    }
+    if (!request.getEmail().isEmpty()) sendRegistrationConfirmationEmail(savedPlayer);
     return savedPlayer;
+  }
+
+  @Override
+  public PlayerTokenDTO loginPlayer(PlayerRequestDTO request) throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+
+    PlayerEntity player = findByUsernameAndPassword(request.getUsername(), request.getPassword());
+
+    if (player==null)
+      throw new IncorrectUsernameOrPwdException();
+    else if (!player.getIsAccountVerified())
+      throw new NotVerifiedRegistrationException();
+    return tokenService.generateTokenToLoggedInPlayer(player);
   }
 
   @Override
@@ -106,23 +112,17 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public void sendRegistrationConfirmationEmail(PlayerEntity player) {
-    SecureTokenEntity secureToken = secureTokenService.createSecureToken();
+    RegistrationTokenEntity secureToken = registrationTokenService.createSecureToken();
     secureToken.setPlayer(player);
-    secureTokenRepository.save(secureToken);
+    registrationTokenService.saveSecureToken(secureToken);
 
     AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
     emailContext.init(player);
     emailContext.setToken(secureToken.getToken());
     emailContext.buildVerificationUrl(baseURL, secureToken.getToken());
-    emailContext.setRecipientEmail(player.getEmail());
-    emailContext.setKingdomName(player.getKingdom().getKingdomName());
-    emailContext.setUsername(player.getUsername());
-    emailContext.setTemplateLocation("registration");
-
-    System.out.println(emailContext);
 
     try {
-      emailService.sendHtmlMail(emailContext);
+      emailService.sendMailWithHtmlAndPlainText(emailContext);
       emailService.sendTextEmail(emailContext);
     } catch (MessagingException e) {
       e.printStackTrace();
@@ -146,24 +146,20 @@ public class PlayerServiceImpl implements PlayerService {
     return playerRepo.isVerifiedUsername(username);
   }
 
-
   @Override
   public boolean verifyUser(String token) throws InvalidTokenException {
-    SecureTokenEntity secureToken = secureTokenService.findByToken(token);
+    RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
     if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
-      throw new InvalidTokenException("Token is not valid");
+      throw new InvalidTokenException();
     }
-    PlayerEntity user = playerRepo.getOne(secureToken.getPlayer().getId());
-    if (Objects.isNull(user)) {
+    PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
+    if (Objects.isNull(player)) {
       return false;
     }
-    user.setIsAccountVerified(true);
-    playerRepo.save(user); // let's save user details
+    player.setIsAccountVerified(true);
+    playerRepo.save(player);
 
-    // we don't need invalid password now
-    secureTokenService.removeToken(secureToken);
+    registrationTokenService.removeToken(secureToken);
     return true;
   }
-
-
 }
