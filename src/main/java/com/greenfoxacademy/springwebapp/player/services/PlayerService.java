@@ -22,7 +22,7 @@ public interface PlayerService {
 
   boolean findIsVerified(String username);
 
-  void sendRegistrationConfirmationEmail(final PlayerEntity user);
+  boolean sendRegistrationConfirmationEmail(final PlayerEntity user);
 
   boolean verifyUser(final String token) throws InvalidTokenException;
 

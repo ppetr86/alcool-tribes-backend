@@ -84,7 +84,9 @@ public class PlayerServiceImpl implements PlayerService {
     if (existsByUsername(request.getUsername())) throw new UsernameIsTakenException();
 
     PlayerEntity savedPlayer = saveNewPlayer(request);
-    if (!request.getEmail().isEmpty()) sendRegistrationConfirmationEmail(savedPlayer);
+    boolean mailWasSent;
+    if (!request.getEmail().isEmpty())
+      mailWasSent = sendRegistrationConfirmationEmail(savedPlayer);
     return savedPlayer;
   }
 
@@ -111,22 +113,23 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
-  public void sendRegistrationConfirmationEmail(PlayerEntity player) {
-    RegistrationTokenEntity secureToken = registrationTokenService.createSecureToken();
-    secureToken.setPlayer(player);
-    registrationTokenService.saveSecureToken(secureToken);
+  public boolean sendRegistrationConfirmationEmail(PlayerEntity player) {
+    RegistrationTokenEntity token = registrationTokenService.createSecureToken();
+    token.setPlayer(player);
+    registrationTokenService.saveSecureToken(token);
 
     AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
     emailContext.init(player);
-    emailContext.setToken(secureToken.getToken());
-    emailContext.buildVerificationUrl(baseURL, secureToken.getToken());
+    emailContext.setToken(token.getToken());
+    emailContext.buildVerificationUrl(baseURL, token.getToken());
 
     try {
       emailService.sendMailWithHtmlAndPlainText(emailContext);
-      emailService.sendTextEmail(emailContext);
     } catch (MessagingException e) {
       e.printStackTrace();
+      return false;
     }
+    return true;
   }
 
   @Override
