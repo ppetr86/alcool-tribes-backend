@@ -16,5 +16,5 @@ public interface KingdomService {
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);
 
-  KingdomEntity changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
+  KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
 }

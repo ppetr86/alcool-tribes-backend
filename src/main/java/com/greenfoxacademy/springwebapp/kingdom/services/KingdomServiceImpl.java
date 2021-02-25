@@ -11,6 +11,8 @@ import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,8 +67,9 @@ public class KingdomServiceImpl implements KingdomService {
   }
 
   @Override
-  public KingdomEntity changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) {
+  public KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) {
     kingdom.setKingdomName(nameDTO.getName());
-    return saveKingdom(kingdom);
+    saveKingdom(kingdom);
+    return convert(kingdom);
   }
 }

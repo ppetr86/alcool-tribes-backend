@@ -2,9 +2,13 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
+import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +44,12 @@ public class KingdomControllerIT {
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
     kingdom.setKingdomName("Test Name");
+    kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
+    kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
+    kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
+    kingdom.setTroops(TroopFactory.createTroops(kingdom));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10));
   }
 
   @Test
@@ -88,6 +96,6 @@ public class KingdomControllerIT {
         .principal(authentication))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(1)))
-        .andExpect(jsonPath("$.kingdomName", is("New Kingdom")));
+        .andExpect(jsonPath("$.name", is("New Kingdom")));
   }
 }

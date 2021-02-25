@@ -5,8 +5,10 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder(setterPrefix = "with")
+@AllArgsConstructor
+@NoArgsConstructor
 public class KingdomResponseDTO {
 
   private long id;

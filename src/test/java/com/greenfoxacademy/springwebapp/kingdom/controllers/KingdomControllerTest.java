@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+import java.util.Objects;
+
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
 public class KingdomControllerTest {
@@ -76,14 +78,17 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setId(1L);
     kingdom.setKingdomName(nameDTO.getName());
+    KingdomResponseDTO responseDTO = new KingdomResponseDTO();
+    responseDTO.setId(kingdom.getId());
+    responseDTO.setName(kingdom.getKingdomName());
 
     Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
-    Mockito.when(kingdomService.changeKingdomName(kingdom, nameDTO)).thenReturn(kingdom);
+    Mockito.when(kingdomService.changeKingdomName(kingdom, nameDTO)).thenReturn(responseDTO);
 
-    ResponseEntity<KingdomEntity> response = kingdomController.updateKingdomByName(authentication, nameDTO);
+    ResponseEntity<KingdomResponseDTO> response = kingdomController.updateKingdomByName(authentication, nameDTO);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assert.assertEquals(java.util.Optional.of(1L), java.util.Optional.ofNullable(response.getBody().getId()));
-    Assert.assertEquals("New Kingdom", response.getBody().getKingdomName());
+    Assert.assertEquals(1, response.getBody().getId());
+    Assert.assertEquals("New Kingdom", response.getBody().getName());
   }
 }

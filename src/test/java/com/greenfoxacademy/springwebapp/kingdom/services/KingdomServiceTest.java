@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -8,10 +9,17 @@ import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomServiceImpl;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KingdomServiceTest {
   private KingdomService kingdomService;
@@ -56,26 +64,34 @@ public class KingdomServiceTest {
   @Test
   public void changeKingdomNameShouldReturnUpdatedKingdom(){
     KingdomNameDTO nameDTO = new KingdomNameDTO("New Kingdom");
-    KingdomEntity kingdom = new KingdomEntity(1L, null, null, "Old Kingdom", null, null, null);
+    List<BuildingEntity> fakeBuildings = new ArrayList<>();
+    List<TroopEntity> fakeTroops = new ArrayList<>();
+    List<ResourceEntity> fakeResources = new ArrayList<>();
+    PlayerEntity fakePlayer = new PlayerEntity(1L ,"test", "test", "test@gmail.com", "avatar.test", 0, null);
+    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources, new LocationEntity(1L, 10, 10));
     kingdom.setKingdomName(nameDTO.getName());
 
     Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
 
-    KingdomEntity result = kingdomService.changeKingdomName(kingdom, nameDTO);
+    KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
 
-    Assert.assertEquals("New Kingdom", result.getKingdomName());
+    Assert.assertEquals("New Kingdom", result.getName());
   }
 
   @Test
   public void changeKingdomNameShouldNotReturnUpdatedKingdom(){
-    KingdomNameDTO nameDTO = new KingdomNameDTO("Not new Kingdom");
-    KingdomEntity kingdom = new KingdomEntity(1L, null, null, "Old Kingdom", null, null, null);
+    KingdomNameDTO nameDTO = new KingdomNameDTO("Not New Kingdom");
+    List<BuildingEntity> fakeBuildings = new ArrayList<>();
+    List<TroopEntity> fakeTroops = new ArrayList<>();
+    List<ResourceEntity> fakeResources = new ArrayList<>();
+    PlayerEntity fakePlayer = new PlayerEntity(1L ,"test", "test", "test@gmail.com", "avatar.test", 0, null);
+    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources, new LocationEntity(1L, 10, 10));
     kingdom.setKingdomName(nameDTO.getName());
 
     Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
 
-    KingdomEntity result = kingdomService.changeKingdomName(kingdom, nameDTO);
+    KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
 
-    Assert.assertNotEquals("New Kingdom", result.getKingdomName());
+    Assert.assertNotEquals("New Kingdom", result.getName());
   }
 }

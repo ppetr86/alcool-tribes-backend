@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -38,8 +39,8 @@ public class KingdomController {
   }
 
   @PutMapping
-  public ResponseEntity<KingdomEntity> updateKingdomByName(Authentication auth,
-                                                 @RequestBody @Valid KingdomNameDTO nameDTO){
+  public ResponseEntity<KingdomResponseDTO> updateKingdomByName(Authentication auth,
+                                                                @RequestBody @Valid KingdomNameDTO nameDTO){
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
   }
