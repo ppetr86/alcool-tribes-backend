@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
-public class ForbiddenCustomException extends RuntimeException {
-  public ForbiddenCustomException() {
+public class ForbiddenActionException extends RuntimeException {
+  public ForbiddenActionException() {
     super("Forbidden action");
   }
 }
