@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+  public static final int AUTHENTICATION_FAILURE_STATUSCODE = 401;
 
   private final JwtFilter jwtFilter;
   private final AuthenticationExceptionHandler authenticationExceptionHandler;
@@ -23,16 +24,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-            .httpBasic().disable()
-            .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            .antMatchers("/register", "/login").permitAll() //permits these endpoints without auth.
-            .anyRequest().authenticated() //any other endpoints requires authentication
-            .and()
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling()
-            .authenticationEntryPoint(authenticationExceptionHandler); //here i put custom json together with 401
+        .httpBasic().disable()
+        .csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeRequests()
+        .antMatchers("/register", "/login").permitAll() //permits these endpoints without auth.
+        .anyRequest().authenticated() //any other endpoints requires authentication
+        .and()
+        .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling()
+        .authenticationEntryPoint(authenticationExceptionHandler); //here i put custom json together with 401
   }
 }

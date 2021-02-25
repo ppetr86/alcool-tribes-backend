@@ -1,57 +1,76 @@
 package com.greenfoxacademy.springwebapp.security.jwt;
 
-import static org.springframework.util.StringUtils.hasText;
-
-import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
+
+import com.greenfoxacademy.springwebapp.configuration.logconfig.EndpointsInterceptor;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetailsService;
+import com.greenfoxacademy.springwebapp.security.SecurityConfig;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-@Log
+@Slf4j
 @Component
 @AllArgsConstructor
-public class JwtFilter extends GenericFilterBean {
+public class JwtFilter extends OncePerRequestFilter {
 
   public static final String AUTHORIZATION = "Authorization";
 
   private JwtProvider jwtProvider;
   private CustomUserDetailsService customUserDetailsService;
-  private PlayerService playerService;
+  private EndpointsInterceptor endpointsInterceptor;
 
   @Override
-  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-          throws IOException, ServletException {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                  FilterChain filterChain) throws ServletException, IOException {
 
-    String token = getTokenFromServletRequest((HttpServletRequest) servletRequest);
-    if (token != null && jwtProvider.validateToken(token)) {
+    String header = request.getHeader("Authorization");
+    if (header == null || !header.startsWith("Bearer")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
+    String token = getTokenFromServletRequest(request);
+    Boolean tokenIsValid = false;
+
+    try{
+      tokenIsValid = jwtProvider.validateToken(token);
+    } catch (Exception e) {
+      SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
+      //Specific message related to authentication failure. Otherwise when wrong token no log is created by interceptor at all.
+      log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
+          request,
+          response,
+          SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
+          "Token validation error"
+      ));
+    }
+
+    if (token != null && tokenIsValid) {
       String userLogin = jwtProvider.getLoginFromToken(token);
-      PlayerEntity player = playerService.findByUsername(userLogin);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
-      customUserDetails.setKingdom(player.getKingdom());
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
               null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
-      logger.info("Following player was authenticated: " + customUserDetails.getUsername());
+      log.info("Authenticated player: {}", customUserDetails.getUsername());
     }
-    filterChain.doFilter(servletRequest, servletResponse);
+
+    filterChain.doFilter(request, response);
   }
 
   private String getTokenFromServletRequest(HttpServletRequest servletRequest){
     String bearerToken = servletRequest.getHeader(AUTHORIZATION);
-    if (hasText(bearerToken) && bearerToken.startsWith("Bearer ")){ //hasText means "is not null or empty"
+    if (bearerToken.startsWith("Bearer ")){
       return bearerToken.substring(7);
     }
     return null;

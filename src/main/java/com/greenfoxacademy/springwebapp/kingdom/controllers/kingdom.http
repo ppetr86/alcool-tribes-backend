@@ -1,0 +1,12 @@
+### Get kingdom
+### kingdom/resources
+GET http://localhost:8080/kingdom/resources
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM3NzU2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.DtUdBear4jyYArWfPOCmvbxwFqY0lXPkxyGP8Kqs_2KrVLs_q1oF7Q6VWiaUgWyTNqyIKSjGEQyLcrXDB7X5_w
+Accept: application/json
+
+
+### Get kingdom
+### kingdom/{id}
+GET http://localhost:8080/kingdom/999
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM2ODkyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.viq8mQL99hSTHs6huaDy_S3S21xYHEFwxDruvaQFrvaiIidQV6dUrwzWw_es0WpxwNfPZfXAhWQKHR_xuIlBXQ
+Accept: application/json

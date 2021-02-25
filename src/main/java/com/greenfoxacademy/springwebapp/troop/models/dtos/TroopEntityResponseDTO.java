@@ -1,22 +1,29 @@
 package com.greenfoxacademy.springwebapp.troop.models.dtos;
 
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class TroopEntityResponseDTO {
 
   private Long id;
-  private Integer level;
-  private Integer hp;
-  private Integer attack;
-  private Integer defence;
-  private Long startedAt;
-  private Long finishedAt;
+  private int level;
+  private int hp;
+  private int attack;
+  private int defence;
+  private long startedAt;
+  private long finishedAt;
+
+  public TroopEntityResponseDTO(long id, int level, int hp, int attack, int defence, long startedAt,
+                                long finishedAt) {
+    this.id = id;
+    this.level = level;
+    this.hp = hp;
+    this.attack = attack;
+    this.defence = defence;
+    this.startedAt = startedAt;
+    this.finishedAt = finishedAt;
+  }
 
   public TroopEntityResponseDTO(TroopEntity entity) {
 

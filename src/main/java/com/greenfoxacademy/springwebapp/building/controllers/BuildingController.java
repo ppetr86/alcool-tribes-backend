@@ -2,7 +2,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingsResponseDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingListResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
@@ -29,11 +29,10 @@ public class BuildingController {
   private final BuildingService buildingService;
 
   @GetMapping
-  public ResponseEntity<BuildingsResponseDTO> getKingdomBuildings(Authentication auth) {
+  public ResponseEntity<BuildingListResponseDTO> getKingdomBuildings(Authentication auth) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-
-    List<BuildingEntity> list = buildingService.findBuildingsByKingdomId(kingdom.getId());
-    return ResponseEntity.status(HttpStatus.OK).body(new BuildingsResponseDTO(list));
+    List<BuildingEntity> list = kingdom.getBuildings();
+    return ResponseEntity.status(HttpStatus.OK).body(new BuildingListResponseDTO(list));
   }
 
   @PostMapping
