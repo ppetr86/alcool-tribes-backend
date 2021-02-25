@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
+
   private ResourceRepository resourceRepository;
   private TimeService timeService;
 
-  public ResourceServiceImpl(
-      ResourceRepository resourceRepository, TimeService timeService) {
+  public ResourceServiceImpl(ResourceRepository resourceRepository, TimeService timeService) {
     this.resourceRepository = resourceRepository;
     this.timeService = timeService;
   }

@@ -3,6 +3,10 @@ package com.greenfoxacademy.springwebapp.player.controllers;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
+import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
+import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
@@ -85,17 +89,13 @@ public class PlayerControllerTest {
   @Test
   public void registerPlayerShouldSaveNewPlayerAndReturnCorrectStatusCode() {
 
-    PlayerEntity
-        fakePlayerEntity = new PlayerEntity("user1", "password");
+    KingdomEntity kingdomEntity = KingdomFactory.createKingdomEntityWithId(1L);
+    PlayerEntity fakePlayerEntity = PlayerFactory.createPlayer(1L, kingdomEntity);
     PlayerRegistrationRequestDTO playerRegistrationRequestDTO =
         new PlayerRegistrationRequestDTO("user1", "user1234", "email");
-    KingdomEntity kingdomEntity = new KingdomEntity();
-    kingdomEntity.setId(1L);
-    List<BuildingEntity> fakeListBuilding = new ArrayList<>();
-    fakeListBuilding.add(new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 1L, 2L, null));
+    List<BuildingEntity> fakeListBuilding = BuildingFactory.createBuildings(kingdomEntity);
 
-    List<ResourceEntity> fakeListResources = new ArrayList<>();
-    fakeListResources.add(new ResourceEntity(kingdomEntity, ResourceType.FOOD, 100, 10, 132456L));
+    List<ResourceEntity> fakeListResources = ResourceFactory.createResourcesWithAllData(kingdomEntity);
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
     Mockito.when(buildingService.createDefaultBuildings(kingdomEntity)).thenReturn(fakeListBuilding);
