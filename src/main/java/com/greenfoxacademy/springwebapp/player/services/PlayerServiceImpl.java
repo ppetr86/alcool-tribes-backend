@@ -9,10 +9,11 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PlayerServiceImpl implements PlayerService {
   private final PlayerRepository playerRepo;
   private final PasswordEncoder passwordEncoder;
   private final BuildingService buildingService;
+  private final ResourceService resourceService;
 
   @Override
   public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO dto) {
@@ -30,8 +32,11 @@ public class PlayerServiceImpl implements PlayerService {
     List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
     kingdom.setBuildings(defaultBuildings);
 
+    List<ResourceEntity> defaultResources = resourceService.createDefaultResources(kingdom);
+    kingdom.setResources(defaultResources);
+
     PlayerEntity player =
-            new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
+        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
     playerRepo.save(player);
