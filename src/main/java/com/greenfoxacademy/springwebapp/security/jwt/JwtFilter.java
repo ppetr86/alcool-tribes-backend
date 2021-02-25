@@ -31,7 +31,6 @@ public class JwtFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
-
     String header = request.getHeader("Authorization");
     if (header == null || !header.startsWith("Bearer")) {
       filterChain.doFilter(request, response);
@@ -42,15 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
     try {
       tokenIsValid = jwtProvider.validateToken(token);
     } catch (Exception e) {
-      SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
-      //Specific message related to authentication failure. Otherwise when wrong token
-      // no log is created by interceptor at all.
-      log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
-          request,
-          response,
-          SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
-          "Token validation error"
-      ));
+      cleanContextAndLogErrorMessage(request, response);
     }
     if (token != null && tokenIsValid) {
       String userLogin = jwtProvider.getLoginFromToken(token);
@@ -61,6 +52,18 @@ public class JwtFilter extends OncePerRequestFilter {
       log.info("Authenticated player: {}", customUserDetails.getUsername());
     }
     filterChain.doFilter(request, response);
+  }
+
+  private void cleanContextAndLogErrorMessage(HttpServletRequest request, HttpServletResponse response) {
+    SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
+    //Specific message related to authentication failure. Otherwise when wrong token
+    // no log is created by interceptor at all.
+    log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
+        request,
+        response,
+        SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
+        "Token validation error"
+    ));
   }
 
   private String getTokenFromServletRequest(HttpServletRequest servletRequest) {

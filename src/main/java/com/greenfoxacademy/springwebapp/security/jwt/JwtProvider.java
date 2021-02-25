@@ -27,9 +27,10 @@ public class JwtProvider {
     Date date = Date.from(LocalDate.now().plusDays(jwtExpireDays).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
         .setClaims(new HashMap<String, Object>() {{
-          put("username", playerEntity.getUsername());
-          put("kingdomId", playerEntity.getKingdom().getId());
-        }})
+            put("username", playerEntity.getUsername());
+            put("kingdomId", playerEntity.getKingdom().getId());
+          }
+        })
         .setExpiration(date)
         .signWith(SignatureAlgorithm.HS512, jwtSecret)
         .compact();
