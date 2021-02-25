@@ -70,14 +70,14 @@ public class ResourceServisTest {
 
     ResourceEntity resource = resourceService.findResourceBasedOnBuildingType(kingdom, BuildingType.ACADEMY);
 
-    Assert.assertEquals(null,resource);
+    Assert.assertNull(resource);
   }
 
   @Test
   public void calculateNewResourceGeneration_food_returnsCorrectGenerationAmount(){
     BuildingEntity buildingLevel5 = new BuildingEntity(5L,BuildingType.FARM,5,200,
         1L,2L);
-    ResourceEntity foodResource =  new ResourceEntity(1L, ResourceType.FOOD,100,
+    ResourceEntity foodResource = new ResourceEntity(1L, ResourceType.FOOD,100,
         50,1L, new KingdomEntity());
     Mockito.when(env.getProperty("resourceEntity.food")).thenReturn("5");
     Mockito.when(env.getProperty("resourceEntity.gold")).thenReturn("10");
@@ -91,7 +91,7 @@ public class ResourceServisTest {
   public void calculateNewResourceGeneration_gold_returnsCorrectGenerationAmount(){
     BuildingEntity buildingLevel5 = new BuildingEntity(5L,BuildingType.MINE,5,200,
         1L,2L);
-    ResourceEntity goldResource =  new ResourceEntity(1L, ResourceType.GOLD,100,
+    ResourceEntity goldResource = new ResourceEntity(1L, ResourceType.GOLD,100,
         50,1L, new KingdomEntity());
     Mockito.when(env.getProperty("resourceEntity.food")).thenReturn("5");
     Mockito.when(env.getProperty("resourceEntity.gold")).thenReturn("10");
@@ -113,5 +113,70 @@ public class ResourceServisTest {
 
     Assert.assertEquals(166, resourcesGenerated);
   }
+
+
+
+  @Test //version1 - using spy for impl class
+  public void updateResourceGeneration_Gold_ShouldReturnCorrectlyUpdatedResource_v1(){
+    resourceServiceImpl = Mockito.spy(new ResourceServiceImpl(resourceRepository, timeService, env));
+
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    BuildingEntity building = new BuildingEntity(10L,BuildingType.MINE,1,100,
+        9L,1029L);
+
+    //gold res. will have these values: amount=100, generation=100, updatedAt=999
+    ResourceEntity goldResourceToBeUpdated = kingdom.getResources().stream()
+        .filter(a -> a.getType().equals(ResourceType.GOLD))
+        .findFirst().get();
+
+    Mockito.doReturn(goldResourceToBeUpdated).when(resourceServiceImpl).findResourceBasedOnBuildingType(kingdom,BuildingType.MINE);
+    Mockito.doReturn(10).when(resourceServiceImpl).calculateNewResourceGeneration(goldResourceToBeUpdated,building);
+    Mockito.doReturn(50).when(resourceServiceImpl).calculateResourcesUntilBuildingIsFinished(building,goldResourceToBeUpdated);
+
+    Mockito.when(timeService.getTime()).thenReturn(1L);
+    Mockito.when(timeService.getTimeBetween(building.getFinishedAt(),1L)).thenReturn(0); //delay = 20s
+    Mockito.when(resourceRepository.findById(goldResourceToBeUpdated.getId())).thenReturn(
+        java.util.Optional.of(goldResourceToBeUpdated));
+
+    ResourceEntity updatedResource = resourceServiceImpl.updateResourceGeneration(kingdom,building);
+
+    Assert.assertEquals(10,updatedResource.getGeneration().intValue());
+  }
+
+
+
+/*  @Test //version2 - not using spy for impl class
+  public void updateResourceGeneration_Gold_ShouldReturnCorrectlyUpdatedResource_v2(){
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    BuildingEntity building = new BuildingEntity(10L,BuildingType.MINE,1,100,
+        9L,1029L);
+
+    //resourceToBeUpdated have these valuses: amount=100, generation=100, updatedAt=999
+    ResourceEntity resourceToBeUpdated = kingdom.getResources().stream()
+        .filter(a -> a.getType() == ResourceType.GOLD)
+        .findFirst().get();
+
+    Mockito.when(timeService.getTime()).thenReturn(1L);
+    Mockito.when(timeService.getTimeBetween(building.getFinishedAt(),1L)).thenReturn(20); //delay = 20s
+    Mockito.when(resourceRepository.findById(resourceToBeUpdated.getId())).thenReturn(
+        java.util.Optional.of(resourceToBeUpdated));
+
+    Mockito.when(env.getProperty("resourceEntity.food")).thenReturn("5");
+    Mockito.when(env.getProperty("resourceEntity.gold")).thenReturn("10");
+
+    //variable newResourceGeneration = 110
+    //variable resourceToBeUpdated =100
+    //variable generatedResourcesInMeantime = 100 + 1*10 + 10 = 120
+    //updatedResource: generation = 110, amount = 100+120 = 220, updatedAt = 1029L
+    ResourceEntity updatedResource = resourceServiceImpl.updateResourceGeneration(kingdom,building);
+
+    Assert.assertEquals(110,updatedResource.getGeneration().intValue());
+    Assert.assertEquals(220,updatedResource.getAmount().intValue());
+    Assert.assertEquals(1029,updatedResource.getUpdatedAt().intValue());
+  }*/
 
 }

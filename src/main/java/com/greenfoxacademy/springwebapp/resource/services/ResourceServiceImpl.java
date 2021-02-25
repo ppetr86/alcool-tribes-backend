@@ -47,45 +47,45 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building) {
-    //1.finding particular kingdom´s resource to be later updated
-    ResourceEntity resource = findResourceBasedOnBuildingType(kingdom,building.getType());
+    ResourceEntity resourceToBeUpdated = findResourceBasedOnBuildingType(kingdom,building.getType());
 
-    //2.calculating new resource generation value
-    Integer newResourceGeneration = calculateNewResourceGeneration(resource, building);
+    Integer newResourceGeneration = calculateNewResourceGeneration(resourceToBeUpdated, building);
 
-    //3.updating selected resource properties in Database in later time when building is finished
+    //updating selected resource properties in Database in later time when building is finished
     int delay = timeService.getTimeBetween(building.getFinishedAt(),timeService.getTime())*1000;
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
         //fetching most recent version of resource from DTB since resource could be updated before my method is actually run
-        ResourceEntity fetchedResource = resourceRepository.findById(resource.getId()).orElse(null);
-        log.info("Fetched resource ID: {} , type: {}", fetchedResource.getId(), fetchedResource.getType());
+        ResourceEntity fetchedResource = resourceRepository.findById(resourceToBeUpdated.getId()).orElse(null);
+        if (fetchedResource != null) {
+          log.info("Fetched resource ID: {} , type: {}", fetchedResource.getId(), fetchedResource.getType());
+        } else log.info("Respective resource was not found in database!");
 
         //calculating resources which were generated since last update of resource until new building is done/upgraded
         Integer generatedResourcesInMeantime = calculateResourcesUntilBuildingIsFinished(building, fetchedResource);
 
-        resource.setGeneration(newResourceGeneration);
-        resource.setAmount(resource.getAmount()+generatedResourcesInMeantime);
-        resource.setUpdatedAt(building.getFinishedAt());
-        resourceRepository.save(resource);
+        resourceToBeUpdated.setGeneration(newResourceGeneration);
+        resourceToBeUpdated.setAmount(resourceToBeUpdated.getAmount()+generatedResourcesInMeantime);
+        resourceToBeUpdated.setUpdatedAt(building.getFinishedAt());
+        resourceRepository.save(resourceToBeUpdated);
       }
     }, delay);
-    return resource;
+    return resourceToBeUpdated;
   }
 
   @Override
   public ResourceEntity findResourceBasedOnBuildingType(KingdomEntity kingdom, Enum buildingType) {
     ResourceEntity resource;
-    if(buildingType == BuildingType.FARM) {
+    if(buildingType.equals(BuildingType.FARM)) {
       resource = kingdom.getResources().stream()
-          .filter(a -> a.getType() == ResourceType.FOOD)
+          .filter(a -> a.getType().equals(ResourceType.FOOD))
           .findFirst()
           .orElse(null);
-    } else if (buildingType == BuildingType.MINE) {
+    } else if (buildingType.equals(BuildingType.MINE)) {
       resource = kingdom.getResources().stream()
-          .filter(a -> a.getType() == ResourceType.GOLD)
+          .filter(a -> a.getType().equals(ResourceType.GOLD))
           .findFirst()
           .orElse(null);
     } else return null;
@@ -94,15 +94,15 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   public Integer calculateNewResourceGeneration(ResourceEntity resource, BuildingEntity building) {
-    //distingushing food/gold in case the values differ in future
+    //distinguishing food/gold in case the values would differ in future
     Integer defaultFood = Integer.parseInt(env.getProperty("resourceEntity.food"));
     Integer defaultGold = Integer.parseInt(env.getProperty("resourceEntity.gold"));
 
-    if (resource.getType() == ResourceType.FOOD) {
+    if (resource.getType().equals(ResourceType.FOOD)) {
       return resource.getGeneration() + building.getLevel()*defaultFood + defaultFood;
     }
 
-    if (resource.getType() == ResourceType.GOLD) {
+    if (resource.getType().equals(ResourceType.GOLD)) {
       return resource.getGeneration() + building.getLevel()*defaultGold + defaultGold;
     }
 
@@ -115,7 +115,7 @@ public class ResourceServiceImpl implements ResourceService {
     Long finishedTime = building.getFinishedAt();
     int timeInSeconds = timeService.getTimeBetween(finishedTime, lastUpdateTime);
 
-    //amount of generated resource is calculated as double based on total time in seconds and rounded down to whole int at the end
+    //generated resources are calculated continuously, not based on predefined intervals (e.g. minute)
     double resourcesGenerated = (double)(timeInSeconds)/60*fetchedResource.getGeneration();
     return (int)resourcesGenerated;
   }
