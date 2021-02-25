@@ -53,11 +53,9 @@ public class TroopServiceTest {
   }
 
   @Test(expected = ForbiddenActionException.class)
-  public void createTroopThrowsForbiddenCustomException() {
+  public void createTroopThrowsForbiddenCustomException_BuildingIdExistsButDoesNotBelongToMyKingdom() {
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    // preparing kingdom with 1 building (e.g., academy, it could be anything),
-    // but  building has different id then requested building
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(2L, BuildingType.ACADEMY,1,1,1L,1L);
@@ -68,10 +66,9 @@ public class TroopServiceTest {
   }
 
   @Test(expected = InvalidAcademyIdException.class)
-  public void createTroopThrowsInvalidAcademyIdException() {
+  public void createTroopThrowsInvalidAcademyIdException_BuildingExistsButItIsNotAcademy() {
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    //preparing kingdom with building matching requested id, but it is not ACADEMY
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(1L, BuildingType.TOWNHALL,1,1,1L,1L);
@@ -131,10 +128,7 @@ public class TroopServiceTest {
   }
 
   @Test (expected = ForbiddenActionException.class)
-  public void getTroopThrowsForbiddenActionException() {
-    // requested troop has different ID from the troop in kingdom
-    // and requested troop ID exists in database, just is not in my kingdom
-
+  public void getTroopThrowsForbiddenActionException_TroopIdExistsButDoesNotBelongToMyKingdom() {
     TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
     TroopEntity fakeTroop2 = new TroopEntity(10L,100,200,300,400,10L,20L);
     KingdomEntity kingdom = new KingdomEntity();
@@ -142,24 +136,19 @@ public class TroopServiceTest {
     troops.add(fakeTroop);
     kingdom.setTroops(troops);
 
-    // it finds fakeTroop2 based on Id, but it does not belongs to my kingdom
     Mockito.when(troopRepository.findById(10L)).thenReturn(Optional.of(fakeTroop2));
 
     TroopEntityResponseDTO response = troopService.getTroop(kingdom,10L);
   }
 
   @Test (expected = IdNotFoundException.class)
-  public void getTroopThrowsIdNotFoundException() {
-    // requested troop has different ID from the troop in kingdom
-    // and requested troop ID does not exists in database
-
+  public void getTroopThrowsIdNotFoundException_TroopIdDoesNotExistsInDatabase() {
     TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
     KingdomEntity kingdom = new KingdomEntity();
     List<TroopEntity> troops = new ArrayList<>();
     troops.add(fakeTroop);
     kingdom.setTroops(troops);
 
-    // it doesnt find any troop based on set ID
     Mockito.when(troopRepository.findById(10L)).thenReturn(Optional.ofNullable(null));
 
     TroopEntityResponseDTO response = troopService.getTroop(kingdom,10L);
