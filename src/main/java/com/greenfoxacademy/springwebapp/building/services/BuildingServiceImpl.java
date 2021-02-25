@@ -91,7 +91,7 @@ public class BuildingServiceImpl implements BuildingService {
     result = save(result);
 
     //updating Resource Generation
-    if(result.getType() == BuildingType.FARM || result.getType() == BuildingType.MINE) {
+    if(result.getType().equals(BuildingType.FARM) || result.getType().equals(BuildingType.MINE)) {
       ResourceEntity updatedResource = resourceService.updateResourceGeneration(kingdom, result);
       if(updatedResource != null) {
         log.info("Resource %s with ID % was updated. Actual amount is %, actual generation is %",
