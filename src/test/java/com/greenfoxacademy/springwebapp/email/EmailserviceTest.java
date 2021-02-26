@@ -3,8 +3,10 @@ package com.greenfoxacademy.springwebapp.email;
 import com.greenfoxacademy.springwebapp.email.context.AbstractEmailContext;
 import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmailContext;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
+import com.greenfoxacademy.springwebapp.email.repository.RegistrationTokenRepository;
 import com.greenfoxacademy.springwebapp.email.services.EmailServiceImpl;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
+import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenServiceImpl;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -25,12 +27,15 @@ public class EmailserviceTest {
     private SpringTemplateEngine templateEngine;
     private EmailServiceImpl emailService;
     private RegistrationTokenService tokenService;
+    private RegistrationTokenRepository registrationTokenRepository;
 
     @Value("${site.base.url.https}")
     private String baseURL;
 
     @Before
     public void init(){
+        registrationTokenRepository = Mockito.mock(RegistrationTokenRepository.class);
+        tokenService = new RegistrationTokenServiceImpl(registrationTokenRepository);
         mailSender = Mockito.mock(JavaMailSender.class);
         templateEngine = Mockito.mock(SpringTemplateEngine.class);
         emailService = new EmailServiceImpl(mailSender,templateEngine);
