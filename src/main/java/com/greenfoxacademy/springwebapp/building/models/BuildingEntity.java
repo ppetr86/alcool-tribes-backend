@@ -42,10 +42,11 @@ public class BuildingEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
-  public BuildingEntity(KingdomEntity kingdom, BuildingType type, int level, Long startedAt, Long finishedAt) {
+  public BuildingEntity(KingdomEntity kingdom, BuildingType type, int level, int hp, Long startedAt, Long finishedAt) {
     this.type = type;
     this.level = level;
     this.kingdom = kingdom;
+    this.hp = hp;
     this.startedAt = startedAt;
     this.finishedAt = finishedAt;
   }
