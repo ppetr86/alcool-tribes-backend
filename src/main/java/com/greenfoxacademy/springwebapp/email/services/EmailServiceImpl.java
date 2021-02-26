@@ -43,8 +43,8 @@ public class EmailServiceImpl implements EmailService {
     mimeMessageHelper.setTo(email.getRecipientEmail());
     mimeMessageHelper.setSubject(email.getSubject());
     mimeMessageHelper.setFrom(email.getFrom());
-    mimeMessageHelper.setText(emailContent, true);
-    //mimeMessageHelper.setText(emailContent, mailBody);
+    //mimeMessageHelper.setText(emailContent, true);
+    mimeMessageHelper.setText(mailBody,emailContent);
     mailSender.send(message);
   }
 }
