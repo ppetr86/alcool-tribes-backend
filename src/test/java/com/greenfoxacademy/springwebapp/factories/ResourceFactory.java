@@ -14,16 +14,16 @@ public class ResourceFactory {
 
   public static List<ResourceEntity> createDefaultResources() {
     return Arrays.asList(
-            new ResourceEntity(1L, ResourceType.GOLD, null, null, null, null),
-            new ResourceEntity(2L, ResourceType.FOOD, null, null, null, null)
+        new ResourceEntity(1L, ResourceType.GOLD, null, null, null, null),
+        new ResourceEntity(2L, ResourceType.FOOD, null, null, null, null)
     );
   }
 
 
   public static List<ResourceEntity> createResourcesWithAllData(KingdomEntity kingdom) {
     return Arrays.asList(
-            new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom),
-            new ResourceEntity(2L, ResourceType.FOOD, 100, 100, 999L, kingdom)
+        new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom),
+        new ResourceEntity(2L, ResourceType.FOOD, 100, 100, 999L, kingdom)
     );
   }
 
