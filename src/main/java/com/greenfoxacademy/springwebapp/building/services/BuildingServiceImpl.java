@@ -95,7 +95,8 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
-        .map(type -> new BuildingEntity(kingdom, type, 1))
+        .map(type -> new BuildingEntity(kingdom, type, 1, timeService.getTime(),
+            timeService.getTime()))
         .collect(Collectors.toList());
   }
 

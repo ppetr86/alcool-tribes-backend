@@ -42,10 +42,12 @@ public class BuildingEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
-  public BuildingEntity(KingdomEntity kingdom, BuildingType type, int level) {
+  public BuildingEntity(KingdomEntity kingdom, BuildingType type, int level, Long startedAt, Long finishedAt) {
     this.type = type;
     this.level = level;
     this.kingdom = kingdom;
+    this.startedAt = startedAt;
+    this.finishedAt = finishedAt;
   }
 
   //constructor for tests building factory
