@@ -98,4 +98,34 @@ public class KingdomControllerIT {
         .andExpect(jsonPath("$.id", is(1)))
         .andExpect(jsonPath("$.name", is("New Kingdom")));
   }
+
+  @Test
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfTextIsEmpty() throws Exception{
+    KingdomNameDTO request = new KingdomNameDTO("");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(KingdomController.URI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message", is("Missing parameter(s): name!")));
+  }
+
+  @Test
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfRequestIsEmpty() throws Exception{
+    KingdomNameDTO request = new KingdomNameDTO();
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(KingdomController.URI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message", is("Missing parameter(s): name!")));
+  }
 }

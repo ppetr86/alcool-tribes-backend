@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.kingdom.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
@@ -59,6 +60,31 @@ public class KingdomServiceTest {
   @Test(expected = IdNotFoundException.class)
   public void entityToKingdomResponseDTO_throwsIDNotFoundException() {
     KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(null);
+  }
+
+  @Test(expected = MissingParameterException.class)
+  public void changeKingdomNameShouldReturnMissingParameterExceptionIfDTOIsNull(){
+    KingdomNameDTO nameDTO = new KingdomNameDTO();
+    List<BuildingEntity> fakeBuildings = new ArrayList<>();
+    List<TroopEntity> fakeTroops = new ArrayList<>();
+    List<ResourceEntity> fakeResources = new ArrayList<>();
+    PlayerEntity fakePlayer = new PlayerEntity(1L ,"test", "test", "test@gmail.com", "avatar.test", 0, null);
+    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources, new LocationEntity(1L, 10, 10));
+    kingdom.setKingdomName(nameDTO.getName());
+
+    KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, null);
+  }
+
+  @Test(expected = MissingParameterException.class)
+  public void changeKingdomNameShouldReturnMissingParameterExceptionIfDTOIsEmpty(){
+    KingdomNameDTO nameDTO = new KingdomNameDTO("");
+    List<BuildingEntity> fakeBuildings = new ArrayList<>();
+    List<TroopEntity> fakeTroops = new ArrayList<>();
+    List<ResourceEntity> fakeResources = new ArrayList<>();
+    PlayerEntity fakePlayer = new PlayerEntity(1L ,"test", "test", "test@gmail.com", "avatar.test", 0, null);
+    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources, new LocationEntity(1L, 10, 10));
+
+    KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
   }
 
   @Test

@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.services;
 
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
@@ -67,7 +68,8 @@ public class KingdomServiceImpl implements KingdomService {
   }
 
   @Override
-  public KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) {
+  public KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) throws MissingParameterException {
+    if (nameDTO==null || nameDTO.getName().isEmpty()) throw new MissingParameterException("name");
     kingdom.setKingdomName(nameDTO.getName());
     saveKingdom(kingdom);
     return convert(kingdom);

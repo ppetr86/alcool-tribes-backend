@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,5 @@ public interface KingdomService {
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);
 
-  KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
+  KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) throws MissingParameterException;
 }
