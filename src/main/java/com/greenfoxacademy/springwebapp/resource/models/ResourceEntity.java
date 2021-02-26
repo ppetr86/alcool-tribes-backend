@@ -26,12 +26,12 @@ public class ResourceEntity {
   @ManyToOne
   private KingdomEntity kingdom;
 
-  public ResourceEntity(KingdomEntity kingdomEntity, ResourceType type, Integer amount, Integer generation, Long updatedAt) {
+  public ResourceEntity(KingdomEntity kingdomEntity, ResourceType type, Integer amount, Integer generation,
+                        Long updatedAt) {
     this.kingdom = kingdomEntity;
     this.type = type;
     this.amount = amount;
     this.generation = generation;
     this.updatedAt = updatedAt;
   }
-
 }

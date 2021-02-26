@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.player.services;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,13 +16,14 @@ public class PlayerServiceTest {
   private PlayerRepository playerRepository;
   private PasswordEncoder passwordEncoder;
   private BuildingService buildingService;
+  private ResourceService resourceService;
 
   @Before
   public void setUp() {
     playerRepository = Mockito.mock(PlayerRepository.class);
     passwordEncoder = Mockito.mock(PasswordEncoder.class);
     buildingService = Mockito.mock(BuildingService.class);
-    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService);
+    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, resourceService);
   }
 
   @Test

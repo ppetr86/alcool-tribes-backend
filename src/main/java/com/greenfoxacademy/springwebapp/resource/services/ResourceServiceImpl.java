@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
+import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
@@ -16,7 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -34,6 +38,13 @@ public class ResourceServiceImpl implements ResourceService {
   public boolean hasResourcesForBuilding() {
     // TODO: hasResourcesForBuilding
     return false;
+  }
+
+  @Override
+  public List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity) {
+    return Arrays.stream(ResourceType.values())
+        .map(type -> new ResourceEntity(kingdomEntity, type, 100, 10, timeService.getTime()))
+        .collect(Collectors.toList());
   }
 
   @Override
