@@ -4,6 +4,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,17 +26,23 @@ public class EndpointsInterceptor extends HandlerInterceptorAdapter {
     String method = request.getMethod();
     String uri = request.getRequestURI();
     String params = request.getQueryString();
-    if(!hasText(params)) params = "NULL";
+    if (!hasText(params)) {
+      params = "NULL";
+    }
     String responseStatusCode = String.valueOf(response.getStatus());
     return String.format("HTTP Method: %s | URI: %s | Params: %s | Response Status Code: %s",
         method, uri, params, responseStatusCode);
   }
+
   //Specific message related to authentication failure. Otherwise when wrong token no log is created by interceptor at all.
-  public String buildSecurityErrorLogMessage(HttpServletRequest request, HttpServletResponse response, int statusCode, String text) {
+  public String buildSecurityErrorLogMessage(HttpServletRequest request, HttpServletResponse response, int statusCode,
+                                             String text) {
     String method = request.getMethod();
     String uri = request.getRequestURI();
     String params = request.getQueryString();
-    if(!hasText(params)) params = "NULL";
+    if (!hasText(params)) {
+      params = "NULL";
+    }
     String responseStatusCode = String.valueOf(response.getStatus());
     return String.format("HTTP Method: %s | URI: %s | Params: %s | Response Status Code: %s | Message: %s",
         method, uri, params, statusCode, text);
