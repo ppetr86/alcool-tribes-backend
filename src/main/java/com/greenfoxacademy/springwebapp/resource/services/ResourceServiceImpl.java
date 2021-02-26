@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
-import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
@@ -10,8 +9,6 @@ import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListRespons
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.repositories.ResourceRepository;
-import java.util.Timer;
-import java.util.TimerTask;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -19,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -62,27 +61,38 @@ public class ResourceServiceImpl implements ResourceService {
 
     Integer newResourceGeneration = calculateNewResourceGeneration(resourceToBeUpdated, building);
 
-    //updating selected resource properties in Database in later time when building is finished
-    int delay = timeService.getTimeBetween(building.getFinishedAt(),timeService.getTime())*1000;
+    //sheduling the update to later time (when building is actually finished)
+    int delay = timeService.getTimeBetween(timeService.getTime(),building.getFinishedAt())*1000;
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        //fetching most recent version of resource from DTB since resource could be updated before my method is actually run
-        ResourceEntity fetchedResource = resourceRepository.findById(resourceToBeUpdated.getId()).orElse(null);
-        if (fetchedResource != null) {
-          log.info("Fetched resource ID: {} , type: {}", fetchedResource.getId(), fetchedResource.getType());
-        } else log.info("Respective resource was not found in database!");
-
-        //calculating resources which were generated since last update of resource until new building is done/upgraded
-        Integer generatedResourcesInMeantime = calculateResourcesUntilBuildingIsFinished(building, fetchedResource);
-
-        resourceToBeUpdated.setGeneration(newResourceGeneration);
-        resourceToBeUpdated.setAmount(resourceToBeUpdated.getAmount()+generatedResourcesInMeantime);
-        resourceToBeUpdated.setUpdatedAt(building.getFinishedAt());
-        resourceRepository.save(resourceToBeUpdated);
+        ResourceEntity updatedResource = scheduledResourceUpdate(resourceToBeUpdated,
+            newResourceGeneration, building);
       }
     }, delay);
+    return resourceToBeUpdated;
+  }
+
+  private ResourceEntity scheduledResourceUpdate(ResourceEntity resourceToBeUpdated,
+                                                 Integer newResourceGeneration, BuildingEntity building) {
+    //fetching most recent version of resource from DTB since resource could be updated in meantime
+    ResourceEntity fetchedResource = resourceRepository.findById(resourceToBeUpdated.getId()).orElse(null);
+    if (fetchedResource == null) log.info("Respective resource was not found in database!");
+
+    Integer generatedResourcesInMeantime = calculateResourcesUntilBuildingIsFinished(building, fetchedResource);
+
+    resourceToBeUpdated.setGeneration(newResourceGeneration);
+    resourceToBeUpdated.setAmount(resourceToBeUpdated.getAmount()+generatedResourcesInMeantime);
+    resourceToBeUpdated.setUpdatedAt(building.getFinishedAt());
+    resourceRepository.save(resourceToBeUpdated);
+
+    log.info("Resource {} with ID {} was be updated. Actual amount is {}, actual generation is {}",
+        resourceToBeUpdated.getType(),
+        resourceToBeUpdated.getId(),
+        resourceToBeUpdated.getAmount(),
+        resourceToBeUpdated.getGeneration());
+
     return resourceToBeUpdated;
   }
 
@@ -124,9 +134,9 @@ public class ResourceServiceImpl implements ResourceService {
 
     Long lastUpdateTime = fetchedResource.getUpdatedAt();
     Long finishedTime = building.getFinishedAt();
-    int timeInSeconds = timeService.getTimeBetween(finishedTime, lastUpdateTime);
+    int timeInSeconds = timeService.getTimeBetween(lastUpdateTime, finishedTime);
 
-    //generated resources are calculated continuously, not based on predefined intervals (e.g. minute)
+    //note: generated resources are calculated continuously, not based on predefined intervals (e.g. minute)
     double resourcesGenerated = (double)(timeInSeconds)/60*fetchedResource.getGeneration();
     return (int)resourcesGenerated;
   }

@@ -90,18 +90,14 @@ public class BuildingServiceImpl implements BuildingService {
     result = defineHp(result);
     result.setLevel(1);
     result.setKingdom(kingdom);
-
     result = save(result);
 
     //updating Resource Generation
     if(result.getType().equals(BuildingType.FARM) || result.getType().equals(BuildingType.MINE)) {
-      ResourceEntity updatedResource = resourceService.updateResourceGeneration(kingdom, result);
-      if(updatedResource != null) {
-        log.info("Resource %s with ID % was updated. Actual amount is %, actual generation is %",
-            updatedResource.getType(),
-            updatedResource.getId(),
-            updatedResource.getAmount(),
-            updatedResource.getGeneration());
+      ResourceEntity resource = resourceService.updateResourceGeneration(kingdom, result);
+      if(resource != null) {
+        log.info("Resource {} with ID {} will be updated. Actual amount is {}, actual generation is {}",
+            resource.getType(), resource.getId(), resource.getAmount(), resource.getGeneration());
       } else log.warn("Resource generation was not updated when creating new building of type {}!", result.getType());
     }
 

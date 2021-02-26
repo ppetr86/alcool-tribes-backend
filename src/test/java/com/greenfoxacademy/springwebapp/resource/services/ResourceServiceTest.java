@@ -125,7 +125,7 @@ public class ResourceServiceTest {
         500L);
     ResourceEntity resource =  new ResourceEntity(1L, ResourceType.GOLD,100,50,
         300L, new KingdomEntity());
-    Mockito.when(timeService.getTimeBetween(500L,300L)).thenReturn(200);
+    Mockito.when(timeService.getTimeBetween(300L,500L)).thenReturn(200);
 
     int resourcesGenerated = resourceServiceImpl.calculateResourcesUntilBuildingIsFinished(building, resource);
 
@@ -161,7 +161,7 @@ public class ResourceServiceTest {
     Assert.assertEquals(10,updatedResource.getGeneration().intValue());
   }
 
-  /*  @Test //version2 - not using spy for impl class
+/*  @Test //version2 - not using spy for impl class
   public void updateResourceGeneration_Gold_ShouldReturnCorrectlyUpdatedResource_v2(){
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
@@ -175,7 +175,7 @@ public class ResourceServiceTest {
         .findFirst().get();
 
     Mockito.when(timeService.getTime()).thenReturn(1L);
-    Mockito.when(timeService.getTimeBetween(building.getFinishedAt(),1L)).thenReturn(20); //delay = 20s
+    Mockito.when(timeService.getTimeBetween(1L,building.getFinishedAt())).thenReturn(20); //delay = 20s
     Mockito.when(resourceRepository.findById(resourceToBeUpdated.getId())).thenReturn(
         java.util.Optional.of(resourceToBeUpdated));
 
