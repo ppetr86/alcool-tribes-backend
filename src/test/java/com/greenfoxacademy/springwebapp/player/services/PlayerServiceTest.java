@@ -31,8 +31,8 @@ public class PlayerServiceTest {
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
 
     Mockito
-            .when(playerRepository.findByUsername("Mark"))
-            .thenReturn(playerEntity);
+        .when(playerRepository.findByUsername("Mark"))
+        .thenReturn(playerEntity);
 
     PlayerEntity fakePlayer = playerService.findByUsername("Mark");
 
@@ -45,8 +45,8 @@ public class PlayerServiceTest {
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
 
     Mockito
-            .when(playerRepository.findByUsername("Mark"))
-            .thenReturn(playerEntity);
+        .when(playerRepository.findByUsername("Mark"))
+        .thenReturn(playerEntity);
 
     PlayerEntity fakePlayer = playerService.findByUsername("BadMark");
 
@@ -59,12 +59,12 @@ public class PlayerServiceTest {
     PlayerEntity playerEntity = new PlayerEntity("Petr", "petrpetr");
 
     Mockito
-            .when(playerService.findByUsername("Petr"))
-            .thenReturn(playerEntity);
+        .when(playerService.findByUsername("Petr"))
+        .thenReturn(playerEntity);
 
     Mockito
-            .when(passwordEncoder.matches("petrpetr", playerEntity.getPassword()))
-            .thenReturn(true);
+        .when(passwordEncoder.matches("petrpetr", playerEntity.getPassword()))
+        .thenReturn(true);
 
     PlayerEntity mockPlayer = playerService.findByUsernameAndPassword("Petr", "petrpetr");
 
@@ -80,12 +80,12 @@ public class PlayerServiceTest {
     PlayerEntity playerEntity = new PlayerEntity("Petr", "petrpetr");
 
     Mockito
-            .when(playerService.findByUsername("Petr"))
-            .thenReturn(playerEntity);
+        .when(playerService.findByUsername("Petr"))
+        .thenReturn(playerEntity);
 
     Mockito
-            .when(passwordEncoder.matches("petrpetr", playerEntity.getPassword()))
-            .thenReturn(true);
+        .when(passwordEncoder.matches("petrpetr", playerEntity.getPassword()))
+        .thenReturn(true);
 
     PlayerEntity mockPlayer = playerService.findByUsernameAndPassword("Petr", "badPassword");
 
@@ -97,12 +97,12 @@ public class PlayerServiceTest {
     PlayerEntity playerEntity = new PlayerEntity("Petr", "petrpetr");
 
     Mockito
-            .when(playerService.findByUsername("Petr"))
-            .thenReturn(playerEntity);
+        .when(playerService.findByUsername("Petr"))
+        .thenReturn(playerEntity);
 
     Mockito
-            .when(passwordEncoder.matches("petrpetr", playerEntity.getPassword()))
-            .thenReturn(true);
+        .when(passwordEncoder.matches("petrpetr", playerEntity.getPassword()))
+        .thenReturn(true);
 
     PlayerEntity mockPlayer = playerService.findByUsernameAndPassword("NoPetr", "petrpetr");
 
