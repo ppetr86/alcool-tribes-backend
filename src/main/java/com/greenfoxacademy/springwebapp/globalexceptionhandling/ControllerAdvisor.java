@@ -50,14 +50,19 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
             InvalidBuildingTypeException.class,
             TownhallLevelException.class,
             InvalidInputException.class,
-            InvalidAcademyIdException.class,
-            PasswordMissingOrTooShortException.class})
+            InvalidAcademyIdException.class})
     public ResponseEntity<ErrorDTO> handleExceptions(Exception ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler({NotEnoughResourceException.class, UsernameIsTakenException.class})
+    @ExceptionHandler( UsernameIsTakenException.class)
+    public ResponseEntity<ErrorDTO> handleExceptions(UsernameIsTakenException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotEnoughResourceException.class )
     public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
@@ -75,8 +80,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({IncorrectUsernameOrPwdException.class, NotVerifiedRegistrationException.class})
+    @ExceptionHandler(IncorrectUsernameOrPwdException.class )
     public ResponseEntity<ErrorDTO> handleExceptions(IncorrectUsernameOrPwdException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotVerifiedRegistrationException.class)
+    public ResponseEntity<ErrorDTO> handleExceptions(NotVerifiedRegistrationException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }

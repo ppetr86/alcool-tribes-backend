@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.email.services;
 
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.repository.RegistrationTokenRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class RegistrationTokenServiceImpl implements RegistrationTokenService {
 
   private static final BytesKeyGenerator DEFAULT_TOKEN_GENERATOR = KeyGenerators.secureRandom(15);
@@ -21,12 +23,11 @@ public class RegistrationTokenServiceImpl implements RegistrationTokenService {
   @Value("${jdj.secure.token.validity}")
   private int tokenValidityInSeconds;
 
-  @Autowired
-  RegistrationTokenRepository secureTokenRepository;
+  private final RegistrationTokenRepository secureTokenRepository;
 
   @Override
   public RegistrationTokenEntity createSecureToken(){
-    String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII); // this is a sample, you can adapt as per your security need
+    String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII);
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken(tokenValue);
     secureToken.setIsExpired(false);

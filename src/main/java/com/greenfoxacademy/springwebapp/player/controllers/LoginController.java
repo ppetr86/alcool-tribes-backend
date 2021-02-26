@@ -22,8 +22,6 @@ import javax.validation.Valid;
 public class LoginController {
 
   private final PlayerService playerService;
-  private final TokenService tokenService;
-
   public static final String URI = "login";
 
   @PostMapping

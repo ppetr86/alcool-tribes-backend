@@ -109,7 +109,7 @@ public class BuildingControllerIntegrationTest {
   }
 
   @Test
-  public void buildBuilding_EmptyInputV3_WhitespaceInputReturnsMissingType() throws Exception {
+  public void buildBuilding_EmptyInputV3_WhitespaceInputReturnsInvalidBuildingType() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("  ");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -118,9 +118,9 @@ public class BuildingControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json)
             .principal(authentication))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotAcceptable())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
+            .andExpect(jsonPath("$.message", is("Invalid building type")));
   }
 
   @Test

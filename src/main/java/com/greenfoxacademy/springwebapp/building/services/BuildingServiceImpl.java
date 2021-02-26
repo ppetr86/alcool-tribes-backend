@@ -82,6 +82,8 @@ public class BuildingServiceImpl implements BuildingService {
     if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
+    result.setKingdom(kingdom);
+    result.setLevel(1);
     result = defineFinishedAt(result);
     result = defineHp(result);
     result = save(result);

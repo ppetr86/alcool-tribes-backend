@@ -110,7 +110,7 @@ public class LoginControllerIT {
             .content(json))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.status", is("error")))
-            .andExpect(jsonPath("$.message", is("Username and password are required.")));
+            .andExpect(jsonPath("$.message", is("Password and username are required.")));
   }
 
   @Test

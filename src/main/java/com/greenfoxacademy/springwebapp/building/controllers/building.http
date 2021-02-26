@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDU3NDM2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.EbEppw_CfPvVhT7hz0Rs6GeQ33FmA_uyc13lE9BQbprhgkyA8qrVejSNfUptj3mC2a5oaeXrZXbDZ4oFAfemcg
 
 {
-  "type": ""
+  "type": "academy"
 }
 
 ### Get buildings
