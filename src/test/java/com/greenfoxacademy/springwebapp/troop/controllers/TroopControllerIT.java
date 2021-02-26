@@ -80,7 +80,6 @@ public class TroopControllerIT {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
-    //creation of Level10 academy and its injection into Kingdom
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity academy =
