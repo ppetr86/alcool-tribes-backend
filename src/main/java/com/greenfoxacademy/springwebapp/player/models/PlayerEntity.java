@@ -35,9 +35,9 @@ public class PlayerEntity {
   @Column(name = "email")
   private String email;
   @Column(name = "avatar")
-  private String avatar;
-  @Column(name = "points", columnDefinition = "integer default 0")
-  private Integer points;
+  private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
+  @Column(name = "points")
+  private Integer points = 0; //TODO: need to have proper point logic
 
   @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
   private KingdomEntity kingdom;

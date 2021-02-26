@@ -8,6 +8,4 @@ public interface EmailService {
 
   void sendMailWithHtmlAndPlainText(final AbstractEmailContext email) throws MessagingException;
 
-  void sendTextEmail(AbstractEmailContext email)throws MessagingException ;
-
   }

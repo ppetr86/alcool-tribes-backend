@@ -22,28 +22,6 @@ public class EmailServiceImpl implements EmailService {
   private final SpringTemplateEngine templateEngine;
 
   @Override
-  public void sendTextEmail(AbstractEmailContext email) throws MessagingException {
-
-    SimpleMailMessage message = new SimpleMailMessage();
-
-    String mailBody = "Welcome " + email.getUsername() + "!\n\n" +
-            email.getKingdomName() + " is ready! You just need to confirm your email address\n" +
-            "and then you are ready to conquer the world :)\n" +
-            " Please confirm your email address by opening the following url: \n" +
-            email.getContext().get("verificationURL") + "\n\n" +
-            "Confirm Email Address\n\n" +
-            " — The Tribes Team\n";
-
-    message.setTo(email.getRecipientEmail());
-    message.setFrom(email.getSenderEmail());
-    message.setReplyTo(email.getSenderEmail());
-    message.setSentDate(Calendar.getInstance().getTime());
-    message.setSubject(email.getSubject());
-    message.setText(mailBody);
-    mailSender.send(message);
-  }
-
-  @Override
   public void sendMailWithHtmlAndPlainText(AbstractEmailContext email) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,
@@ -65,8 +43,8 @@ public class EmailServiceImpl implements EmailService {
     mimeMessageHelper.setTo(email.getRecipientEmail());
     mimeMessageHelper.setSubject(email.getSubject());
     mimeMessageHelper.setFrom(email.getFrom());
-    //mimeMessageHelper.setText(emailContent, true);
-    mimeMessageHelper.setText(emailContent, mailBody);
+    mimeMessageHelper.setText(emailContent, true);
+    //mimeMessageHelper.setText(emailContent, mailBody);
     mailSender.send(message);
   }
 }
