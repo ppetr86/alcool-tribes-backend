@@ -37,22 +37,19 @@ public class LoginControllerUnitTest {
   public void postLoginShouldReturn200AndOkStatus() throws Exception {
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
     PlayerTokenDTO fakePlayerDto = new PlayerTokenDTO("12345");
-    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "markmark");
-
-    String username = playerRequestDTO.getUsername();
-    String password = playerRequestDTO.getPassword();
+    PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "markmark");
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
     Mockito
-        .when(tokenService.generateTokenToLoggedInPlayer(playerRequestDTO))
+        .when(tokenService.generateTokenToLoggedInPlayer(requestDTO))
         .thenReturn(fakePlayerDto);
 
     Mockito
-        .when(playerService.findByUsernameAndPassword(username, password))
+        .when(playerService.findByUsernameAndPassword(requestDTO.getUsername(), requestDTO.getPassword()))
         .thenReturn(playerEntity);
 
-    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
+    ResponseEntity<?> response = loginController.login(requestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assert.assertEquals("ok", ((PlayerTokenDTO) response.getBody()).getStatus());
@@ -129,18 +126,16 @@ public class LoginControllerUnitTest {
   @Test
   public void postLoginShould401ErrorStatusAndUsernameOrPasswordIsIncorrectMessageBecauseWrongUsername()
       throws Exception {
-    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("BadMark", "markmark");
+    PlayerRequestDTO requestDTO = new PlayerRequestDTO("BadMark", "markmark");
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
-    String username = playerEntity.getUsername();
-    String password = playerEntity.getPassword();
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
     Mockito
-        .when(playerService.findByUsernameAndPassword(username, password))
+        .when(playerService.findByUsernameAndPassword(requestDTO.getUsername(), requestDTO.getPassword()))
         .thenReturn(playerEntity);
 
-    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
+    ResponseEntity<?> response = loginController.login(requestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Username or password is incorrect.", ((ErrorDTO) response.getBody()).getMessage());
@@ -150,18 +145,16 @@ public class LoginControllerUnitTest {
   public void postLoginShould401ErrorStatusAndUsernameOrPasswordIsIncorrectMessageBecauseWrongPassword()
       throws Exception {
 
-    PlayerRequestDTO playerRequestDTO = new PlayerRequestDTO("Mark", "badPassword");
+    PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "badPassword");
     PlayerEntity playerEntity = new PlayerEntity("Mark", "markmark");
-    String username = playerEntity.getUsername();
-    String password = playerEntity.getPassword();
 
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
     Mockito
-        .when(playerService.findByUsernameAndPassword(username, password))
+        .when(playerService.findByUsernameAndPassword(requestDTO.getUsername(), requestDTO.getPassword()))
         .thenReturn(playerEntity);
 
-    ResponseEntity<?> response = loginController.login(playerRequestDTO, bindingResult);
+    ResponseEntity<?> response = loginController.login(requestDTO, bindingResult);
 
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Username or password is incorrect.", ((ErrorDTO) response.getBody()).getMessage());

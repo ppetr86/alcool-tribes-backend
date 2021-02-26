@@ -77,8 +77,7 @@ public class TroopControllerIT {
   public void createTroopWithCorrectBuildingId_level10Academy_createsLevel10troop()
       throws Exception {
     TroopRequestDTO request = new TroopRequestDTO(1L);
-    ObjectMapper mapper = new ObjectMapper();
-    String json = mapper.writeValueAsString(request);
+    String json = new ObjectMapper().writeValueAsString(request);
 
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     List<BuildingEntity> buildings = new ArrayList<>();
