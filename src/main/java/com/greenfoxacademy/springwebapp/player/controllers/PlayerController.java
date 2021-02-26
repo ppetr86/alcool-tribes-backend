@@ -35,16 +35,16 @@ public class PlayerController {
       PlayerResponseDTO responsePlayerEntity = playerService.saveNewPlayer(playerRegistrationRequestDTO);
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(responsePlayerEntity);
     } else if (playerRegistrationRequestDTO.getUsername() == null &&
-            playerRegistrationRequestDTO.getPassword() == null) {
+        playerRegistrationRequestDTO.getPassword() == null) {
       return ResponseEntity.status(HttpStatus.valueOf(400))
-              .body(new ErrorDTO("Username and password are required."));
+          .body(new ErrorDTO("Username and password are required."));
     } else if (playerRegistrationRequestDTO.getPassword() == null ||
-            playerRegistrationRequestDTO.getPassword().length() < 8) {
+        playerRegistrationRequestDTO.getPassword().length() < 8) {
       return ResponseEntity.status(HttpStatus.valueOf(406))
-              .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
+          .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
     }
 
     return ResponseEntity.status(HttpStatus.valueOf(400))
-            .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
+        .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
   }
 }
