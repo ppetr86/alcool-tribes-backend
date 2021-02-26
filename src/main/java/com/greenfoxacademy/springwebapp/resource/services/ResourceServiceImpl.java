@@ -74,7 +74,7 @@ public class ResourceServiceImpl implements ResourceService {
     return resourceToBeUpdated;
   }
 
-  private ResourceEntity scheduledResourceUpdate(ResourceEntity resourceToBeUpdated,
+  public ResourceEntity scheduledResourceUpdate(ResourceEntity resourceToBeUpdated,
                                                  Integer newResourceGeneration, BuildingEntity building) {
     //fetching most recent version of resource from DTB since resource could be updated in meantime
     ResourceEntity fetchedResource = resourceRepository.findById(resourceToBeUpdated.getId()).orElse(null);
