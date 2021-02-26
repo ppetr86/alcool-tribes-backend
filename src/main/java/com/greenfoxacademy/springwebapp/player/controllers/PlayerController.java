@@ -7,6 +7,7 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequest
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -48,6 +49,6 @@ public class PlayerController {
     // combine it with Binding result
     // if you dont combine, default messages will be displayed and exception thrown automatically
     PlayerEntity newRegistration = playerService.registerNewPlayer(request);
-    return ResponseEntity.ok(playerService.playerToResponseDTO(newRegistration));
+    return ResponseEntity.status(HttpStatus.CREATED).body(playerService.playerToResponseDTO(newRegistration));
   }
 }

@@ -84,7 +84,7 @@ public class PlayerServiceImpl implements PlayerService {
     if (existsByUsername(request.getUsername())) throw new UsernameIsTakenException();
 
     PlayerEntity savedPlayer = saveNewPlayer(request);
-    boolean mailWasSent;
+    boolean mailWasSent = false;
     if (!request.getEmail().isEmpty())
       mailWasSent = sendRegistrationConfirmationEmail(savedPlayer);
     return savedPlayer;

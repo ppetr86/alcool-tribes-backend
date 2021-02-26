@@ -4,10 +4,10 @@ DELETE FROM kingdoms;
 DELETE FROM locations;
 DELETE FROM players;
 
-INSERT INTO players (id, avatar, email, password, points, username)
-VALUES (1, 'http://avatar.loc/my.png', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0, 'furkesz');
-INSERT INTO players (id, username, email, password, points)
-VALUES (100, 'occupied_username', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0);
+INSERT INTO players (id, avatar, email, password, points, username, is_account_verified)
+VALUES (1, 'http://avatar.loc/my.png', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0, 'furkesz', true);
+INSERT INTO players (id, username, email, password, points, is_account_verified)
+VALUES (100, 'occupied_username', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0, true);
 
 INSERT INTO locations (id, x, y)
 VALUES (1, 10, 10);

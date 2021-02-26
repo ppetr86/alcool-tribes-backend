@@ -17,8 +17,6 @@ public class PlayerRegisterRequestDTO {
 
   private long id;
   @NotBlank(message = "Username is required.")
-  @Size(min = 5, message = "Username has to be at least 5 characters.")
-  // TODO: need to have at least 5 chars but can be modified since it's not requested.
   private String username;
 
   @NotBlank(message = "Password is required.")
