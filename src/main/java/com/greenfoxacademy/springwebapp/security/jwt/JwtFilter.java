@@ -1,18 +1,19 @@
 package com.greenfoxacademy.springwebapp.security.jwt;
 
-import com.greenfoxacademy.springwebapp.player.services.PlayerService;
-
 import com.greenfoxacademy.springwebapp.configuration.logconfig.EndpointsInterceptor;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetailsService;
 import com.greenfoxacademy.springwebapp.security.SecurityConfig;
+
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import lombok.AllArgsConstructor;
+
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
     String token = getTokenFromServletRequest(request);
     Boolean tokenIsValid = false;
 
-    try{
+    try {
       tokenIsValid = jwtProvider.validateToken(token);
     } catch (Exception e) {
       SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
@@ -60,7 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
       String userLogin = jwtProvider.getLoginFromToken(token);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
-              null, customUserDetails.getAuthorities());
+          null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
       log.info("Authenticated player: {}", customUserDetails.getUsername());
     }
@@ -68,9 +69,9 @@ public class JwtFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private String getTokenFromServletRequest(HttpServletRequest servletRequest){
+  private String getTokenFromServletRequest(HttpServletRequest servletRequest) {
     String bearerToken = servletRequest.getHeader(AUTHORIZATION);
-    if (bearerToken.startsWith("Bearer ")){
+    if (bearerToken.startsWith("Bearer ")) {
       return bearerToken.substring(7);
     }
     return null;

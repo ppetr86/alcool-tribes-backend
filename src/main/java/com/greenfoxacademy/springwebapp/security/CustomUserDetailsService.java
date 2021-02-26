@@ -1,7 +1,5 @@
 package com.greenfoxacademy.springwebapp.security;
 
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,7 @@ public class CustomUserDetailsService implements UserDetailsService {
   @Override
   public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     PlayerEntity player = playerService.findByUsername(username);
-    if(player == null){
+    if (player == null) {
       throw new UsernameNotFoundException("Player with username " + username + " was not found!");
     }
     return CustomUserDetails.fromPlayerToCustomUserDetails(player);
