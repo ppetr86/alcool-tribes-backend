@@ -15,6 +15,7 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,7 @@ public class PlayerServiceTest {
   private RegistrationTokenService registrationTokenService;
   private TokenService tokenService;
   private AccountVerificationEmailContext accountVerification;
+  private ResourceService resourceService;
 
   @Before
   public void setUp() {
@@ -45,7 +47,8 @@ public class PlayerServiceTest {
     emailService = Mockito.mock(EmailService.class);
     registrationTokenService = Mockito.mock(RegistrationTokenService.class);
     tokenService = Mockito.mock(TokenService.class);
-    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService, registrationTokenService, tokenService);
+    resourceService = Mockito.mock(ResourceService.class);
+    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService, registrationTokenService, tokenService,resourceService);
   }
 
   @Test

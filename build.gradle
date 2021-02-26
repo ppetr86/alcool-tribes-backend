@@ -1,3 +1,4 @@
+
 plugins {
     id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -46,6 +47,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    implementation 'org.flywaydb:flyway-core'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit:4.12'

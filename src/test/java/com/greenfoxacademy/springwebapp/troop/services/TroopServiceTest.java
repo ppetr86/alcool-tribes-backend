@@ -4,7 +4,8 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -16,6 +17,7 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.repositories.TroopRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,13 +52,10 @@ public class TroopServiceTest {
     Assert.assertEquals(101, (long) result.getTroops().get(0).getFinishedAt());
   }
 
-  @Test(expected = ForbiddenCustomException.class)
-  public void createTroopThrowsForbiddenCustomException() {
-    //preparing requestDTO
+  @Test(expected = ForbiddenActionException.class)
+  public void createTroopThrowsForbiddenCustomException_BuildingIdExistsButDoesNotBelongToMyKingdom() {
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    //preparing kingdom with 1 building (e.g., academy, it could be anything),
-    // but  building has different id then requested building
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(2L, BuildingType.ACADEMY,1,1,1L,1L);
@@ -67,11 +66,9 @@ public class TroopServiceTest {
   }
 
   @Test(expected = InvalidAcademyIdException.class)
-  public void createTroopThrowsInvalidAcademyIdException() {
-    //preparing requestDTO
+  public void createTroopThrowsInvalidAcademyIdException_BuildingExistsButItIsNotAcademy() {
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    //preparing kingdom with building matching requested id, but it is not ACADEMY
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(1L, BuildingType.TOWNHALL,1,1,1L,1L);
@@ -83,10 +80,8 @@ public class TroopServiceTest {
 
   @Test(expected = NotEnoughResourceException.class)
   public void createTroopThrowsNotEnoughResourceException() {
-    //preparing requestDTO
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    //preparing kingdom with matching ACADEMY
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY,1,1,1L,1L);
@@ -101,17 +96,14 @@ public class TroopServiceTest {
 
   @Test
   public void createTroopReturnsLevel1CreatedTroopAsDTO() {
-    //preparing requestDTO
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    //preparing kingdom with matching ACADEMY
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY,1,1,1L,1L);
     buildings.add(building);
     kingdom.setBuildings(buildings);
 
-    //preparing fake troop
     TroopEntity fakeTroop = new TroopEntity(1, 20, 10, 5, 1L, 30L, kingdom);
 
     Mockito.when(env.getProperty("troop.hp")).thenReturn("20");
@@ -133,6 +125,51 @@ public class TroopServiceTest {
     Assert.assertEquals(5, response.getDefence());
     Assert.assertEquals(1, response.getStartedAt());
     Assert.assertEquals(30, response.getFinishedAt());
-
   }
+
+  @Test (expected = ForbiddenActionException.class)
+  public void getTroopThrowsForbiddenActionException_TroopIdExistsButDoesNotBelongToMyKingdom() {
+    TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
+    TroopEntity fakeTroop2 = new TroopEntity(10L,100,200,300,400,10L,20L);
+    KingdomEntity kingdom = new KingdomEntity();
+    List<TroopEntity> troops = new ArrayList<>();
+    troops.add(fakeTroop);
+    kingdom.setTroops(troops);
+
+    Mockito.when(troopRepository.findById(10L)).thenReturn(Optional.of(fakeTroop2));
+
+    TroopEntityResponseDTO response = troopService.getTroop(kingdom,10L);
+  }
+
+  @Test (expected = IdNotFoundException.class)
+  public void getTroopThrowsIdNotFoundException_TroopIdDoesNotExistsInDatabase() {
+    TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
+    KingdomEntity kingdom = new KingdomEntity();
+    List<TroopEntity> troops = new ArrayList<>();
+    troops.add(fakeTroop);
+    kingdom.setTroops(troops);
+
+    Mockito.when(troopRepository.findById(10L)).thenReturn(Optional.ofNullable(null));
+
+    TroopEntityResponseDTO response = troopService.getTroop(kingdom,10L);
+  }
+
+  @Test
+  public void getTroopReturnsCorrectTroopEntityResponseDTO() {
+    TroopEntity fakeTroop = new TroopEntity(1L,10,20,30,40,1L,2L);
+
+    KingdomEntity kingdom = new KingdomEntity();
+    List<TroopEntity> troops = new ArrayList<>();
+    troops.add(fakeTroop);
+    kingdom.setTroops(troops);
+
+    Mockito.when(troopRepository.findById(1L)).thenReturn(Optional.of(fakeTroop));
+
+    TroopEntityResponseDTO response = troopService.getTroop(kingdom,1L);
+
+    Assert.assertEquals(1L, response.getId().longValue());
+    Assert.assertEquals(10, response.getLevel());
+    Assert.assertEquals(40, response.getDefence());
+  }
+
 }

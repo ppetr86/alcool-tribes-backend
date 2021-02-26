@@ -13,3 +13,22 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDU3NDM2MDAsImtpbmdkb21JZ
 {
   "buildingId": 3
 }
+
+### Zdenek:
+### Get kingdom troop - Ok troop
+
+GET http://localhost:8080/kingdom/troops/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDQ5NjYwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJ6ZGVuZWsifQ.3T3ob1vgDZH2ohKTCJk_qPaURKTxcOFtv2mQTwR5vmala80t9pcgj_ITtD6bQxRrzIBbLFbH56nOTe11KwvZoA
+Accept: application/json
+
+### Get kingdom troop - forbiddenException
+
+GET http://localhost:8080/kingdom/troops/6
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDQ5NjYwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJ6ZGVuZWsifQ.3T3ob1vgDZH2ohKTCJk_qPaURKTxcOFtv2mQTwR5vmala80t9pcgj_ITtD6bQxRrzIBbLFbH56nOTe11KwvZoA
+Accept: application/json
+
+### Get kingdom troop - IdNotFoundException
+
+GET http://localhost:8080/kingdom/troops/100
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDQ5NjYwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJ6ZGVuZWsifQ.3T3ob1vgDZH2ohKTCJk_qPaURKTxcOFtv2mQTwR5vmala80t9pcgj_ITtD6bQxRrzIBbLFbH56nOTe11KwvZoA
+Accept: application/json

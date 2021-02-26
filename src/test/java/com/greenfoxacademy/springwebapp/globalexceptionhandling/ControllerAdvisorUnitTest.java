@@ -48,7 +48,7 @@ public class ControllerAdvisorUnitTest {
 
   @Test
   public void forbiddenCustomException_ReturnsUFORBIDDENandCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new ForbiddenCustomException());
+    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new ForbiddenActionException());
     Assert.assertEquals(HttpStatus.valueOf(403), result.getStatusCode());
     Assert.assertEquals("Forbidden action.", result.getBody().getMessage());
   }

@@ -56,13 +56,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler( UsernameIsTakenException.class)
+    @ExceptionHandler(UsernameIsTakenException.class)
     public ResponseEntity<ErrorDTO> handleExceptions(UsernameIsTakenException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(NotEnoughResourceException.class )
+    @ExceptionHandler(NotEnoughResourceException.class)
     public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
@@ -74,13 +74,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ForbiddenCustomException.class)
-    public ResponseEntity<ErrorDTO> handleExceptions(ForbiddenCustomException ex) {
+    @ExceptionHandler(ForbiddenActionException.class)
+    public ResponseEntity<ErrorDTO> handleExceptions(ForbiddenActionException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(IncorrectUsernameOrPwdException.class )
+    @ExceptionHandler(IncorrectUsernameOrPwdException.class)
     public ResponseEntity<ErrorDTO> handleExceptions(IncorrectUsernameOrPwdException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.UNAUTHORIZED);

@@ -18,6 +18,8 @@ public class KingdomFactory {
     kingdom.setId(kingdomID);
 
     PlayerEntity pl = PlayerFactory.createPlayer(userID, kingdom);
+    pl.setUsername("testUsername");
+    pl.setEmail("test@mail.com");
     kingdom.setPlayer(pl);
 
     kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
