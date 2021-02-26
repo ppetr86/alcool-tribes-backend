@@ -86,6 +86,8 @@ public class BuildingServiceImpl implements BuildingService {
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
     result = defineHp(result);
+    result.setLevel(1);
+    result.setKingdom(kingdom);
     result = save(result);
     return result;
   }
