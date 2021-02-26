@@ -27,23 +27,21 @@ public class PlayerController {
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegistrationRequestDTO playerRegistrationRequestDTO,
                                         BindingResult bindingResult) {
     List<ObjectError> errorList = bindingResult.getAllErrors();
-
     if (errorList.isEmpty()) {
       if (playerService.findByUsername(playerRegistrationRequestDTO.getUsername()) != null) {
         return ResponseEntity.status(HttpStatus.valueOf(409)).body(new ErrorDTO("Username is already taken."));
       }
       PlayerResponseDTO responsePlayerEntity = playerService.saveNewPlayer(playerRegistrationRequestDTO);
       return ResponseEntity.status(HttpStatus.valueOf(201)).body(responsePlayerEntity);
-    } else if (playerRegistrationRequestDTO.getUsername() == null &&
-        playerRegistrationRequestDTO.getPassword() == null) {
+    } else if (playerRegistrationRequestDTO.getUsername() == null
+        && playerRegistrationRequestDTO.getPassword() == null) {
       return ResponseEntity.status(HttpStatus.valueOf(400))
           .body(new ErrorDTO("Username and password are required."));
-    } else if (playerRegistrationRequestDTO.getPassword() == null ||
-        playerRegistrationRequestDTO.getPassword().length() < 8) {
+    } else if (playerRegistrationRequestDTO.getPassword() == null
+        || playerRegistrationRequestDTO.getPassword().length() < 8) {
       return ResponseEntity.status(HttpStatus.valueOf(406))
           .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
     }
-
     return ResponseEntity.status(HttpStatus.valueOf(400))
         .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
   }

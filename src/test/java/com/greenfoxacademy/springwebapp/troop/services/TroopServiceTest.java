@@ -81,13 +81,12 @@ public class TroopServiceTest {
 
   @Test(expected = NotEnoughResourceException.class)
   public void createTroopThrowsNotEnoughResourceException() {
-    TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
-
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY, 1, 1, 1L, 1L);
     buildings.add(building);
     kingdom.setBuildings(buildings);
+    TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(false);
     // TODO: after resources are defined, this method will be updated, so test should be updated as well
@@ -97,8 +96,6 @@ public class TroopServiceTest {
 
   @Test
   public void createTroopReturnsLevel1CreatedTroopAsDTO() {
-    TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
-
     KingdomEntity kingdom = new KingdomEntity();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY, 1, 1, 1L, 1L);
@@ -106,6 +103,7 @@ public class TroopServiceTest {
     kingdom.setBuildings(buildings);
 
     TroopEntity fakeTroop = new TroopEntity(1, 20, 10, 5, 1L, 30L, kingdom);
+    TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
     Mockito.when(env.getProperty("troop.hp")).thenReturn("20");
     Mockito.when(env.getProperty("troop.food")).thenReturn("-5");

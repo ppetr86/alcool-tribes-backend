@@ -71,7 +71,7 @@ public class TroopControllerTest {
         .map(TroopEntityResponseDTO::new)
         .collect(Collectors.toList());
 
-    Mockito.when(troopService.troopsToListDTO(KingdomFactory.createKingdomEntityWithId(1l)))
+    Mockito.when(troopService.troopsToListDTO(KingdomFactory.createKingdomEntityWithId(1L)))
         .thenReturn(new TroopListResponseDto(list));
 
     ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));

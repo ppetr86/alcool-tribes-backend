@@ -33,8 +33,8 @@ public class LoginController {
     List<ObjectError> errorList = bindingResult.getAllErrors();
 
     if (errorList.isEmpty()) {
-      if (playerService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword()) !=
-          null) {
+      if (playerService.findByUsernameAndPassword(playerRequestDTO.getUsername(), playerRequestDTO.getPassword())
+          != null) {
         PlayerTokenDTO playerTokenDTO = tokenService.generateTokenToLoggedInPlayer(playerRequestDTO);
         return ResponseEntity.ok().body(playerTokenDTO);
       } else {
