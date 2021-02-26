@@ -11,4 +11,6 @@ public interface TroopRepository extends JpaRepository<TroopEntity, Long> {
 
   TroopEntity findTroopEntityByKingdomId(Long kingdomEntity);
 
+  TroopEntity findTroopEntityById(Long troopId);
+
 }

@@ -74,16 +74,17 @@ public class TroopServiceImpl implements TroopService {
   }
 
   @Override
-  public TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) throws
+  public TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO,
+                                                 Long troopId) throws
       MissingParameterException, ForbiddenCustomException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException {
     BuildingEntity academy = findAcademy(kingdomEntity, requestDTO);
 
-    if (requestDTO.getBuildingId().toString().isEmpty()) {
+    if (requestDTO.getBuildingId() == null || requestDTO.getBuildingId() == 0 || requestDTO.getBuildingId().toString().isEmpty()) {
       throw new MissingParameterException("buildingId");
     }
 
-    TroopEntity existingTroop = troopRepository.findTroopEntityByKingdomId(kingdomEntity.getId());
+    TroopEntity existingTroop = troopRepository.findTroopEntityById(troopId);
 
     if (academy == null && !existingTroop.getKingdom().equals(kingdomEntity)) {
       throw new ForbiddenCustomException();
@@ -105,13 +106,14 @@ public class TroopServiceImpl implements TroopService {
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
 
-    TroopEntity troopEntity = troopRepository.findTroopEntityByKingdomId(kingdomEntity.getId());
+    TroopEntity troopEntity = troopRepository.findTroopEntityById(troopId);
+    if (troopRepository.findTroopEntityByKingdomId(troopEntity.getKingdom().getId()) != null){
+      troopEntity.setLevel(troopLevel);
+      troopEntity.setStartedAt(startedAt);
+      troopEntity.setFinishedAt(finishedAt);
 
-    troopEntity.setLevel(troopLevel);
-    troopEntity.setStartedAt(startedAt);
-    troopEntity.setFinishedAt(finishedAt);
-
-    troopRepository.save(troopEntity);
+      troopRepository.save(troopEntity);
+    }
 
     return new TroopEntityResponseDTO(troopEntity);
   }

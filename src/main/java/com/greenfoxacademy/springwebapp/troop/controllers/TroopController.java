@@ -52,12 +52,13 @@ public class TroopController {
 
   @PutMapping("/{troopId}")
   public ResponseEntity<?> updateTroops(@PathVariable Long troopId, Authentication authentication,
-                                        @RequestBody @Valid TroopRequestDTO requestDTO) throws
+                                        @RequestBody TroopRequestDTO requestDTO) throws
       MissingParameterException, ForbiddenCustomException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException {
+
     KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
-    TroopEntityResponseDTO responseDTO = troopService.updateTroopLevel(kingdomEntity, requestDTO);
+    TroopEntityResponseDTO responseDTO = troopService.updateTroopLevel(kingdomEntity, requestDTO, troopId);
 
     return ResponseEntity.ok(responseDTO);
   }

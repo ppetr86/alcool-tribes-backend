@@ -18,7 +18,10 @@ public interface TroopService {
   TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
       ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException;
 
-  TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) throws
+  TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO,
+                                          Long troopId) throws
       MissingParameterException, ForbiddenCustomException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException;
+
+
 }
