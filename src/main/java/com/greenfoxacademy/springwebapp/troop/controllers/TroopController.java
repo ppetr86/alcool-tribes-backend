@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenCustomException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidBuildingTypeException;
@@ -41,7 +41,7 @@ public class TroopController {
 
   @PostMapping
   public ResponseEntity<?> createTroop(@RequestBody @Valid TroopRequestDTO requestDTO, Authentication auth)
-      throws ForbiddenCustomException, InvalidAcademyIdException, NotEnoughResourceException {
+      throws ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
@@ -53,13 +53,21 @@ public class TroopController {
   @PutMapping("/{troopId}")
   public ResponseEntity<?> updateTroops(@PathVariable Long troopId, Authentication authentication,
                                         @RequestBody TroopRequestDTO requestDTO) throws
-      MissingParameterException, ForbiddenCustomException, IdNotFoundException,
+      MissingParameterException, ForbiddenActionException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException {
 
     KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
     TroopEntityResponseDTO responseDTO = troopService.updateTroopLevel(kingdomEntity, requestDTO, troopId);
+    return ResponseEntity.ok(responseDTO);
+  }
+  
+  @GetMapping ("/{id}")
+  public ResponseEntity<?> returnTroop(@PathVariable("id") Long troopId, Authentication auth)
+      throws ForbiddenActionException, IdNotFoundException {
 
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    TroopEntityResponseDTO responseDTO = troopService.getTroop(kingdom, troopId);
     return ResponseEntity.ok(responseDTO);
   }
 }
