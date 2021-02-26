@@ -61,8 +61,8 @@ public class TroopController {
     TroopEntityResponseDTO responseDTO = troopService.updateTroopLevel(kingdomEntity, requestDTO, troopId);
     return ResponseEntity.ok(responseDTO);
   }
-  
-  @GetMapping ("/{id}")
+
+  @GetMapping("/{id}")
   public ResponseEntity<?> returnTroop(@PathVariable("id") Long troopId, Authentication auth)
       throws ForbiddenActionException, IdNotFoundException {
 
