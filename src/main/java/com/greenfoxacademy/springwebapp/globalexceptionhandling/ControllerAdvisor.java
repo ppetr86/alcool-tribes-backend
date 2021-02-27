@@ -23,7 +23,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                                                                   HttpStatus status, WebRequest request) {
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-
         if (errors.size() > 1) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < errors.size(); i++) {
@@ -31,9 +30,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                     sb.append(errors.get(i).getField().substring(0, 1).toUpperCase());
                     sb.append(errors.get(i).getField().substring(1)).append(" and ");
                 } else {
-                    sb.append(errors.get(i).getField());
-                    if (i < errors.size() - 1) sb.append(" and ");
-                    else sb.append(" are required.");
+                    String msgCurrent = errors.get(i).getDefaultMessage();
+                    if (!sb.toString().contains(msgCurrent.substring(0, msgCurrent.indexOf(" ")))) {
+                        sb.append(errors.get(i).getField());
+                        if (i < errors.size() - 1) sb.append(" and ");
+                        else sb.append(" are required.");
+                    }
                 }
             }
             return new ResponseEntity<>(new ErrorDTO(sb.toString()), HttpStatus.BAD_REQUEST);
