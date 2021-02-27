@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class PlayerRegisterRequestDTO {
 
-  private long id;
   @NotBlank(message = "Username is required.")
   private String username;
 

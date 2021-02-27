@@ -1,11 +1,11 @@
 package com.greenfoxacademy.springwebapp.email.services;
 
-import com.greenfoxacademy.springwebapp.email.context.AbstractEmailContext;
+import com.greenfoxacademy.springwebapp.email.context.AbstractEmail;
 
 import javax.mail.MessagingException;
 
 public interface EmailService {
 
-  void sendMailWithHtmlAndPlainText(final AbstractEmailContext email) throws MessagingException;
+  void sendMailWithHtmlAndPlainText(final AbstractEmail email) throws MessagingException;
 
   }

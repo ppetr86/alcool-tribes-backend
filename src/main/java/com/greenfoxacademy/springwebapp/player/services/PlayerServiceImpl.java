@@ -2,7 +2,7 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmailContext;
+import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
@@ -17,7 +17,6 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -52,18 +51,19 @@ public class PlayerServiceImpl implements PlayerService {
         kingdom.setBuildings(defaultBuildings);
 
         PlayerEntity player = new PlayerEntity();
-        BeanUtils.copyProperties(dto, player);
+        player.setEmail(dto.getEmail());
+        player.setUsername(dto.getUsername());
         player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        List<ResourceEntity> defaultResources = resourceService.createDefaultResources(kingdom);
-        kingdom.setResources(defaultResources);
+        kingdom.setResources(resourceService.createDefaultResources(kingdom));
 
         player.setKingdom(kingdom);
         player.setIsAccountVerified(false);
         kingdom.setPlayer(player);
 
-        playerRepo.saveAndFlush(player);
-        return playerRepo.findByUsername(player.getUsername());
+        player = playerRepo.save(player);
+        System.out.println(player.getId() + "DDDDDDDDDDDDDDDDDDDDDDDD");
+        return player;
     }
 
     private KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
@@ -125,7 +125,7 @@ public class PlayerServiceImpl implements PlayerService {
         token.setPlayer(player);
         registrationTokenService.saveSecureToken(token);
 
-        AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
+        AccountVerificationEmail emailContext = new AccountVerificationEmail();
         emailContext.init(player);
         emailContext.setToken(token.getToken());
         emailContext.buildVerificationUrl(baseURL, token.getToken());
@@ -149,11 +149,6 @@ public class PlayerServiceImpl implements PlayerService {
             }
         }
         return null;
-    }
-
-    @Override
-    public boolean findIsVerified(String username) {
-        return playerRepo.isVerifiedUsername(username);
     }
 
     @Override

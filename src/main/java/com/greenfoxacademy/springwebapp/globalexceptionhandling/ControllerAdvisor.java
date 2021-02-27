@@ -24,6 +24,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
         if (errors.size() > 1) {
+            //filter by the annotation type
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < errors.size(); i++) {
                 if (i == 0) {

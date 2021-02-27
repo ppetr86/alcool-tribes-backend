@@ -1,8 +1,7 @@
 package com.greenfoxacademy.springwebapp.email.services;
 
-import com.greenfoxacademy.springwebapp.email.context.AbstractEmailContext;
+import com.greenfoxacademy.springwebapp.email.context.AbstractEmail;
 import lombok.AllArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
 
 @Service("emailService")
 @AllArgsConstructor
@@ -22,8 +20,9 @@ public class EmailServiceImpl implements EmailService {
   private final SpringTemplateEngine templateEngine;
 
   @Override
-  public void sendMailWithHtmlAndPlainText(AbstractEmailContext email) throws MessagingException {
+  public void sendMailWithHtmlAndPlainText(AbstractEmail email) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
+
     MimeMessageHelper helper = new MimeMessageHelper(message,
             MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
             StandardCharsets.UTF_8.name());
@@ -31,7 +30,6 @@ public class EmailServiceImpl implements EmailService {
     context.setVariables(email.getContext());
 
     String htmlMail = templateEngine.process(email.getTemplateLocation(), context);
-
     String textMail = "Welcome " + email.getUsername() + "!\n\n" +
             email.getKingdomName() + " is ready! You just need to confirm your email address\n" +
             "and then you are ready to conquer the world :)\n" +
@@ -42,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
 
     helper.setTo(email.getRecipientEmail());
     helper.setSubject(email.getSubject());
-    helper.setFrom(email.getFrom());
+    helper.setFrom(email.getSenderEmail());
     helper.setText(textMail,htmlMail);
     mailSender.send(message);
   }

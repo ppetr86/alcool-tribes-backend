@@ -9,11 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class RegistrationTokenServiceTest {
-
-    @Value("${jdj.secure.token.validity}")
-    private int tokenValidityInSeconds;
 
     private RegistrationTokenService tokenService;
     private RegistrationTokenRepository tokenRepository;
@@ -22,15 +23,15 @@ public class RegistrationTokenServiceTest {
     public void init() {
         tokenRepository = Mockito.mock(RegistrationTokenRepository.class);
         tokenService = new RegistrationTokenServiceImpl(tokenRepository);
+        ReflectionTestUtils.setField(tokenService, "tokenValidityInSeconds", 86400);
     }
 
     @Test
-    public void createSecureTokenReturnsToken() {
+    public void createSecureToken_ReturnsToken() {
         RegistrationTokenEntity te = tokenService.createSecureToken();
-        //te.setTimeStamp(Timestamp.valueOf(LocalDateTime.now()));
-        Mockito.when(tokenRepository.save(te)).thenReturn(null);
+        te.setTimeStamp(Timestamp.valueOf(LocalDateTime.now()));
         Assert.assertFalse(te.getIsExpired());
-        //Assert.assertTrue(LocalDateTime.now().isBefore(te.getExpireAt()));
+        Assert.assertTrue(LocalDateTime.now().isBefore(te.getExpireAt()));
         Assert.assertEquals(20, te.getToken().length());
         //why is my key len 20 when defined is 15???
         //why the time related doesnt  work??

@@ -8,30 +8,26 @@ import java.util.Map;
 
 @Getter
 @Setter
-public abstract class AbstractEmailContext {
+public abstract class AbstractEmail {
 
-    private String from;
     private String recipientEmail;
     private String subject;
     private String senderEmail;
     private String senderDisplayName;
-    private String emailLanguage;
     private String username;
     private String templateLocation;
-    private String kingdomName;
     private Map<String, Object> context;
 
 
-    public AbstractEmailContext() {
+    public AbstractEmail() {
         this.context = new HashMap<>();
     }
 
-    public <T> void init(T context){
-        //we can do any common configuration setup here
-        // like setting up some base URL and context
+    public <T> void init(T context) {
     }
 
     public Object put(String key, Object value) {
-        return key ==null ? null : this.context.put(key.intern(),value);
+
+        return key == null ? null : this.context.put(key.intern(), value);
     }
 }

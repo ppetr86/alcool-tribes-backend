@@ -20,8 +20,6 @@ public interface PlayerService {
 
   PlayerEntity findByUsernameAndPassword(String username, String password);
 
-  boolean findIsVerified(String username);
-
   boolean sendRegistrationConfirmationEmail(final PlayerEntity user);
 
   boolean verifyUser(final String token) throws InvalidTokenException;

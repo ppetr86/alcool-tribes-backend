@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmailContext;
+import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
@@ -35,12 +35,12 @@ public class PlayerServiceTest {
   private EmailService emailService;
   private RegistrationTokenService registrationTokenService;
   private TokenService tokenService;
-  private AccountVerificationEmailContext accountVerification;
+  private AccountVerificationEmail accountVerification;
   private ResourceService resourceService;
 
   @Before
   public void setUp() {
-    accountVerification = Mockito.mock(AccountVerificationEmailContext.class);
+    accountVerification = Mockito.mock(AccountVerificationEmail.class);
     playerRepository = Mockito.mock(PlayerRepository.class);
     passwordEncoder = Mockito.mock(PasswordEncoder.class);
     buildingService = Mockito.mock(BuildingService.class);
@@ -173,7 +173,7 @@ public class PlayerServiceTest {
     PlayerEntity pl = ke.getPlayer();
     pl.setIsAccountVerified(false);
     pl.setUsername("Dezo");
-    AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
+    AccountVerificationEmail emailContext = new AccountVerificationEmail();
     emailContext.init(pl);
     emailContext.setToken(secureToken.getToken());
     emailContext.buildVerificationUrl("http://localhost:8080", secureToken.getToken());
@@ -197,7 +197,7 @@ public class PlayerServiceTest {
     pl.setIsAccountVerified(false);
     pl.setUsername("Dezo");
 
-    AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
+    AccountVerificationEmail emailContext = new AccountVerificationEmail();
     emailContext.init(pl);
     emailContext.setToken(secureToken.getToken());
 
