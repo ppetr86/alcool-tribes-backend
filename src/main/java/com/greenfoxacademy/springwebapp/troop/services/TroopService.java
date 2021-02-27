@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.troop.services;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
@@ -29,5 +28,4 @@ public interface TroopService {
 
   TroopEntity findTroopById(Long id);
 
-  BuildingEntity findAcademy(KingdomEntity Kingdom, TroopRequestDTO requestDTO);
 }

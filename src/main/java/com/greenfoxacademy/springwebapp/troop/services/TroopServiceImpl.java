@@ -125,8 +125,7 @@ public class TroopServiceImpl implements TroopService {
     return Integer.parseInt(env.getProperty(propertyName));
   }
 
-  @Override
-  public BuildingEntity findAcademy(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) {
+  private BuildingEntity findAcademy(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) {
     return kingdomEntity.getBuildings().stream()
         .filter(building -> building.getId().equals(requestDTO.getBuildingId()))
         .findFirst()
