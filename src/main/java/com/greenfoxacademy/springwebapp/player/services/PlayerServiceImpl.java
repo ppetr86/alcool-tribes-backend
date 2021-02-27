@@ -11,6 +11,8 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenExce
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
@@ -40,9 +42,23 @@ public class PlayerServiceImpl implements PlayerService {
     private final RegistrationTokenService registrationTokenService;
     private final TokenService tokenService;
     private final ResourceService resourceService;
+    private final LocationService locationService;
 
     @Value("${site.base.url.https}")
     private String baseURL;
+
+    @Override
+    public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
+        throws UsernameIsTakenException {
+
+        if (existsByUsername(request.getUsername())) throw new UsernameIsTakenException();
+
+        PlayerEntity savedPlayer = saveNewPlayer(request);
+        boolean mailWasSent = false;
+        if (!request.getEmail().isEmpty())
+            mailWasSent = sendRegistrationConfirmationEmail(savedPlayer);
+        return savedPlayer;
+    }
 
     @Override
     public PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO dto) {
@@ -56,6 +72,10 @@ public class PlayerServiceImpl implements PlayerService {
         player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         kingdom.setResources(resourceService.createDefaultResources(kingdom));
+        //TODO: location has to be implemented... this is only to satisfy SQL NON NULL
+        LocationEntity defaultLocation = new LocationEntity(1L,10,10);
+        locationService.save(defaultLocation);
+        kingdom.setLocation(defaultLocation);
 
         player.setKingdom(kingdom);
         player.setIsAccountVerified(false);
@@ -63,6 +83,26 @@ public class PlayerServiceImpl implements PlayerService {
 
         player = playerRepo.save(player);
         return player;
+    }
+
+    @Override
+    public boolean sendRegistrationConfirmationEmail(PlayerEntity player) {
+        RegistrationTokenEntity token = registrationTokenService.createSecureToken(player);
+        token.setPlayer(player);
+        registrationTokenService.saveSecureToken(token);
+
+        AccountVerificationEmail emailContext = new AccountVerificationEmail();
+        emailContext.init(player);
+        emailContext.setToken(token.getToken());
+        emailContext.buildVerificationUrl(baseURL, token.getToken());
+
+        try {
+            emailService.sendMailWithHtmlAndPlainText(emailContext);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
@@ -83,18 +123,7 @@ public class PlayerServiceImpl implements PlayerService {
         return responseDTO;
     }
 
-    @Override
-    public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
-            throws UsernameIsTakenException {
 
-        if (existsByUsername(request.getUsername())) throw new UsernameIsTakenException();
-
-        PlayerEntity savedPlayer = saveNewPlayer(request);
-        boolean mailWasSent = false;
-        if (!request.getEmail().isEmpty())
-            mailWasSent = sendRegistrationConfirmationEmail(savedPlayer);
-        return savedPlayer;
-    }
 
     @Override
     public PlayerTokenDTO loginPlayer(PlayerRequestDTO request) throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
@@ -116,26 +145,6 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public boolean existsByUsername(String username) {
         return playerRepo.existsByUsername(username);
-    }
-
-    @Override
-    public boolean sendRegistrationConfirmationEmail(PlayerEntity player) {
-        RegistrationTokenEntity token = registrationTokenService.createSecureToken();
-        token.setPlayer(player);
-        registrationTokenService.saveSecureToken(token);
-
-        AccountVerificationEmail emailContext = new AccountVerificationEmail();
-        emailContext.init(player);
-        emailContext.setToken(token.getToken());
-        emailContext.buildVerificationUrl(baseURL, token.getToken());
-
-        try {
-            emailService.sendMailWithHtmlAndPlainText(emailContext);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
     @Override

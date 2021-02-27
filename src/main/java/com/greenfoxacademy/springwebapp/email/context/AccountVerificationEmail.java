@@ -10,7 +10,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AccountVerificationEmail extends AbstractEmail {
 
   private String token;
-  private String kingdomName;
 
   @Override
   public <T> void init(T context) {

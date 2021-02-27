@@ -3,21 +3,24 @@ package com.greenfoxacademy.springwebapp.player.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-<<<<<<< HEAD
-import javax.persistence.*;
-import java.util.Set;
-=======
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
->>>>>>> development
+import java.util.Set;
 
 @Entity
 @Getter
@@ -67,8 +70,8 @@ public class PlayerEntity {
   @Override
   public String toString() {
     return "username='" + username + '\'' +
-            ", password='" + password + '\'' +
-            ", email='" + email + '\'' +
-            ", points=" + points;
+        ", password='" + password + '\'' +
+        ", email='" + email + '\'' +
+        ", points=" + points;
   }
 }

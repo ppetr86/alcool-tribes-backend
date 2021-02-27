@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.email.services;
 
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.repository.RegistrationTokenRepository;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,13 @@ public class RegistrationTokenServiceImpl implements RegistrationTokenService {
   private final RegistrationTokenRepository secureTokenRepository;
 
   @Override
-  public RegistrationTokenEntity createSecureToken(){
+  public RegistrationTokenEntity createSecureToken(PlayerEntity player){
     String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII);
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken(tokenValue);
     secureToken.setIsExpired(false);
     secureToken.setExpireAt(LocalDateTime.now().plusSeconds(getTokenValidityInSeconds()));
+    secureToken.setPlayer(player);
     this.saveSecureToken(secureToken);
     return secureToken;
   }

@@ -48,7 +48,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
       if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters.")) {
           return new ResponseEntity<>(new ErrorDTO("Password must be 8 characters."), HttpStatus.NOT_ACCEPTABLE);
       }
-
     //covers for missing type, password required, username required
     return new ResponseEntity<>(new ErrorDTO(errors.get(0).getDefaultMessage()), HttpStatus.BAD_REQUEST);
   }

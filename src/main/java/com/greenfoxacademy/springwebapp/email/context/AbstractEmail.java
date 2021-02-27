@@ -17,7 +17,7 @@ public abstract class AbstractEmail {
     private String username;
     private String templateLocation;
     private Map<String, Object> context;
-
+    private String kingdomName;
 
     public AbstractEmail() {
         this.context = new HashMap<>();
