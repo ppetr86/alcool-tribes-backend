@@ -22,6 +22,8 @@ public class TimeServiceImpl implements TimeService {
   public int getTimeBetween(long from, long to) {
     if (to > from) {
       return (int) (to - from);
-    } else return 0;
+    } else {
+      return 0;
+    }
   }
 }

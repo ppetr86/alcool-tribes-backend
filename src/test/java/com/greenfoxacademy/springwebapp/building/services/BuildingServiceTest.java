@@ -12,9 +12,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BuildingServiceTest {
 
   private BuildingService buildingService;
@@ -30,22 +27,22 @@ public class BuildingServiceTest {
     buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
 
     Mockito.when(env.getProperty("building.townhall.buildingTime"))
-            .thenReturn("120");
+        .thenReturn("120");
     Mockito.when(env.getProperty("building.farm.buildingTime"))
-            .thenReturn("60");
+        .thenReturn("60");
     Mockito.when(env.getProperty("building.mine.buildingTime"))
-            .thenReturn("60");
+        .thenReturn("60");
     Mockito.when(env.getProperty("building.academy.buildingTime"))
-            .thenReturn("90");
+        .thenReturn("90");
 
     Mockito.when(env.getProperty("building.townhall.hp"))
-            .thenReturn("200");
+        .thenReturn("200");
     Mockito.when(env.getProperty("building.farm.hp"))
-            .thenReturn("100");
+        .thenReturn("100");
     Mockito.when(env.getProperty("building.mine.hp"))
-            .thenReturn("100");
+        .thenReturn("100");
     Mockito.when(env.getProperty("building.academy.hp"))
-            .thenReturn("150");
+        .thenReturn("150");
 
     Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(BuildingFactory.createBuildings(null));
   }
@@ -106,7 +103,7 @@ public class BuildingServiceTest {
   public void defineHP_Mine() {
     BuildingEntity b = BuildingFactory.createBuildings(null).get(3);
     buildingService.defineHp(b);
-    Assert.assertEquals(100,  b.getHp().longValue());
+    Assert.assertEquals(100, b.getHp().longValue());
   }
 
   @Test
@@ -144,12 +141,12 @@ public class BuildingServiceTest {
   @Test
   public void isTypeOkRequest_Mine_ShouldTrue_LowerCase() {
     Assert.assertEquals(BuildingType.MINE,
-            buildingService.setBuildingTypeOnEntity("mine").getType());
+        buildingService.setBuildingTypeOnEntity("mine").getType());
   }
 
   @Test
   public void isTypeOkRequest_Academy_ShouldTrue_VariousCase() {
     Assert.assertEquals(BuildingType.ACADEMY,
-            buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
+        buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
   }
 }

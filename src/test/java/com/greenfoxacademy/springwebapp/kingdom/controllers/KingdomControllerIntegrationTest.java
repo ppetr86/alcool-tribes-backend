@@ -44,24 +44,24 @@ public class KingdomControllerIntegrationTest {
   @Test
   public void getKingdomID_returns200_andCorrectResultsWhenExistingKingdom() throws Exception {
 
-    mockMvc.perform(get(KingdomController.URI+ "/{id}", 1))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id", is(1)))
-            .andExpect(jsonPath("$.name", is("furkesz's kingdom")))
-            .andExpect(jsonPath("$.userId", is(1)))
-            .andExpect(jsonPath("$.buildings.[0].type", is("townhall")))
-            .andExpect(jsonPath("$.resources.[0].type", is("food")))
-            .andExpect(jsonPath("$.troops.[0].level", is(1)))
-            .andExpect(jsonPath("$.location.x", is(10)));
+    mockMvc.perform(get(KingdomController.URI + "/{id}", 1))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.id", is(1)))
+        .andExpect(jsonPath("$.name", is("furkesz's kingdom")))
+        .andExpect(jsonPath("$.userId", is(1)))
+        .andExpect(jsonPath("$.buildings.[0].type", is("townhall")))
+        .andExpect(jsonPath("$.resources.[0].type", is("food")))
+        .andExpect(jsonPath("$.troops.[0].level", is(1)))
+        .andExpect(jsonPath("$.location.x", is(10)));
   }
 
   @Test
   public void getKingdomID_returns404WhenNotExistingKingdom() throws Exception {
     mockMvc.perform(get("/kingdom/{id}", 1111))
-            .andExpect(status().isNotFound())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", is("Id not found")));
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message", is("Id not found")));
   }
 
   @Test
