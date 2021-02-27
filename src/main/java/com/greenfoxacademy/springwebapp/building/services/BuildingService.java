@@ -25,10 +25,8 @@ public interface BuildingService {
 
   BuildingEntity findBuildingById(Long id);
 
-  String checkBuildingDetails(KingdomEntity kingdomEntity, Long id, BuildingLevelDTO levelDTO)
-    throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
-
-  BuildingEntity updateBuilding(Long id, BuildingLevelDTO levelDTO);
+  BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
 
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 

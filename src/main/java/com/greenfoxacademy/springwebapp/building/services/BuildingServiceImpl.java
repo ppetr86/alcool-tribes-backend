@@ -51,35 +51,12 @@ public class BuildingServiceImpl implements BuildingService {
     return repo.findById(id).orElse(null);
   }
 
-  @Override
-  public String checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO request)
-    throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
-
-    BuildingEntity townHall = kingdom.getBuildings().stream()
-      .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
-      .findFirst()
-      .get();
-
-    BuildingEntity building = findBuildingById(id);
-
-    if (building == null) {
-      throw new IdNotFoundException();
-    } else if (request == null || request.getLevel() == 0) {
-      throw new MissingParameterException("level");
-    } else if (!resourceService.hasResourcesForBuilding()) {
-      throw new NotEnoughResourceException();
-    } else if (building.getType() == townHall.getType()) {
-      return "townhall";
-    } else if (townHall.getLevel() < request.getLevel()) {
-      throw new TownhallLevelException();
-    } else {
-      return "building details";
-    }
-  }
 
   @Override
-  public BuildingEntity updateBuilding(Long id, BuildingLevelDTO levelDTO) {
-    BuildingEntity building = findBuildingById(id);
+  public BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException{
+
+    BuildingEntity building = checkBuildingDetails(kingdom, id, levelDTO);
 
     if (building.getType().equals(BuildingType.TOWNHALL)) {
       building.setLevel(levelDTO.getLevel());
@@ -99,6 +76,31 @@ public class BuildingServiceImpl implements BuildingService {
       building.setStartedAt(timeService.getTime());
       building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 60));
       return repo.save(building);
+    }
+  }
+
+  private BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+    throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
+
+    BuildingEntity townHall = kingdom.getBuildings().stream()
+      .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
+      .findFirst()
+      .get();
+
+    BuildingEntity building = findBuildingById(id);
+
+    if (building == null) {
+      throw new IdNotFoundException();
+    } else if (levelDTO == null || levelDTO.getLevel() == 0) {
+      throw new MissingParameterException("level");
+    } else if (!resourceService.hasResourcesForBuilding()) {
+      throw new NotEnoughResourceException();
+    } else if (building.getType() == townHall.getType()) {
+      return building;
+    } else if (townHall.getLevel() < levelDTO.getLevel()) {
+      throw new TownhallLevelException();
+    } else {
+      return building;
     }
   }
 

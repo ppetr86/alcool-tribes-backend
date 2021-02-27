@@ -8,7 +8,6 @@ import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Assert;
@@ -82,7 +81,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingRepository.findById(3L)).thenReturn(null);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 3L, level)).thenThrow(IdNotFoundException.class);
+    Mockito.when(buildingService.updateBuilding(kingdom, 3L, level)).thenThrow(IdNotFoundException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(3L, authentication, level);
 
@@ -103,7 +102,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenThrow(MissingParameterException.class);
+    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenThrow(MissingParameterException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 
@@ -124,7 +123,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenThrow(TownhallLevelException.class);
+    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenThrow(TownhallLevelException.class);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 
@@ -145,7 +144,7 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenThrow(NotEnoughResourceException.class);
+    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenThrow(NotEnoughResourceException.class);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
@@ -167,12 +166,12 @@ public class BuildingControllerTest {
     kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
-    Mockito.when(buildingService.checkBuildingDetails(kingdom, 1L, level)).thenReturn("building details");
+    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenReturn(building);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     building.setLevel(3);
     building.setStartedAt(100L);
     building.setFinishedAt(280L);
-    Mockito.when(buildingService.updateBuilding(1L, level)).thenReturn(building);
+    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenReturn(building);
 
     ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
 

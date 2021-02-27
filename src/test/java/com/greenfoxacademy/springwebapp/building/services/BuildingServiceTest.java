@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -20,6 +21,7 @@ import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class BuildingServiceTest {
 
@@ -162,178 +164,78 @@ public class BuildingServiceTest {
       buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
   }
 
-  @Test(expected = IdNotFoundException.class)
-  public void checkBuildingDetailsShouldReturnIdNotFoundException(){
-    KingdomEntity kingdom = new KingdomEntity();
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      townHall,
-      building
-    );
-    kingdom.setBuildings(fakeList);
 
-    //TODO: have to modify hasResourcesForBuilding method
-    Mockito.when(buildingRepository.findById(4L)).thenReturn(java.util.Optional.empty());
+
+  @Test
+  public void updateBuildingShouldReturnWithUpdatedTownHall(){
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setBuildings(BuildingFactory.createDefaultBuildings());
+    BuildingEntity townHall = kingdom.getBuildings().get(0);
+
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(townHall));
+    Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
-    String response = buildingService.checkBuildingDetails(kingdom, 4L, new BuildingLevelDTO(3));
-  }
+    buildingService.updateBuilding(kingdom, 1L, new BuildingLevelDTO(4));
 
-  @Test(expected = MissingParameterException.class)
-  public void checkBuildingDetailsShouldReturnMissingHpAndFinishedAtParametersException(){
-    KingdomEntity kingdom = new KingdomEntity();
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 10, 3000L, 4000L, kingdom);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      townHall,
-      building
-    );
-    kingdom.setBuildings(fakeList);
-
-    //TODO: have to modify hasResourcesForBuilding method
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
-
-    String response = buildingService.checkBuildingDetails(kingdom, 1L, null);
-
-    Assert.assertEquals("Missing parameter(s): level!", response);
-  }
-
-  @Test(expected = NotEnoughResourceException.class)
-  public void checkBuildingDetailsShouldReturnNowEnoughResourceException(){
-    KingdomEntity kingdom = new KingdomEntity();
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      townHall,
-      building
-    );
-    kingdom.setBuildings(fakeList);
-
-    //TODO: have to modify hasResourcesForBuilding method
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
-
-    String response = buildingService.checkBuildingDetails(kingdom, 1L, new BuildingLevelDTO(2));
+    Assert.assertEquals(Optional.of(4), Optional.ofNullable(townHall.getLevel()));
+    Assert.assertEquals(Optional.of(800), Optional.ofNullable(townHall.getHp()));
+    Assert.assertEquals(Optional.of(1060L), Optional.ofNullable(townHall.getStartedAt()));
+    Assert.assertEquals(Optional.of(1540L), Optional.ofNullable(townHall.getFinishedAt()));
   }
 
   @Test
-  public void checkBuildingDetailsShouldReturnOkAndTownHall(){
+  public void updateBuildingShouldReturnWithUpdatedAcademy(){
     KingdomEntity kingdom = new KingdomEntity();
-    BuildingEntity townHall = new BuildingEntity(1L, BuildingType.TOWNHALL, 5, 100, 3000L, 4000L, kingdom);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
+    BuildingEntity academy = kingdom.getBuildings().get(1);
 
-    //TODO: have to modify hasResourcesForBuilding method
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(townHall));
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(java.util.Optional.of(academy));
+    Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
-    String result = buildingService.checkBuildingDetails(kingdom, 1L, new BuildingLevelDTO(10));
+    buildingService.updateBuilding(kingdom, 2L, new BuildingLevelDTO(3));
 
-    Assert.assertEquals("townhall", result);
+    Assert.assertEquals(java.util.Optional.of(3), java.util.Optional.ofNullable(academy.getLevel()));
+    Assert.assertEquals(java.util.Optional.of(450), java.util.Optional.ofNullable(academy.getHp()));
+    Assert.assertEquals(java.util.Optional.of(1060L), java.util.Optional.ofNullable(academy.getStartedAt()));
+    Assert.assertEquals(java.util.Optional.of(1330L), java.util.Optional.ofNullable(academy.getFinishedAt()));
   }
 
-  @Test(expected = TownhallLevelException.class)
-  public void checkBuildingDetailsShouldReturnTownHallException(){
+  @Test
+  public void updateBuildingShouldReturnWithUpdatedFarm(){
     KingdomEntity kingdom = new KingdomEntity();
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      townHall,
-      building
-    );
-    kingdom.setBuildings(fakeList);
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
+    BuildingEntity farm = kingdom.getBuildings().get(2);
 
-    //TODO: have to modify hasResourcesForBuilding method
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
+    Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(farm));
+    Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
-    String response = buildingService.checkBuildingDetails(kingdom, 1L, new BuildingLevelDTO(3));
+    buildingService.updateBuilding(kingdom,3L, new BuildingLevelDTO(2));
+
+    Assert.assertEquals(Optional.of(2), Optional.ofNullable(farm.getLevel()));
+    Assert.assertEquals(Optional.of(200), Optional.ofNullable(farm.getHp()));
+    Assert.assertEquals(Optional.of(1060L), Optional.ofNullable(farm.getStartedAt()));
+    Assert.assertEquals(Optional.of(1180L), Optional.ofNullable(farm.getFinishedAt()));
   }
 
   @Test
-  public void checkBuildingDetailsShouldReturnOkAndBuildingDetails(){
+  public void updateBuildingShouldReturnWithUpdatedMine(){
     KingdomEntity kingdom = new KingdomEntity();
-    BuildingEntity townHall = new BuildingEntity(kingdom, BuildingType.TOWNHALL, 2);
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, kingdom);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      townHall,
-      building
-    );
-    kingdom.setBuildings(fakeList);
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
+    BuildingEntity mine = kingdom.getBuildings().get(3);
 
-    //TODO: have to modify hasResourcesForBuilding method
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
+    Mockito.when(buildingRepository.findById(4L)).thenReturn(Optional.of(mine));
+    Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
-    String result = buildingService.checkBuildingDetails(kingdom, 1L, new BuildingLevelDTO(2));
+    buildingService.updateBuilding(kingdom, 4L, new BuildingLevelDTO(4));
 
-    Assert.assertEquals("building details", result);
-  }
-
-  @Test
-  public void updateBuildingShouldReturnWithUpdatedBuildingTownHall(){
-
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 3000L, 4000L, null);
-
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
-    Mockito.when(timeService.getTime()).thenReturn(1060L);
-
-    buildingService.updateBuilding(1L, new BuildingLevelDTO(4));
-
-    Assert.assertEquals(java.util.Optional.of(4), java.util.Optional.ofNullable(building.getLevel()));
-    Assert.assertEquals(java.util.Optional.of(800), java.util.Optional.ofNullable(building.getHp()));
-    Assert.assertEquals(java.util.Optional.of(1060L), java.util.Optional.ofNullable(building.getStartedAt()));
-    Assert.assertEquals(java.util.Optional.of(1540L), java.util.Optional.ofNullable(building.getFinishedAt()));
-  }
-
-  @Test
-  public void updateBuildingShouldReturnWithUpdatedBuildingAcademy(){
-
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY, 1, 100, 3000L, 4000L, null);
-
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
-    Mockito.when(timeService.getTime()).thenReturn(1060L);
-
-    buildingService.updateBuilding(1L, new BuildingLevelDTO(3));
-
-    Assert.assertEquals(java.util.Optional.of(3), java.util.Optional.ofNullable(building.getLevel()));
-    Assert.assertEquals(java.util.Optional.of(450), java.util.Optional.ofNullable(building.getHp()));
-    Assert.assertEquals(java.util.Optional.of(1060L), java.util.Optional.ofNullable(building.getStartedAt()));
-    Assert.assertEquals(java.util.Optional.of(1330L), java.util.Optional.ofNullable(building.getFinishedAt()));
-  }
-
-  @Test
-  public void updateBuildingShouldReturnWithUpdatedBuildingFarm(){
-
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, null);
-
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
-    Mockito.when(timeService.getTime()).thenReturn(1060L);
-
-    buildingService.updateBuilding(1L, new BuildingLevelDTO(2));
-
-    Assert.assertEquals(java.util.Optional.of(2), java.util.Optional.ofNullable(building.getLevel()));
-    Assert.assertEquals(java.util.Optional.of(200), java.util.Optional.ofNullable(building.getHp()));
-    Assert.assertEquals(java.util.Optional.of(1060L), java.util.Optional.ofNullable(building.getStartedAt()));
-    Assert.assertEquals(java.util.Optional.of(1180L), java.util.Optional.ofNullable(building.getFinishedAt()));
-  }
-
-  @Test
-  public void updateBuildingShouldReturnWithUpdatedBuildingMine(){
-
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.MINE, 1, 100, 3000L, 4000L, null);
-
-    Mockito.when(buildingRepository.findById(1L)).thenReturn(java.util.Optional.of(building));
-    Mockito.when(timeService.getTime()).thenReturn(1060L);
-
-    buildingService.updateBuilding(1L, new BuildingLevelDTO(15));
-
-    Assert.assertEquals(java.util.Optional.of(15), java.util.Optional.ofNullable(building.getLevel()));
-    Assert.assertEquals(java.util.Optional.of(1500), java.util.Optional.ofNullable(building.getHp()));
-    Assert.assertEquals(java.util.Optional.of(1060L), java.util.Optional.ofNullable(building.getStartedAt()));
-    Assert.assertEquals(java.util.Optional.of(1960L), java.util.Optional.ofNullable(building.getFinishedAt()));
+    Assert.assertEquals(Optional.of(4), Optional.ofNullable(mine.getLevel()));
+    Assert.assertEquals(Optional.of(400), Optional.ofNullable(mine.getHp()));
+    Assert.assertEquals(Optional.of(1060L), Optional.ofNullable(mine.getStartedAt()));
+    Assert.assertEquals(Optional.of(1300L), Optional.ofNullable(mine.getFinishedAt()));
   }
 }
