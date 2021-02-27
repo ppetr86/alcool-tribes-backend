@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -102,12 +103,14 @@ public class BuildingServiceImpl implements BuildingService {
     result = save(result);
 
     //updating Resource Generation
-    if(result.getType().equals(BuildingType.FARM) || result.getType().equals(BuildingType.MINE)) {
+    if (result.getType().equals(BuildingType.FARM) || result.getType().equals(BuildingType.MINE)) {
       ResourceEntity resource = resourceService.updateResourceGeneration(kingdom, result);
-      if(resource != null) {
+      if (resource != null) {
         log.info("Resource {} with ID {} will be updated. Actual amount is {}, actual generation is {}",
             resource.getType(), resource.getId(), resource.getAmount(), resource.getGeneration());
-      } else log.warn("Resource generation was not updated when creating new building of type {}!", result.getType());
+      } else {
+        log.warn("Resource generation was not updated when creating new building of type {}!", result.getType());
+      }
     }
 
     return result;
