@@ -89,7 +89,7 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdom, Long id)
+  public BuildingDetailsDTO showBuilding(KingdomEntity kingdom, Long id)
     throws IdNotFoundException, ForbiddenActionException {
 
     BuildingEntity myBuilding = kingdom.getBuildings().stream()

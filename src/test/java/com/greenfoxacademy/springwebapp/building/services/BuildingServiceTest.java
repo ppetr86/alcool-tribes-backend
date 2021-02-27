@@ -185,7 +185,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void showActualBuildingDetailsShouldReturnCorrectBuildingDetails(){
+  public void showBuildingShouldReturnCorrectBuildingDetails(){
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -194,7 +194,7 @@ public class BuildingServiceTest {
 
     Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
 
-    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, 1L);
+    BuildingDetailsDTO result = buildingService.showBuilding(kingdomEntity, 1L);
 
     Assert.assertEquals(1, result.getId());
     Assert.assertEquals(1, result.getLevel());
@@ -203,7 +203,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void showActualBuildingDetailsShouldNotReturnWithBuildingDetails(){
+  public void showBuildingShouldNotReturnWithBuildingDetails(){
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -212,7 +212,7 @@ public class BuildingServiceTest {
 
     Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.of(buildingEntity));
 
-    BuildingDetailsDTO result = buildingService.showActualBuildingDetails(kingdomEntity, 2L);
+    BuildingDetailsDTO result = buildingService.showBuilding(kingdomEntity, 2L);
 
     Assert.assertNotEquals(1, result.getId());
     Assert.assertNotEquals(1, result.getLevel());
@@ -221,7 +221,7 @@ public class BuildingServiceTest {
   }
 
   @Test(expected = IdNotFoundException.class)
-  public void showActualBuildingDetailsShouldReturnWithIdNotFoundException(){
+  public void showBuildingShouldReturnWithIdNotFoundException(){
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -230,11 +230,11 @@ public class BuildingServiceTest {
 
     Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.empty());
 
-    BuildingDetailsDTO response = buildingService.showActualBuildingDetails(kingdomEntity, 3L);
+    BuildingDetailsDTO response = buildingService.showBuilding(kingdomEntity, 3L);
   }
 
   @Test(expected = ForbiddenActionException.class)
-  public void showActualBuildingDetailsShouldReturnWithForbiddenException(){
+  public void showBuildingShouldReturnWithForbiddenException(){
     BuildingEntity fakeBuilding2 = new BuildingEntity(3L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity fakeBuilding = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
@@ -244,6 +244,6 @@ public class BuildingServiceTest {
 
     Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(fakeBuilding2));
 
-    BuildingDetailsDTO response = buildingService.showActualBuildingDetails(kingdomEntity, 3L);
+    BuildingDetailsDTO response = buildingService.showBuilding(kingdomEntity, 3L);
   }
 }

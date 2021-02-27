@@ -5,9 +5,7 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Assert;
@@ -77,7 +75,7 @@ public class BuildingControllerTest {
     buildingDetailsDTO.setLevel(buildingEntity.getLevel());
     buildingDetailsDTO.setHp(buildingEntity.getHp());
 
-    Mockito.when(buildingService.showActualBuildingDetails(kingdomEntity, 1L)).thenReturn(buildingDetailsDTO);
+    Mockito.when(buildingService.showBuilding(kingdomEntity, 1L)).thenReturn(buildingDetailsDTO);
 
     ResponseEntity<?> response = buildingController.getBuildingById(1L, authentication);
 

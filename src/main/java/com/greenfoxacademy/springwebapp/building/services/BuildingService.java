@@ -27,7 +27,7 @@ public interface BuildingService {
 
   BuildingEntity findBuildingById(Long id);
 
-  BuildingDetailsDTO showActualBuildingDetails(KingdomEntity kingdomEntity, Long id)
+  BuildingDetailsDTO showBuilding(KingdomEntity kingdomEntity, Long id)
     throws IdNotFoundException, ForbiddenActionException;
 
   boolean hasKingdomTownhall(KingdomEntity kingdom);

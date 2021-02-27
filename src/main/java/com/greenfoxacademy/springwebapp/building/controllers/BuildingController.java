@@ -1,13 +1,11 @@
 package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingListResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,6 +46,6 @@ public class BuildingController {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    return ResponseEntity.ok(buildingService.showActualBuildingDetails(kingdom, id));
+    return ResponseEntity.ok(buildingService.showBuilding(kingdom, id));
   }
 }
