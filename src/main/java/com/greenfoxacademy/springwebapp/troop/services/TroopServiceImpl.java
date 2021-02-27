@@ -2,11 +2,13 @@ package com.greenfoxacademy.springwebapp.troop.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidBuildingTypeException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -30,6 +32,7 @@ public class TroopServiceImpl implements TroopService {
   private TimeService timeService;
   private TroopRepository troopRepository;
   private final Environment env;
+  private BuildingService buildingService;
 
   @Override
   public TroopListResponseDto troopsToListDTO(KingdomEntity entity) {
@@ -78,20 +81,21 @@ public class TroopServiceImpl implements TroopService {
                                                  Long troopId) throws
       MissingParameterException, ForbiddenActionException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException {
+
     BuildingEntity academy = findAcademy(kingdomEntity, requestDTO);
 
-    if (requestDTO.getBuildingId() == null || requestDTO.getBuildingId() == 0 || requestDTO.getBuildingId().toString().isEmpty()) {
+    if (requestDTO.getBuildingId() == null || requestDTO.getBuildingId() == 0
+        || requestDTO.getBuildingId().toString().isEmpty()) {
       throw new MissingParameterException("buildingId");
     }
 
-    TroopEntity existingTroop = troopRepository.findTroopEntityById(troopId);
-
-    if (academy == null && !existingTroop.getKingdom().equals(kingdomEntity)) {
-      throw new ForbiddenActionException();
-    }
-
     if (academy == null) {
-      throw new IdNotFoundException();
+      BuildingEntity actualBuilding = buildingService.findBuildingById(requestDTO.getBuildingId());
+      if (actualBuilding == null) {
+        throw new IdNotFoundException();
+      } else {
+        throw new ForbiddenActionException();
+      }
     }
 
     if (!academy.getType().equals(BuildingType.ACADEMY)) {
@@ -102,20 +106,27 @@ public class TroopServiceImpl implements TroopService {
       throw new NotEnoughResourceException();
     }
 
+    if (!kingdomEntity.getId().equals(troopRepository.findKingdomIdByTroopId(troopId))){
+      throw new InvalidInputException("troop id!");
+      // throwing invalid troop id in case of wrong id is provided. Not in swagger but i thought it is required.
+    }
+
+    TroopEntity troopEntity = updateTroop(academy, troopId);
+    troopRepository.save(troopEntity);
+    return new TroopEntityResponseDTO(troopEntity);
+  }
+
+  private TroopEntity updateTroop(BuildingEntity academy, Long troopId){
     Integer troopLevel = academy.getLevel();
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
 
     TroopEntity troopEntity = troopRepository.findTroopEntityById(troopId);
-    if (troopRepository.findTroopEntityByKingdomId(troopEntity.getKingdom().getId()) != null){
-      troopEntity.setLevel(troopLevel);
-      troopEntity.setStartedAt(startedAt);
-      troopEntity.setFinishedAt(finishedAt);
+    troopEntity.setLevel(troopLevel);
+    troopEntity.setStartedAt(startedAt);
+    troopEntity.setFinishedAt(finishedAt);
 
-      troopRepository.save(troopEntity);
-    }
-
-    return new TroopEntityResponseDTO(troopEntity);
+    return troopEntity;
   }
 
   private Integer getAppPropertyAsInt(String propertyName) {
@@ -124,7 +135,7 @@ public class TroopServiceImpl implements TroopService {
 
   private BuildingEntity findAcademy(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) {
     return kingdomEntity.getBuildings().stream()
-        .filter(building -> building.getId() == requestDTO.getBuildingId())
+        .filter(building -> building.getId().equals(requestDTO.getBuildingId()))
         .findFirst()
         .orElse(null);
   }
@@ -140,9 +151,11 @@ public class TroopServiceImpl implements TroopService {
 
     if (myTroop == null) {
       TroopEntity existingTroop = findTroopById(troopId);
-      if(existingTroop == null) {
+      if (existingTroop == null) {
         throw new IdNotFoundException();
-      } else throw new ForbiddenActionException();
+      } else {
+        throw new ForbiddenActionException();
+      }
     }
 
     return new TroopEntityResponseDTO(myTroop);
