@@ -26,7 +26,6 @@ public class PlayerController {
   @GetMapping("/verify")
   @ResponseBody
   public String verifyUser(@RequestParam(required = false) String token) {
-
     if (token.isEmpty()) {
       log.info(String.format("Verification token was incorrect. Used token: %s", token));
       return "empty token";

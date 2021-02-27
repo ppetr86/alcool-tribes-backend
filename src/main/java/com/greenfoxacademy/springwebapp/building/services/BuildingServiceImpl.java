@@ -34,7 +34,8 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity defineFinishedAt(BuildingEntity entity) {
-    String time = env.getProperty(String.format("building.%s.buildingTime", entity.getType().buildingType.toLowerCase()));
+    String time =
+        env.getProperty(String.format("building.%s.buildingTime", entity.getType().buildingType.toLowerCase()));
     entity.setFinishedAt(entity.getStartedAt() + Long.parseLong(time));
     return entity;
   }
@@ -93,13 +94,21 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
-        .map(type -> new BuildingEntity(kingdom, type, 1))
+        .map(type -> new BuildingEntity(kingdom,
+            type,
+            1,
+            Integer.parseInt(env.getProperty(String.format("building.%s.hp",
+                type.toString().toLowerCase()))),
+            timeService.getTime(),
+            timeService.getTime()))
         .collect(Collectors.toList());
   }
 
   @Override
   public boolean hasKingdomTownhall(KingdomEntity kingdom) {
-    if (kingdom.getBuildings() == null) return false;
+    if (kingdom.getBuildings() == null) {
+      return false;
+    }
     return kingdom.getBuildings().stream()
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }

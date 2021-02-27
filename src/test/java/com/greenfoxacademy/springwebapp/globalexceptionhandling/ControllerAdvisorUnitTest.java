@@ -10,23 +10,23 @@ public class ControllerAdvisorUnitTest {
   private final ControllerAdvisor ca = new ControllerAdvisor();
 
   @Test
-  public void invalidBuildingTypeException_ReturnsNOTACCEPTABLEandCorrectMessage() {
+  public void invalidBuildingTypeException_ReturnsNotAcceptableAndCorrectMessage() {
     ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidBuildingTypeException());
     Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
     Assert.assertEquals("Invalid building type",
-            result.getBody().getMessage());
+        result.getBody().getMessage());
   }
 
   @Test
-  public void townhallLevelException_ReturnsNOTACCEPTABLEandCorrectMessage() {
+  public void townhallLevelException_ReturnsNotAcceptableAndCorrectMessage() {
     ResponseEntity<ErrorDTO> result = ca.handleExceptions(new TownhallLevelException());
     Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
     Assert.assertEquals("Cannot build buildings with higher level than the Townhall",
-            result.getBody().getMessage());
+        result.getBody().getMessage());
   }
 
   @Test
-  public void notEnoughResourceException_ReturnsCONFLICTandCorrectMessage() {
+  public void notEnoughResourceException_ReturnsConflictAndCorrectMessage() {
     ResponseEntity<ErrorDTO> result = ca.handleExceptions(new NotEnoughResourceException());
     Assert.assertEquals(HttpStatus.valueOf(409), result.getStatusCode());
     Assert.assertEquals("Not enough resource", result.getBody().getMessage());

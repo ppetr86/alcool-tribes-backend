@@ -62,7 +62,6 @@ public class PlayerServiceImpl implements PlayerService {
         kingdom.setPlayer(player);
 
         player = playerRepo.save(player);
-        System.out.println(player.getId() + "DDDDDDDDDDDDDDDDDDDDDDDD");
         return player;
     }
 

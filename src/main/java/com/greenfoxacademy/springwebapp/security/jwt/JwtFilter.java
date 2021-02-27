@@ -31,39 +31,39 @@ public class JwtFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
-
     String header = request.getHeader("Authorization");
     if (header == null || !header.startsWith("Bearer")) {
       filterChain.doFilter(request, response);
       return;
     }
-
     String token = getTokenFromServletRequest(request);
     Boolean tokenIsValid = false;
-
     try {
       tokenIsValid = jwtProvider.validateToken(token);
     } catch (Exception e) {
-      SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
-      //Specific message related to authentication failure. Otherwise when wrong token no log is created by interceptor at all.
-      log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
-              request,
-              response,
-              SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
-              "Token validation error"
-      ));
+      cleanContextAndLogErrorMessage(request, response);
     }
-
     if (token != null && tokenIsValid) {
       String userLogin = jwtProvider.getLoginFromToken(token);
       CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
-              null, customUserDetails.getAuthorities());
+          null, customUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
       log.info("Authenticated player: {}", customUserDetails.getUsername());
     }
-
     filterChain.doFilter(request, response);
+  }
+
+  private void cleanContextAndLogErrorMessage(HttpServletRequest request, HttpServletResponse response) {
+    SecurityContextHolder.clearContext(); //we are clearing context before throwing Exception
+    //Specific message related to authentication failure. Otherwise when wrong token
+    // no log is created by interceptor at all.
+    log.error(endpointsInterceptor.buildSecurityErrorLogMessage(
+        request,
+        response,
+        SecurityConfig.AUTHENTICATION_FAILURE_STATUSCODE,
+        "Token validation error"
+    ));
   }
 
   private String getTokenFromServletRequest(HttpServletRequest servletRequest) {
