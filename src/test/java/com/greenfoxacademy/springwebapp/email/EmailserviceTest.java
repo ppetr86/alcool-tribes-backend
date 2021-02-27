@@ -13,6 +13,7 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,13 +21,15 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class EmailserviceTest {
 
-    //@Mock
+    @Mock
     private JavaMailSender mailSender;
     private SpringTemplateEngine templateEngine;
     private EmailServiceImpl emailService;
@@ -37,7 +40,7 @@ public class EmailserviceTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        mailSender = new JavaMailSenderImpl();
+        //mailSender = new JavaMailSenderImpl();
         tokenService = new RegistrationTokenServiceImpl(registrationTokenRepository);
         templateEngine = new SpringTemplateEngine();
         emailService = new EmailServiceImpl(mailSender, templateEngine);
@@ -54,11 +57,7 @@ public class EmailserviceTest {
         email.init(kingdom.getPlayer());
         email.setToken(token.getToken());
         email.buildVerificationUrl("http://localhost:8080", token.getToken());
-
-        /*ArgumentCaptor<SimpleMailMessage> emailCaptor =
-                ArgumentCaptor.forClass(SimpleMailMessage.class);
-        verify(mailSender, times(1)).send(emailCaptor.capture());*/
-
+        //doNothing().when(mailSender).send(mailSender.createMimeMessage());
         emailService.sendMailWithHtmlAndPlainText(email);
 
         Assert.assertEquals("testUsername", email.getUsername());

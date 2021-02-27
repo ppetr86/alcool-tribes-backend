@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
@@ -54,6 +55,7 @@ public class PlayerServiceTest {
     accountVerification = Mockito.mock(AccountVerificationEmail.class);
     resourceService = Mockito.mock(ResourceService.class);
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService, registrationTokenService, tokenService,resourceService,locationService);
+    ReflectionTestUtils.setField(tokenService, "tokenValidityInSeconds", 86400);
   }
 
   @Test

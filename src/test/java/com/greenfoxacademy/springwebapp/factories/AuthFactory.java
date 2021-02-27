@@ -22,4 +22,18 @@ public class AuthFactory {
     return new UsernamePasswordAuthenticationToken(userDetails, null, null);
   }
 
+  public static Authentication createAuthFullKingdom(String userName, Long kingdomId) {
+
+    CustomUserDetails userDetails = new CustomUserDetails();
+    PlayerEntity player = new PlayerEntity();
+    player.setUsername(userName);
+    player.setId(kingdomId);
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(kingdomId,kingdomId);
+
+    userDetails.setLogin(player);
+    userDetails.setKingdom(kingdom);
+
+    return new UsernamePasswordAuthenticationToken(userDetails, null, null);
+  }
+
 }
