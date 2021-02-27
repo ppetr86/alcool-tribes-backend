@@ -95,6 +95,8 @@ public class BuildingServiceImpl implements BuildingService {
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
     result = defineHp(result);
+    result.setLevel(1);
+    result.setKingdom(kingdom);
     result = save(result);
     return result;
   }
@@ -102,7 +104,13 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
-        .map(type -> new BuildingEntity(kingdom, type, 1))
+        .map(type -> new BuildingEntity(kingdom,
+            type,
+            1,
+            Integer.parseInt(env.getProperty(String.format("building.%s.hp",
+                type.toString().toLowerCase()))),
+            timeService.getTime(),
+            timeService.getTime()))
         .collect(Collectors.toList());
   }
 
