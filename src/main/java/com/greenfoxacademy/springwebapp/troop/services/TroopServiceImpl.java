@@ -87,28 +87,20 @@ public class TroopServiceImpl implements TroopService {
     if (requestDTO.getBuildingId() == null || requestDTO.getBuildingId() == 0
         || requestDTO.getBuildingId().toString().isEmpty()) {
       throw new MissingParameterException("buildingId");
-    }
-
-    if (academy == null) {
+    } else if (academy == null) {
       BuildingEntity actualBuilding = buildingService.findBuildingById(requestDTO.getBuildingId());
       if (actualBuilding == null) {
         throw new IdNotFoundException();
       } else {
         throw new ForbiddenActionException();
       }
-    }
-
-    if (!academy.getType().equals(BuildingType.ACADEMY)) {
+    } else if (!academy.getType().equals(BuildingType.ACADEMY)) {
       throw new InvalidAcademyIdException();
-    }
-
-    if (!resourceService.hasResourcesForTroop()) {
+    } else if (!resourceService.hasResourcesForTroop()) {
       throw new NotEnoughResourceException();
-    }
-
-    if (!kingdomEntity.getId().equals(troopRepository.findKingdomIdByTroopId(troopId))){
+    } else if (!kingdomEntity.getId().equals(troopRepository.findKingdomIdByTroopId(troopId))) {
       throw new InvalidInputException("troop id!");
-      // throwing invalid troop id in case of wrong id is provided. Not in swagger but i thought it is required.
+      // throwing invalid troop id in case of wrong id is provided. Not in swagger but i think its important.
     }
 
     TroopEntity troopEntity = updateTroop(academy, troopId);
@@ -116,7 +108,7 @@ public class TroopServiceImpl implements TroopService {
     return new TroopEntityResponseDTO(troopEntity);
   }
 
-  private TroopEntity updateTroop(BuildingEntity academy, Long troopId){
+  private TroopEntity updateTroop(BuildingEntity academy, Long troopId) {
     Integer troopLevel = academy.getLevel();
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
@@ -133,7 +125,8 @@ public class TroopServiceImpl implements TroopService {
     return Integer.parseInt(env.getProperty(propertyName));
   }
 
-  private BuildingEntity findAcademy(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) {
+  @Override
+  public BuildingEntity findAcademy(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO) {
     return kingdomEntity.getBuildings().stream()
         .filter(building -> building.getId().equals(requestDTO.getBuildingId()))
         .findFirst()
