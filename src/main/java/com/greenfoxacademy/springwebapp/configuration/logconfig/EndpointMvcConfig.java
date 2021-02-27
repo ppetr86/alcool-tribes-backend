@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @AllArgsConstructor
 @Configuration
-public class EndpointMVCConfig implements WebMvcConfigurer {
+public class EndpointMvcConfig implements WebMvcConfigurer {
   EndpointsInterceptor endpointsInterceptor;
 
   @Override

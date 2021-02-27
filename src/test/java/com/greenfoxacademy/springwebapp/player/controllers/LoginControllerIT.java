@@ -1,18 +1,13 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
-import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -39,11 +34,11 @@ public class LoginControllerIT {
     PlayerRequestDTO request = new PlayerRequestDTO("furkesz", "password");
     String json = new ObjectMapper().writeValueAsString(request);
     mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status", is("ok")))
-            .andExpect(jsonPath("$.token", matchesPattern(".+\\..+\\..+")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status", is("ok")))
+        .andExpect(jsonPath("$.token", matchesPattern(".+\\..+\\..+")));
   }
 
   @Test
@@ -52,12 +47,12 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .principal(createAuth("Mark", 1L))
-            .content(json))
-            .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.status", is("error")))
-            .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .principal(createAuth("Mark", 1L))
+        .content(json))
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
   }
 
   @Test
@@ -66,11 +61,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.status", is("error")))
-            .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Username or password is incorrect.")));
   }
 
   @Test
@@ -80,11 +75,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.status", is("error")))
-            .andExpect(jsonPath("$.message", is("Username is required.")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Username is required.")));
   }
 
   @Test
@@ -93,11 +88,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.status", is("error")))
-            .andExpect(jsonPath("$.message", is("Password is required.")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Password is required.")));
   }
 
   @Test
@@ -106,11 +101,11 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.status", is("error")))
-            .andExpect(jsonPath("$.message", is("Username and password are required.")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Username and password are required.")));
   }
 
   @Test
@@ -119,10 +114,10 @@ public class LoginControllerIT {
     String json = new ObjectMapper().writeValueAsString(request);
 
     mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.status", is("error")))
-            .andExpect(jsonPath("$.message", is("Password has to contain at least 8 letters.")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Password has to contain at least 8 letters.")));
   }
 }
