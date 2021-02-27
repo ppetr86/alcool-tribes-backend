@@ -24,7 +24,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     List<FieldError> errors = ex.getBindingResult().getFieldErrors();
     if (errors.size() > 1) {
-      //filter by the annotation type
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < errors.size(); i++) {
         if (i == 0) {
@@ -34,20 +33,18 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
           String msgCurrent = errors.get(i).getDefaultMessage();
           if (!sb.toString().contains(msgCurrent.substring(0, msgCurrent.indexOf(" ")))) {
             sb.append(errors.get(i).getField());
-              if (i < errors.size() - 1) {
-                  sb.append(" and ");
-              } else {
-                  sb.append(" are required.");
-              }
+            if (i < errors.size() - 1) {
+              sb.append(" and ");
+            }
           }
+          if (i == errors.size() - 1) sb.append(" are required.");
         }
       }
       return new ResponseEntity<>(new ErrorDTO(sb.toString()), HttpStatus.BAD_REQUEST);
     }
 
-      if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters.")) {
-          return new ResponseEntity<>(new ErrorDTO("Password must be 8 characters."), HttpStatus.NOT_ACCEPTABLE);
-      }
+    if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters."))
+      return new ResponseEntity<>(new ErrorDTO("Password must be 8 characters."), HttpStatus.NOT_ACCEPTABLE);
     //covers for missing type, password required, username required
     return new ResponseEntity<>(new ErrorDTO(errors.get(0).getDefaultMessage()), HttpStatus.BAD_REQUEST);
   }
