@@ -6,14 +6,18 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +38,8 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity defineFinishedAt(BuildingEntity entity) {
-    String time = env.getProperty(String.format("building.%s.buildingTime", entity.getType().buildingType.toLowerCase()));
+    String time =
+        env.getProperty(String.format("building.%s.buildingTime", entity.getType().buildingType.toLowerCase()));
     entity.setFinishedAt(entity.getStartedAt() + Long.parseLong(time));
     return entity;
   }
@@ -78,7 +83,7 @@ public class BuildingServiceImpl implements BuildingService {
       throw new MissingParameterException("level");
     } else if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)){
       throw new ForbiddenActionException();
-    } else if (resourceService.hasResourcesForBuilding()) {
+    } else if (!resourceService.hasResourcesForBuilding()) {
       throw new NotEnoughResourceException();
     } else if (building.getType() == townHall.getType()) {
       return building;
@@ -150,15 +155,25 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
-    throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
-    if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
-    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
-    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
-    if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
+      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
+    if (dto.getType().trim().isEmpty()) {
+      throw new MissingParameterException("type");
+    }
+    if (!isBuildingTypeInRequestOk(dto)) {
+      throw new InvalidInputException("building type");
+    }
+    if (!hasKingdomTownhall(kingdom)) {
+      throw new TownhallLevelException();
+    }
+    if (!resourceService.hasResourcesForBuilding()) {
+      throw new NotEnoughResourceException();
+    }
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
     result = defineHp(result);
+    result.setLevel(1);
+    result.setKingdom(kingdom);
     result = save(result);
     return result;
   }
@@ -166,13 +181,21 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
-      .map(type -> new BuildingEntity(kingdom, type, 1))
-      .collect(Collectors.toList());
+        .map(type -> new BuildingEntity(kingdom,
+            type,
+            1,
+            Integer.parseInt(env.getProperty(String.format("building.%s.hp",
+                type.toString().toLowerCase()))),
+            timeService.getTime(),
+            timeService.getTime()))
+        .collect(Collectors.toList());
   }
 
   @Override
   public boolean hasKingdomTownhall(KingdomEntity kingdom) {
-    if (kingdom.getBuildings() == null) return false;
+    if (kingdom.getBuildings() == null) {
+      return false;
+    }
     return kingdom.getBuildings().stream()
       .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
