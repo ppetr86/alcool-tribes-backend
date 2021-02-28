@@ -184,7 +184,8 @@ public class TroopServiceTest {
     fakeKingdom.getBuildings().get(1).setLevel(7);
 
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
-    Mockito.when(troopRepository.findKingdomIdByTroopId(fakeKingdom.getTroops().get(0).getId())).thenReturn(fakeKingdom.getId());
+    Mockito.when(troopRepository.findKingdomIdByTroopId(fakeKingdom.getTroops().get(0).getId()))
+        .thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
     Mockito.when(troopRepository.findTroopEntityById(1L)).thenReturn(fakeKingdom.getTroops().get(0));
 

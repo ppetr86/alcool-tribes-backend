@@ -244,9 +244,6 @@ public class TroopControllerIT {
         .andExpect(status().is(200))
         .andExpect(jsonPath("$.id", is(1)))
         .andExpect(jsonPath("$.level", is(1)))
-        .andExpect(jsonPath("$.hp", is(100)))
-        .andExpect(jsonPath("$.attack", is(1)))
-        .andExpect(jsonPath("$.defence", is(1)))
         .andExpect(jsonPath("$.startedAt", is(greaterThan(0))))
         .andExpect(jsonPath("$.finishedAt", is(greaterThan(0))));
   }
