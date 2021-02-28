@@ -30,18 +30,22 @@ public class EmailServiceImpl implements EmailService {
     context.setVariables(email.getContext());
 
     String htmlMail = templateEngine.process(email.getTemplateLocation(), context);
-    String textMail = "Welcome " + email.getUsername() + "!\n\n" +
-            email.getKingdomName() + " is ready! You just need to confirm your email address\n" +
-            "and then you are ready to conquer the world :)\n" +
-            " Please confirm your email address by opening the following url: \n" +
-            email.getContext().get("verificationURL") + "\n\n" +
-            "Confirm Email Address\n\n" +
-            " — The Tribes Team\n";
+    String textMail = verificationMail(email);
 
     helper.setTo(email.getRecipientEmail());
     helper.setSubject(email.getSubject());
     helper.setFrom(email.getSenderEmail());
     helper.setText(textMail,htmlMail);
     mailSender.send(message);
+  }
+
+  private String verificationMail(AbstractEmail email) {
+    return "Welcome " + email.getUsername() + "!\n\n" +
+        email.getKingdomName() + " is ready! You just need to confirm your email address\n" +
+        "and then you are ready to conquer the world :)\n" +
+        " Please confirm your email address by opening the following url: \n" +
+        email.getContext().get("verificationURL") + "\n\n" +
+        "Confirm Email Address\n\n" +
+        " — The Tribes Team\n";
   }
 }

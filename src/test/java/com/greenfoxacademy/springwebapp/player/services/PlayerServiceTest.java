@@ -52,8 +52,6 @@ public class PlayerServiceTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    accountVerification = Mockito.mock(AccountVerificationEmail.class);
-    resourceService = Mockito.mock(ResourceService.class);
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService, registrationTokenService, tokenService,resourceService,locationService);
   }
 
