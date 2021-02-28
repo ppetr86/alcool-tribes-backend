@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TroopRepository extends JpaRepository<TroopEntity, Long> {
 
-  TroopEntity save (TroopEntity troop);
-
-  TroopEntity findTroopEntityByKingdomId(Long kingdomEntity);
+  TroopEntity save(TroopEntity troop);
 
   TroopEntity findTroopEntityById(Long troopId);
 
