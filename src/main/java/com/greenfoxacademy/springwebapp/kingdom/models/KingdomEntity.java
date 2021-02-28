@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.models;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
@@ -14,6 +15,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,6 +53,8 @@ public class KingdomEntity {
   @LazyCollection(LazyCollectionOption.FALSE)
   private List<ResourceEntity> resources;
 
-  @OneToOne
+  @OneToOne(mappedBy = "kingdoms", cascade = CascadeType.PERSIST)
   private LocationEntity location;
+
+
 }

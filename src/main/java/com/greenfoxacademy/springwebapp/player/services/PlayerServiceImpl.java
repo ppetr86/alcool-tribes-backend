@@ -73,7 +73,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         kingdom.setResources(resourceService.createDefaultResources(kingdom));
         //TODO: location has to be implemented... this is only to satisfy SQL NON NULL
-        LocationEntity defaultLocation = new LocationEntity(1L,10,10);
+        LocationEntity defaultLocation = locationService.defaultLocation(kingdom);
         locationService.save(defaultLocation);
         kingdom.setLocation(defaultLocation);
 
