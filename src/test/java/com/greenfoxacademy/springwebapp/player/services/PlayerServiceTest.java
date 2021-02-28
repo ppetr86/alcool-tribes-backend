@@ -214,9 +214,8 @@ public class PlayerServiceTest {
     secureToken.setIsExpired(false);
     secureToken.setPlayer(pl);
     secureToken.setExpireAt(LocalDateTime.now().plusDays(1));
-
-    Mockito.when(registrationTokenService.createSecureToken(pl)).thenReturn(secureToken);
     ReflectionTestUtils.setField(tokenService, "tokenValidityInSeconds", 86400);
+    Mockito.when(registrationTokenService.createSecureToken(pl)).thenReturn(secureToken);
     Assert.assertFalse(playerService.sendRegistrationConfirmationEmail(pl));
   }
 
