@@ -1,15 +1,15 @@
 package com.greenfoxacademy.springwebapp.common;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import java.time.Instant;
-
 import com.greenfoxacademy.springwebapp.common.services.TimeServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.time.Instant;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class TimeServiceUnitTest {
 
@@ -27,7 +27,7 @@ public class TimeServiceUnitTest {
     Long actualTimeInSec = timeService.getTime();
 
     Assert.assertTrue(minEpochTime < actualTimeInSec);
-    Assert.assertEquals((Long)(Instant.now().getEpochSecond()), actualTimeInSec);
+    Assert.assertEquals((Long) (Instant.now().getEpochSecond()), actualTimeInSec);
   }
 
   @Test

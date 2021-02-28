@@ -10,7 +10,9 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
+
 import javax.validation.Valid;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -46,7 +48,7 @@ public class TroopController {
     return ResponseEntity.ok(responseDTO);
   }
 
-  @GetMapping ("/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<?> returnTroop(@PathVariable("id") Long troopId, Authentication auth)
       throws ForbiddenActionException, IdNotFoundException {
 

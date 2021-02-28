@@ -36,8 +36,9 @@ public class CustomUserDetails implements UserDetails {
     this.kingdom = kingdom;
   }
 
-  public void setLogin(PlayerEntity player){
-    this.login = player.getUsername() ;}
+  public void setLogin(PlayerEntity player) {
+    this.login = player.getUsername();
+  }
 
   @Override
   public String getPassword() {

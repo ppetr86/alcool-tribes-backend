@@ -32,7 +32,7 @@ public class TroopServiceImpl implements TroopService {
   @Override
   public TroopListResponseDto troopsToListDTO(KingdomEntity entity) {
     return new TroopListResponseDto(
-            entity.getTroops().stream()
+        entity.getTroops().stream()
             .map(TroopEntityResponseDTO::new)
             .collect(Collectors.toList())
     );
@@ -41,34 +41,36 @@ public class TroopServiceImpl implements TroopService {
   @Override
   public TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
       ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException {
-
     BuildingEntity academy = kingdom.getBuildings().stream()
         .filter(building -> building.getId().equals(requestDTO.getBuildingId()))
         .findFirst()
         .orElse(null);
 
-    if(academy == null) throw new ForbiddenActionException();
-
-    if (!academy.getType().equals(BuildingType.ACADEMY)) throw new InvalidAcademyIdException();
-
-    if (!resourceService.hasResourcesForTroop()) throw new NotEnoughResourceException();
-    // TODO: after resources are defined, adjust logic for getting resources and their substracting when new troops are created.
-
+    if (academy == null) {
+      throw new ForbiddenActionException();
+    } else if (!academy.getType().equals(BuildingType.ACADEMY)) {
+      throw new InvalidAcademyIdException();
+    } else if (!resourceService.hasResourcesForTroop()) {
+      throw new NotEnoughResourceException();
+    }
+    // TODO: after resources are defined, adjust logic for getting resources and
+    //  their substracting when new troops are created.
     Integer troopLevel = academy.getLevel();
-    Integer hp = troopLevel*getAppPropertyAsInt("troop.hp");
-    Integer attack = troopLevel*getAppPropertyAsInt("troop.attack");
-    Integer defence = troopLevel*getAppPropertyAsInt("troop.defence");
-    Long startedAt = timeService.getTime();
-    Long finishedAt = timeService.getTimeAfter(troopLevel*getAppPropertyAsInt("troop.buildingTime"));
-
-    TroopEntity
-        troop = new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
+    TroopEntity troop = buildTroopFromTroopProperties(kingdom, troopLevel);
     troopRepository.save(troop);
-
     return new TroopEntityResponseDTO(troop);
   }
 
-  private Integer getAppPropertyAsInt (String propertyName) {
+  private TroopEntity buildTroopFromTroopProperties(KingdomEntity kingdom, Integer troopLevel) {
+    Integer hp = troopLevel * getAppPropertyAsInt("troop.hp");
+    Integer attack = troopLevel * getAppPropertyAsInt("troop.attack");
+    Integer defence = troopLevel * getAppPropertyAsInt("troop.defence");
+    Long startedAt = timeService.getTime();
+    Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
+    return new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
+  }
+
+  private Integer getAppPropertyAsInt(String propertyName) {
     return Integer.parseInt(env.getProperty(propertyName));
   }
 
@@ -83,9 +85,11 @@ public class TroopServiceImpl implements TroopService {
 
     if (myTroop == null) {
       TroopEntity existingTroop = findTroopById(troopId);
-      if(existingTroop == null) {
+      if (existingTroop == null) {
         throw new IdNotFoundException();
-      } else throw new ForbiddenActionException();
+      } else {
+        throw new ForbiddenActionException();
+      }
     }
 
     return new TroopEntityResponseDTO(myTroop);
