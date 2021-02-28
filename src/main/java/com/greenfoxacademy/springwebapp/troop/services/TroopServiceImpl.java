@@ -51,28 +51,16 @@ public class TroopServiceImpl implements TroopService {
 
     if (academy == null) {
       throw new ForbiddenActionException();
-    }
-
-    if (!academy.getType().equals(BuildingType.ACADEMY)) {
+    } else if (!academy.getType().equals(BuildingType.ACADEMY)) {
       throw new InvalidAcademyIdException();
-    }
-
-    if (!resourceService.hasResourcesForTroop()) {
+    } else if (!resourceService.hasResourcesForTroop()) {
       throw new NotEnoughResourceException();
     }
-    // TODO: after resources are defined, adjust logic for getting resources and their substracting when new troops are created.
-
+    // TODO: after resources are defined, adjust logic for getting resources and
+    //  their substracting when new troops are created.
     Integer troopLevel = academy.getLevel();
-    Integer hp = troopLevel * getAppPropertyAsInt("troop.hp");
-    Integer attack = troopLevel * getAppPropertyAsInt("troop.attack");
-    Integer defence = troopLevel * getAppPropertyAsInt("troop.defence");
-    Long startedAt = timeService.getTime();
-    Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
-
-    TroopEntity
-        troop = new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
+    TroopEntity troop = buildTroopFromTroopProperties(kingdom, troopLevel);
     troopRepository.save(troop);
-
     return new TroopEntityResponseDTO(troop);
   }
 
@@ -119,6 +107,15 @@ public class TroopServiceImpl implements TroopService {
     troopEntity.setFinishedAt(finishedAt);
 
     return troopEntity;
+  }
+
+  private TroopEntity buildTroopFromTroopProperties(KingdomEntity kingdom, Integer troopLevel) {
+    Integer hp = troopLevel * getAppPropertyAsInt("troop.hp");
+    Integer attack = troopLevel * getAppPropertyAsInt("troop.attack");
+    Integer defence = troopLevel * getAppPropertyAsInt("troop.defence");
+    Long startedAt = timeService.getTime();
+    Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
+    return new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
   }
 
   private Integer getAppPropertyAsInt(String propertyName) {

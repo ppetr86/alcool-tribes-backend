@@ -10,8 +10,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
@@ -20,8 +18,6 @@ import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +30,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Import(TestNoSecurityConfig.class)
 @RunWith(SpringRunner.class)
@@ -79,10 +78,8 @@ public class TroopControllerIT {
   public void createTroopWithCorrectBuildingId_level10Academy_createsLevel10troop()
       throws Exception {
     TroopRequestDTO request = new TroopRequestDTO(1L);
-    ObjectMapper mapper = new ObjectMapper();
-    String json = mapper.writeValueAsString(request);
+    String json = new ObjectMapper().writeValueAsString(request);
 
-    //creation of Level10 academy and its injection into Kingdom
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity academy =
@@ -293,6 +290,4 @@ public class TroopControllerIT {
         .andExpect(jsonPath("$.status", is("error")))
         .andExpect(jsonPath("$.message", is("Missing parameter(s): buildingId!")));
   }
-
-
 }

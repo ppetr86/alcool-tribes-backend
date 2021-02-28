@@ -52,7 +52,7 @@ public class TroopController {
 
   @PutMapping("/{troopId}")
   public ResponseEntity<?> updateTroop(@PathVariable Long troopId, Authentication authentication,
-                                        @RequestBody TroopRequestDTO requestDTO) throws
+                                       @RequestBody TroopRequestDTO requestDTO) throws
       MissingParameterException, ForbiddenActionException, IdNotFoundException,
       InvalidBuildingTypeException, NotEnoughResourceException {
 

@@ -33,7 +33,8 @@ public class PlayerServiceImpl implements PlayerService {
     kingdom.setResources(defaultResources);
 
     PlayerEntity player =
-            new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
+        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
+    if(dto.getEmail() == null) player.setEmail("");
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
     playerRepo.save(player);

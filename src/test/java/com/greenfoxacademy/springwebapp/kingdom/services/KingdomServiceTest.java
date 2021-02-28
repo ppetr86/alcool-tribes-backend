@@ -5,8 +5,6 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundExcept
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
