@@ -100,7 +100,7 @@ public class TroopServiceImpl implements TroopService {
       throw new NotEnoughResourceException();
     } else if (!kingdomEntity.getId().equals(troopRepository.findKingdomIdByTroopId(troopId))) {
       throw new InvalidInputException("troop id!");
-      // throwing invalid troop id in case of wrong id is provided. Not in swagger but i think its important.
+      //throwing invalid troop id in case of wrong id is provided. Not in swagger but i think it's important.
     }
 
     TroopEntity troopEntity = updateTroop(academy, troopId);
