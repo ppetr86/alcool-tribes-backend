@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -156,14 +157,9 @@ public class BuildingControllerTest {
   @Test
   public void updateTheGivenBuildingDetailsShouldReturnOkWithUpdatedBuildings() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
+    BuildingEntity building = kingdom.getBuildings().get(2);
     BuildingLevelDTO level = new BuildingLevelDTO(3);
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 3000L, 4000L, null);
-    BuildingEntity townHall = new BuildingEntity(2L, BuildingType.TOWNHALL, 3, 200, 3000L, 4000L, null);
-    List<BuildingEntity> fakeList = Arrays.asList(
-      building,
-      townHall
-    );
-    kingdom.setBuildings(fakeList);
 
     Mockito.when(buildingService.findBuildingById(1L)).thenReturn(building);
     Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenReturn(building);

@@ -44,4 +44,13 @@ public class BuildingFactory {
         new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100L, 200L)
     );
   }
+
+  public static List<BuildingEntity> createBuildingsWhereBuildingsIdAre_5_8() {
+    return Arrays.asList(
+        new BuildingEntity(5L, BuildingType.TOWNHALL, 1, 100, 100L, 200L),
+        new BuildingEntity(6L, BuildingType.ACADEMY, 1, 100, 100L, 200L),
+        new BuildingEntity(7L, BuildingType.FARM, 1, 100, 100L, 200L),
+        new BuildingEntity(8L, BuildingType.MINE, 1, 100, 100L, 200L)
+    );
+  }
 }

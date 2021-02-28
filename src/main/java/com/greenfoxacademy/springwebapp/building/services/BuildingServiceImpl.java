@@ -59,41 +59,26 @@ public class BuildingServiceImpl implements BuildingService {
     BuildingEntity building = checkBuildingDetails(kingdom, id, levelDTO);
 
     if (building.getType().equals(BuildingType.TOWNHALL)) {
-      building.setLevel(levelDTO.getLevel());
-      building.setHp(levelDTO.getLevel() * 200);
-      building.setStartedAt(timeService.getTime());
-      building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 120));
-      return repo.save(building);
+      return updateTownHall(building, levelDTO);
     } else if (building.getType().equals(BuildingType.ACADEMY)) {
-      building.setLevel(levelDTO.getLevel());
-      building.setHp(levelDTO.getLevel() * 150);
-      building.setStartedAt(timeService.getTime());
-      building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 90));
-      return repo.save(building);
+      return updateAcademy(building, levelDTO);
     } else {
-      building.setLevel(levelDTO.getLevel());
-      building.setHp(levelDTO.getLevel() * 100);
-      building.setStartedAt(timeService.getTime());
-      building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 60));
-      return repo.save(building);
+      return updateFarmOrMine(building, levelDTO);
     }
   }
 
   private BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
-    throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
-
-    BuildingEntity townHall = kingdom.getBuildings().stream()
-      .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
-      .findFirst()
-      .get();
-
+    throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException, ForbiddenActionException {
+    BuildingEntity townHall = getTownHallFromKingdom(kingdom);
     BuildingEntity building = findBuildingById(id);
 
     if (building == null) {
       throw new IdNotFoundException();
     } else if (levelDTO == null || levelDTO.getLevel() == 0) {
       throw new MissingParameterException("level");
-    } else if (!resourceService.hasResourcesForBuilding()) {
+    } else if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)){
+      throw new ForbiddenActionException();
+    } else if (resourceService.hasResourcesForBuilding()) {
       throw new NotEnoughResourceException();
     } else if (building.getType() == townHall.getType()) {
       return building;
@@ -102,6 +87,37 @@ public class BuildingServiceImpl implements BuildingService {
     } else {
       return building;
     }
+  }
+
+  private BuildingEntity getTownHallFromKingdom(KingdomEntity kingdom) {
+    return kingdom.getBuildings().stream()
+        .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
+        .findFirst()
+        .get();
+  }
+
+  private BuildingEntity updateTownHall(BuildingEntity building, BuildingLevelDTO levelDTO) {
+    building.setLevel(levelDTO.getLevel());
+    building.setHp(levelDTO.getLevel() * 200);
+    building.setStartedAt(timeService.getTime());
+    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 120));
+    return repo.save(building);
+  }
+
+  private BuildingEntity updateAcademy(BuildingEntity building, BuildingLevelDTO levelDTO) {
+    building.setLevel(levelDTO.getLevel());
+    building.setHp(levelDTO.getLevel() * 150);
+    building.setStartedAt(timeService.getTime());
+    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 90));
+    return repo.save(building);
+  }
+
+  private BuildingEntity updateFarmOrMine(BuildingEntity building, BuildingLevelDTO levelDTO) {
+    building.setLevel(levelDTO.getLevel());
+    building.setHp(levelDTO.getLevel() * 100);
+    building.setStartedAt(timeService.getTime());
+    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 60));
+    return repo.save(building);
   }
 
   @Override
@@ -160,5 +176,4 @@ public class BuildingServiceImpl implements BuildingService {
     return kingdom.getBuildings().stream()
       .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
-
 }
