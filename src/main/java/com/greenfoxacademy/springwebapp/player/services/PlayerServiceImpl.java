@@ -72,7 +72,6 @@ public class PlayerServiceImpl implements PlayerService {
         player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         kingdom.setResources(resourceService.createDefaultResources(kingdom));
-        //TODO: location has to be implemented... this is only to satisfy SQL NON NULL
         LocationEntity defaultLocation = locationService.defaultLocation(kingdom);
         locationService.save(defaultLocation);
         kingdom.setLocation(defaultLocation);

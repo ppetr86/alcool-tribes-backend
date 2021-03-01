@@ -4,16 +4,36 @@ random free locations on the map (coordinates from -100 to +100).*/
 
 CREATE PROCEDURE generate50DesertsAnd50Jungles()
 BEGIN
+    /* loop to get 50 locations,
+       while loop to check if generated location is already in db
+       if in DB, generate again, else move on*/
     SET @i = 0;
     REPEAT
-        SELECT RAND()*(101-0)*(-1) AS 'xdesert';
-        SELECT RAND()*(101-0)*(+1) AS 'ydesert';
+        BEGIN
+            DECLARE RandomDesertCount INT DEFAULT 1;
+            DECLARE RandomDesertX INT;
+            DECLARE RandomDesertY INT;
 
-        SELECT * FROM locations where x = xdesert x = ydesert;
+            DECLARE RandomJungleCount INT DEFAULT 1;
+            DECLARE RandomJungleX INT;
+            DECLARE RandomJungleY INT;
 
-        SELECT RAND()*(101-0)*(-1) AS 'xjungle';
-        SELECT RAND()*(101-0)*(+1) AS 'yjungle';
+            WHILE RandomDesertCount > 0 DO
+                    SET RandomDesertX = RAND() * (200) - 100;
+                    SET RandomDesertY = RAND() * (200) - 100;
+                    SET RandomDesertCount = SELECT COUNT(*) FROM locations where x = RAND()*(200)-100 AND y = RAND()*(200)-100;
+            END WHILE;
 
-    until  @i>50 END REPEAT;
+            WHILE RandomJungleCount > 0 DO
+                    SET RandomJungleX = RAND() * (200) - 100;
+                    SET RandomJungleY = RAND() * (200) - 100;
+                    SET RandomJungleCount = SELECT COUNT(*) FROM locations where x = RAND()*(200)-100 AND y = RAND()*(200)-100;
+            END WHILE;
 
+            INSERT INTO locations (x, y, type) VALUES (RandomDesertX, RandomDesertY, 'DESERT');
+            INSERT INTO locations (x, y, type) VALUES (RandomJungleX, RandomJungleY, 'JUNGLE');
+
+        END;
+        UNTIL @i = 49
+    END REPEAT;
 END;

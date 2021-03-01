@@ -9,9 +9,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,8 +36,9 @@ public class LocationEntity {
   private Integer x;
   private Integer y;
 
-  @OneToOne
-  @JoinColumn(name = "kingdom_id")
+  //Location is the owning side
+  @OneToOne(targetEntity = KingdomEntity.class)
+  //@JoinColumn(name = "kingdom_id", nullable = true)
   private KingdomEntity kingdom;
 
   @Enumerated(EnumType.STRING)

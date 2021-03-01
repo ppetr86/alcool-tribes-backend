@@ -12,7 +12,7 @@ import java.util.Random;
 
 @AllArgsConstructor
 @Service
-public class LocationServiceImpl implements LocationService{
+public class LocationServiceImpl implements LocationService {
 
   private LocationRepository repo;
 
@@ -28,9 +28,11 @@ public class LocationServiceImpl implements LocationService{
     LocationEntity startingLocation = null;
     List<LocationEntity> allLocations = findAll();
 
-    while (isOccupied){
+    while (isOccupied) {
       startingLocation = generateRandomLocation();
-      if (!allLocations.contains(startingLocation)) isOccupied = false;
+      if (!allLocations.contains(startingLocation)) {
+        isOccupied = false;
+      }
     }
     startingLocation.setKingdom(kingdom);
     startingLocation.setType(LocationType.KINGDOM);
