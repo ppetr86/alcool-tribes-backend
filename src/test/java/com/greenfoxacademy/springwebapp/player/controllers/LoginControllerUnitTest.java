@@ -39,8 +39,6 @@ public class LoginControllerUnitTest {
     PlayerTokenDTO fakePlayerDto = new PlayerTokenDTO("12345");
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "markmark");
 
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-
     Mockito
         .when(tokenService.generateTokenToLoggedInPlayer(requestDTO))
         .thenReturn(fakePlayerDto);
@@ -133,7 +131,7 @@ public class LoginControllerUnitTest {
 
     Mockito
         .when(playerService.findByUsernameAndPassword(requestDTO.getUsername(), requestDTO.getPassword()))
-        .thenReturn(playerEntity);
+        .thenReturn(null);
 
     ResponseEntity<?> response = loginController.login(requestDTO, bindingResult);
 
@@ -152,7 +150,7 @@ public class LoginControllerUnitTest {
 
     Mockito
         .when(playerService.findByUsernameAndPassword(requestDTO.getUsername(), requestDTO.getPassword()))
-        .thenReturn(playerEntity);
+        .thenReturn(null);
 
     ResponseEntity<?> response = loginController.login(requestDTO, bindingResult);
 
