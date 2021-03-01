@@ -60,7 +60,7 @@ public class TroopServiceImpl implements TroopService {
     //  their substracting when new troops are created.
     Integer troopLevel = academy.getLevel();
     TroopEntity troop = buildTroopFromTroopProperties(kingdom, troopLevel);
-    troopRepository.save(troop);
+    troop = troopRepository.save(troop);
     return new TroopEntityResponseDTO(troop);
   }
 

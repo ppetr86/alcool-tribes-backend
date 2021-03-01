@@ -37,21 +37,30 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
     String token = getTokenFromServletRequest(request);
+    Boolean tokenIsValid = validateToken(token, request,response);
+    if (token != null && tokenIsValid) {
+      authenticateUser(token);
+    }
+    filterChain.doFilter(request, response);
+  }
+
+  private void authenticateUser(String token) {
+    String userLogin = jwtProvider.getLoginFromToken(token);
+    CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
+    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
+        null, customUserDetails.getAuthorities());
+    SecurityContextHolder.getContext().setAuthentication(auth);
+    log.info("Authenticated player: {}", customUserDetails.getUsername());
+  }
+
+  private Boolean validateToken(String token, HttpServletRequest request, HttpServletResponse response) {
     Boolean tokenIsValid = false;
     try {
       tokenIsValid = jwtProvider.validateToken(token);
     } catch (Exception e) {
       cleanContextAndLogErrorMessage(request, response);
     }
-    if (token != null && tokenIsValid) {
-      String userLogin = jwtProvider.getLoginFromToken(token);
-      CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
-      UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
-          null, customUserDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(auth);
-      log.info("Authenticated player: {}", customUserDetails.getUsername());
-    }
-    filterChain.doFilter(request, response);
+    return tokenIsValid;
   }
 
   private void cleanContextAndLogErrorMessage(HttpServletRequest request, HttpServletResponse response) {
