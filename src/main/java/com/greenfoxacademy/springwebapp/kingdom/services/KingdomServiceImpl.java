@@ -67,7 +67,7 @@ public class KingdomServiceImpl implements KingdomService {
   }
 
   @Override
-  public String kingdomNameByPlayerID(Long id) {
+  public String findKingdomNameByPlayerID(Long id) {
     return kingdomRepository.findKingdomNameByPlayerID(id);
   }
 
