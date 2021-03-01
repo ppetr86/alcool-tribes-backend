@@ -54,11 +54,7 @@ public class KingdomEntity {
   @LazyCollection(LazyCollectionOption.FALSE)
   private List<ResourceEntity> resources;
 
-  //not owning
-  //@OneToOne(mappedBy = "kingdoms", cascade = CascadeType.PERSIST)
-  //@OneToOne(targetEntity = LocationEntity.class)
-  @OneToOne
-  //@JoinColumn(name = "location_id")
+  @OneToOne(mappedBy = "kingdom")
   private LocationEntity location;
 
 

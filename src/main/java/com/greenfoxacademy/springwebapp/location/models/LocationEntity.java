@@ -36,9 +36,7 @@ public class LocationEntity {
   private Integer x;
   private Integer y;
 
-  //Location is the owning side
-  //@OneToOne(targetEntity = KingdomEntity.class)
-  //@JoinColumn(name = "kingdom_id")
+
   @OneToOne
   private KingdomEntity kingdom;
 
