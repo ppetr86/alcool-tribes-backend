@@ -17,9 +17,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.configuration.injection.MockInjection;
 import org.springframework.core.env.Environment;
 
 import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
 
 public class BuildingServiceTest {
 
@@ -228,15 +231,15 @@ public class BuildingServiceTest {
   @Test
   public void updateBuildingShouldReturnWithUpdatedTownHall(){
     KingdomEntity kingdom = new KingdomEntity();
-    kingdom.setId(1L);
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8());
     BuildingEntity townHall = kingdom.getBuildings().get(0);
 
-    buildingService = Mockito.spy(BuildingService.class);
-    Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(1L);
+    buildingService = Mockito.spy(buildingService);
+    Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(5L)).thenReturn(Optional.of(townHall));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+    Mockito.when(buildingRepository.save(any())).thenReturn(townHall);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 5L, new BuildingLevelDTO(4));
 
@@ -251,16 +254,13 @@ public class BuildingServiceTest {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     BuildingEntity academy = kingdom.getBuildings().get(1);
-    academy.setLevel(3);
-    academy.setHp(450);
-    academy.setStartedAt(1060L);
-    academy.setFinishedAt(1330L);
 
-    buildingService = Mockito.spy(BuildingService.class);
+    buildingService = Mockito.spy(buildingService);
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(2L)).thenReturn(java.util.Optional.of(academy));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+    Mockito.when(buildingRepository.save(any())).thenReturn(academy);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 2L, new BuildingLevelDTO(3));
 
@@ -276,11 +276,12 @@ public class BuildingServiceTest {
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     BuildingEntity farm = kingdom.getBuildings().get(2);
 
-    buildingService = Mockito.spy(BuildingService.class);
+    buildingService = Mockito.spy(buildingService);
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(farm));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+    Mockito.when(buildingRepository.save(any())).thenReturn(farm);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom,3L, new BuildingLevelDTO(2));
 
@@ -296,13 +297,14 @@ public class BuildingServiceTest {
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     BuildingEntity mine = kingdom.getBuildings().get(3);
 
-    buildingService = Mockito.spy(BuildingService.class);
+    buildingService = Mockito.spy(buildingService);
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(4L)).thenReturn(Optional.of(mine));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+    Mockito.when(buildingRepository.save(any())).thenReturn(mine);
 
-    buildingService.updateBuilding(kingdom, 4L, new BuildingLevelDTO(4));
+    BuildingEntity result = buildingService.updateBuilding(kingdom, 4L, new BuildingLevelDTO(4));
 
     Assert.assertEquals(Optional.of(4), Optional.ofNullable(mine.getLevel()));
     Assert.assertEquals(Optional.of(400), Optional.ofNullable(mine.getHp()));
