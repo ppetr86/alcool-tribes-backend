@@ -52,10 +52,7 @@ public class PlayerServiceTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    accountVerification = Mockito.mock(AccountVerificationEmail.class);
-    resourceService = Mockito.mock(ResourceService.class);
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService, registrationTokenService, tokenService,resourceService,locationService);
-    ReflectionTestUtils.setField(tokenService, "tokenValidityInSeconds", 86400);
   }
 
   @Test
@@ -188,6 +185,7 @@ public class PlayerServiceTest {
     secureToken.setIsExpired(false);
     secureToken.setPlayer(pl);
     secureToken.setExpireAt(LocalDateTime.now().plusDays(1));
+    ReflectionTestUtils.setField(tokenService, "tokenValidityInSeconds", 86400);
 
     Mockito.when(registrationTokenService.createSecureToken(pl)).thenReturn(secureToken);
     Mockito.when(playerService.sendRegistrationConfirmationEmail(pl)).thenReturn(true);
@@ -214,9 +212,8 @@ public class PlayerServiceTest {
     secureToken.setIsExpired(false);
     secureToken.setPlayer(pl);
     secureToken.setExpireAt(LocalDateTime.now().plusDays(1));
-
+    ReflectionTestUtils.setField(tokenService, "tokenValidityInSeconds", 86400);
     Mockito.when(registrationTokenService.createSecureToken(pl)).thenReturn(secureToken);
-
     Assert.assertFalse(playerService.sendRegistrationConfirmationEmail(pl));
   }
 

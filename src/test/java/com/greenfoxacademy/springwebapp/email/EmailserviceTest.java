@@ -40,7 +40,6 @@ public class EmailserviceTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        //mailSender = new JavaMailSenderImpl();
         tokenService = new RegistrationTokenServiceImpl(registrationTokenRepository);
         templateEngine = new SpringTemplateEngine();
         emailService = new EmailServiceImpl(mailSender, templateEngine);
@@ -58,6 +57,8 @@ public class EmailserviceTest {
         email.setToken(token.getToken());
         email.buildVerificationUrl("http://localhost:8080", token.getToken());
         //doNothing().when(mailSender).send(mailSender.createMimeMessage());
+        //verify(javaMailSender, times(1)).send(emailCaptor.capture());
+
         emailService.sendMailWithHtmlAndPlainText(email);
 
         Assert.assertEquals("testUsername", email.getUsername());

@@ -15,7 +15,6 @@ public class AccountVerificationEmail extends AbstractEmail {
   public <T> void init(T context) {
     PlayerEntity player = (PlayerEntity) context;
     // we pass the variables we want in Thymeleaf in the context map
-    put("firstName", player.getEmail());
     put("username", player.getUsername());
     put("kingdomname", player.getKingdom().getKingdomName());
 
@@ -23,8 +22,6 @@ public class AccountVerificationEmail extends AbstractEmail {
     setSenderDisplayName("AlcoolGame");
 
     setRecipientEmail(player.getEmail());
-    setRecipientEmail(player.getEmail());
-
     setKingdomName(player.getKingdom().getKingdomName());
     setUsername(player.getUsername());
     setTemplateLocation("registration");

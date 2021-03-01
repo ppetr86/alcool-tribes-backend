@@ -64,6 +64,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
 
+    testImplementation group: 'com.icegreen', name: 'greenmail', version: '1.6.2'
 
 }
 

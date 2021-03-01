@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -24,29 +26,27 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     List<FieldError> errors = ex.getBindingResult().getFieldErrors();
     if (errors.size() > 1) {
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < errors.size(); i++) {
-        if (i == 0) {
-          sb.append(errors.get(i).getField().substring(0, 1).toUpperCase());
-          sb.append(errors.get(i).getField().substring(1)).append(" and ");
-        } else {
-          String msgCurrent = errors.get(i).getDefaultMessage();
-          if (!sb.toString().contains(msgCurrent.substring(0, msgCurrent.indexOf(" ")))) {
-            sb.append(errors.get(i).getField());
-            if (i < errors.size() - 1) {
-              sb.append(" and ");
-            }
-          }
-          if (i == errors.size() - 1) sb.append(" are required.");
-        }
-      }
-      return new ResponseEntity<>(new ErrorDTO(sb.toString()), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(new ErrorDTO(createTextFromFieldErrors(errors)), HttpStatus.BAD_REQUEST);
     }
 
-    if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters."))
+    if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters.")) {
       return new ResponseEntity<>(new ErrorDTO("Password must be 8 characters."), HttpStatus.NOT_ACCEPTABLE);
+    }
     //covers for missing type, password required, username required
     return new ResponseEntity<>(new ErrorDTO(errors.get(0).getDefaultMessage()), HttpStatus.BAD_REQUEST);
+  }
+
+  private String createTextFromFieldErrors(List<FieldError> errors) {
+
+    String result = errors.stream()
+        .map(DefaultMessageSourceResolvable::getDefaultMessage)
+        .map(x -> x.toLowerCase().substring(0, x.indexOf(" ")))
+        .distinct()
+        .sorted()
+        .map(each -> each + " and ")
+        .collect(Collectors.joining());
+
+    return result.substring(0, 1).toUpperCase() + result.substring(1, result.lastIndexOf(" and")) + " are required.";
   }
 
   @ExceptionHandler({
