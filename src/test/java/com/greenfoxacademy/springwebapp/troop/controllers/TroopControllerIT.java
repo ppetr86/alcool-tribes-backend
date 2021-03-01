@@ -3,7 +3,6 @@ package com.greenfoxacademy.springwebapp.troop.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -20,9 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultLevel1BuildingsWithAllData;
@@ -76,15 +72,10 @@ public class TroopControllerIT {
   @Test
   public void createTroopWithCorrectBuildingId_level10Academy_createsLevel10troop()
       throws Exception {
-    TroopRequestDTO request = new TroopRequestDTO(1L);
-    String json = new ObjectMapper().writeValueAsString(request);
-
+    String json = new ObjectMapper().writeValueAsString(new TroopRequestDTO(4L));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    List<BuildingEntity> buildings = new ArrayList<>();
-    BuildingEntity academy =
-        new BuildingEntity(1L, BuildingType.ACADEMY, 10, 150, 1613303221L, 1613303371L);
-    buildings.add(academy);
-    kingdom.setBuildings(buildings);
+    BuildingEntity academy = kingdom.getBuildings().stream().filter(a -> a.getId() == 4).findFirst().orElse(null);
+    academy.setLevel(10);
 
     mockMvc.perform(post(TroopController.URI)
         .contentType(MediaType.APPLICATION_JSON)

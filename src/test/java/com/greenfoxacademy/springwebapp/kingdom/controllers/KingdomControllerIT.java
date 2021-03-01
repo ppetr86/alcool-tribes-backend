@@ -24,7 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -85,7 +86,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void updateKingdomWithNameShouldReturnUpdatedKingdom() throws Exception{
+  public void updateKingdomWithNameShouldReturnUpdatedKingdom() throws Exception {
     KingdomNameDTO request = new KingdomNameDTO("New Kingdom");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -100,7 +101,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfTextIsEmpty() throws Exception{
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfTextIsEmpty() throws Exception {
     KingdomNameDTO request = new KingdomNameDTO("");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -115,7 +116,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfRequestIsEmpty() throws Exception{
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfRequestIsEmpty() throws Exception {
     KingdomNameDTO request = new KingdomNameDTO();
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);

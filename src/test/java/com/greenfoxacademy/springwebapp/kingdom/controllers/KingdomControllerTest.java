@@ -14,13 +14,10 @@ import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-
-import java.util.Objects;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
@@ -75,7 +72,7 @@ public class KingdomControllerTest {
   }
 
   @Test
-  public void updateKingdomWithNameShouldReturnUpdatedBuilding(){
+  public void updateKingdomWithNameShouldReturnUpdatedBuilding() {
     KingdomNameDTO nameDTO = new KingdomNameDTO("New Kingdom");
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setId(1L);
@@ -90,32 +87,26 @@ public class KingdomControllerTest {
     ResponseEntity<?> response = kingdomController.updateKingdomByName(authentication, nameDTO);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assert.assertEquals(1, ((KingdomResponseDTO)response.getBody()).getId());
-    Assert.assertEquals("New Kingdom", ((KingdomResponseDTO)response.getBody()).getName());
+    Assert.assertEquals(1, ((KingdomResponseDTO) response.getBody()).getId());
+    Assert.assertEquals("New Kingdom", ((KingdomResponseDTO) response.getBody()).getName());
   }
 
   @Test(expected = MissingParameterException.class)
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfDTOIsEmpty(){
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfDtoIsEmpty() {
     KingdomNameDTO nameDTO = new KingdomNameDTO("");
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
     Mockito.when(kingdomService.changeKingdomName(kingdom, nameDTO)).thenThrow(MissingParameterException.class);
 
     ResponseEntity<?> response = kingdomController.updateKingdomByName(authentication, nameDTO);
-
-    Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    Assert.assertEquals("Missing parameter(s): name!", ((ErrorDTO) response.getBody()).getMessage());
   }
 
   @Test(expected = MissingParameterException.class)
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfDTOIsNull(){
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfDtoIsNull() {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
     Mockito.when(kingdomService.changeKingdomName(kingdom, null)).thenThrow(MissingParameterException.class);
 
     ResponseEntity<?> response = kingdomController.updateKingdomByName(authentication, null);
-
-    Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    Assert.assertEquals("Missing parameter(s): name!", ((ErrorDTO) response.getBody()).getMessage());
   }
 }

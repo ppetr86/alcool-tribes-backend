@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
+import com.greenfoxacademy.springwebapp.TestConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
@@ -18,31 +19,12 @@ public class BuildingServiceTest {
 
   @Before
   public void init() {
-
     BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
-    Environment env = Mockito.mock(Environment.class);
     ResourceService resourceService = Mockito.mock(ResourceService.class);
 
-    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
-
-    Mockito.when(env.getProperty("building.townhall.buildingTime"))
-        .thenReturn("120");
-    Mockito.when(env.getProperty("building.farm.buildingTime"))
-        .thenReturn("60");
-    Mockito.when(env.getProperty("building.mine.buildingTime"))
-        .thenReturn("60");
-    Mockito.when(env.getProperty("building.academy.buildingTime"))
-        .thenReturn("90");
-
-    Mockito.when(env.getProperty("building.townhall.hp"))
-        .thenReturn("200");
-    Mockito.when(env.getProperty("building.farm.hp"))
-        .thenReturn("100");
-    Mockito.when(env.getProperty("building.mine.hp"))
-        .thenReturn("100");
-    Mockito.when(env.getProperty("building.academy.hp"))
-        .thenReturn("150");
+    Environment mockEnvironment = TestConfig.mockEnvironment();
+    buildingService = new BuildingServiceImpl(mockEnvironment, buildingRepository, timeService, resourceService);
 
     Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(BuildingFactory.createBuildings(null));
   }
