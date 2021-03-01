@@ -70,7 +70,7 @@ public class KingdomServiceImpl implements KingdomService {
   }
 
   @Override
-  public KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) throws MissingParameterException {
+  public KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) {
     kingdom.setKingdomName(nameDTO.getName());
     saveKingdom(kingdom);
     return convert(kingdom);
