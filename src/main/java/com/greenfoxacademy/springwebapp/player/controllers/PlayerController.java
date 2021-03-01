@@ -9,8 +9,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -19,9 +24,8 @@ import javax.validation.Valid;
 @AllArgsConstructor
 @RequestMapping(PlayerController.URI)
 public class PlayerController {
-  private final PlayerService playerService;
-
   public static final String URI = "/register";
+  private final PlayerService playerService;
 
   @GetMapping("/verify")
   @ResponseBody
@@ -43,7 +47,7 @@ public class PlayerController {
 
   @PostMapping
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request)
-          throws UsernameIsTakenException {
+      throws UsernameIsTakenException {
     //if you want to use the text from validation annotation then you can not
     // combine it with Binding result
     // if you dont combine, default messages will be displayed and exception thrown automatically

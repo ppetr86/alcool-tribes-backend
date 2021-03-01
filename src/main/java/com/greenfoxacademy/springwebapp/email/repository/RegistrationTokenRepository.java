@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.email.repository;
 
-
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

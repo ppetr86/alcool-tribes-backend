@@ -35,144 +35,144 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
 
-    private final PlayerRepository playerRepo;
-    private final PasswordEncoder passwordEncoder;
-    private final BuildingService buildingService;
-    private final EmailService emailService;
-    private final RegistrationTokenService registrationTokenService;
-    private final TokenService tokenService;
-    private final ResourceService resourceService;
-    private final LocationService locationService;
+  private final PlayerRepository playerRepo;
+  private final PasswordEncoder passwordEncoder;
+  private final BuildingService buildingService;
+  private final EmailService emailService;
+  private final RegistrationTokenService registrationTokenService;
+  private final TokenService tokenService;
+  private final ResourceService resourceService;
+  private final LocationService locationService;
 
-    @Value("${site.base.url.https}")
-    private String baseURL;
+  @Value("${site.base.url.https}")
+  private String baseURL;
 
-    @Override
-    public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
-        throws UsernameIsTakenException {
+  @Override
+  public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
+      throws UsernameIsTakenException {
 
-        if (existsByUsername(request.getUsername())) throw new UsernameIsTakenException();
-
-        PlayerEntity savedPlayer = saveNewPlayer(request);
-        boolean mailWasSent = false;
-        if (!request.getEmail().isEmpty())
-            mailWasSent = sendRegistrationConfirmationEmail(savedPlayer);
-        return savedPlayer;
+    if (existsByUsername(request.getUsername())) {
+      throw new UsernameIsTakenException();
     }
 
-    @Override
-    public PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO dto) {
-        KingdomEntity kingdom = assignKingdomName(dto);
-        List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
-        kingdom.setBuildings(defaultBuildings);
-
-        PlayerEntity player = new PlayerEntity();
-        player.setEmail(dto.getEmail());
-        player.setUsername(dto.getUsername());
-        player.setPassword(passwordEncoder.encode(dto.getPassword()));
-
-        kingdom.setResources(resourceService.createDefaultResources(kingdom));
-        //TODO: location has to be implemented... this is only to satisfy SQL NON NULL
-        LocationEntity defaultLocation = new LocationEntity(1L,10,10);
-        locationService.save(defaultLocation);
-        kingdom.setLocation(defaultLocation);
-
-        player.setKingdom(kingdom);
-        player.setIsAccountVerified(false);
-        kingdom.setPlayer(player);
-
-        player = playerRepo.save(player);
-        return player;
+    PlayerEntity savedPlayer = saveNewPlayer(request);
+    boolean mailWasSent = false;
+    if (!request.getEmail().isEmpty()) {
+      mailWasSent = sendRegistrationConfirmationEmail(savedPlayer);
     }
+    return savedPlayer;
+  }
 
-    @Override
-    public boolean sendRegistrationConfirmationEmail(PlayerEntity player) {
-        RegistrationTokenEntity token = registrationTokenService.createSecureToken(player);
-        token.setPlayer(player);
-        registrationTokenService.saveSecureToken(token);
+  @Override
+  public PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO dto) {
+    KingdomEntity kingdom = assignKingdomName(dto);
+    List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
+    kingdom.setBuildings(defaultBuildings);
+    PlayerEntity player = new PlayerEntity();
+    player.setEmail(dto.getEmail());
+    player.setUsername(dto.getUsername());
+    player.setPassword(passwordEncoder.encode(dto.getPassword()));
+    kingdom.setResources(resourceService.createDefaultResources(kingdom));
+    //TODO: location has to be implemented... this is only to satisfy SQL NON NULL
+    LocationEntity defaultLocation = new LocationEntity(1L, 10, 10);
+    locationService.save(defaultLocation);
+    kingdom.setLocation(defaultLocation);
+    player.setKingdom(kingdom);
+    player.setIsAccountVerified(false);
+    kingdom.setPlayer(player);
+    player = playerRepo.save(player);
+    return player;
+  }
 
-        AccountVerificationEmail emailContext = new AccountVerificationEmail();
-        emailContext.init(player);
-        emailContext.setToken(token.getToken());
-        emailContext.buildVerificationUrl(baseURL, token.getToken());
+  @Override
+  public boolean sendRegistrationConfirmationEmail(PlayerEntity player) {
+    RegistrationTokenEntity token = registrationTokenService.createSecureToken(player);
+    token.setPlayer(player);
+    registrationTokenService.saveSecureToken(token);
 
-        try {
-            emailService.sendMailWithHtmlAndPlainText(emailContext);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+    AccountVerificationEmail emailContext = new AccountVerificationEmail();
+    emailContext.init(player);
+    emailContext.setToken(token.getToken());
+    emailContext.buildVerificationUrl(baseURL, token.getToken());
+
+    try {
+      emailService.sendMailWithHtmlAndPlainText(emailContext);
+    } catch (MessagingException e) {
+      e.printStackTrace();
+      return false;
     }
+    return true;
+  }
 
-    private KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
-        KingdomEntity kingdom = new KingdomEntity();
-        if (dto.getKingdomname() != null) {
-            kingdom.setKingdomName(dto.getKingdomname());
-        } else {
-            kingdom.setKingdomName(dto.getUsername() + "'s kingdom");
-        }
-        return kingdom;
+  private KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
+    KingdomEntity kingdom = new KingdomEntity();
+    if (dto.getKingdomname() != null) {
+      kingdom.setKingdomName(dto.getKingdomname());
+    } else {
+      kingdom.setKingdomName(dto.getUsername() + "'s kingdom");
     }
+    return kingdom;
+  }
 
-    @Override
-    public PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity) {
-        PlayerResponseDTO responseDTO = new PlayerResponseDTO();
-        BeanUtils.copyProperties(playerEntity, responseDTO);
-        responseDTO.setKingdomId(playerEntity.getKingdom().getId());
-        return responseDTO;
+  @Override
+  public PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity) {
+    PlayerResponseDTO responseDTO = new PlayerResponseDTO();
+    BeanUtils.copyProperties(playerEntity, responseDTO);
+    responseDTO.setKingdomId(playerEntity.getKingdom().getId());
+    return responseDTO;
+  }
+
+
+  @Override
+  public PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
+      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+
+    PlayerEntity player = findByUsernameAndPassword(request.getUsername(), request.getPassword());
+
+    if (player == null) {
+      throw new IncorrectUsernameOrPwdException();
+    } else if (!player.getIsAccountVerified()) {
+      throw new NotVerifiedRegistrationException();
     }
+    return tokenService.generateTokenToLoggedInPlayer(player);
+  }
 
+  @Override
+  public PlayerEntity findByUsername(String username) {
+    return playerRepo.findByUsername(username);
+  }
 
+  @Override
+  public boolean existsByUsername(String username) {
+    return playerRepo.existsByUsername(username);
+  }
 
-    @Override
-    public PlayerTokenDTO loginPlayer(PlayerRequestDTO request) throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+  @Override
+  public PlayerEntity findByUsernameAndPassword(String username, String password) {
+    PlayerEntity playerEntity = findByUsername(username);
 
-        PlayerEntity player = findByUsernameAndPassword(request.getUsername(), request.getPassword());
-
-        if (player == null)
-            throw new IncorrectUsernameOrPwdException();
-        else if (!player.getIsAccountVerified())
-            throw new NotVerifiedRegistrationException();
-        return tokenService.generateTokenToLoggedInPlayer(player);
+    if (playerEntity != null) {
+      if (passwordEncoder.matches(password, playerEntity.getPassword())) {
+        return playerEntity;
+      }
     }
+    return null;
+  }
 
-    @Override
-    public PlayerEntity findByUsername(String username) {
-        return playerRepo.findByUsername(username);
+  @Override
+  public boolean verifyUser(String token) throws InvalidTokenException {
+    RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
+    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
+      throw new InvalidTokenException();
     }
-
-    @Override
-    public boolean existsByUsername(String username) {
-        return playerRepo.existsByUsername(username);
+    PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
+    if (Objects.isNull(player)) {
+      return false;
     }
+    player.setIsAccountVerified(true);
+    playerRepo.save(player);
 
-    @Override
-    public PlayerEntity findByUsernameAndPassword(String username, String password) {
-        PlayerEntity playerEntity = findByUsername(username);
-
-        if (playerEntity != null) {
-            if (passwordEncoder.matches(password, playerEntity.getPassword())) {
-                return playerEntity;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean verifyUser(String token) throws InvalidTokenException {
-        RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
-        if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
-            throw new InvalidTokenException();
-        }
-        PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
-        if (Objects.isNull(player)) {
-            return false;
-        }
-        player.setIsAccountVerified(true);
-        playerRepo.save(player);
-
-        registrationTokenService.removeToken(secureToken);
-        return true;
-    }
+    registrationTokenService.removeToken(secureToken);
+    return true;
+  }
 }

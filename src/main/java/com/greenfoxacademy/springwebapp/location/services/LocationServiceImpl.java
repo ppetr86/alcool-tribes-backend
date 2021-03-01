@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class LocationServiceImpl implements LocationService{
+public class LocationServiceImpl implements LocationService {
 
   private LocationRepository repo;
 
