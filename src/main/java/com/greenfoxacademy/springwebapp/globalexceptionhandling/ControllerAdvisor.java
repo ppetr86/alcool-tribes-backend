@@ -25,13 +25,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                                                                 HttpStatus status, WebRequest request) {
 
     List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-    if (errors.size() > 1) {
+    if (errors.size() > 1)
       return new ResponseEntity<>(new ErrorDTO(createTextFromFieldErrors(errors)), HttpStatus.BAD_REQUEST);
-    }
 
-    if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters.")) {
+    if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters."))
       return new ResponseEntity<>(new ErrorDTO("Password must be 8 characters."), HttpStatus.NOT_ACCEPTABLE);
-    }
+
     //covers for missing type, password required, username required
     return new ResponseEntity<>(new ErrorDTO(errors.get(0).getDefaultMessage()), HttpStatus.BAD_REQUEST);
   }
