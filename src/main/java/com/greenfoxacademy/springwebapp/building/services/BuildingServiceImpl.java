@@ -35,7 +35,8 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingEntity defineFinishedAt(BuildingEntity entity) {
-    String time = env.getProperty(String.format("building.%s.buildingTime", entity.getType().buildingType.toLowerCase()));
+    String time =
+        env.getProperty(String.format("building.%s.buildingTime", entity.getType().buildingType.toLowerCase()));
     entity.setFinishedAt(entity.getStartedAt() + Long.parseLong(time));
     return entity;
   }
@@ -78,14 +79,24 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
-    if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
-    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
-    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
-    if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
+    if (dto.getType().trim().isEmpty()) {
+      throw new MissingParameterException("type");
+    }
+    if (!isBuildingTypeInRequestOk(dto)) {
+      throw new InvalidInputException("building type");
+    }
+    if (!hasKingdomTownhall(kingdom)) {
+      throw new TownhallLevelException();
+    }
+    if (!resourceService.hasResourcesForBuilding()) {
+      throw new NotEnoughResourceException();
+    }
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
     result = defineHp(result);
+    result.setLevel(1);
+    result.setKingdom(kingdom);
     result = save(result);
     return result;
   }
@@ -93,13 +104,21 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
-        .map(type -> new BuildingEntity(kingdom, type, 1))
+        .map(type -> new BuildingEntity(kingdom,
+            type,
+            1,
+            Integer.parseInt(env.getProperty(String.format("building.%s.hp",
+                type.toString().toLowerCase()))),
+            timeService.getTime(),
+            timeService.getTime()))
         .collect(Collectors.toList());
   }
 
   @Override
   public boolean hasKingdomTownhall(KingdomEntity kingdom) {
-    if (kingdom.getBuildings() == null) return false;
+    if (kingdom.getBuildings() == null) {
+      return false;
+    }
     return kingdom.getBuildings().stream()
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }

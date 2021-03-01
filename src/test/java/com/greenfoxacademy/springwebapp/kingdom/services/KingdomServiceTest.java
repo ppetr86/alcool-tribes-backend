@@ -8,8 +8,6 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomServiceImpl;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
@@ -18,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,31 +59,6 @@ public class KingdomServiceTest {
   @Test(expected = IdNotFoundException.class)
   public void entityToKingdomResponseDTO_throwsIDNotFoundException() {
     KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(null);
-  }
-
-  @Test(expected = MissingParameterException.class)
-  public void changeKingdomNameShouldReturnMissingParameterExceptionIfDTOIsNull(){
-    KingdomNameDTO nameDTO = new KingdomNameDTO();
-    List<BuildingEntity> fakeBuildings = new ArrayList<>();
-    List<TroopEntity> fakeTroops = new ArrayList<>();
-    List<ResourceEntity> fakeResources = new ArrayList<>();
-    PlayerEntity fakePlayer = new PlayerEntity(1L ,"test", "test", "test@gmail.com", "avatar.test", 0, null);
-    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources, new LocationEntity(1L, 10, 10));
-    kingdom.setKingdomName(nameDTO.getName());
-
-    KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, null);
-  }
-
-  @Test(expected = MissingParameterException.class)
-  public void changeKingdomNameShouldReturnMissingParameterExceptionIfDTOIsEmpty(){
-    KingdomNameDTO nameDTO = new KingdomNameDTO("");
-    List<BuildingEntity> fakeBuildings = new ArrayList<>();
-    List<TroopEntity> fakeTroops = new ArrayList<>();
-    List<ResourceEntity> fakeResources = new ArrayList<>();
-    PlayerEntity fakePlayer = new PlayerEntity(1L ,"test", "test", "test@gmail.com", "avatar.test", 0, null);
-    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources, new LocationEntity(1L, 10, 10));
-
-    KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
   }
 
   @Test

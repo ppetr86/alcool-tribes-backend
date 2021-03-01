@@ -40,26 +40,28 @@ public class KingdomServiceImpl implements KingdomService {
   @Override
   public KingdomResponseDTO entityToKingdomResponseDTO(Long id) throws IdNotFoundException {
     KingdomEntity kingdom = findByID(id);
-    if (kingdom == null) throw new IdNotFoundException();
+    if (kingdom == null) {
+      throw new IdNotFoundException();
+    }
     return convert(kingdom);
   }
 
   public KingdomResponseDTO convert(KingdomEntity e) {
     return KingdomResponseDTO.builder()
-            .withId(e.getId())
-            .withName(e.getKingdomName())
-            .withUserId(e.getPlayer().getId())
-            .withBuildings(e.getBuildings().stream()
-                    .map(BuildingSingleResponseDTO::new)
-                    .collect(Collectors.toList()))
-            .withResources(e.getResources().stream()
-                    .map(ResourceResponseDTO::new)
-                    .collect(Collectors.toList()))
-            .withTroops(e.getTroops().stream()
-                    .map(TroopEntityResponseDTO::new)
-                    .collect(Collectors.toList()))
-            .withLocation(new LocationEntityDTO(e.getLocation()))
-            .build();
+        .withId(e.getId())
+        .withName(e.getKingdomName())
+        .withUserId(e.getPlayer().getId())
+        .withBuildings(e.getBuildings().stream()
+            .map(BuildingSingleResponseDTO::new)
+            .collect(Collectors.toList()))
+        .withResources(e.getResources().stream()
+            .map(ResourceResponseDTO::new)
+            .collect(Collectors.toList()))
+        .withTroops(e.getTroops().stream()
+            .map(TroopEntityResponseDTO::new)
+            .collect(Collectors.toList()))
+        .withLocation(new LocationEntityDTO(e.getLocation()))
+        .build();
   }
 
   @Override
@@ -69,7 +71,6 @@ public class KingdomServiceImpl implements KingdomService {
 
   @Override
   public KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) throws MissingParameterException {
-    if (nameDTO==null || nameDTO.getName().isEmpty()) throw new MissingParameterException("name");
     kingdom.setKingdomName(nameDTO.getName());
     saveKingdom(kingdom);
     return convert(kingdom);
