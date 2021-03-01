@@ -54,7 +54,7 @@ public class BuildingController {
   public ResponseEntity<?> updateTheGivenBuildingDetails(@PathVariable Long id,
                                                          Authentication auth,
                                                          @RequestBody BuildingLevelDTO level)
-    throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
