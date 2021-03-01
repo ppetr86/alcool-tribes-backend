@@ -5,6 +5,9 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,18 +16,24 @@ import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
 public class BuildingServiceTest {
+  private Environment env;
+  private BuildingRepository buildingRepository;
+  private TimeService timeService;
+  private ResourceService resourceService;
 
   private BuildingService buildingService;
+  private BuildingServiceImpl buildingServiceImpl;
 
   @Before
   public void init() {
 
-    BuildingRepository buildingRepository = Mockito.mock(BuildingRepository.class);
-    TimeService timeService = Mockito.mock(TimeService.class);
-    Environment env = Mockito.mock(Environment.class);
-    ResourceService resourceService = Mockito.mock(ResourceService.class);
+    buildingRepository = Mockito.mock(BuildingRepository.class);
+    timeService = Mockito.mock(TimeService.class);
+    env = Mockito.mock(Environment.class);
+    resourceService = Mockito.mock(ResourceService.class);
 
     buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
+    buildingServiceImpl = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
 
     Mockito.when(env.getProperty("building.townhall.buildingTime"))
         .thenReturn("120");
@@ -148,5 +157,19 @@ public class BuildingServiceTest {
   public void isTypeOkRequest_Academy_ShouldTrue_VariousCase() {
     Assert.assertEquals(BuildingType.ACADEMY,
         buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
+  }
+
+  @Test
+  public void updateResource_returnsCorrectResource() {
+    KingdomEntity kingdom = new KingdomEntity();
+    ResourceEntity resource = new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom);
+    BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100,
+        10L, 1000L);
+
+    Mockito.when(resourceService.updateResourceGeneration(kingdom, building)).thenReturn(resource);
+
+    ResourceEntity resourceToBeUpdated = buildingServiceImpl.updateResource(building, kingdom);
+
+    Assert.assertEquals(resource, resourceToBeUpdated);
   }
 }

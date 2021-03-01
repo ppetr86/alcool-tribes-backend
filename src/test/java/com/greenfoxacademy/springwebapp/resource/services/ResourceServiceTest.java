@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
@@ -24,8 +23,6 @@ import org.springframework.core.env.Environment;
 import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
-
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(MockitoJUnitRunner.class) //needed for using ArgumentCaptor
 public class ResourceServiceTest {
