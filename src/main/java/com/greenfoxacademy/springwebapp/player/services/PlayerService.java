@@ -16,5 +16,5 @@ public interface PlayerService {
 
   PlayerEntity findByUsernameAndPassword(String username, String password);
 
-  PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom);
+  PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance);
 }

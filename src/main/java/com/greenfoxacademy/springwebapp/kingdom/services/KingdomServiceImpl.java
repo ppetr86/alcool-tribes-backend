@@ -5,11 +5,13 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundExcept
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,6 +65,11 @@ public class KingdomServiceImpl implements KingdomService {
   @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
     return kingdomRepository.save(kingdom);
+  }
+
+  @Override
+  public List<KingdomEntity> findKingdomEntitiesByLocationBetween(LocationEntity location, LocationEntity location2) {
+    return kingdomRepository.findKingdomEntitiesByLocationBetween(location, location2);
   }
 
 }
