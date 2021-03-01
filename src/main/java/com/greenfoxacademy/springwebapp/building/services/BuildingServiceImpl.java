@@ -103,6 +103,12 @@ public class BuildingServiceImpl implements BuildingService {
     result = save(result);
 
     //updating Resource Generation
+    ResourceEntity resourceToBeUpdated = updateResource(result, kingdom);
+
+    return result;
+  }
+
+  public ResourceEntity updateResource(BuildingEntity result, KingdomEntity kingdom) {
     if (result.getType().equals(BuildingType.FARM) || result.getType().equals(BuildingType.MINE)) {
       ResourceEntity resource = resourceService.updateResourceGeneration(kingdom, result);
       if (resource != null) {
@@ -111,9 +117,9 @@ public class BuildingServiceImpl implements BuildingService {
       } else {
         log.warn("Resource generation was not updated when creating new building of type {}!", result.getType());
       }
+      return resource;
     }
-
-    return result;
+    return null;
   }
 
   @Override

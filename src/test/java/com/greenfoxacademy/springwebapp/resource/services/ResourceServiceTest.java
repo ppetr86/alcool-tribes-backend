@@ -7,17 +7,33 @@ import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceTimerTask;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.repositories.ResourceRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Timer;
 
+import static org.mockito.ArgumentMatchers.any;
+
+@RunWith(MockitoJUnitRunner.class) //needed for using ArgumentCaptor
 public class ResourceServiceTest {
+  @Captor
+  ArgumentCaptor<ResourceTimerTask> resourceTimerTaskCaptor;
+  @Captor
+  ArgumentCaptor<Integer> delayCaptor;
+
   private ResourceService resourceService;
   private TimeService timeService;
   private ResourceRepository resourceRepository;
@@ -133,34 +149,52 @@ public class ResourceServiceTest {
     Assert.assertEquals(166, resourcesGenerated);
   }
 
-  @Test //version1 - using spy for impl class
-  public void updateResourceGeneration_Gold_ShouldReturnCorrectlyUpdatedResource_v1() {
+  @Test
+  public void scheduledResourceUpdateShouldReturnCorrectlyUpdatedResource() {
     resourceServiceImpl = Mockito.spy(new ResourceServiceImpl(resourceRepository, timeService, env));
-
     KingdomEntity kingdom = new KingdomEntity();
-    kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    ResourceEntity resource = new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom);
     BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100,
-        9L, 1029L);
+        10L, 1000L);
+    int newResourceGeneration = 100;
 
-    //gold res. will have these values: amount=100, generation=100, updatedAt=999
-    ResourceEntity goldResourceToBeUpdated = kingdom.getResources().stream()
-        .filter(a -> a.getType().equals(ResourceType.GOLD))
-        .findFirst().get();
+    Mockito.when(resourceRepository.findById(1L)).thenReturn(Optional.of(resource));
+    Mockito.doReturn(500).when(resourceServiceImpl).calculateResourcesUntilBuildingIsFinished(building, resource);
 
-    Mockito.doReturn(goldResourceToBeUpdated).when(resourceServiceImpl)
-        .findResourceBasedOnBuildingType(kingdom, BuildingType.MINE);
-    Mockito.doReturn(10).when(resourceServiceImpl).calculateNewResourceGeneration(goldResourceToBeUpdated, building);
-    Mockito.doReturn(50).when(resourceServiceImpl)
-        .calculateResourcesUntilBuildingIsFinished(building, goldResourceToBeUpdated);
+    ResourceEntity updatedResource = resourceServiceImpl
+        .scheduledResourceUpdate(resource, newResourceGeneration, building);
 
-    Mockito.when(timeService.getTime()).thenReturn(1L);
-    Mockito.when(timeService.getTimeBetween(building.getFinishedAt(), 1L)).thenReturn(0); //delay = 20s
-    Mockito.when(resourceRepository.findById(goldResourceToBeUpdated.getId())).thenReturn(
-        java.util.Optional.of(goldResourceToBeUpdated));
-
-    ResourceEntity updatedResource = resourceServiceImpl.updateResourceGeneration(kingdom, building);
-
-    Assert.assertEquals(10, updatedResource.getGeneration().intValue());
+    Assert.assertEquals(1L, updatedResource.getId().longValue());
+    Assert.assertEquals(100, updatedResource.getGeneration().intValue());
+    Assert.assertEquals(600, updatedResource.getAmount().intValue());
+    Assert.assertEquals(1000L, updatedResource.getUpdatedAt().longValue());
   }
+
+  @Test
+  public void updateResourceGeneration_passesCorrectArgumentsToScheduleResourceUpdateMethod(){
+    resourceServiceImpl = Mockito.spy(resourceServiceImpl);
+    KingdomEntity kingdom = new KingdomEntity();
+    ResourceEntity resource = new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom);
+    BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100,
+        10L, 1000L);
+    Timer mockTimer = Mockito.mock(Timer.class);
+
+    Mockito.doReturn(resource).when(resourceServiceImpl).findResourceBasedOnBuildingType(kingdom, building.getType());
+    Mockito.doReturn(100).when(resourceServiceImpl).calculateNewResourceGeneration(resource, building);
+    Mockito.doReturn(mockTimer).when(resourceServiceImpl).createNewTimer();
+
+    ResourceEntity resourceToBeUpdated = resourceServiceImpl.updateResourceGeneration(kingdom,building);
+
+    Mockito.verify(mockTimer).schedule(resourceTimerTaskCaptor.capture(), delayCaptor.capture());
+
+    ResourceTimerTask task = resourceTimerTaskCaptor.getValue();
+    ResourceEntity passedResource = task.getResource();
+    Integer passedGeneration = task.getGeneration();
+    BuildingEntity passedBuilding = task.getBuilding();
+
+    Assert.assertEquals(resource,passedResource);
+    Assert.assertEquals(100,passedGeneration.intValue());
+    Assert.assertEquals(building,passedBuilding);
+  }
+
 }

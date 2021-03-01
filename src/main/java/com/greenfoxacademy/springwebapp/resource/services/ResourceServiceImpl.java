@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceTimerTask;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,6 +55,7 @@ public class ResourceServiceImpl implements ResourceService {
         .build();
   }
 
+  // TODO: when PUT kingdom/buildings/{buildingId} then also update resources
   @Override
   public ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building) {
     ResourceEntity resourceToBeUpdated = findResourceBasedOnBuildingType(kingdom, building.getType());
@@ -63,15 +64,23 @@ public class ResourceServiceImpl implements ResourceService {
 
     //sheduling the update to later time (when building is actually finished)
     int delay = timeService.getTimeBetween(timeService.getTime(), building.getFinishedAt()) * 1000;
-    Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
+    Timer timer = createNewTimer();
+    ResourceTimerTask resourceTimerTask = new ResourceTimerTask(resourceToBeUpdated,
+        newResourceGeneration, building) {
       @Override
       public void run() {
-        ResourceEntity updatedResource = scheduledResourceUpdate(resourceToBeUpdated,
-            newResourceGeneration, building);
+        ResourceEntity updatedResource = scheduledResourceUpdate(this.getResource(), this.getGeneration(),
+            this.getBuilding());
       }
-    }, delay);
+    };
+
+    timer.schedule(resourceTimerTask, delay);
+
     return resourceToBeUpdated;
+  }
+
+  public Timer createNewTimer() {
+    return new Timer();
   }
 
   public ResourceEntity scheduledResourceUpdate(ResourceEntity resourceToBeUpdated,
@@ -89,7 +98,7 @@ public class ResourceServiceImpl implements ResourceService {
     resourceToBeUpdated.setUpdatedAt(building.getFinishedAt());
     resourceRepository.save(resourceToBeUpdated);
 
-    log.info("Resource {} with ID {} was be updated. Actual amount is {}, actual generation is {}",
+    log.info("Resource {} with ID {} was updated. Actual amount is {}, actual generation is {}",
         resourceToBeUpdated.getType(), resourceToBeUpdated.getId(), resourceToBeUpdated.getAmount(),
         resourceToBeUpdated.getGeneration());
 
