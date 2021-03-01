@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
+import com.greenfoxacademy.springwebapp.TestConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
@@ -27,31 +28,12 @@ public class BuildingServiceTest {
 
   @Before
   public void init() {
-
     buildingRepository = Mockito.mock(BuildingRepository.class);
     TimeService timeService = Mockito.mock(TimeService.class);
-    Environment env = Mockito.mock(Environment.class);
     ResourceService resourceService = Mockito.mock(ResourceService.class);
 
-    buildingService = new BuildingServiceImpl(env, buildingRepository, timeService, resourceService);
-
-    Mockito.when(env.getProperty("building.townhall.buildingTime"))
-        .thenReturn("120");
-    Mockito.when(env.getProperty("building.farm.buildingTime"))
-        .thenReturn("60");
-    Mockito.when(env.getProperty("building.mine.buildingTime"))
-        .thenReturn("60");
-    Mockito.when(env.getProperty("building.academy.buildingTime"))
-        .thenReturn("90");
-
-    Mockito.when(env.getProperty("building.townhall.hp"))
-        .thenReturn("200");
-    Mockito.when(env.getProperty("building.farm.hp"))
-        .thenReturn("100");
-    Mockito.when(env.getProperty("building.mine.hp"))
-        .thenReturn("100");
-    Mockito.when(env.getProperty("building.academy.hp"))
-        .thenReturn("150");
+    Environment mockEnvironment = TestConfig.mockEnvironment();
+    buildingService = new BuildingServiceImpl(mockEnvironment, buildingRepository, timeService, resourceService);
 
     Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(BuildingFactory.createBuildings(null));
   }
@@ -184,7 +166,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void showBuildingShouldReturnCorrectBuildingDetails(){
+  public void showBuildingShouldReturnCorrectBuildingDetails() {
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -202,7 +184,7 @@ public class BuildingServiceTest {
   }
 
   @Test
-  public void showBuildingShouldNotReturnWithBuildingDetails(){
+  public void showBuildingShouldNotReturnWithBuildingDetails() {
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -220,7 +202,7 @@ public class BuildingServiceTest {
   }
 
   @Test(expected = IdNotFoundException.class)
-  public void showBuildingShouldReturnWithIdNotFoundException(){
+  public void showBuildingShouldReturnWithIdNotFoundException() {
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     List<BuildingEntity> fakeList = new ArrayList<>();
@@ -233,7 +215,7 @@ public class BuildingServiceTest {
   }
 
   @Test(expected = ForbiddenActionException.class)
-  public void showBuildingShouldReturnWithForbiddenException(){
+  public void showBuildingShouldReturnWithForbiddenException() {
     BuildingEntity fakeBuilding2 = new BuildingEntity(3L, BuildingType.MINE, 2, 200, 100L, 200L, null);
     KingdomEntity kingdomEntity = new KingdomEntity();
     BuildingEntity fakeBuilding = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);

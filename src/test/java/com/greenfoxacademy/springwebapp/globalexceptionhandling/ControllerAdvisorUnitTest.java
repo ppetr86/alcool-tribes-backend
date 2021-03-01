@@ -40,14 +40,14 @@ public class ControllerAdvisorUnitTest {
   }
 
   @Test
-  public void idNotFoundExceptionShouldReturnNotFoundAndCorrectMessage(){
+  public void idNotFoundExceptionShouldReturnNotFoundAndCorrectMessage() {
     ResponseEntity<ErrorDTO> response = ca.handleExceptions(new IdNotFoundException());
     Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     Assert.assertEquals("Id not found", response.getBody().getMessage());
   }
 
   @Test
-  public void forbiddenActionExceptionShouldReturnForbiddenAndCorrectMessage(){
+  public void forbiddenActionExceptionShouldReturnForbiddenAndCorrectMessage() {
     ResponseEntity<ErrorDTO> response = ca.handleForbiddenException(new ForbiddenActionException());
     Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     Assert.assertEquals("Forbidden action", response.getBody().getMessage());

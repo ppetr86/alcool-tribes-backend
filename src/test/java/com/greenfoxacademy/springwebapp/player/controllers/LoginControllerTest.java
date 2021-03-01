@@ -39,8 +39,6 @@ public class LoginControllerTest {
     PlayerTokenDTO fakePlayerDto = new PlayerTokenDTO("12345");
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "markmark");
 
-    BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
-
     Mockito
         .when(tokenService.generateTokenToLoggedInPlayer(requestDTO))
         .thenReturn(fakePlayerDto);

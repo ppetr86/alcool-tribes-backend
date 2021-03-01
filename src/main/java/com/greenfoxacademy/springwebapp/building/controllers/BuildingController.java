@@ -4,7 +4,12 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingListResponseDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.*;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
@@ -47,7 +52,7 @@ public class BuildingController {
   @GetMapping("/{id}")
   public ResponseEntity<?> getBuildingById(@PathVariable Long id,
                                            Authentication auth)
-    throws IdNotFoundException, ForbiddenActionException {
+      throws IdNotFoundException, ForbiddenActionException {
 
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 

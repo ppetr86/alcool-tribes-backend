@@ -1,7 +1,5 @@
 package com.greenfoxacademy.springwebapp.kingdom.models;
 
-import javax.persistence.*;
-
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;

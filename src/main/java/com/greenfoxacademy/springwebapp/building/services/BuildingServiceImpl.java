@@ -70,18 +70,11 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
-    if (dto.getType().trim().isEmpty()) {
-      throw new MissingParameterException("type");
-    }
-    if (!isBuildingTypeInRequestOk(dto)) {
-      throw new InvalidInputException("building type");
-    }
-    if (!hasKingdomTownhall(kingdom)) {
-      throw new TownhallLevelException();
-    }
-    if (!resourceService.hasResourcesForBuilding()) {
-      throw new NotEnoughResourceException();
-    }
+    if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
+    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
+    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
+
+    if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
@@ -106,18 +99,18 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Override
   public BuildingDetailsDTO showBuilding(KingdomEntity kingdom, Long id)
-    throws IdNotFoundException, ForbiddenActionException {
+      throws IdNotFoundException, ForbiddenActionException {
 
     BuildingEntity myBuilding = kingdom.getBuildings().stream()
-      .filter(b -> b.getId().equals(id))
-      .findFirst()
-      .orElse(null);
+        .filter(b -> b.getId().equals(id))
+        .findFirst()
+        .orElse(null);
 
     if (myBuilding == null) {
       BuildingEntity actualBuilding = findBuildingById(id);
-      if (actualBuilding == null)
+      if (actualBuilding == null) {
         throw new IdNotFoundException();
-      else {
+      } else {
         throw new ForbiddenActionException();
       }
     }
@@ -148,7 +141,7 @@ public class BuildingServiceImpl implements BuildingService {
       return false;
     }
     return kingdom.getBuildings().stream()
-      .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
+        .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
 
 }
