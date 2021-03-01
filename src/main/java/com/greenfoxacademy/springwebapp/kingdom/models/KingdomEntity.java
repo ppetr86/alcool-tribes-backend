@@ -20,6 +20,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -55,7 +56,9 @@ public class KingdomEntity {
 
   //not owning
   //@OneToOne(mappedBy = "kingdoms", cascade = CascadeType.PERSIST)
-  @OneToOne(targetEntity = LocationEntity.class)
+  //@OneToOne(targetEntity = LocationEntity.class)
+  @OneToOne
+  //@JoinColumn(name = "location_id")
   private LocationEntity location;
 
 

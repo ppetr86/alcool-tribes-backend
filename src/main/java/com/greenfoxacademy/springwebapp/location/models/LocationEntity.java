@@ -37,8 +37,9 @@ public class LocationEntity {
   private Integer y;
 
   //Location is the owning side
-  @OneToOne(targetEntity = KingdomEntity.class)
-  //@JoinColumn(name = "kingdom_id", nullable = true)
+  //@OneToOne(targetEntity = KingdomEntity.class)
+  //@JoinColumn(name = "kingdom_id")
+  @OneToOne
   private KingdomEntity kingdom;
 
   @Enumerated(EnumType.STRING)
