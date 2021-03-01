@@ -59,7 +59,6 @@ public class ResourceServiceImpl implements ResourceService {
   @Override
   public ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building) {
     ResourceEntity resourceToBeUpdated = findResourceBasedOnBuildingType(kingdom, building.getType());
-
     Integer newResourceGeneration = calculateNewResourceGeneration(resourceToBeUpdated, building);
 
     //sheduling the update to later time (when building is actually finished)

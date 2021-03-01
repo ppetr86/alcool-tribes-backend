@@ -94,6 +94,15 @@ public class BuildingServiceImpl implements BuildingService {
     if (!resourceService.hasResourcesForBuilding()) {
       throw new NotEnoughResourceException();
     }
+    BuildingEntity result = buildResult(dto,kingdom);
+
+    //updating Resource Generation
+    ResourceEntity resourceToBeUpdated = updateResource(result, kingdom);
+
+    return result;
+  }
+
+  private BuildingEntity buildResult(BuildingRequestDTO dto, KingdomEntity kingdom) {
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
@@ -101,10 +110,6 @@ public class BuildingServiceImpl implements BuildingService {
     result.setLevel(1);
     result.setKingdom(kingdom);
     result = save(result);
-
-    //updating Resource Generation
-    ResourceEntity resourceToBeUpdated = updateResource(result, kingdom);
-
     return result;
   }
 

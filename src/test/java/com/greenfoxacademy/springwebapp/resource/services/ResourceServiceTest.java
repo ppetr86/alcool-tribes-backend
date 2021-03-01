@@ -168,14 +168,13 @@ public class ResourceServiceTest {
   }
 
   @Test
-  public void updateResourceGeneration_passesCorrectArgumentsToScheduleResourceUpdateMethod(){
+  public void updateResourceGeneration_passesCorrectArgumentsToScheduleResourceUpdateMethod() {
     resourceServiceImpl = Mockito.spy(resourceServiceImpl);
     KingdomEntity kingdom = new KingdomEntity();
     ResourceEntity resource = new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom);
-    BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100,
-        10L, 1000L);
-    Timer mockTimer = Mockito.mock(Timer.class);
+    BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100, 10L, 1000L);
 
+    Timer mockTimer = Mockito.mock(Timer.class);
     Mockito.doReturn(resource).when(resourceServiceImpl).findResourceBasedOnBuildingType(kingdom, building.getType());
     Mockito.doReturn(100).when(resourceServiceImpl).calculateNewResourceGeneration(resource, building);
     Mockito.doReturn(mockTimer).when(resourceServiceImpl).createNewTimer();
@@ -183,15 +182,10 @@ public class ResourceServiceTest {
     ResourceEntity resourceToBeUpdated = resourceServiceImpl.updateResourceGeneration(kingdom,building);
 
     Mockito.verify(mockTimer).schedule(resourceTimerTaskCaptor.capture(), delayCaptor.capture());
-
     ResourceTimerTask task = resourceTimerTaskCaptor.getValue();
-    ResourceEntity passedResource = task.getResource();
-    Integer passedGeneration = task.getGeneration();
-    BuildingEntity passedBuilding = task.getBuilding();
-
-    Assert.assertEquals(resource,passedResource);
-    Assert.assertEquals(100,passedGeneration.intValue());
-    Assert.assertEquals(building,passedBuilding);
+    Assert.assertEquals(resource,task.getResource());
+    Assert.assertEquals(100,task.getGeneration().intValue());
+    Assert.assertEquals(building,task.getBuilding());
   }
 
 }
