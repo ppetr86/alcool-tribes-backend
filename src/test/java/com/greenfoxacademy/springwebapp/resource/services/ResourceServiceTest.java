@@ -179,7 +179,7 @@ public class ResourceServiceTest {
     Mockito.doReturn(100).when(resourceServiceImpl).calculateNewResourceGeneration(resource, building);
     Mockito.doReturn(mockTimer).when(resourceServiceImpl).createNewTimer();
 
-    ResourceEntity resourceToBeUpdated = resourceServiceImpl.updateResourceGeneration(kingdom,building);
+    resourceServiceImpl.updateResourceGeneration(kingdom,building);
 
     Mockito.verify(mockTimer).schedule(resourceTimerTaskCaptor.capture(), delayCaptor.capture());
     ResourceTimerTask task = resourceTimerTaskCaptor.getValue();
