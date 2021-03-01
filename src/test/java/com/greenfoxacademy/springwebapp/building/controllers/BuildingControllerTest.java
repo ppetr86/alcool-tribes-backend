@@ -66,14 +66,11 @@ public class BuildingControllerTest {
   @Test
   public void getBuildingByIdShouldReturnCorrectBuildingDetails() {
     BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
-    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    List<BuildingEntity> fakeList = new ArrayList<>();
-    fakeList.add(buildingEntity);
-    kingdomEntity.setBuildings(fakeList);
     BuildingDetailsDTO buildingDetailsDTO = new BuildingDetailsDTO();
     buildingDetailsDTO.setType(buildingEntity.getType().toString().toLowerCase());
     buildingDetailsDTO.setLevel(buildingEntity.getLevel());
     buildingDetailsDTO.setHp(buildingEntity.getHp());
+    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
     Mockito.when(buildingService.showBuilding(kingdomEntity, 1L)).thenReturn(buildingDetailsDTO);
 
