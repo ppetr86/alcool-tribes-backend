@@ -44,9 +44,9 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         .distinct()
         .sorted()
         .map(each -> each + " and ")
-            .collect(Collectors.joining());
+        .collect(Collectors.joining());
 
-    return result.substring(0,1).toUpperCase() + result.substring(1, result.lastIndexOf(" and")) + " are required.";
+    return result.substring(0, 1).toUpperCase() + result.substring(1, result.lastIndexOf(" and")) + " are required.";
   }
 
   @ExceptionHandler({
