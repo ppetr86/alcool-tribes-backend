@@ -32,12 +32,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
 
-  @ExceptionHandler(MissingParameterException.class)
-  public ResponseEntity<ErrorDTO> handleBadRequestExceptions(Exception ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
-  }
-
   @ExceptionHandler(NotEnoughResourceException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
     log.error(ex.getMessage());
@@ -54,5 +48,11 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorDTO> handleForbiddenException(ForbiddenActionException ex) {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(MissingParameterException.class)
+  public ResponseEntity<ErrorDTO> handleBadRequestExceptions(Exception ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 }
