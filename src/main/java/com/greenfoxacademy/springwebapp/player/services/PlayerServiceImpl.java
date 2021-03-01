@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -80,5 +82,17 @@ public class PlayerServiceImpl implements PlayerService {
       }
     }
     return null;
+  }
+
+  @Override
+  public PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom) {
+    List<PlayerEntity> allPlayers = (List<PlayerEntity>) playerRepo.findAll();
+    List<PlayerResponseDTO> playerResponseDTO = new ArrayList<>();
+    for (PlayerEntity allPlayer : allPlayers) {
+      PlayerResponseDTO responseDTO = assignResponseDto(allPlayer);
+      playerResponseDTO.add(responseDTO);
+    }
+    PlayerListResponseDTO playerListResponseDTO = new PlayerListResponseDTO(playerResponseDTO);
+    return playerListResponseDTO;
   }
 }

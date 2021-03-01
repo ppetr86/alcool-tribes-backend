@@ -1,13 +1,18 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
+import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,4 +50,12 @@ public class PlayerController {
     return ResponseEntity.status(HttpStatus.valueOf(400))
         .body(new ErrorDTO(errorList.get(0).getDefaultMessage()));
   }
+
+  @GetMapping("/players")
+  public ResponseEntity<PlayerListResponseDTO> getPlayersAroundMyKingdom(Authentication auth){
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    PlayerListResponseDTO playerListResponseDTO = playerService.findPlayersAroundMe(kingdom);
+    return ResponseEntity.ok(playerListResponseDTO);
+  }
+
 }
