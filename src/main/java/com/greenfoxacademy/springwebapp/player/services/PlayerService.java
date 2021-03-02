@@ -28,7 +28,7 @@ public interface PlayerService {
 
   PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request) throws UsernameIsTakenException;
 
-  boolean existsByUsername(String username);
+  boolean existsPlayerByUsername(String username);
 
   PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
       throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException;

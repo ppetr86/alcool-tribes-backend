@@ -95,7 +95,7 @@ public class BuildingControllerIntegrationTest {
   }
 
   @Test
-  public void buildBuilding_EmptyInputV2_NoTypeProvidedReturnsMissingType() throws Exception {
+  public void buildBuilding_EmptyInput_NoTypeProvidedReturnsMissingType() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO();
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -110,7 +110,7 @@ public class BuildingControllerIntegrationTest {
   }
 
   @Test
-  public void buildBuilding_EmptyInputV3_WhitespaceInputReturnsInvalidBuildingType() throws Exception {
+  public void buildBuilding_EmptyInput_WhitespaceInputReturnsInvalidBuildingType() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("  ");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);

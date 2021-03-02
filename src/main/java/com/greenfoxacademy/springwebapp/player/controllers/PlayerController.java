@@ -48,9 +48,6 @@ public class PlayerController {
   @PostMapping
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request)
       throws UsernameIsTakenException {
-    //if you want to use the text from validation annotation then you can not
-    // combine it with Binding result
-    // if you dont combine, default messages will be displayed and exception thrown automatically
     PlayerEntity newRegistration = playerService.registerNewPlayer(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(playerService.playerToResponseDTO(newRegistration));
   }

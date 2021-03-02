@@ -49,7 +49,7 @@ public class PlayerServiceImpl implements PlayerService {
   public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
       throws UsernameIsTakenException {
 
-    if (existsByUsername(request.getUsername())) {
+    if (existsPlayerByUsername(request.getUsername())) {
       throw new UsernameIsTakenException();
     }
 
@@ -139,7 +139,7 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
-  public boolean existsByUsername(String username) {
+  public boolean existsPlayerByUsername(String username) {
     return playerRepo.existsByUsername(username);
   }
 
@@ -158,13 +158,11 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public boolean verifyUser(String token) throws InvalidTokenException {
     RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
-    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
+    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired())
       throw new InvalidTokenException();
-    }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
-    if (Objects.isNull(player)) {
-      return false;
-    }
+    if (Objects.isNull(player))return false;
+
     player.setIsAccountVerified(true);
     playerRepo.save(player);
 
