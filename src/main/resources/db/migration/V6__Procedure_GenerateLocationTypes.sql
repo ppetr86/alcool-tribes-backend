@@ -14,26 +14,26 @@ BEGIN
             DECLARE RandomDesertX INT;
             DECLARE RandomDesertY INT;
 
-            DECLARE RandomJungleCount BOOLEAN DEFAULT TRUE;
+            DECLARE RandomJungleCount INT DEFAULT 1;
             DECLARE RandomJungleX INT;
             DECLARE RandomJungleY INT;
 
             WHILE RandomDesertCount > 0 DO
                     SET RandomDesertX = RAND() * (200) - 100;
                     SET RandomDesertY = RAND() * (200) - 100;
-                    SET RandomDesertCount = SELECT COUNT(*) FROM locations where x = RAND()*(200)-100 AND y = RAND()*(200)-100;
-            END WHILE;
+                    SET RandomDesertCount = SELECT COUNT(*) FROM locations where x = RandomDesertX AND y = RandomDesertY;
+                END WHILE;
 
-            WHILE RandomJungleCount TRUE DO
+            WHILE RandomJungleCount > 0 DO
                     SET RandomJungleX = RAND() * (200) - 100;
                     SET RandomJungleY = RAND() * (200) - 100;
-                    SET RandomJungleCount = SELECT id FROM locations where EXISTS (x = RAND()*(200)-100 AND y = RAND()*(200)-100);
-            END WHILE;
+                    SET RandomJungleCount = SELECT COUNT(*) FROM locations where x = RandomJungleX AND y = RandomJungleY;
+                END WHILE;
 
             INSERT INTO locations (x, y, type) VALUES (RandomDesertX, RandomDesertY, 'DESERT');
             INSERT INTO locations (x, y, type) VALUES (RandomJungleX, RandomJungleY, 'JUNGLE');
-
+            SET @i = @i + 1;
+            UNTIL @i = 49;
         END;
-        UNTIL @i = 49
     END REPEAT;
 END;
