@@ -67,7 +67,7 @@ public class PlayerServiceImpl implements PlayerService {
     List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
     kingdom.setBuildings(defaultBuildings);
 
-    PlayerEntity player = copyProperties(kingdom,dto, false);
+    PlayerEntity player = copyProperties(kingdom, dto, false);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
@@ -172,7 +172,7 @@ public class PlayerServiceImpl implements PlayerService {
     return true;
   }
 
-  private PlayerEntity copyProperties(KingdomEntity kingdom,PlayerRegisterRequestDTO dto, boolean verified){
+  private PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
     PlayerEntity player = new PlayerEntity();
     player.setEmail(dto.getEmail());
     player.setUsername(dto.getUsername());
