@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
@@ -54,9 +53,6 @@ public class PlayerServiceTest {
   private LocationService locationService;
   @Mock
   private ResourceService resourceService;
-  @Mock
-  RegistrationTokenRepository secureTokenRepository;
-  RegistrationTokenServiceImpl registrationTokenServiceImpl;
 
   @Before
   public void setUp() {
@@ -64,7 +60,6 @@ public class PlayerServiceTest {
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
         registrationTokenService, tokenService, resourceService, locationService);
     emailContext = new AccountVerificationEmail();
-    //registrationTokenServiceImpl = new RegistrationTokenServiceImpl(secureTokenRepository);
   }
 
   @Test
@@ -93,7 +88,6 @@ public class PlayerServiceTest {
 
     Assert.assertNull(fakePlayer);
   }
-
 
   @Test
   public void findByUserAndPasswordShouldReturnCorrectPlayer() {
@@ -195,11 +189,11 @@ public class PlayerServiceTest {
   public void sendRegistrationConfirmationEmail_ReturnsFalse() throws MessagingException {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
-    registrationTokenServiceImpl = Mockito.spy(new RegistrationTokenServiceImpl(secureTokenRepository));
 
-    Mockito.when(registrationTokenServiceImpl.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
+    Mockito.when(registrationTokenService.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
     Mockito.when(registrationTokenService.createSecureToken(any())).thenReturn(secureToken);
     Mockito.when(emailService.sendMailWithHtmlAndPlainText(any())).thenThrow(new MessagingException());
+
     Assert.assertFalse(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
   }
 
