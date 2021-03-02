@@ -1,6 +1,7 @@
 /*Create a stored procedure with a
 Flyway script that generates 50 deserts and 50 jungles to
 random free locations on the map (coordinates from -100 to +100).*/
+DELIMITER $$
 
 CREATE PROCEDURE generate50DesertsAnd50Jungles()
 BEGIN
@@ -21,19 +22,21 @@ BEGIN
             WHILE RandomDesertCount > 0 DO
                     SET RandomDesertX = RAND() * (200) - 100;
                     SET RandomDesertY = RAND() * (200) - 100;
-                    SET RandomDesertCount = SELECT COUNT(*) FROM locations where x = RandomDesertX AND y = RandomDesertY;
-                END WHILE;
+                    SET RandomDesertCount = (SELECT COUNT(*) FROM locations where x = RandomDesertX AND y = RandomDesertY);
+            END WHILE;
 
             WHILE RandomJungleCount > 0 DO
                     SET RandomJungleX = RAND() * (200) - 100;
                     SET RandomJungleY = RAND() * (200) - 100;
-                    SET RandomJungleCount = SELECT COUNT(*) FROM locations where x = RandomJungleX AND y = RandomJungleY;
-                END WHILE;
+                    SET RandomJungleCount = (SELECT COUNT(*) FROM locations where x = RandomDesertX AND y = RandomDesertY);
+            END WHILE;
 
             INSERT INTO locations (x, y, type) VALUES (RandomDesertX, RandomDesertY, 'DESERT');
             INSERT INTO locations (x, y, type) VALUES (RandomJungleX, RandomJungleY, 'JUNGLE');
-            SET @i = @i + 1;
-            UNTIL @i = 49;
         END;
-    END REPEAT;
-END;
+        SET @i = @i +1;
+    UNTIL @i = 50
+        END REPEAT;
+END $$
+
+DELIMITER ;
