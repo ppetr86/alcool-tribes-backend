@@ -141,8 +141,6 @@ public class BuildingServiceTest {
         buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
   }
 
-
-  //Mark's tests
   @Test
   public void findBuildingByIdShouldReturnWithCorrectBuildingType() {
     BuildingEntity buildingEntity = new BuildingEntity(null, BuildingType.FARM, 0);

@@ -42,7 +42,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorDTO> handleExceptions(IdNotFoundException ex) {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
-
   }
 
   @ExceptionHandler(ForbiddenActionException.class)

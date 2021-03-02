@@ -231,7 +231,7 @@ public class BuildingControllerIT {
   }
 
   @Test
-  public void getBuildingByIdShouldReturnOk() throws Exception {
+  public void getBuildingByIdShouldReturnOkAndProperBuilding() throws Exception {
     mockMvc.perform(get(BuildingController.URI + "/1")
       .principal(authentication))
       .andExpect(status().isOk())
@@ -243,7 +243,7 @@ public class BuildingControllerIT {
   }
 
   @Test
-  public void getBuildingByIdShouldReturn404() throws Exception {
+  public void getBuildingByIdShouldReturn404WhenNonExistingBuildingIdGiven() throws Exception {
     mockMvc.perform(get(BuildingController.URI + "/16")
       .principal(authentication))
       .andExpect(status().isNotFound())
@@ -251,7 +251,7 @@ public class BuildingControllerIT {
   }
 
   @Test
-  public void getBuildingByIdShouldReturn403() throws Exception {
+  public void getBuildingByIdShouldReturn403WhenNotOwnBuildingRequested() throws Exception {
     mockMvc.perform(get(BuildingController.URI + "/5")
       .principal(authentication))
       .andExpect(status().isForbidden())
