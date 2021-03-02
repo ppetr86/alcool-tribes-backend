@@ -52,12 +52,11 @@ public class LocationEntity {
       return false;
     }
     LocationEntity that = (LocationEntity) o;
-    return Objects.equals(id, that.id) && Objects.equals(x, that.x) &&
-        Objects.equals(y, that.y) && Objects.equals(kingdom, that.kingdom) && type == that.type;
+    return x.equals(that.x) && y.equals(that.y);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, x, y, kingdom, type);
+    return Objects.hash(x, y);
   }
 }
