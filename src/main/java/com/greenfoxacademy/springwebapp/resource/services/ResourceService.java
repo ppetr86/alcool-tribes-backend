@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import java.util.List;
 
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
+import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,4 +21,6 @@ public interface ResourceService {
   ResourceEntity saveResource(ResourceEntity resourceEntity);
 
   ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
+
+  void updateResources(Long kingdomId, ResourceType resourceType, int amountChange);
 }

@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.repositories.ResourceRepository;
 import org.junit.Assert;
@@ -15,12 +16,14 @@ public class ResourceServiceTest {
   private ResourceService resourceService;
   private ResourceRepository resourceRepository;
   private TimeService timeService;
+  private KingdomService kingdomService;
 
   @Before
   public void setUp() throws Exception {
     resourceRepository = Mockito.mock(ResourceRepository.class);
     timeService = Mockito.mock(TimeService.class);
-    resourceService = new ResourceServiceImpl(resourceRepository, timeService);
+    kingdomService = Mockito.mock(KingdomService.class);
+    resourceService = new ResourceServiceImpl(resourceRepository, timeService, kingdomService);
   }
 
   @Test
