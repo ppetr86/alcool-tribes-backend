@@ -142,18 +142,4 @@ public class BuildingServiceTest {
     Assert.assertEquals(BuildingType.ACADEMY,
         buildingService.setBuildingTypeOnEntity("ACAdemy").getType());
   }
-
-  @Test
-  public void updateResource_returnsCorrectResource() {
-    KingdomEntity kingdom = new KingdomEntity();
-    ResourceEntity resource = new ResourceEntity(1L, ResourceType.GOLD, 100, 100, 999L, kingdom);
-    BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100,
-        10L, 1000L);
-
-    Mockito.when(resourceService.updateResourceGeneration(kingdom, building)).thenReturn(resource);
-
-    ResourceEntity resourceToBeUpdated = buildingServiceImpl.updateResource(building, kingdom);
-
-    Assert.assertEquals(resource, resourceToBeUpdated);
-  }
 }

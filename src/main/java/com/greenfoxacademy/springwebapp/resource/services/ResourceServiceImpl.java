@@ -58,6 +58,20 @@ public class ResourceServiceImpl implements ResourceService {
   // TODO: when PUT kingdom/buildings/{buildingId} then also update resources
   @Override
   public ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building) {
+    if (building.getType().equals(BuildingType.FARM) || building.getType().equals(BuildingType.MINE)) {
+      ResourceEntity resource = doResourceUpdate(kingdom, building);
+      if (resource != null) {
+        log.info("Resource {} with ID {} will be updated. Actual amount is {}, actual generation is {}",
+            resource.getType(), resource.getId(), resource.getAmount(), resource.getGeneration());
+      } else {
+        log.warn("Resource generation was not updated when creating new building of type {}!", building.getType());
+      }
+      return resource;
+    }
+    return null;
+  }
+
+  public ResourceEntity doResourceUpdate(KingdomEntity kingdom, BuildingEntity building) {
     ResourceEntity resourceToBeUpdated = findResourceBasedOnBuildingType(kingdom, building.getType());
     Integer newResourceGeneration = calculateNewResourceGeneration(resourceToBeUpdated, building);
 
