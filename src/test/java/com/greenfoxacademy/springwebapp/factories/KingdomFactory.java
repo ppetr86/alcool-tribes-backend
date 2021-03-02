@@ -30,5 +30,24 @@ public class KingdomFactory {
     return kingdom;
   }
 
+  public static KingdomEntity createFullKingdom(Long kingdomID, Long userID, boolean isAccountVerified) {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setKingdomName("testKingdom");
+    kingdom.setId(kingdomID);
+
+    PlayerEntity pl = PlayerFactory.createPlayer(userID, kingdom);
+    pl.setUsername("testUsername");
+    pl.setEmail("test@mail.com");
+    pl.setIsAccountVerified(isAccountVerified);
+    kingdom.setPlayer(pl);
+
+    kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10));
+    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    kingdom.setTroops(TroopFactory.createTroops(kingdom));
+
+    return kingdom;
+  }
+
 
 }
