@@ -65,6 +65,17 @@ public class ResourceServiceTest {
   }
 
   @Test
+  public void updateResourceGeneration_wrongBuildingTypeReturnsNull() {
+    KingdomEntity kingdom = new KingdomEntity();
+    BuildingEntity building = new BuildingEntity(10L, BuildingType.ACADEMY, 1, 100,
+        10L, 1000L);
+
+    ResourceEntity resourceToBeUpdated = resourceServiceImpl.updateResourceGeneration(kingdom, building);
+
+    Assert.assertEquals(null, resourceToBeUpdated);
+  }
+
+  @Test
   public void doResourceUpdate_passesCorrectArgumentsToScheduleResourceUpdateMethod() {
     resourceServiceImpl = Mockito.spy(resourceServiceImpl);
     KingdomEntity kingdom = new KingdomEntity();
@@ -72,7 +83,7 @@ public class ResourceServiceTest {
     BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100, 10L, 1000L);
 
     Timer mockTimer = Mockito.mock(Timer.class);
-    Mockito.doReturn(resource).when(resourceServiceImpl).findResourceBasedOnBuildingType(kingdom, building.getType());
+    Mockito.doReturn(resource).when(resourceServiceImpl).findResourceByBuildingType(kingdom, building.getType());
     Mockito.doReturn(100).when(resourceServiceImpl).calculateNewResourceGeneration(resource, building);
     Mockito.doReturn(mockTimer).when(resourceServiceImpl).createNewTimer();
 
@@ -124,7 +135,7 @@ public class ResourceServiceTest {
   }
 
   @Test
-  public void findResourceBasedOnBuildingType_FarmReturnsFood() {
+  public void findResourceByBuildingType_FarmReturnsFood() {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
     kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
@@ -132,13 +143,13 @@ public class ResourceServiceTest {
         .filter(a -> a.getType() == ResourceType.FOOD)
         .findFirst().orElse(null);
 
-    ResourceEntity resource = resourceService.findResourceBasedOnBuildingType(kingdom, BuildingType.FARM);
+    ResourceEntity resource = resourceService.findResourceByBuildingType(kingdom, BuildingType.FARM);
 
     Assert.assertEquals(food, resource);
   }
 
   @Test
-  public void findResourceBasedOnBuildingType_MineReturnsGold() {
+  public void findResourceByBuildingType_MineReturnsGold() {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
     kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
@@ -146,18 +157,18 @@ public class ResourceServiceTest {
         .filter(a -> a.getType() == ResourceType.GOLD)
         .findFirst().orElse(null);
 
-    ResourceEntity resource = resourceService.findResourceBasedOnBuildingType(kingdom, BuildingType.MINE);
+    ResourceEntity resource = resourceService.findResourceByBuildingType(kingdom, BuildingType.MINE);
 
     Assert.assertEquals(gold, resource);
   }
 
   @Test
-  public void findResourceBasedOnBuildingType_AcademyReturnsNull() {
+  public void ffindResourceByBuildingType_AcademyReturnsNull() {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
     kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
 
-    ResourceEntity resource = resourceService.findResourceBasedOnBuildingType(kingdom, BuildingType.ACADEMY);
+    ResourceEntity resource = resourceService.findResourceByBuildingType(kingdom, BuildingType.ACADEMY);
 
     Assert.assertNull(resource);
   }

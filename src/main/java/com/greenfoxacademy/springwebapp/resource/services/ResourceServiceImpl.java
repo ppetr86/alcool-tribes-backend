@@ -72,7 +72,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   public ResourceEntity doResourceUpdate(KingdomEntity kingdom, BuildingEntity building) {
-    ResourceEntity resourceToBeUpdated = findResourceBasedOnBuildingType(kingdom, building.getType());
+    ResourceEntity resourceToBeUpdated = findResourceByBuildingType(kingdom, building.getType());
     Integer newResourceGeneration = calculateNewResourceGeneration(resourceToBeUpdated, building);
 
     //sheduling the update to later time (when building is actually finished)
@@ -119,7 +119,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public ResourceEntity findResourceBasedOnBuildingType(KingdomEntity kingdom, Enum buildingType) {
+  public ResourceEntity findResourceByBuildingType(KingdomEntity kingdom, Enum buildingType) {
     ResourceEntity resource;
     if (buildingType.equals(BuildingType.FARM)) {
       resource = kingdom.getResources().stream()
