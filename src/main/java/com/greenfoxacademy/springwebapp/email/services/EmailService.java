@@ -6,6 +6,6 @@ import javax.mail.MessagingException;
 
 public interface EmailService {
 
-  void sendMailWithHtmlAndPlainText(final AbstractEmail email) throws MessagingException;
+  Boolean sendMailWithHtmlAndPlainText(final AbstractEmail email) throws MessagingException;
 
 }

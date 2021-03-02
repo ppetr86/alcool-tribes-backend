@@ -32,6 +32,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
+
 public class PlayerServiceTest {
 
   AccountVerificationEmail emailContext;
@@ -62,7 +64,7 @@ public class PlayerServiceTest {
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
         registrationTokenService, tokenService, resourceService, locationService);
     emailContext = new AccountVerificationEmail();
-    registrationTokenServiceImpl = new RegistrationTokenServiceImpl(secureTokenRepository);
+    //registrationTokenServiceImpl = new RegistrationTokenServiceImpl(secureTokenRepository);
   }
 
   @Test
@@ -185,14 +187,8 @@ public class PlayerServiceTest {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
 
-    emailContext.init(ke.getPlayer());
-    emailContext.setToken(secureToken.getToken());
-    emailContext.buildVerificationUrl("http://localhost:8080", secureToken.getToken());
-    emailContext.put("verificationURL", "http://localhost:8080/register/verify?token=" + secureToken.getToken());
-
-    ReflectionTestUtils.setField(registrationTokenServiceImpl, "tokenValidityInSeconds", 86400);
-    Mockito.when(registrationTokenService.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
-    Assert.assertFalse(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
+    Mockito.when(registrationTokenService.createSecureToken(any())).thenReturn(secureToken);
+    Assert.assertTrue(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
   }
 
   @Test
@@ -200,15 +196,10 @@ public class PlayerServiceTest {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
     registrationTokenServiceImpl = Mockito.spy(new RegistrationTokenServiceImpl(secureTokenRepository));
-    emailContext.init(ke.getPlayer());
-    emailContext.setToken(secureToken.getToken());
 
-    emailContext.buildVerificationUrl("http://localhost:8080", secureToken.getToken());
-    emailContext.put("verificationURL", "http://localhost:8080/register/verify?token=" + secureToken.getToken());
-
-    ReflectionTestUtils.setField(registrationTokenService, "tokenValidityInSeconds", 86400);
-    Mockito.doReturn(secureToken).when(registrationTokenServiceImpl).createSecureToken(ke.getPlayer());
-    Mockito.when(registrationTokenService.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
+    Mockito.when(registrationTokenServiceImpl.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
+    Mockito.when(registrationTokenService.createSecureToken(any())).thenReturn(secureToken);
+    Mockito.when(emailService.sendMailWithHtmlAndPlainText(any())).thenThrow(new MessagingException());
     Assert.assertFalse(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
   }
 
