@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class RegistrationTokenFactory {
 
-  public static RegistrationTokenEntity createToken(PlayerEntity player){
+  public static RegistrationTokenEntity createToken(PlayerEntity player) {
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken("123");
     secureToken.setIsExpired(false);

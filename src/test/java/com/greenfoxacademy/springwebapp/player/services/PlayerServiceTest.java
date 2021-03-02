@@ -32,20 +32,28 @@ import static org.mockito.ArgumentMatchers.any;
 
 public class PlayerServiceTest {
 
+  ResourceService resourceService;
+  LocationService locationService;
+  PlayerRepository playerRepository;
+  PasswordEncoder passwordEncoder;
+  BuildingService buildingService;
+  EmailService emailService;
+  RegistrationTokenService registrationTokenService;
+  TokenService tokenService;
+  Environment mockEnvironment;
   private PlayerService playerService;
-
-  ResourceService resourceService = Mockito.mock(ResourceService.class);
-  LocationService locationService = Mockito.mock(LocationService.class);
-  PlayerRepository playerRepository = Mockito.mock(PlayerRepository.class);
-  PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
-  BuildingService buildingService = Mockito.mock(BuildingService.class);
-  EmailService emailService = Mockito.mock(EmailService.class);
-  RegistrationTokenService registrationTokenService = Mockito.mock(RegistrationTokenService.class);
-  TokenService tokenService = Mockito.mock(TokenService.class);
-  Environment mockEnvironment = TestConfig.mockEnvironment();
 
   @Before
   public void setUp() {
+    resourceService = Mockito.mock(ResourceService.class);
+    locationService = Mockito.mock(LocationService.class);
+    playerRepository = Mockito.mock(PlayerRepository.class);
+    passwordEncoder = Mockito.mock(PasswordEncoder.class);
+    buildingService = Mockito.mock(BuildingService.class);
+    emailService = Mockito.mock(EmailService.class);
+    registrationTokenService = Mockito.mock(RegistrationTokenService.class);
+    tokenService = Mockito.mock(TokenService.class);
+    mockEnvironment = TestConfig.mockEnvironment();
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
         registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
   }
@@ -245,12 +253,13 @@ public class PlayerServiceTest {
   @Test
   public void verifyUser_ReturnsFalse_PlayerDoesNotExist() throws InvalidTokenException {
     PlayerEntity pl = PlayerFactory.createPlayer(1L, null, false, "Superman");
-    String token = "123";
+
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken("123");
     secureToken.setIsExpired(false);
     secureToken.setPlayer(pl);
     secureToken.setExpireAt(LocalDateTime.now().plusDays(1));
+    String token = "123";
     Mockito.when(registrationTokenService.findByToken(token)).thenReturn(secureToken);
     Mockito.when(playerRepository.getOne(secureToken.getPlayer().getId())).thenReturn(null);
     Assert.assertFalse(playerService.verifyUser("123"));
@@ -259,12 +268,12 @@ public class PlayerServiceTest {
   @Test
   public void verifyUser_ReturnsTrue_OnTokenAndPlayerMatch() throws InvalidTokenException {
     PlayerEntity pl = PlayerFactory.createPlayer(1L, null, false, "Superman");
-    String token = "123";
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken("123");
     secureToken.setIsExpired(false);
     secureToken.setPlayer(pl);
     secureToken.setExpireAt(LocalDateTime.now().plusDays(1));
+    String token = "123";
     Mockito.when(registrationTokenService.findByToken(token)).thenReturn(secureToken);
     Mockito.when(playerRepository.getOne(secureToken.getPlayer().getId())).thenReturn(pl);
     playerService.verifyUser(token);
