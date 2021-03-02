@@ -1,12 +1,10 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
+import com.greenfoxacademy.springwebapp.TestConfig;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
-import com.greenfoxacademy.springwebapp.email.repository.RegistrationTokenRepository;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
-import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenServiceImpl;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.RegistrationTokenFactory;
@@ -23,9 +21,8 @@ import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.MessagingException;
@@ -35,31 +32,22 @@ import static org.mockito.ArgumentMatchers.any;
 
 public class PlayerServiceTest {
 
-  AccountVerificationEmail emailContext;
   private PlayerService playerService;
-  @Mock
-  private PlayerRepository playerRepository;
-  @Mock
-  private PasswordEncoder passwordEncoder;
-  @Mock
-  private BuildingService buildingService;
-  @Mock
-  private EmailService emailService;
-  @Mock
-  private RegistrationTokenService registrationTokenService;
-  @Mock
-  private TokenService tokenService;
-  @Mock
-  private LocationService locationService;
-  @Mock
-  private ResourceService resourceService;
+
+  ResourceService resourceService = Mockito.mock(ResourceService.class);
+  LocationService locationService = Mockito.mock(LocationService.class);
+  PlayerRepository playerRepository = Mockito.mock(PlayerRepository.class);
+  PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+  BuildingService buildingService = Mockito.mock(BuildingService.class);
+  EmailService emailService = Mockito.mock(EmailService.class);
+  RegistrationTokenService registrationTokenService = Mockito.mock(RegistrationTokenService.class);
+  TokenService tokenService = Mockito.mock(TokenService.class);
+  Environment mockEnvironment = TestConfig.mockEnvironment();
 
   @Before
   public void setUp() {
-    MockitoAnnotations.initMocks(this);
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
-        registrationTokenService, tokenService, resourceService, locationService);
-    emailContext = new AccountVerificationEmail();
+        registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
   }
 
   @Test
@@ -181,6 +169,7 @@ public class PlayerServiceTest {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
 
+    Mockito.when(mockEnvironment.getProperty("site.base.url.http")).thenReturn("http://localhost:8080");
     Mockito.when(registrationTokenService.createSecureToken(any())).thenReturn(secureToken);
     Assert.assertTrue(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
   }
@@ -190,6 +179,7 @@ public class PlayerServiceTest {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
 
+    Mockito.when(mockEnvironment.getProperty("site.base.url.http")).thenReturn("http://localhost:8080");
     Mockito.when(registrationTokenService.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
     Mockito.when(registrationTokenService.createSecureToken(any())).thenReturn(secureToken);
     Mockito.when(emailService.sendMailWithHtmlAndPlainText(any())).thenThrow(new MessagingException());

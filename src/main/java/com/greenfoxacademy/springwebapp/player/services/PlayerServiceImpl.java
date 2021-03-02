@@ -23,6 +23,7 @@ import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -43,9 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
     private final TokenService tokenService;
     private final ResourceService resourceService;
     private final LocationService locationService;
-
-    @Value("${site.base.url.https}")
-    private String baseURL;
+    private final Environment env;
 
     @Override
     public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
@@ -94,7 +93,7 @@ public class PlayerServiceImpl implements PlayerService {
         AccountVerificationEmail emailContext = new AccountVerificationEmail();
         emailContext.init(player);
         emailContext.setToken(token.getToken());
-        emailContext.buildVerificationUrl("http://localhost:8080", token.getToken());
+        emailContext.buildVerificationUrl(env.getProperty("site.base.url.http"), token.getToken());
 
         try {
             emailService.sendMailWithHtmlAndPlainText(emailContext);
