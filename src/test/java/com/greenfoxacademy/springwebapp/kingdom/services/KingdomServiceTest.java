@@ -68,9 +68,6 @@ public class KingdomServiceTest {
     PlayerEntity fakePlayer = new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null);
     KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
         new LocationEntity(1L, 10, 10));
-    kingdom.setKingdomName(nameDTO.getName());
-
-    Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
 
     KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
 
@@ -86,9 +83,6 @@ public class KingdomServiceTest {
     PlayerEntity fakePlayer = new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null);
     KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
         new LocationEntity(1L, 10, 10));
-    kingdom.setKingdomName(nameDTO.getName());
-
-    Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
 
     KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
 

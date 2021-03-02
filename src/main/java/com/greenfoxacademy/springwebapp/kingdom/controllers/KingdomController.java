@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -45,8 +44,7 @@ public class KingdomController {
 
   @PutMapping
   public ResponseEntity<?> updateKingdomByName(Authentication auth,
-                                               @RequestBody @Valid KingdomNameDTO nameDTO)
-      throws MissingParameterException {
+                                               @RequestBody @Valid KingdomNameDTO nameDTO) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
   }

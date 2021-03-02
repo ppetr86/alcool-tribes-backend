@@ -72,7 +72,7 @@ public class KingdomControllerTest {
   }
 
   @Test
-  public void updateKingdomWithNameShouldReturnUpdatedBuilding() {
+  public void updateKingdomByNameShouldReturnUpdatedBuilding() {
     KingdomNameDTO nameDTO = new KingdomNameDTO("New Kingdom");
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setId(1L);
@@ -81,7 +81,6 @@ public class KingdomControllerTest {
     responseDTO.setId(kingdom.getId());
     responseDTO.setName(kingdom.getKingdomName());
 
-    Mockito.when(kingdomRepository.save(kingdom)).thenReturn(kingdom);
     Mockito.when(kingdomService.changeKingdomName(kingdom, nameDTO)).thenReturn(responseDTO);
 
     ResponseEntity<?> response = kingdomController.updateKingdomByName(authentication, nameDTO);
@@ -92,7 +91,7 @@ public class KingdomControllerTest {
   }
 
   @Test(expected = MissingParameterException.class)
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfDtoIsEmpty() {
+  public void updateKingdomByNameShouldReturnMissingParameterExceptionIfDtoIsEmpty() {
     KingdomNameDTO nameDTO = new KingdomNameDTO("");
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
@@ -102,11 +101,12 @@ public class KingdomControllerTest {
   }
 
   @Test(expected = MissingParameterException.class)
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfDtoIsNull() {
+  public void updateKingdomByNameShouldReturnMissingParameterExceptionIfDtoIsNull() {
+    KingdomNameDTO nameDTO = new KingdomNameDTO();
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
-    Mockito.when(kingdomService.changeKingdomName(kingdom, null)).thenThrow(MissingParameterException.class);
+    Mockito.when(kingdomService.changeKingdomName(kingdom, nameDTO)).thenThrow(MissingParameterException.class);
 
-    ResponseEntity<?> response = kingdomController.updateKingdomByName(authentication, null);
+    ResponseEntity<?> response = kingdomController.updateKingdomByName(authentication, nameDTO);
   }
 }

@@ -101,7 +101,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfTextIsEmpty() throws Exception {
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfNameIsEmpty() throws Exception {
     KingdomNameDTO request = new KingdomNameDTO("");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -116,7 +116,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfRequestIsEmpty() throws Exception {
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfNameIsNull() throws Exception {
     KingdomNameDTO request = new KingdomNameDTO();
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
