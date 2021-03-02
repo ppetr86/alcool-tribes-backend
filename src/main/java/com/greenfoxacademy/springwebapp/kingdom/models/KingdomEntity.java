@@ -54,7 +54,7 @@ public class KingdomEntity {
   @LazyCollection(LazyCollectionOption.FALSE)
   private List<ResourceEntity> resources;
 
-  @OneToOne(mappedBy = "kingdom")
+  @OneToOne(mappedBy = "kingdom", cascade = CascadeType.PERSIST)
   private LocationEntity location;
 
 
