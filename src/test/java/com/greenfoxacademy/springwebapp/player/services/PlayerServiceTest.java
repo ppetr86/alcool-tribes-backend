@@ -1,12 +1,10 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
+import com.greenfoxacademy.springwebapp.TestConfig;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
-import com.greenfoxacademy.springwebapp.email.repository.RegistrationTokenRepository;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
-import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenServiceImpl;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.RegistrationTokenFactory;
@@ -23,46 +21,41 @@ import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
+
 public class PlayerServiceTest {
 
-  AccountVerificationEmail emailContext;
+  ResourceService resourceService;
+  LocationService locationService;
+  PlayerRepository playerRepository;
+  PasswordEncoder passwordEncoder;
+  BuildingService buildingService;
+  EmailService emailService;
+  RegistrationTokenService registrationTokenService;
+  TokenService tokenService;
+  Environment mockEnvironment;
   private PlayerService playerService;
-  @Mock
-  private PlayerRepository playerRepository;
-  @Mock
-  private PasswordEncoder passwordEncoder;
-  @Mock
-  private BuildingService buildingService;
-  @Mock
-  private EmailService emailService;
-  @Mock
-  private RegistrationTokenService registrationTokenService;
-  @Mock
-  private TokenService tokenService;
-  @Mock
-  private LocationService locationService;
-  @Mock
-  private ResourceService resourceService;
-  @Mock
-  RegistrationTokenRepository secureTokenRepository;
-  RegistrationTokenServiceImpl registrationTokenServiceImpl;
 
   @Before
   public void setUp() {
-    MockitoAnnotations.initMocks(this);
+    resourceService = Mockito.mock(ResourceService.class);
+    locationService = Mockito.mock(LocationService.class);
+    playerRepository = Mockito.mock(PlayerRepository.class);
+    passwordEncoder = Mockito.mock(PasswordEncoder.class);
+    buildingService = Mockito.mock(BuildingService.class);
+    emailService = Mockito.mock(EmailService.class);
+    registrationTokenService = Mockito.mock(RegistrationTokenService.class);
+    tokenService = Mockito.mock(TokenService.class);
+    mockEnvironment = TestConfig.mockEnvironment();
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
-        registrationTokenService, tokenService, resourceService, locationService);
-    emailContext = new AccountVerificationEmail();
-    registrationTokenServiceImpl = new RegistrationTokenServiceImpl(secureTokenRepository);
+        registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
   }
 
   @Test
@@ -91,7 +84,6 @@ public class PlayerServiceTest {
 
     Assert.assertNull(fakePlayer);
   }
-
 
   @Test
   public void findByUserAndPasswordShouldReturnCorrectPlayer() {
@@ -185,30 +177,21 @@ public class PlayerServiceTest {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
 
-    emailContext.init(ke.getPlayer());
-    emailContext.setToken(secureToken.getToken());
-    emailContext.buildVerificationUrl("http://localhost:8080", secureToken.getToken());
-    emailContext.put("verificationURL", "http://localhost:8080/register/verify?token=" + secureToken.getToken());
-
-    ReflectionTestUtils.setField(registrationTokenServiceImpl, "tokenValidityInSeconds", 86400);
-    Mockito.when(registrationTokenService.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
-    Assert.assertFalse(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
+    Mockito.when(mockEnvironment.getProperty("site.base.url.http")).thenReturn("http://localhost:8080");
+    Mockito.when(registrationTokenService.createSecureToken(any())).thenReturn(secureToken);
+    Assert.assertTrue(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
   }
 
   @Test
   public void sendRegistrationConfirmationEmail_ReturnsFalse() throws MessagingException {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
-    registrationTokenServiceImpl = Mockito.spy(new RegistrationTokenServiceImpl(secureTokenRepository));
-    emailContext.init(ke.getPlayer());
-    emailContext.setToken(secureToken.getToken());
 
-    emailContext.buildVerificationUrl("http://localhost:8080", secureToken.getToken());
-    emailContext.put("verificationURL", "http://localhost:8080/register/verify?token=" + secureToken.getToken());
-
-    ReflectionTestUtils.setField(registrationTokenService, "tokenValidityInSeconds", 86400);
-    Mockito.doReturn(secureToken).when(registrationTokenServiceImpl).createSecureToken(ke.getPlayer());
+    Mockito.when(mockEnvironment.getProperty("site.base.url.http")).thenReturn("http://localhost:8080");
     Mockito.when(registrationTokenService.createSecureToken(ke.getPlayer())).thenReturn(secureToken);
+    Mockito.when(registrationTokenService.createSecureToken(any())).thenReturn(secureToken);
+    Mockito.when(emailService.sendMailWithHtmlAndPlainText(any())).thenThrow(new MessagingException());
+
     Assert.assertFalse(playerService.sendRegistrationConfirmationEmail(ke.getPlayer()));
   }
 
@@ -270,12 +253,13 @@ public class PlayerServiceTest {
   @Test
   public void verifyUser_ReturnsFalse_PlayerDoesNotExist() throws InvalidTokenException {
     PlayerEntity pl = PlayerFactory.createPlayer(1L, null, false, "Superman");
-    String token = "123";
+
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken("123");
     secureToken.setIsExpired(false);
     secureToken.setPlayer(pl);
     secureToken.setExpireAt(LocalDateTime.now().plusDays(1));
+    String token = "123";
     Mockito.when(registrationTokenService.findByToken(token)).thenReturn(secureToken);
     Mockito.when(playerRepository.getOne(secureToken.getPlayer().getId())).thenReturn(null);
     Assert.assertFalse(playerService.verifyUser("123"));
@@ -284,12 +268,12 @@ public class PlayerServiceTest {
   @Test
   public void verifyUser_ReturnsTrue_OnTokenAndPlayerMatch() throws InvalidTokenException {
     PlayerEntity pl = PlayerFactory.createPlayer(1L, null, false, "Superman");
-    String token = "123";
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken("123");
     secureToken.setIsExpired(false);
     secureToken.setPlayer(pl);
     secureToken.setExpireAt(LocalDateTime.now().plusDays(1));
+    String token = "123";
     Mockito.when(registrationTokenService.findByToken(token)).thenReturn(secureToken);
     Mockito.when(playerRepository.getOne(secureToken.getPlayer().getId())).thenReturn(pl);
     playerService.verifyUser(token);

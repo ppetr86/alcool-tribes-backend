@@ -2,7 +2,7 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmail;
+import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
@@ -22,7 +22,7 @@ import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -43,15 +43,13 @@ public class PlayerServiceImpl implements PlayerService {
   private final TokenService tokenService;
   private final ResourceService resourceService;
   private final LocationService locationService;
-
-  @Value("${site.base.url.https}")
-  private String baseURL;
+  private final Environment env;
 
   @Override
   public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
       throws UsernameIsTakenException {
 
-    if (existsByUsername(request.getUsername())) {
+    if (existsPlayerByUsername(request.getUsername())) {
       throw new UsernameIsTakenException();
     }
 
@@ -68,17 +66,17 @@ public class PlayerServiceImpl implements PlayerService {
     KingdomEntity kingdom = assignKingdomName(dto);
     List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
     kingdom.setBuildings(defaultBuildings);
-    PlayerEntity player = new PlayerEntity();
-    player.setEmail(dto.getEmail());
-    player.setUsername(dto.getUsername());
+
+    PlayerEntity player = copyProperties(kingdom, dto, false);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
+
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
     LocationEntity defaultLocation = locationService.defaultLocation(kingdom);
+
     locationService.save(defaultLocation);
     kingdom.setLocation(defaultLocation);
-    player.setKingdom(kingdom);
-    player.setIsAccountVerified(false);
     kingdom.setPlayer(player);
+
     player = playerRepo.save(player);
     return player;
   }
@@ -89,10 +87,10 @@ public class PlayerServiceImpl implements PlayerService {
     token.setPlayer(player);
     registrationTokenService.saveSecureToken(token);
 
-    AccountVerificationEmail emailContext = new AccountVerificationEmail();
+    VerificationEmail emailContext = new VerificationEmail();
     emailContext.init(player);
     emailContext.setToken(token.getToken());
-    emailContext.buildVerificationUrl(baseURL, token.getToken());
+    emailContext.buildVerificationUrl(env.getProperty("site.base.url.http"), token.getToken());
 
     try {
       emailService.sendMailWithHtmlAndPlainText(emailContext);
@@ -142,7 +140,7 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
-  public boolean existsByUsername(String username) {
+  public boolean existsPlayerByUsername(String username) {
     return playerRepo.existsByUsername(username);
   }
 
@@ -165,13 +163,21 @@ public class PlayerServiceImpl implements PlayerService {
       throw new InvalidTokenException();
     }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
-    if (Objects.isNull(player)) {
-      return false;
-    }
+    if (Objects.isNull(player)) return false;
+
     player.setIsAccountVerified(true);
     playerRepo.save(player);
 
     registrationTokenService.removeToken(secureToken);
     return true;
+  }
+
+  private PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
+    PlayerEntity player = new PlayerEntity();
+    player.setEmail(dto.getEmail());
+    player.setUsername(dto.getUsername());
+    player.setKingdom(kingdom);
+    player.setIsAccountVerified(verified);
+    return player;
   }
 }

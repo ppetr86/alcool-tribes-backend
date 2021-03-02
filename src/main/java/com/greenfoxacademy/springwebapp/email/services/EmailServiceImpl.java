@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
   private final SpringTemplateEngine templateEngine;
 
   @Override
-  public void sendMailWithHtmlAndPlainText(AbstractEmail email) throws MessagingException {
+  public Boolean sendMailWithHtmlAndPlainText(AbstractEmail email) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
 
     MimeMessageHelper helper = new MimeMessageHelper(message,
@@ -37,6 +37,7 @@ public class EmailServiceImpl implements EmailService {
     helper.setFrom(email.getSenderEmail());
     helper.setText(textMail, htmlMail);
     mailSender.send(message);
+    return true;
   }
 
   private String verificationMail(AbstractEmail email) {

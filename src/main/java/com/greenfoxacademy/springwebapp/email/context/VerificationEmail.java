@@ -7,7 +7,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Getter
 @Setter
-public class AccountVerificationEmail extends AbstractEmail {
+public class VerificationEmail extends AbstractEmail {
 
   private String token;
 
