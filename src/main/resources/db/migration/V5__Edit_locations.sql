@@ -1,6 +1,6 @@
 ALTER TABLE locations
     ADD COLUMN kingdom_id BIGINT,
-    ADD COLUMN type       varchar(10),
+    ADD COLUMN type       VARCHAR(10) NOT NULL,
     ADD FOREIGN KEY (kingdom_id) references kingdoms (id);
 
 ALTER TABLE kingdoms

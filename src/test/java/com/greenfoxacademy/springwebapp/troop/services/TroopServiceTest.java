@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.troop.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
@@ -24,6 +25,9 @@ import org.springframework.core.env.Environment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 public class TroopServiceTest {
 
@@ -50,7 +54,7 @@ public class TroopServiceTest {
     TroopListResponseDto result = troopService.troopsToListDTO(ke);
 
     Assert.assertEquals(3, result.getTroops().size());
-    Assert.assertEquals(101, (long) result.getTroops().get(0).getFinishedAt());
+    Assert.assertEquals(101, result.getTroops().get(0).getFinishedAt());
   }
 
   @Test(expected = ForbiddenActionException.class)
@@ -96,14 +100,10 @@ public class TroopServiceTest {
 
   @Test
   public void createTroopReturnsLevel1CreatedTroopAsDTO() {
-    KingdomEntity kingdom = new KingdomEntity();
-    List<BuildingEntity> buildings = new ArrayList<>();
-    BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY, 1, 1, 1L, 1L);
-    buildings.add(building);
-    kingdom.setBuildings(buildings);
-
-    TroopEntity fakeTroop = new TroopEntity(1, 20, 10, 5, 1L, 30L, kingdom);
-    TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L); //academy is id2
+    TroopEntity fakeTroop = new TroopEntity(1L, 1, 20, 10, 5, 1L, 30L, kingdom);
+    TroopRequestDTO requestDTO = new TroopRequestDTO(2L);
+    TroopEntityResponseDTO expectedTroop = new TroopEntityResponseDTO(1L, 1, 20, 10, 5, 1, 30);
 
     Mockito.when(env.getProperty("troop.hp")).thenReturn("20");
     Mockito.when(env.getProperty("troop.food")).thenReturn("-5");
@@ -112,18 +112,12 @@ public class TroopServiceTest {
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
     Mockito.when(timeService.getTime()).thenReturn(1L);
-    Mockito.when(timeService.getTimeAfter(building.getLevel()
-        * Integer.parseInt(env.getProperty("troop.buildingTime")))) //using application.properties
-        .thenReturn(30L);
-    Mockito.when(troopRepository.save(fakeTroop)).thenReturn(fakeTroop);
+    Mockito.when(timeService.getTimeAfter(1
+        * Integer.parseInt(env.getProperty("troop.buildingTime")))).thenReturn(30L);
+    Mockito.when(troopRepository.save(any())).thenReturn(fakeTroop);
 
     TroopEntityResponseDTO response = troopService.createTroop(kingdom, requestDTO);
-    Assert.assertEquals(1, response.getLevel());
-    Assert.assertEquals(20, response.getHp());
-    Assert.assertEquals(10, response.getAttack());
-    Assert.assertEquals(5, response.getDefence());
-    Assert.assertEquals(1, response.getStartedAt());
-    Assert.assertEquals(30, response.getFinishedAt());
+    assertThat(response).isEqualToComparingFieldByField(expectedTroop);
   }
 
   @Test(expected = ForbiddenActionException.class)

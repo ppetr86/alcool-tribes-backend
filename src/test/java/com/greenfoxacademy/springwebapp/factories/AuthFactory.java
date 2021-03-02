@@ -28,7 +28,7 @@ public class AuthFactory {
     PlayerEntity player = new PlayerEntity();
     player.setUsername(userName);
     player.setId(kingdomId);
-    KingdomEntity kingdom = KingdomFactory.createFullKingdom(kingdomId,kingdomId);
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(kingdomId, kingdomId);
 
     userDetails.setLogin(player);
     userDetails.setKingdom(kingdom);

@@ -5,7 +5,6 @@ import com.greenfoxacademy.springwebapp.email.repository.RegistrationTokenReposi
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 import org.springframework.security.crypto.keygen.KeyGenerators;
@@ -20,14 +19,12 @@ public class RegistrationTokenServiceImpl implements RegistrationTokenService {
 
   private static final BytesKeyGenerator DEFAULT_TOKEN_GENERATOR = KeyGenerators.secureRandom(15);
   private static final Charset US_ASCII = Charset.forName("US-ASCII");
-
+  private final RegistrationTokenRepository secureTokenRepository;
   @Value("${jdj.secure.token.validity}")
   private int tokenValidityInSeconds;
 
-  private final RegistrationTokenRepository secureTokenRepository;
-
   @Override
-  public RegistrationTokenEntity createSecureToken(PlayerEntity player){
+  public RegistrationTokenEntity createSecureToken(PlayerEntity player) {
     String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII);
     RegistrationTokenEntity secureToken = new RegistrationTokenEntity();
     secureToken.setToken(tokenValue);

@@ -30,5 +30,6 @@ public interface PlayerService {
 
   boolean existsByUsername(String username);
 
-  PlayerTokenDTO loginPlayer(PlayerRequestDTO request) throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException;
+  PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
+      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException;
 }

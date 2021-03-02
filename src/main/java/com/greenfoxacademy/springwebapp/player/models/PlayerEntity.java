@@ -69,9 +69,9 @@ public class PlayerEntity {
 
   @Override
   public String toString() {
-    return "username='" + username + '\'' +
-        ", password='" + password + '\'' +
-        ", email='" + email + '\'' +
-        ", points=" + points;
+    return "username='" + username + '\''
+        + ", password='" + password + '\''
+        + ", email='" + email + '\''
+        + ", points=" + points;
   }
 }

@@ -1,2 +1,0 @@
-ALTER TABLE players
-    MODIFY COLUMN email VARCHAR(100);
