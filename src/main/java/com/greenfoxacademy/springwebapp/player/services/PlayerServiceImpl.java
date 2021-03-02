@@ -2,7 +2,7 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.email.context.AccountVerificationEmail;
+import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
@@ -86,7 +86,7 @@ public class PlayerServiceImpl implements PlayerService {
     token.setPlayer(player);
     registrationTokenService.saveSecureToken(token);
 
-    AccountVerificationEmail emailContext = new AccountVerificationEmail();
+    VerificationEmail emailContext = new VerificationEmail();
     emailContext.init(player);
     emailContext.setToken(token.getToken());
     emailContext.buildVerificationUrl(env.getProperty("site.base.url.http"), token.getToken());
@@ -158,10 +158,11 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public boolean verifyUser(String token) throws InvalidTokenException {
     RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
-    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired())
+    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
       throw new InvalidTokenException();
+    }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
-    if (Objects.isNull(player))return false;
+    if (Objects.isNull(player)) return false;
 
     player.setIsAccountVerified(true);
     playerRepo.save(player);
