@@ -25,6 +25,7 @@ import javax.validation.Valid;
 @RequestMapping(PlayerController.URI)
 public class PlayerController {
   public static final String URI = "/register";
+  public static final String URIVERIFY = "/register/verify";
   private final PlayerService playerService;
 
   @GetMapping("/verify")
