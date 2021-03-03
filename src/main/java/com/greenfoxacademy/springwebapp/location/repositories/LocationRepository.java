@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
 
   @Procedure
-  void generate50DesertsAnd50Jungles();
+  List<LocationEntity> generate50DesertsAnd50Jungles();
 }

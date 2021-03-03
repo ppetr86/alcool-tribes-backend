@@ -12,6 +12,3 @@ ALTER TABLE kingdoms
 UPDATE locations
 SET locations.type = 'KINGDOM'
 WHERE locations.kingdom_id IS NOT NULL;
-
-/*locations table should have a kingdom_id column which is nullable
-*/

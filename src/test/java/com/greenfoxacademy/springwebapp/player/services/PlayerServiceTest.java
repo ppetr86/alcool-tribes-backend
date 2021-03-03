@@ -1,25 +1,33 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.TestConfig;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
+import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.RegistrationTokenFactory;
+import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IncorrectUsernameOrPwdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
@@ -27,6 +35,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -56,6 +65,31 @@ public class PlayerServiceTest {
     mockEnvironment = TestConfig.mockEnvironment();
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
         registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
+  }
+
+  @Ignore
+  @Test
+  public void saveNewPlayer_savesWithCorrectData(){
+    PlayerRegisterRequestDTO rqst =
+        new PlayerRegisterRequestDTO("testUser", "password", "test@test.com");
+    List<BuildingEntity> buildings = BuildingFactory.createDefaultBuildings();
+    List<ResourceEntity> resources = ResourceFactory.createDefaultResources();
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+
+    Mockito.when(buildingService.createDefaultBuildings(kingdom)).thenReturn(buildings);
+    Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPassword");
+    Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(resources);
+
+    LocationEntity location = new LocationEntity(1L,10,10,kingdom, LocationType.KINGDOM);
+    Mockito.when(locationService.defaultLocation(kingdom)).thenReturn(location);
+
+    PlayerEntity player = playerService.saveNewPlayer(rqst);
+
+    Assert.assertEquals("testUser's Kingdom", player.getKingdom().getKingdomName());
+    Assert.assertEquals("testUser", player.getUsername());
+    Assert.assertEquals(4,player.getKingdom().getBuildings().size());
+    Assert.assertEquals(2,player.getKingdom().getResources().size());
+    Assert.assertEquals(100,(int) player.getKingdom().getResources().get(0).getAmount());
   }
 
   @Test

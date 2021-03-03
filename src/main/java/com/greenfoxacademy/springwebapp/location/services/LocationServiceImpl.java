@@ -42,14 +42,19 @@ public class LocationServiceImpl implements LocationService {
 
   private LocationEntity generateRandomLocation() {
     LocationEntity result = new LocationEntity();
-    result.setX(new Random().nextInt(101) - 102);
-    result.setY(new Random().nextInt(101) - 102);
+    result.setX(new Random().nextInt(201) - 100);
+    result.setY(new Random().nextInt(201) - 100);
     return result;
   }
 
   @Override
   public List<LocationEntity> findAll() {
     return repo.findAll();
+  }
+
+  @Override
+  public void generate50DesertsAnd50Jungles() {
+    repo.generate50DesertsAnd50Jungles();
   }
 
 

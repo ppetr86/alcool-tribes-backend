@@ -1,13 +1,7 @@
-/*Create a stored procedure with a
-Flyway script that generates 50 deserts and 50 jungles to
-random free locations on the map (coordinates from -100 to +100).*/
 DELIMITER $$
 
 CREATE PROCEDURE generate50DesertsAnd50Jungles()
 BEGIN
-    /* loop to get 50 locations,
-       while loop to check if generated location is already in db
-       if in DB, generate again, else move on*/
     SET @i = 0;
     REPEAT
         BEGIN

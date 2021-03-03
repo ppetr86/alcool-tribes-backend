@@ -14,4 +14,6 @@ public interface LocationService {
   LocationEntity defaultLocation(KingdomEntity kingdom);
 
   List<LocationEntity> findAll();
+
+  void generate50DesertsAnd50Jungles();
 }

@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.factories;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 
 public class KingdomFactory {
@@ -42,7 +43,7 @@ public class KingdomFactory {
     kingdom.setPlayer(pl);
 
     kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
-    kingdom.setLocation(new LocationEntity(1L, 10, 10));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10,kingdom, LocationType.KINGDOM));
     kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 
