@@ -29,14 +29,16 @@ public class LocationServiceTest {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(11L);
     List<LocationEntity> occupiedLocations = LocationFactory.createOccupiedLocations();
 
-    for (int i = 0; i < 150; i++) {
+    for (int i = 0; i < 1000; i++) {
       LocationEntity startingLocation = locationService.defaultLocation(kingdom);
+
+      if (occupiedLocations.contains(startingLocation))
+        System.out.println(startingLocation.getX() + " " + startingLocation.getY());
+
       Assert.assertFalse(occupiedLocations.contains(startingLocation));
       Assert.assertEquals(startingLocation.getType(), LocationType.KINGDOM);
       Assert.assertTrue(startingLocation.getX() >= -100 && startingLocation.getX() <= 100);
       Assert.assertTrue(startingLocation.getY() >= -100 && startingLocation.getY() <= 100);
-      System.out.println(startingLocation.getX());
-      System.out.println(startingLocation.getY());
     }
   }
 }
