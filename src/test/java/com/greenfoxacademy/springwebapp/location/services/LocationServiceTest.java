@@ -32,9 +32,6 @@ public class LocationServiceTest {
     for (int i = 0; i < 1000; i++) {
       LocationEntity startingLocation = locationService.defaultLocation(kingdom);
 
-      if (occupiedLocations.contains(startingLocation))
-        System.out.println(startingLocation.getX() + " " + startingLocation.getY());
-
       Assert.assertFalse(occupiedLocations.contains(startingLocation));
       Assert.assertEquals(startingLocation.getType(), LocationType.KINGDOM);
       Assert.assertTrue(startingLocation.getX() >= -100 && startingLocation.getX() <= 100);
