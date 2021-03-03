@@ -43,7 +43,7 @@ public class TroopServiceTest {
     timeService = Mockito.mock(TimeService.class);
     troopRepository = Mockito.mock(TroopRepository.class);
     env = Mockito.mock(Environment.class);
-    troopService = new TroopServiceImpl(resourceService, timeService, troopRepository, env);
+    troopService = new TroopServiceImpl(env, resourceService, timeService, troopRepository);
   }
 
   @Test
