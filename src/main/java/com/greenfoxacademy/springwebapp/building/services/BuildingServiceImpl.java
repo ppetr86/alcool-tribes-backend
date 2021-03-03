@@ -78,9 +78,15 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
-    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
-    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
-    if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
+    if (!isBuildingTypeInRequestOk(dto)) {
+      throw new InvalidInputException("building type");
+    }
+    if (!hasKingdomTownhall(kingdom)) {
+      throw new TownhallLevelException();
+    }
+    if (!resourceService.hasResourcesForBuilding()) {
+      throw new NotEnoughResourceException();
+    }
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result.setKingdom(kingdom);

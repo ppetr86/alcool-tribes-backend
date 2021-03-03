@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
-  private ResourceRepository resourceRepository;
-  private TimeService timeService;
+  private final ResourceRepository resourceRepository;
+  private final TimeService timeService;
 
   public ResourceServiceImpl(ResourceRepository resourceRepository, TimeService timeService) {
     this.resourceRepository = resourceRepository;

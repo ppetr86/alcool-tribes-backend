@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private PlayerService playerService;
+  private final PlayerService playerService;
 
   @Override
   public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TroopServiceImpl implements TroopService {
 
-  private ResourceService resourceService;
-  private TimeService timeService;
-  private TroopRepository troopRepository;
   private final Environment env;
+  private final ResourceService resourceService;
+  private final TimeService timeService;
+  private final TroopRepository troopRepository;
 
   @Override
   public TroopListResponseDto troopsToListDTO(KingdomEntity entity) {

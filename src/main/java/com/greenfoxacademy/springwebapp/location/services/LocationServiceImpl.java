@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocationServiceImpl implements LocationService {
 
-  private LocationRepository repo;
+  private final LocationRepository repo;
 
   @Override
   public LocationEntity save(LocationEntity entity) {

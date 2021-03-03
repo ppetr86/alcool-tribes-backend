@@ -10,9 +10,6 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
-
-import javax.validation.Valid;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor

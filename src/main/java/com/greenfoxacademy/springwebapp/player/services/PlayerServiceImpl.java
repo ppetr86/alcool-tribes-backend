@@ -162,7 +162,9 @@ public class PlayerServiceImpl implements PlayerService {
       throw new InvalidTokenException();
     }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
-    if (Objects.isNull(player)) return false;
+    if (Objects.isNull(player)) {
+      return false;
+    }
 
     player.setIsAccountVerified(true);
     playerRepo.save(player);

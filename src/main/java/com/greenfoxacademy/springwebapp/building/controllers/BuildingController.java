@@ -40,7 +40,7 @@ public class BuildingController {
 
   @PostMapping
   public ResponseEntity<?> buildBuilding(Authentication auth, @RequestBody @Valid BuildingRequestDTO dto)
-      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException  {
+      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(buildingService.createBuilding(kingdom, dto));
   }
