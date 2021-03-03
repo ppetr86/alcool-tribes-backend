@@ -22,13 +22,12 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(PlayerController.URI)
 public class PlayerController {
   public static final String URI = "/register";
   public static final String URIVERIFY = "/register/verify";
   private final PlayerService playerService;
 
-  @GetMapping("/verify")
+  @GetMapping(URIVERIFY)
   @ResponseBody
   public String verifyUser(@RequestParam(required = false) String token) {
     if (token.isEmpty()) {
@@ -46,7 +45,7 @@ public class PlayerController {
   }
 
 
-  @PostMapping
+  @PostMapping(URI)
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request)
       throws UsernameIsTakenException {
     PlayerEntity newRegistration = playerService.registerNewPlayer(request);

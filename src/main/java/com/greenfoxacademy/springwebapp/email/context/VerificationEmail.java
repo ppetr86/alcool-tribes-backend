@@ -13,13 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class VerificationEmail extends AbstractEmail {
 
   private String token;
-  @Value("${senderEmail}")
-  private String senderEmail;
-
-  @Value("${senderDisplayName}")
-  private String senderDisplayName;
-  @Value("${subject}")
-  private String subject;
 
   @Override
   public <T> void init(T context) {
@@ -28,14 +21,14 @@ public class VerificationEmail extends AbstractEmail {
     put("username", player.getUsername());
     put("kingdomname", player.getKingdom().getKingdomName());
 
-    setSenderEmail(senderEmail);
-    setSenderDisplayName(senderDisplayName);
+    setSenderEmail("2abbedeb1d-3b2376@inbox.mailtrap.io");
+    setSenderDisplayName("AlcoolGame");
 
     setRecipientEmail(player.getEmail());
     setKingdomName(player.getKingdom().getKingdomName());
     setUsername(player.getUsername());
     setTemplateLocation("registration");
-    setSubject(subject);
+    setSubject("Verify your email for Alcool Game");
   }
 
   public void setToken(String token) {
