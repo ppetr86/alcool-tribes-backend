@@ -4,8 +4,6 @@ import com.greenfoxacademy.springwebapp.player.controllers.PlayerController;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Getter
@@ -38,7 +36,7 @@ public class VerificationEmail extends AbstractEmail {
 
   public void buildVerificationUrl(final String baseURL, final String token) {
     final String url = UriComponentsBuilder.fromHttpUrl(baseURL)
-            .path(PlayerController.URIVERIFY).queryParam("token", token).toUriString();
+        .path(PlayerController.URIVERIFY).queryParam("token", token).toUriString();
     put("verificationURL", url);
   }
 }
