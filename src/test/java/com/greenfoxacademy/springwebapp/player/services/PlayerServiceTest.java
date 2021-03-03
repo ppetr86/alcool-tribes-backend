@@ -69,27 +69,23 @@ public class PlayerServiceTest {
 
   @Ignore
   @Test
-  public void saveNewPlayer_savesWithCorrectData(){
+  public void saveNewPlayer_savesWithCorrectData() {
     PlayerRegisterRequestDTO rqst =
         new PlayerRegisterRequestDTO("testUser", "password", "test@test.com");
     List<BuildingEntity> buildings = BuildingFactory.createDefaultBuildings();
     List<ResourceEntity> resources = ResourceFactory.createDefaultResources();
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
-
     Mockito.when(buildingService.createDefaultBuildings(kingdom)).thenReturn(buildings);
     Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPassword");
     Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(resources);
-
-    LocationEntity location = new LocationEntity(1L,10,10,kingdom, LocationType.KINGDOM);
+    LocationEntity location = new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM);
     Mockito.when(locationService.defaultLocation(kingdom)).thenReturn(location);
-
     PlayerEntity player = playerService.saveNewPlayer(rqst);
-
     Assert.assertEquals("testUser's Kingdom", player.getKingdom().getKingdomName());
     Assert.assertEquals("testUser", player.getUsername());
-    Assert.assertEquals(4,player.getKingdom().getBuildings().size());
-    Assert.assertEquals(2,player.getKingdom().getResources().size());
-    Assert.assertEquals(100,(int) player.getKingdom().getResources().get(0).getAmount());
+    Assert.assertEquals(4, player.getKingdom().getBuildings().size());
+    Assert.assertEquals(2, player.getKingdom().getResources().size());
+    Assert.assertEquals(100, (int) player.getKingdom().getResources().get(0).getAmount());
   }
 
   @Test

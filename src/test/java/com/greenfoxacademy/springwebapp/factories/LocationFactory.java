@@ -17,7 +17,6 @@ public class LocationFactory {
     locationEntities.add(new LocationEntity(4L, -72, -32, new KingdomEntity(), LocationType.KINGDOM));
     locationEntities.add(new LocationEntity(5L, -38, -44, new KingdomEntity(), LocationType.KINGDOM));
     locationEntities.add(new LocationEntity(6L, -64, -38, new KingdomEntity(), LocationType.KINGDOM));
-    locationEntities.add(new LocationEntity(7L, -79, -59, new KingdomEntity(), LocationType.KINGDOM));
     locationEntities.add(new LocationEntity(8L, 94, -71, null, LocationType.DESERT));
     locationEntities.add(new LocationEntity(9L, 65, 36, null, LocationType.JUNGLE));
     locationEntities.add(new LocationEntity(10L, 85, 18, null, LocationType.DESERT));

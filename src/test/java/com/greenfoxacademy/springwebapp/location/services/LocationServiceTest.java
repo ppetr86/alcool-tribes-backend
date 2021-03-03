@@ -22,12 +22,10 @@ public class LocationServiceTest {
   public void setUp() {
     locationRepository = Mockito.mock(LocationRepository.class);
     locationService = new LocationServiceImpl(locationRepository);
-
-
   }
 
   @Test
-  public void defaultLocation_generatesUnoccupiedLocationInRangePlusMinus100(){
+  public void defaultLocation_generatesUnoccupiedLocationInRangePlusMinus100() {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(11L);
     List<LocationEntity> occupiedLocations = LocationFactory.createOccupiedLocations();
 
@@ -35,8 +33,8 @@ public class LocationServiceTest {
       LocationEntity startingLocation = locationService.defaultLocation(kingdom);
       Assert.assertFalse(occupiedLocations.contains(startingLocation));
       Assert.assertEquals(startingLocation.getType(), LocationType.KINGDOM);
-      Assert.assertTrue(startingLocation.getX() >= -100 && startingLocation.getX() <=100);
-      Assert.assertTrue(startingLocation.getY() >= -100 && startingLocation.getY() <=100);
+      Assert.assertTrue(startingLocation.getX() >= -100 && startingLocation.getX() <= 100);
+      Assert.assertTrue(startingLocation.getY() >= -100 && startingLocation.getY() <= 100);
       System.out.println(startingLocation.getX());
       System.out.println(startingLocation.getY());
     }
