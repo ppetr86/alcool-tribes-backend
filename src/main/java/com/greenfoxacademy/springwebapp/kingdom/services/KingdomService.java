@@ -18,6 +18,4 @@ public interface KingdomService {
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);
 
-  List<KingdomEntity> findKingdomEntitiesByLocationBetween(LocationEntity location, LocationEntity location2);
-
 }

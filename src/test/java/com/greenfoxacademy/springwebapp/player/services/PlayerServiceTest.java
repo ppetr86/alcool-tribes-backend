@@ -18,15 +18,13 @@ public class PlayerServiceTest {
   private PasswordEncoder passwordEncoder;
   private BuildingService buildingService;
   private ResourceService resourceService;
-  private KingdomService kingdomService;
 
   @Before
   public void setUp() {
     playerRepository = Mockito.mock(PlayerRepository.class);
     passwordEncoder = Mockito.mock(PasswordEncoder.class);
     buildingService = Mockito.mock(BuildingService.class);
-    kingdomService = Mockito.mock(KingdomService.class);
-    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, resourceService, kingdomService);
+    playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, resourceService);
   }
 
   @Test

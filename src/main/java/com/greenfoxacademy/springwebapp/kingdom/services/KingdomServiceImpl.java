@@ -67,9 +67,4 @@ public class KingdomServiceImpl implements KingdomService {
     return kingdomRepository.save(kingdom);
   }
 
-  @Override
-  public List<KingdomEntity> findKingdomEntitiesByLocationBetween(LocationEntity location, LocationEntity location2) {
-    return kingdomRepository.findKingdomEntitiesByLocationBetween(location, location2);
-  }
-
 }

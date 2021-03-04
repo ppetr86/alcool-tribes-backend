@@ -3,7 +3,6 @@ package com.greenfoxacademy.springwebapp.player.services;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegistrationRequestDTO;
@@ -15,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +24,6 @@ public class PlayerServiceImpl implements PlayerService {
   private final PasswordEncoder passwordEncoder;
   private final BuildingService buildingService;
   private final ResourceService resourceService;
-  private final KingdomService kingdomService;
 
   @Override
   public PlayerResponseDTO saveNewPlayer(PlayerRegistrationRequestDTO dto) {
@@ -91,13 +88,13 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance) {
-    List<PlayerResponseDTO> playerResponseDTO = new ArrayList<>();
+    List<PlayerResponseDTO> playerResponseDTO;
     List<PlayerEntity> allPlayers = (List<PlayerEntity>) playerRepo.findAll();
 
     if (distance == null) {
       playerResponseDTO = allPlayers.stream()
-          .map(e -> assignResponseDto(e))
-          .forEach(e -> playerResponseDTO.add(e))
+          .map(this::assignResponseDto)
+          .filter(e -> e.getKingdomId() != kingdom.getId())
           .collect(Collectors.toList());
     } else {
       List<KingdomEntity> kingdomEntities = allPlayers.stream()
@@ -105,13 +102,9 @@ public class PlayerServiceImpl implements PlayerService {
           .filter(e -> !e.getId().equals(kingdom.getId()))
           .filter(x -> isWithinGrid(kingdom, distance, x))
           .collect(Collectors.toList());
-
-      for (KingdomEntity kingdomEntity : kingdomEntities) {
-        PlayerEntity playerEntity = kingdomEntity.getPlayer();
-        PlayerResponseDTO responseDTO = assignResponseDto(playerEntity);
-        playerResponseDTO.add(responseDTO);
-      }
-
+      playerResponseDTO = kingdomEntities.stream()
+          .map(e -> assignResponseDto(e.getPlayer()))
+          .collect(Collectors.toList());
     }
     PlayerListResponseDTO playerListResponseDTO = new PlayerListResponseDTO(playerResponseDTO);
     return playerListResponseDTO;
