@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -34,6 +33,9 @@ public class ResourceServiceImpl implements ResourceService {
   @Override
   public boolean hasResourcesForBuilding() {
     // TODO: hasResourcesForBuilding
+
+    //In my opinion the better solution is using levelDTO instead of amountChange, cause this time I can check that
+    //the building level will be increase or decrease. If decrease than I think the amount change not relevant.
     return false;
   }
 
@@ -59,6 +61,8 @@ public class ResourceServiceImpl implements ResourceService {
 
   private void updateResources(Long kingdomId, ResourceType resourceType, int amountChange) {
     //get kingdom just in this method
+
+
     KingdomEntity kingdom = kingdomService.findByID(kingdomId);
 
 
@@ -74,16 +78,57 @@ public class ResourceServiceImpl implements ResourceService {
 
     saveResource(resource);
   }
-  
 
-  private ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType){
+  private boolean updateResourcesIfBuildTownHall(KingdomEntity kingdom, BuildingEntity building, int amountChange) {
+    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+
+    if (building.getType().equals(BuildingType.TOWNHALL)) {
+      if (amountChange <= actualAmount) {
+        kingdomsGold.setAmount(actualAmount - amountChange);
+        saveResource(kingdomsGold);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean updateResourcesIfBuildAcademy(KingdomEntity kingdom, BuildingEntity building, int amountChange) {
+    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+
+    if (building.getType().equals(BuildingType.ACADEMY)) {
+      if (amountChange <= actualAmount) {
+        kingdomsGold.setAmount(actualAmount - amountChange);
+        saveResource(kingdomsGold);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean updateResourcesIfBuildFarmOrMine(KingdomEntity kingdom, BuildingEntity building, int amountChange) {
+    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+
+    if (building.getType().equals(BuildingType.FARM) || building.getType().equals(BuildingType.MINE)) {
+      if (amountChange <= actualAmount) {
+        kingdomsGold.setAmount(actualAmount - amountChange);
+        saveResource(kingdomsGold);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType) {
     return kingdom.getResources().stream()
         .filter(r -> r.getType().equals(resourceType))
         .findFirst()
         .orElse(null);
   }
 
-  private Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType){
+  private Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType) {
     ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
     Integer lastUpdatedAmount = resource.getAmount();
 
