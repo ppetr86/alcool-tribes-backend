@@ -67,7 +67,7 @@ public class PlayerServiceTest {
         registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
   }
 
-  @Ignore
+  //@Ignore
   @Test
   public void saveNewPlayer_savesWithCorrectData() {
     PlayerRegisterRequestDTO rqst =
@@ -75,11 +75,12 @@ public class PlayerServiceTest {
     List<BuildingEntity> buildings = BuildingFactory.createDefaultBuildings();
     List<ResourceEntity> resources = ResourceFactory.createDefaultResources();
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
-    Mockito.when(buildingService.createDefaultBuildings(kingdom)).thenReturn(buildings);
-    Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPassword");
-    Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(resources);
+    Mockito.when(buildingService.createDefaultBuildings(Mockito.any(KingdomEntity.class))).thenReturn(buildings);
+    Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPWD");
+    Mockito.when(resourceService.createDefaultResources(Mockito.any(KingdomEntity.class))).thenReturn(resources);
     LocationEntity location = new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM);
-    Mockito.when(locationService.defaultLocation(kingdom)).thenReturn(location);
+
+    Mockito.when(locationService.defaultLocation(Mockito.any(KingdomEntity.class))).thenReturn(location);
     PlayerEntity player = playerService.saveNewPlayer(rqst);
     Assert.assertEquals("testUser's Kingdom", player.getKingdom().getKingdomName());
     Assert.assertEquals("testUser", player.getUsername());

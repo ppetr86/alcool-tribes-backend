@@ -22,9 +22,9 @@ POST http://localhost:8080/register
 Content-Type: application/json
 
 {
-  "username": "petrN7",
+  "username": "petrN2",
   "password": "password",
-  "email": "ppetrnovotny@gmail.com7"
+  "email": "ppetrnovotny@gmail.com2"
 }
 
 ###
