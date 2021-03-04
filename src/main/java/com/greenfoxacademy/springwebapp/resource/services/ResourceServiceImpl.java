@@ -31,12 +31,17 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public boolean hasResourcesForBuilding() {
-    // TODO: hasResourcesForBuilding
+  public boolean hasResourcesForBuilding(Long kingdomId, BuildingEntity building, int amountChange) {
+    KingdomEntity kingdom = kingdomService.findByID(kingdomId);
 
     //In my opinion the better solution is using levelDTO instead of amountChange, cause this time I can check that
     //the building level will be increase or decrease. If decrease than I think the amount change not relevant.
-    return false;
+
+    if (updateResourcesIfBuildTownHall(kingdom, building, amountChange)) {
+      return true;
+    } else if (updateResourcesIfBuildAcademy(kingdom, building, amountChange)) {
+      return true;
+    } else return updateResourcesIfBuildFarmOrMine(kingdom, building, amountChange);
   }
 
   @Override
@@ -59,15 +64,10 @@ public class ResourceServiceImpl implements ResourceService {
         .build();
   }
 
+  // non relevant method right now
   private void updateResources(Long kingdomId, ResourceType resourceType, int amountChange) {
     //get kingdom just in this method
-
-
     KingdomEntity kingdom = kingdomService.findByID(kingdomId);
-
-
-
-
 
     ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
 
