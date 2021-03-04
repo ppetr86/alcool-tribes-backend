@@ -56,7 +56,6 @@ public class BuildingServiceImpl implements BuildingService {
     return repo.findById(id).orElse(null);
   }
 
-
   @Override
   public BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
       throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
