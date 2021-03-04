@@ -1,11 +1,8 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
-import org.springframework.stereotype.Service;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
-
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public interface KingdomService {
