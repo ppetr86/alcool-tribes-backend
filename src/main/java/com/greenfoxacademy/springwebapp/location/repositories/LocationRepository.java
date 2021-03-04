@@ -12,4 +12,6 @@ public interface LocationRepository extends JpaRepository<LocationEntity, Long> 
 
   @Procedure
   List<LocationEntity> generate50DesertsAnd50Jungles();
+
+  List<LocationEntity> findAll();
 }

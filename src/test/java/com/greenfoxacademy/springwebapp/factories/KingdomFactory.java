@@ -24,7 +24,7 @@ public class KingdomFactory {
     kingdom.setPlayer(pl);
 
     kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
-    kingdom.setLocation(new LocationEntity(1L, 10, 10,null,null));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10,null,LocationType.KINGDOM));
     kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 

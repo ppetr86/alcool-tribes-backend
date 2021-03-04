@@ -72,12 +72,12 @@ public class PlayerServiceImpl implements PlayerService {
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
     LocationEntity defaultLocation = locationService.defaultLocation(kingdom);
-    defaultLocation.setKingdom(kingdom);
 
     kingdom.setLocation(defaultLocation);
     kingdom.setPlayer(player);
 
     player = playerRepo.save(player);
+    locationService.save(defaultLocation);
     return player;
   }
 

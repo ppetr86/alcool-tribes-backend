@@ -36,7 +36,6 @@ public class LocationServiceImpl implements LocationService {
     }
     startingLocation.setKingdom(kingdom);
     startingLocation.setType(LocationType.KINGDOM);
-
     return startingLocation;
   }
 
