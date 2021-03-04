@@ -1,5 +1,8 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -54,13 +57,15 @@ public class ResourceServiceImpl implements ResourceService {
         .build();
   }
 
-  @Override
-  public void updateResources(Long kingdomId, ResourceType resourceType, int amountChange) {
+  private void updateResources(Long kingdomId, ResourceType resourceType, int amountChange) {
+    //get kingdom just in this method
     KingdomEntity kingdom = kingdomService.findByID(kingdomId);
-    ResourceEntity resource = kingdom.getResources().stream()
-        .filter(r -> r.getType().equals(resourceType))
-        .findFirst()
-        .orElse(null);
+
+
+
+
+
+    ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
 
     assert resource != null;
     if (amountChange < 0) resource.setAmount(resource.getAmount() - amountChange);
@@ -68,5 +73,26 @@ public class ResourceServiceImpl implements ResourceService {
     resource.setUpdatedAt(timeService.getTime());
 
     saveResource(resource);
+  }
+  
+
+  private ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType){
+    return kingdom.getResources().stream()
+        .filter(r -> r.getType().equals(resourceType))
+        .findFirst()
+        .orElse(null);
+  }
+
+  private Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType){
+    ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
+    Integer lastUpdatedAmount = resource.getAmount();
+
+    long updatedTime = resource.getUpdatedAt();
+    long actualTime = timeService.getTime();
+    int betweenUpdateAndActualTime = timeService.getTimeBetween(updatedTime, actualTime);
+
+    Integer betweenUpdateAndActualAmount = (betweenUpdateAndActualTime / 60 * resource.getGeneration());
+
+    return lastUpdatedAmount + betweenUpdateAndActualAmount;
   }
 }

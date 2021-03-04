@@ -22,5 +22,4 @@ public interface ResourceService {
 
   ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
 
-  void updateResources(Long kingdomId, ResourceType resourceType, int amountChange);
 }
