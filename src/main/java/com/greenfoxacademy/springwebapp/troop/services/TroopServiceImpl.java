@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,7 +75,7 @@ public class TroopServiceImpl implements TroopService {
 
     throwExceptions(requestDTO, academy, kingdomEntity, troopId);
 
-    TroopEntity troopEntity = updateTroop(academy, troopId);
+    TroopEntity troopEntity = updateTroop(academy, troopId, kingdomEntity);
     troopRepository.save(troopEntity);
     return new TroopEntityResponseDTO(troopEntity);
   }
@@ -101,12 +102,17 @@ public class TroopServiceImpl implements TroopService {
     }
   }
 
-  private TroopEntity updateTroop(BuildingEntity academy, Long troopId) {
+  private TroopEntity updateTroop(BuildingEntity academy, Long troopId, KingdomEntity kingdomEntity) {
     Integer troopLevel = academy.getLevel();
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
 
-    TroopEntity troopEntity = troopRepository.findTroopEntityById(troopId);
+    List<TroopEntity> listOfTroops = kingdomEntity.getTroops();
+
+    TroopEntity troopEntity = listOfTroops.stream()
+        .filter(e -> e.getId().equals(troopId))
+        .findFirst().get();
+
     troopEntity.setLevel(troopLevel);
     troopEntity.setStartedAt(startedAt);
     troopEntity.setFinishedAt(finishedAt);
