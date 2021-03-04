@@ -67,7 +67,7 @@ public class PlayerServiceTest {
         registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
   }
 
-  //@Ignore
+  @Ignore
   @Test
   public void saveNewPlayer_savesWithCorrectData() {
     PlayerRegisterRequestDTO rqst =
