@@ -181,7 +181,6 @@ public class TroopServiceTest {
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeKingdom.getTroops().get(0).getId()))
         .thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
-    Mockito.when(troopRepository.findTroopEntityById(1L)).thenReturn(fakeKingdom.getTroops().get(0));
 
     TroopEntityResponseDTO response = troopService.updateTroopLevel(fakeKingdom, fakeTroopRequest, 1L);
 
@@ -205,7 +204,6 @@ public class TroopServiceTest {
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(false);
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeTroopList.get(0).getId())).thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
-    Mockito.when(troopRepository.findTroopEntityById(1L)).thenReturn(fakeTroopList.get(0));
 
     TroopEntityResponseDTO response = troopService.updateTroopLevel(fakeKingdom, fakeTroopRequest, 1L);
   }
@@ -223,7 +221,6 @@ public class TroopServiceTest {
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeTroopList.get(0).getId())).thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
-    Mockito.when(troopRepository.findTroopEntityById(1L)).thenReturn(fakeTroopList.get(0));
 
     TroopEntityResponseDTO response = troopService.updateTroopLevel(fakeKingdom, fakeTroopRequest, 1L);
   }
@@ -241,7 +238,6 @@ public class TroopServiceTest {
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeTroopList.get(0).getId())).thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
-    Mockito.when(troopRepository.findTroopEntityById(1L)).thenReturn(fakeTroopList.get(0));
 
     TroopEntityResponseDTO response = troopService.updateTroopLevel(fakeKingdom, fakeTroopRequest, 1L);
   }
