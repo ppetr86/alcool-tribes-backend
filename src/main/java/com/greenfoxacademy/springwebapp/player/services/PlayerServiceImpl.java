@@ -100,10 +100,10 @@ public class PlayerServiceImpl implements PlayerService {
     } else {
       Integer currentKingdomLocationX = kingdom.getLocation().getX();
       Integer currentKingdomLocationY = kingdom.getLocation().getY();
-      Integer distanceFromCurrentLocationNegativeX = currentKingdomLocationX - distance - 1;
-      Integer distanceFromCurrentLocationPositiveX = currentKingdomLocationX + distance + 1;
-      Integer distanceFromCurrentLocationPositiveY = currentKingdomLocationY + distance + 1;
-      Integer distanceFromCurrentLocationNegativeY = currentKingdomLocationY - distance - 1;
+      Integer distanceFromCurrentLocationNegativeX = currentKingdomLocationX - distance;
+      Integer distanceFromCurrentLocationPositiveX = currentKingdomLocationX + distance;
+      Integer distanceFromCurrentLocationPositiveY = currentKingdomLocationY + distance;
+      Integer distanceFromCurrentLocationNegativeY = currentKingdomLocationY - distance;
 
       LocationEntity location1 = new LocationEntity(distanceFromCurrentLocationNegativeX, distanceFromCurrentLocationNegativeY);
       LocationEntity location2 = new LocationEntity(distanceFromCurrentLocationPositiveX, distanceFromCurrentLocationPositiveY);
