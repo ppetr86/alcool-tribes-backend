@@ -101,7 +101,7 @@ public class PlayerServiceImpl implements PlayerService {
     return true;
   }
 
-  private KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
+  public KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
     KingdomEntity kingdom = new KingdomEntity();
     if (dto.getKingdomname() != null) {
       kingdom.setKingdomName(dto.getKingdomname());
@@ -172,7 +172,7 @@ public class PlayerServiceImpl implements PlayerService {
     return true;
   }
 
-  private PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
+  public PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
     PlayerEntity player = new PlayerEntity();
     player.setEmail(dto.getEmail());
     player.setUsername(dto.getUsername());
