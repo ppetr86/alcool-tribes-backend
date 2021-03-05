@@ -81,8 +81,7 @@ public class ControllerAdvisorUnitTest {
     Assert.assertEquals("Not a valid academy id", result.getBody().getMessage());
   }
 
-}
-
+  @Test
   public void idNotFoundExceptionShouldReturnNotFoundAndCorrectMessage() {
     ResponseEntity<ErrorDTO> response = ca.handleExceptions(new IdNotFoundException());
     Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());

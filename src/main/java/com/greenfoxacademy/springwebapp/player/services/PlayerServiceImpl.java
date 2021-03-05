@@ -70,19 +70,12 @@ public class PlayerServiceImpl implements PlayerService {
     PlayerEntity player = copyProperties(kingdom, dto, false);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-<<<<<<< HEAD
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
     LocationEntity defaultLocation = new LocationEntity(1L, 10, 10);
     locationService.save(defaultLocation);
     kingdom.setLocation(defaultLocation);
-=======
-    PlayerEntity player =
-        new PlayerEntity(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
-    if (dto.getEmail() == null) {
-      player.setEmail("");
-    }
+
     player.setKingdom(kingdom);
->>>>>>> development
     kingdom.setPlayer(player);
 
     player = playerRepo.save(player);
