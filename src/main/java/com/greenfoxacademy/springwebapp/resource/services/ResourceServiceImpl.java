@@ -77,12 +77,15 @@ public class ResourceServiceImpl implements ResourceService {
   private Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType) {
     ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
     Integer lastUpdatedAmount = resource.getAmount();
+    Integer betweenUpdateAndActualAmount = 0;
 
     long updatedTime = resource.getUpdatedAt();
     long actualTime = timeService.getTime();
-    int betweenUpdateAndActualTime = timeService.getTimeBetween(updatedTime, actualTime);
+    int betweenUpdateAndActualTime = (int) (actualTime - updatedTime);
 
-    Integer betweenUpdateAndActualAmount = (betweenUpdateAndActualTime / 60 * resource.getGeneration());
+    if (updatedTime < actualTime){
+      betweenUpdateAndActualAmount = (betweenUpdateAndActualTime / 60 * resource.getGeneration());
+    }
 
     return lastUpdatedAmount + betweenUpdateAndActualAmount;
   }

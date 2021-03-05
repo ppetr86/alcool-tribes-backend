@@ -51,7 +51,6 @@ public class BuildingControllerIT {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(createBuildings(kingdom));
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount(kingdom));
   }
 
   @Test
@@ -68,10 +67,7 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-
-    // TODO: remove this when ResourceService is implemented
-    Mockito.when(timeService.getTime()).thenReturn(999L);
-
+    
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
@@ -146,11 +142,8 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("farM");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
 
-    // TODO: remove this when ResourceService is implemented
-    Mockito.when(timeService.getTime()).thenReturn(999L);
+    Mockito.when(timeService.getTime()).thenReturn(222L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -166,11 +159,8 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("TOWNhall");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
 
-    // TODO: remove this when ResourceService is implemented
-    Mockito.when(timeService.getTime()).thenReturn(999L);
+    Mockito.when(timeService.getTime()).thenReturn(222L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -186,10 +176,8 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("MINE");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
-    // TODO: remove this when ResourceService is implemented
-    Mockito.when(timeService.getTime()).thenReturn(999L);
+
+    Mockito.when(timeService.getTime()).thenReturn(222L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -205,11 +193,8 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("academy");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
 
-    // TODO: remove this when ResourceService is implemented
-    Mockito.when(timeService.getTime()).thenReturn(999L);
+    Mockito.when(timeService.getTime()).thenReturn(222L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -228,7 +213,6 @@ public class BuildingControllerIT {
     String json = mapper.writeValueAsString(request);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(new ArrayList<>());
-    // TODO: remove this when ResourceService is implemented
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)

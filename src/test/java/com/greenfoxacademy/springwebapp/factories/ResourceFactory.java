@@ -34,10 +34,10 @@ public class ResourceFactory {
     );
   }
 
-  public static List<ResourceEntity> createResourcesWithAllDataAndLowAmount(KingdomEntity kingdom) {
+  public static List<ResourceEntity> createResourcesWithAllDataAndLowAmount() {
     return Arrays.asList(
-        new ResourceEntity(1L, ResourceType.GOLD, 0, 100, 999L, kingdom),
-        new ResourceEntity(2L, ResourceType.FOOD, 0, 100, 999L, kingdom)
+        new ResourceEntity(1L, ResourceType.GOLD, 0, 100, 999L, null),
+        new ResourceEntity(2L, ResourceType.FOOD, 0, 100, 999L, null)
     );
   }
 

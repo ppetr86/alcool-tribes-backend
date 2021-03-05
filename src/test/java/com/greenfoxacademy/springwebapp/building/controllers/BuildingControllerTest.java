@@ -24,13 +24,11 @@ public class BuildingControllerTest {
 
   private BuildingController buildingController;
   private BuildingService buildingService;
-  private KingdomService kingdomService;
   private ResourceService resourceService;
 
   @Before
   public void setUp() {
     buildingService = Mockito.mock(BuildingService.class);
-    kingdomService = Mockito.mock(KingdomService.class);
     resourceService = Mockito.mock(ResourceService.class);
     buildingController = new BuildingController(buildingService);
   }
