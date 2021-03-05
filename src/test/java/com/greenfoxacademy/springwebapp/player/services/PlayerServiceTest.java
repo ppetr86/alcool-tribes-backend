@@ -67,7 +67,7 @@ public class PlayerServiceTest {
         registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
   }
 
-  @Ignore
+  //@Ignore
   @Test
   public void saveNewPlayer_savesWithCorrectData() {
     playerService = Mockito.spy(playerService);
@@ -77,6 +77,7 @@ public class PlayerServiceTest {
     List<BuildingEntity> buildings = BuildingFactory.createDefaultBuildings(kingdom);
     List<ResourceEntity> resources = ResourceFactory.createDefaultResources(kingdom);
 
+    Mockito.doReturn(kingdom).when(playerService).createNewEmptyKingdom();
     Mockito.when(buildingService.createDefaultBuildings(kingdom)).thenReturn(buildings);
     Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPWD");
     Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(resources);
@@ -94,7 +95,7 @@ public class PlayerServiceTest {
 
     Mockito.when(playerRepository.save(player)).thenReturn(player);
     player = playerService.saveNewPlayer(rqst);
-    Assert.assertEquals("testUser's Kingdom", player.getKingdom().getKingdomName());
+    Assert.assertEquals("mycoolEmpire", player.getKingdom().getKingdomName());
     Assert.assertEquals("testUser", player.getUsername());
     Assert.assertEquals(4, player.getKingdom().getBuildings().size());
     Assert.assertEquals(2, player.getKingdom().getResources().size());

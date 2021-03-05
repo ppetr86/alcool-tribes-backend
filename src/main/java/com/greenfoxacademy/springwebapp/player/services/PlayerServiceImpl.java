@@ -63,7 +63,7 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO dto) {
-    KingdomEntity kingdom = new KingdomEntity();
+    KingdomEntity kingdom = createNewEmptyKingdom();
     kingdom.setKingdomName(dto.getKingdomname() == null ? dto.getUsername() + "'s kingdom" : dto.getKingdomname());
     List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
     kingdom.setBuildings(defaultBuildings);
@@ -80,6 +80,10 @@ public class PlayerServiceImpl implements PlayerService {
     player = playerRepo.save(player);
     locationService.save(defaultLocation);
     return player;
+  }
+
+  public KingdomEntity createNewEmptyKingdom() {
+    return new KingdomEntity();
   }
 
   @Override
