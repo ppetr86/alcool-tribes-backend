@@ -71,16 +71,22 @@ public class BuildingServiceImpl implements BuildingService {
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (dto.getType().trim().isEmpty()) {
       throw new MissingParameterException("type");
     }
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
 =======
+=======
+>>>>>>> 963d7be178d04c45e6f6dc46dd3a1df8676e8814
     if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
 
+<<<<<<< HEAD
+>>>>>>> 963d7be178d04c45e6f6dc46dd3a1df8676e8814
+=======
 >>>>>>> 963d7be178d04c45e6f6dc46dd3a1df8676e8814
     if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());

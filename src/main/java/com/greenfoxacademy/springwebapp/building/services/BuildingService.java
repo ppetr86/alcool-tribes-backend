@@ -36,8 +36,14 @@ public interface BuildingService {
   boolean hasKingdomTownhall(KingdomEntity kingdom);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   BuildingEntity findBuildingById(Long id);
 
+=======
+  List<BuildingEntity> findBuildingsByKingdomId(Long id);
+
+  List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
+>>>>>>> 963d7be178d04c45e6f6dc46dd3a1df8676e8814
 =======
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 
