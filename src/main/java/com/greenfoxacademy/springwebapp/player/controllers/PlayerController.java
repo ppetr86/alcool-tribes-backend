@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
@@ -28,25 +28,24 @@ public class PlayerController {
 
   @GetMapping(URIVERIFY)
   @ResponseBody
-  public String verifyUser(@RequestParam(required = false) String token) {
+  public ResponseEntity<ErrorDTO> verifyUser(@RequestParam(required = false) String token) {
     if (token.isEmpty()) {
       log.info(String.format("Verification token was incorrect. Used token: %s", token));
-      return "empty token";
+      return ResponseEntity.badRequest().body(new ErrorDTO("empty token"));
     }
     try {
       playerService.verifyUser(token);
     } catch (InvalidTokenException e) {
       log.info("Verification token is invalid. Used token: {}", token);
-      return "invalid token";
+      return ResponseEntity.badRequest().body(new ErrorDTO("invalid token"));
     }
     log.info(String.format("Token: %s was verified", token));
-    return "verified";
+    return ResponseEntity.ok().body(new ErrorDTO("ok","verified"));
   }
-
 
   @PostMapping(URI)
   public ResponseEntity<?> registerUser(@RequestBody @Valid PlayerRegisterRequestDTO request)
-      throws UsernameIsTakenException {
+      throws RuntimeException {
     PlayerEntity newRegistration = playerService.registerNewPlayer(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(playerService.playerToResponseDTO(newRegistration));
   }
