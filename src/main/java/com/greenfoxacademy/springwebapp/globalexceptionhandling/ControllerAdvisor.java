@@ -80,7 +80,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(RuntimeException ex) {
-    HttpStatus status = null;
+    HttpStatus status = HttpStatus.UNAUTHORIZED;
     if (ex.getMessage().equals("Not verified username.")) {
       status = HttpStatus.UNAUTHORIZED;
     }
