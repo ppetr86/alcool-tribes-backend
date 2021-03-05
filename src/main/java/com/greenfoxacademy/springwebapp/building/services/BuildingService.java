@@ -1,7 +1,10 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -25,10 +28,14 @@ public interface BuildingService {
 
   BuildingEntity defineHp(BuildingEntity entity);
 
-  List<BuildingEntity> findBuildingsByKingdomId(Long id);
+  BuildingEntity findBuildingById(Long id);
 
-  List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
+  BuildingDetailsDTO showBuilding(KingdomEntity kingdomEntity, Long id)
+      throws IdNotFoundException, ForbiddenActionException;
 
   boolean hasKingdomTownhall(KingdomEntity kingdom);
 
+  List<BuildingEntity> findBuildingsByKingdomId(Long id);
+
+  List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
 }

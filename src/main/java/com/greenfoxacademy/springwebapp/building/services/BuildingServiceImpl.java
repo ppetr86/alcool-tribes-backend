@@ -1,14 +1,17 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
@@ -44,18 +47,6 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingEntity defineHp(BuildingEntity entity) {
-    String hp = env.getProperty(String.format("building.%s.hp", entity.getType().buildingType.toLowerCase()));
-    entity.setHp(Integer.parseInt(hp));
-    return entity;
-  }
-
-  @Override
-  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
-    return repo.findAllByKingdomId(id);
-  }
-
-  @Override
   public boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto) {
     try {
       BuildingType.valueOf(dto.getType().toUpperCase());
@@ -81,26 +72,11 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
-    if (dto.getType().trim().isEmpty()) {
-      throw new MissingParameterException("type");
-    }
-    if (!isBuildingTypeInRequestOk(dto)) {
-      throw new InvalidInputException("building type");
-    }
-    if (!hasKingdomTownhall(kingdom)) {
-      throw new TownhallLevelException();
-    }
-    if (!resourceService.hasResourcesForBuilding()) {
-      throw new NotEnoughResourceException();
-    }
-    BuildingEntity result = buildResult(dto,kingdom);
+    if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
+    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
+    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
 
-    resourceService.updateResourceGeneration(kingdom, result);
-
-    return result;
-  }
-
-  private BuildingEntity buildResult(BuildingRequestDTO dto, KingdomEntity kingdom) {
+    if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
@@ -108,7 +84,47 @@ public class BuildingServiceImpl implements BuildingService {
     result.setLevel(1);
     result.setKingdom(kingdom);
     result = save(result);
+
+    resourceService.updateResourceGeneration(kingdom, result);
+
     return result;
+  }
+
+  @Override
+  public BuildingEntity defineHp(BuildingEntity entity) {
+    String hp = env.getProperty(String.format("building.%s.hp", entity.getType().buildingType.toLowerCase()));
+    entity.setHp(Integer.parseInt(hp));
+    return entity;
+  }
+
+  @Override
+  public BuildingEntity findBuildingById(Long id) {
+    return repo.findById(id).orElse(null);
+  }
+
+  @Override
+  public BuildingDetailsDTO showBuilding(KingdomEntity kingdom, Long id)
+      throws IdNotFoundException, ForbiddenActionException {
+
+    BuildingEntity myBuilding = kingdom.getBuildings().stream()
+        .filter(b -> b.getId().equals(id))
+        .findFirst()
+        .orElse(null);
+
+    if (myBuilding == null) {
+      BuildingEntity actualBuilding = findBuildingById(id);
+      if (actualBuilding == null) {
+        throw new IdNotFoundException();
+      } else {
+        throw new ForbiddenActionException();
+      }
+    }
+    return new BuildingDetailsDTO(myBuilding);
+  }
+
+  @Override
+  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
+    return repo.findAllByKingdomId(id);
   }
 
   @Override
@@ -134,3 +150,5 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
 }
+
+
