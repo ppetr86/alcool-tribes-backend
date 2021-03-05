@@ -58,7 +58,7 @@ public class PlayerServiceImpl implements PlayerService {
     return kingdom;
   }
 
-  private PlayerResponseDTO assignResponseDto(PlayerEntity playerEntity) {
+  public PlayerResponseDTO assignResponseDto(PlayerEntity playerEntity) {
     PlayerResponseDTO responseDTO = new PlayerResponseDTO();
     responseDTO.setId(playerEntity.getId());
     responseDTO.setUsername(playerEntity.getUsername());
