@@ -223,39 +223,39 @@ public class BuildingControllerIT {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isNotAcceptable())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isNotAcceptable())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
 
   @Test
   public void getBuildingByIdShouldReturnOkAndProperBuilding() throws Exception {
     mockMvc.perform(get(BuildingController.URI + "/1")
-      .principal(authentication))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.level", is(1)))
-      .andExpect(jsonPath("$.hp", is(100)))
-      .andExpect(jsonPath("$.startedAt", is(100)))
-      .andExpect(jsonPath("$.finishedAt", is(200)))
-      .andExpect(jsonPath("$.type", is("townhall")));
+        .principal(authentication))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.level", is(1)))
+        .andExpect(jsonPath("$.hp", is(100)))
+        .andExpect(jsonPath("$.startedAt", is(100)))
+        .andExpect(jsonPath("$.finishedAt", is(200)))
+        .andExpect(jsonPath("$.type", is("townhall")));
   }
 
   @Test
   public void getBuildingByIdShouldReturn404WhenNonExistingBuildingIdGiven() throws Exception {
     mockMvc.perform(get(BuildingController.URI + "/16")
-      .principal(authentication))
-      .andExpect(status().isNotFound())
-      .andExpect(jsonPath("$.message", is("Id not found")));
+        .principal(authentication))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message", is("Id not found")));
   }
 
   @Test
   public void getBuildingByIdShouldReturn403WhenNotOwnBuildingRequested() throws Exception {
     mockMvc.perform(get(BuildingController.URI + "/5")
-      .principal(authentication))
-      .andExpect(status().isForbidden())
-      .andExpect(jsonPath("$.message", is("Forbidden action")));
+        .principal(authentication))
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.message", is("Forbidden action")));
   }
 }

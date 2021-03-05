@@ -28,7 +28,7 @@ public class LoginControllerTest {
 
   @Test
   public void postLoginShouldReturn200AndOkStatus()
-      throws Exception, NotVerifiedRegistrationException, IncorrectUsernameOrPwdException {
+      throws RuntimeException {
     PlayerEntity entity = new PlayerEntity("Mark", "markmark");
     PlayerTokenDTO tokenDTO = new PlayerTokenDTO("12345");
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "markmark");
@@ -42,25 +42,25 @@ public class LoginControllerTest {
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
-  @Test(expected = IncorrectUsernameOrPwdException.class)
+  @Test(expected = RuntimeException.class)
   public void loginShould401_WrongPasswordAndOrUsername()
-      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+      throws RuntimeException {
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "badPassword");
     Mockito
         .when(playerService.loginPlayer(requestDTO))
-        .thenThrow(IncorrectUsernameOrPwdException.class);
+        .thenThrow(RuntimeException.class);
     ResponseEntity<?> response = loginController.login(requestDTO);
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Username or password is incorrect.", ((ErrorDTO) response.getBody()).getMessage());
   }
 
-  @Test(expected = NotVerifiedRegistrationException.class)
+  @Test(expected = RuntimeException.class)
   public void loginShould401_NotVerifiedPlayer()
-      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+      throws RuntimeException {
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "badPassword");
     Mockito
         .when(playerService.loginPlayer(requestDTO))
-        .thenThrow(NotVerifiedRegistrationException.class);
+        .thenThrow(RuntimeException.class);
     ResponseEntity<?> response = loginController.login(requestDTO);
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Not verified username.", ((ErrorDTO) response.getBody()).getMessage());

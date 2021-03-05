@@ -149,9 +149,9 @@ public class PlayerServiceTest {
     Assert.assertEquals("MY_TOKEN", tkn.getToken());
   }
 
-  @Test(expected = IncorrectUsernameOrPwdException.class)
+  @Test(expected = RuntimeException.class)
   public void loginPlayerShould_ThrowIncorrectUsernameOrPwdExceptionWhenNotExistingUser()
-      throws NotVerifiedRegistrationException, IncorrectUsernameOrPwdException {
+      throws RuntimeException {
     PlayerRequestDTO rqst = new PlayerRequestDTO("Petr", "password");
 
     Mockito.when(playerService.findByUsernameAndPassword("ABC", "EFG"))
@@ -159,9 +159,9 @@ public class PlayerServiceTest {
     playerService.loginPlayer(rqst);
   }
 
-  @Test(expected = NotVerifiedRegistrationException.class)
+  @Test(expected = RuntimeException.class)
   public void loginPlayerShould_ThrowNotVerifiedRegistrationExceptionWhenNotVerified()
-      throws NotVerifiedRegistrationException, IncorrectUsernameOrPwdException {
+      throws RuntimeException {
     PlayerRequestDTO rqst = new PlayerRequestDTO("Petr", "password");
     PlayerEntity pl = PlayerFactory.createPlayer(1L, null, false);
     Mockito.when(playerRepository.findByUsername(rqst.getUsername()))

@@ -81,9 +81,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(RuntimeException ex) {
     HttpStatus status = null;
-    if (ex.getMessage().equals("Not verified username.")) status = HttpStatus.UNAUTHORIZED;
-    if (ex.getMessage().equals("Username or password is incorrect.")) status = HttpStatus.UNAUTHORIZED;
-    if (ex.getMessage().equals("Username is already taken.")) status = HttpStatus.CONFLICT;
+    if (ex.getMessage().equals("Not verified username.")) {
+      status = HttpStatus.UNAUTHORIZED;
+    }
+    if (ex.getMessage().equals("Username or password is incorrect.")) {
+      status = HttpStatus.UNAUTHORIZED;
+    }
+    if (ex.getMessage().equals("Username is already taken.")) {
+      status = HttpStatus.CONFLICT;
+    }
 
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), status);

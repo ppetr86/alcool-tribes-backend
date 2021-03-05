@@ -40,7 +40,7 @@ public class PlayerController {
       return ResponseEntity.badRequest().body(new ErrorDTO("invalid token"));
     }
     log.info(String.format("Token: %s was verified", token));
-    return ResponseEntity.ok().body(new ErrorDTO("ok","verified"));
+    return ResponseEntity.ok().body(new ErrorDTO("ok", "verified"));
   }
 
   @PostMapping(URI)
