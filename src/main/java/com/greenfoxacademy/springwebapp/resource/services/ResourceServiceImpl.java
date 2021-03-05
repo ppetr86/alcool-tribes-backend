@@ -1,7 +1,5 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -31,17 +29,9 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public boolean hasResourcesForBuilding(Long kingdomId, BuildingEntity building, int amountChange) {
+  public boolean hasResourcesForBuilding(Long kingdomId, int amountChange) {
     KingdomEntity kingdom = kingdomService.findByID(kingdomId);
-
-    //In my opinion the better solution is using levelDTO instead of amountChange, cause this time I can check that
-    //the building level will be increase or decrease. If decrease than I think the amount change not relevant.
-
-    if (updateResourcesIfBuildTownHall(kingdom, building, amountChange)) {
-      return true;
-    } else if (updateResourcesIfBuildAcademy(kingdom, building, amountChange)) {
-      return true;
-    } else return updateResourcesIfBuildFarmOrMine(kingdom, building, amountChange);
+    return updateResourcesIfBuildBuilding(kingdom, amountChange);
   }
 
   @Override
@@ -64,59 +54,15 @@ public class ResourceServiceImpl implements ResourceService {
         .build();
   }
 
-  // non relevant method right now
-  private void updateResources(Long kingdomId, ResourceType resourceType, int amountChange) {
-    //get kingdom just in this method
-    KingdomEntity kingdom = kingdomService.findByID(kingdomId);
-
-    ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
-
-    assert resource != null;
-    if (amountChange < 0) resource.setAmount(resource.getAmount() - amountChange);
-    if (0 < amountChange) resource.setAmount(resource.getAmount() + amountChange);
-    resource.setUpdatedAt(timeService.getTime());
-
-    saveResource(resource);
-  }
-
-  private boolean updateResourcesIfBuildTownHall(KingdomEntity kingdom, BuildingEntity building, int amountChange) {
+  private boolean updateResourcesIfBuildBuilding(KingdomEntity kingdom, int amountChange) {
     ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
     int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
 
-    if (building.getType().equals(BuildingType.TOWNHALL)) {
-      if (amountChange <= actualAmount) {
-        kingdomsGold.setAmount(actualAmount - amountChange);
-        saveResource(kingdomsGold);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private boolean updateResourcesIfBuildAcademy(KingdomEntity kingdom, BuildingEntity building, int amountChange) {
-    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
-    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
-
-    if (building.getType().equals(BuildingType.ACADEMY)) {
-      if (amountChange <= actualAmount) {
-        kingdomsGold.setAmount(actualAmount - amountChange);
-        saveResource(kingdomsGold);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private boolean updateResourcesIfBuildFarmOrMine(KingdomEntity kingdom, BuildingEntity building, int amountChange) {
-    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
-    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
-
-    if (building.getType().equals(BuildingType.FARM) || building.getType().equals(BuildingType.MINE)) {
-      if (amountChange <= actualAmount) {
-        kingdomsGold.setAmount(actualAmount - amountChange);
-        saveResource(kingdomsGold);
-        return true;
-      }
+    if (amountChange <= actualAmount) {
+      kingdomsGold.setAmount(actualAmount - amountChange);
+      kingdomsGold.setUpdatedAt(timeService.getTime());
+      saveResource(kingdomsGold);
+      return true;
     }
     return false;
   }

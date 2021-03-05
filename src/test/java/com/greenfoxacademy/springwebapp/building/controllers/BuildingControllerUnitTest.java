@@ -52,7 +52,7 @@ public class BuildingControllerUnitTest {
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
 
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+    Mockito.when(resourceService.hasResourcesForBuilding(1L, 100)).thenReturn(true);
 
     ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request);
 

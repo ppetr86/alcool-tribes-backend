@@ -68,7 +68,6 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -146,7 +145,6 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -164,7 +162,6 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -181,7 +178,6 @@ public class BuildingControllerIntegrationTest {
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -199,7 +195,6 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +214,6 @@ public class BuildingControllerIntegrationTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(new ArrayList<>());
     // TODO: remove this when ResourceService is implemented
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)

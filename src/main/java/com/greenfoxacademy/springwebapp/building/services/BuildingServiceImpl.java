@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +48,8 @@ public class BuildingServiceImpl implements BuildingService {
     entity.setHp(Integer.parseInt(hp));
     return entity;
   }
+
+
 
   @Override
   public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
@@ -80,13 +83,16 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
+
+
     if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
-    BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
-    if (!resourceService.hasResourcesForBuilding(kingdom.getId(), result, (result.getLevel() * 100)))
-      throw new NotEnoughResourceException();
+    int amountChange = defineBuildingCosts(dto.getType());
+    if (dto.getType().toUpperCase().equals("ACADEMY")) amountChange = amountChange + 50;
+    if (!resourceService.hasResourcesForBuilding(kingdom.getId(), amountChange)) throw new NotEnoughResourceException();
 
+    BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result = defineFinishedAt(result);
     result = defineHp(result);
@@ -94,6 +100,12 @@ public class BuildingServiceImpl implements BuildingService {
     result.setKingdom(kingdom);
     result = save(result);
     return result;
+  }
+
+  private int defineBuildingCosts(String buildingType) {
+    return Integer.parseInt(
+        Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts",
+            buildingType.toLowerCase()))));
   }
 
   @Override
@@ -117,5 +129,4 @@ public class BuildingServiceImpl implements BuildingService {
     return kingdom.getBuildings().stream()
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
-
 }

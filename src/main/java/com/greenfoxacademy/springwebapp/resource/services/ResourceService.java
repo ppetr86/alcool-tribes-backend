@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 
@@ -14,7 +13,7 @@ public interface ResourceService {
 
   boolean hasResourcesForTroop();
 
-  boolean hasResourcesForBuilding(Long kingdomId, BuildingEntity building, int amountChange);
+  boolean hasResourcesForBuilding(Long kingdomId, int amountChange);
 
   List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
 
