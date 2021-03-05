@@ -3,8 +3,9 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.common.services.TimeService;
+import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,13 +36,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BuildingControllerIntegrationTest {
+public class BuildingControllerIT {
 
   @Autowired
   private MockMvc mockMvc;
 
   @MockBean
-  private ResourceService resourceService;
+  private TimeService timeService;
 
   private Authentication authentication;
 
@@ -50,6 +51,7 @@ public class BuildingControllerIntegrationTest {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(createBuildings(kingdom));
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount(kingdom));
   }
 
   @Test
@@ -68,6 +70,7 @@ public class BuildingControllerIntegrationTest {
     String json = mapper.writeValueAsString(request);
 
     // TODO: remove this when ResourceService is implemented
+    Mockito.when(timeService.getTime()).thenReturn(999L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -143,8 +146,11 @@ public class BuildingControllerIntegrationTest {
     BuildingRequestDTO request = new BuildingRequestDTO("farM");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
 
     // TODO: remove this when ResourceService is implemented
+    Mockito.when(timeService.getTime()).thenReturn(999L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -160,8 +166,11 @@ public class BuildingControllerIntegrationTest {
     BuildingRequestDTO request = new BuildingRequestDTO("TOWNhall");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
 
     // TODO: remove this when ResourceService is implemented
+    Mockito.when(timeService.getTime()).thenReturn(999L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -177,7 +186,10 @@ public class BuildingControllerIntegrationTest {
     BuildingRequestDTO request = new BuildingRequestDTO("MINE");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
     // TODO: remove this when ResourceService is implemented
+    Mockito.when(timeService.getTime()).thenReturn(999L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -193,8 +205,11 @@ public class BuildingControllerIntegrationTest {
     BuildingRequestDTO request = new BuildingRequestDTO("academy");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount(kingdom));
 
     // TODO: remove this when ResourceService is implemented
+    Mockito.when(timeService.getTime()).thenReturn(999L);
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)

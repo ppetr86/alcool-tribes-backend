@@ -103,9 +103,8 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   private int defineBuildingCosts(String buildingType) {
-    return Integer.parseInt(
-        Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts",
-            buildingType.toLowerCase()))));
+    return Integer.parseInt(Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts",
+        buildingType.toLowerCase()))));
   }
 
   @Override

@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
-public class BuildingControllerUnitTest {
+public class BuildingControllerTest {
 
   private BuildingController buildingController;
   private BuildingService buildingService;
