@@ -23,9 +23,9 @@ public class KingdomFactory {
     pl.setEmail("test@mail.com");
     kingdom.setPlayer(pl);
 
-    kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
+    kingdom.setBuildings(BuildingFactory.createDefaultBuildings(kingdom));
     kingdom.setLocation(new LocationEntity(1L, 10, 10,null,LocationType.KINGDOM));
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 
     return kingdom;
@@ -42,9 +42,9 @@ public class KingdomFactory {
     pl.setIsAccountVerified(isAccountVerified);
     kingdom.setPlayer(pl);
 
-    kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
+    kingdom.setBuildings(BuildingFactory.createDefaultBuildings(kingdom));
     kingdom.setLocation(new LocationEntity(1L, 10, 10,kingdom, LocationType.KINGDOM));
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 
     return kingdom;

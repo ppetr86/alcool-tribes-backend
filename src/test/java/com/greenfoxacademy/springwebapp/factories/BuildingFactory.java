@@ -18,7 +18,7 @@ public class BuildingFactory {
     );
   }
 
-  public static List<BuildingEntity> createBuildings(KingdomEntity kingdom) {
+  public static List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.asList(
         new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 100L, 200L, kingdom),
         new BuildingEntity(2L, BuildingType.ACADEMY, 1, 100, 100L, 200L, kingdom),
