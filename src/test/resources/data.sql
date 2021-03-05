@@ -20,6 +20,8 @@ VALUES (100, '', 'occupied_username', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jE
         0, true);
 INSERT INTO locations (id, x, y)
 VALUES (1, 10, 10);
+INSERT INTO locations (id, x, y)
+VALUES (2, 20, 20);
 
 INSERT INTO kingdoms (id, kingdomname, player_id, location_id)
 VALUES (1, 'furkesz''s kingdom', 1, 1);

@@ -4,6 +4,8 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingListResponseDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +46,15 @@ public class BuildingController {
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(buildingService.createBuilding(kingdom, dto));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getBuildingById(@PathVariable Long id,
+                                           Authentication auth)
+      throws IdNotFoundException, ForbiddenActionException {
+
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+
+    return ResponseEntity.ok(buildingService.showBuilding(kingdom, id));
   }
 }

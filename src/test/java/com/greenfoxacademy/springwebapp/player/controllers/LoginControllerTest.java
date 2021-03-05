@@ -15,7 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class LoginControllerUnitTest {
+public class LoginControllerTest {
 
   private LoginController loginController;
   private PlayerService playerService;
