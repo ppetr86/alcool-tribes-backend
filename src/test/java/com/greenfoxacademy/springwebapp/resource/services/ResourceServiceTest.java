@@ -180,7 +180,6 @@ public class ResourceServiceTest {
     ResourceEntity foodResource = new ResourceEntity(1L, ResourceType.FOOD, 100,
         50, 1L, new KingdomEntity());
     Mockito.when(env.getProperty("resourceEntity.food")).thenReturn("5");
-    Mockito.when(env.getProperty("resourceEntity.gold")).thenReturn("10");
 
     int amount = resourceServiceImpl.calculateNewResourceGeneration(foodResource, buildingLevel5);
 
@@ -193,7 +192,7 @@ public class ResourceServiceTest {
         1L, 2L);
     ResourceEntity goldResource = new ResourceEntity(1L, ResourceType.GOLD, 100,
         50, 1L, new KingdomEntity());
-    Mockito.when(env.getProperty("resourceEntity.food")).thenReturn("5");
+
     Mockito.when(env.getProperty("resourceEntity.gold")).thenReturn("10");
 
     int amount = resourceServiceImpl.calculateNewResourceGeneration(goldResource, buildingLevel5);

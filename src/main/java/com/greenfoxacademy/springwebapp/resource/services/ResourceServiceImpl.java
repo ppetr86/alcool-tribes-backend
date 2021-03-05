@@ -79,13 +79,7 @@ public class ResourceServiceImpl implements ResourceService {
     int delay = timeService.getTimeBetween(timeService.getTime(), building.getFinishedAt()) * 1000;
     Timer timer = createNewTimer();
     ResourceTimerTask resourceTimerTask = new ResourceTimerTask(resourceToBeUpdated,
-        newResourceGeneration, building) {
-      @Override
-      public void run() {
-        ResourceEntity updatedResource = scheduledResourceUpdate(this.getResource(), this.getGeneration(),
-            this.getBuilding());
-      }
-    };
+        newResourceGeneration, building, this);
 
     timer.schedule(resourceTimerTask, delay);
 
@@ -139,19 +133,11 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   public Integer calculateNewResourceGeneration(ResourceEntity resource, BuildingEntity building) {
-    //distinguishing food/gold in case the values would differ in future
-    Integer defaultFood = Integer.parseInt(env.getProperty("resourceEntity.food"));
-    Integer defaultGold = Integer.parseInt(env.getProperty("resourceEntity.gold"));
 
-    if (resource.getType().equals(ResourceType.FOOD)) {
-      return resource.getGeneration() + building.getLevel() * defaultFood + defaultFood;
-    }
-
-    if (resource.getType().equals(ResourceType.GOLD)) {
-      return resource.getGeneration() + building.getLevel() * defaultGold + defaultGold;
-    }
-
-    return null;
+    //universal solution for food/gold in case the values would differ in future
+    Integer defaultGeneration = Integer
+        .parseInt(env.getProperty("resourceEntity." + resource.getType().resourceType));
+    return resource.getGeneration() + building.getLevel() * defaultGeneration + defaultGeneration;
   }
 
   public Integer calculateResourcesUntilBuildingIsFinished(BuildingEntity building, ResourceEntity fetchedResource) {
