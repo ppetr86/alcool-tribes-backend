@@ -63,7 +63,8 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO dto) {
-    KingdomEntity kingdom = assignKingdomName(dto);
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setKingdomName(dto.getKingdomname() == null ? dto.getUsername() + "'s kingdom" : dto.getKingdomname());
     List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
     kingdom.setBuildings(defaultBuildings);
 
@@ -99,16 +100,6 @@ public class PlayerServiceImpl implements PlayerService {
       return false;
     }
     return true;
-  }
-
-  public KingdomEntity assignKingdomName(PlayerRegisterRequestDTO dto) {
-    KingdomEntity kingdom = new KingdomEntity();
-    if (dto.getKingdomname() != null) {
-      kingdom.setKingdomName(dto.getKingdomname());
-    } else {
-      kingdom.setKingdomName(dto.getUsername() + "'s kingdom");
-    }
-    return kingdom;
   }
 
   @Override
@@ -163,7 +154,9 @@ public class PlayerServiceImpl implements PlayerService {
       throw new InvalidTokenException();
     }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
-    if (Objects.isNull(player)) return false;
+    if (Objects.isNull(player)) {
+      return false;
+    }
 
     player.setIsAccountVerified(true);
     playerRepo.save(player);
