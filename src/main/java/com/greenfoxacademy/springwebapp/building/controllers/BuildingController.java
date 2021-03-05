@@ -52,6 +52,16 @@ public class BuildingController {
     return ResponseEntity.ok(buildingService.createBuilding(kingdom, dto));
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getBuildingById(@PathVariable Long id,
+                                           Authentication auth)
+      throws IdNotFoundException, ForbiddenActionException {
+
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+
+    return ResponseEntity.ok(buildingService.showBuilding(kingdom, id));
+  }
+
   @PutMapping("/{id}")
   public ResponseEntity<?> updateTheGivenBuildingDetails(@PathVariable Long id,
                                                          Authentication auth,
@@ -62,15 +72,5 @@ public class BuildingController {
 
     return ResponseEntity.ok().body(buildingService.updateBuilding(kingdom, id, level));
 
-  }
-
-  @GetMapping("/{id}")
-  public ResponseEntity<?> getBuildingById(@PathVariable Long id,
-                                           Authentication auth)
-      throws IdNotFoundException, ForbiddenActionException {
-
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-
-    return ResponseEntity.ok(buildingService.showBuilding(kingdom, id));
   }
 }
