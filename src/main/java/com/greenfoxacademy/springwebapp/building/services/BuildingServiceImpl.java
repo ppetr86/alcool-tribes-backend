@@ -70,24 +70,9 @@ public class BuildingServiceImpl implements BuildingService {
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    if (dto.getType().trim().isEmpty()) {
-      throw new MissingParameterException("type");
-    }
-    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
-    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
-=======
-=======
->>>>>>> 963d7be178d04c45e6f6dc46dd3a1df8676e8814
     if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
-
-<<<<<<< HEAD
->>>>>>> 963d7be178d04c45e6f6dc46dd3a1df8676e8814
-=======
->>>>>>> 963d7be178d04c45e6f6dc46dd3a1df8676e8814
     if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
@@ -156,11 +141,6 @@ public class BuildingServiceImpl implements BuildingService {
     }
     return kingdom.getBuildings().stream()
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
-  }
-
-  @Override
-  public BuildingEntity findBuildingById(Long id) {
-    return repo.findById(id).orElse(null);
   }
 
 }
