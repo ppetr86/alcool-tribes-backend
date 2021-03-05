@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.TestConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
@@ -20,6 +21,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,13 +30,15 @@ import static org.mockito.ArgumentMatchers.any;
 public class BuildingServiceTest {
 
   private BuildingService buildingService;
-  private ResourceService resourceService;
-  private TimeService timeService;
   private BuildingRepository buildingRepository;
+  private TimeService timeService;
+  private ResourceService resourceService;
 
   @Before
   public void init() {
     buildingRepository = Mockito.mock(BuildingRepository.class);
+    timeService = Mockito.mock(TimeService.class);
+    resourceService = Mockito.mock(ResourceService.class);
     timeService = Mockito.mock(TimeService.class);
     resourceService = Mockito.mock(ResourceService.class);
 
@@ -225,8 +230,8 @@ public class BuildingServiceTest {
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(5L)).thenReturn(Optional.of(townHall));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(buildingRepository.save(any())).thenReturn(townHall);
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 5L, new BuildingLevelDTO(4));
 
@@ -246,8 +251,8 @@ public class BuildingServiceTest {
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(2L)).thenReturn(java.util.Optional.of(academy));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(buildingRepository.save(any())).thenReturn(academy);
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 2L, new BuildingLevelDTO(3));
 
@@ -267,8 +272,8 @@ public class BuildingServiceTest {
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(farm));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(buildingRepository.save(any())).thenReturn(farm);
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 3L, new BuildingLevelDTO(2));
 
@@ -288,15 +293,100 @@ public class BuildingServiceTest {
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
     Mockito.when(buildingRepository.findById(4L)).thenReturn(Optional.of(mine));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
-    Mockito.when(timeService.getTime()).thenReturn(1060L);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
     Mockito.when(buildingRepository.save(any())).thenReturn(mine);
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 4L, new BuildingLevelDTO(4));
 
-    Assert.assertEquals(Optional.of(4), Optional.ofNullable(mine.getLevel()));
-    Assert.assertEquals(Optional.of(400), Optional.ofNullable(mine.getHp()));
-    Assert.assertEquals(Optional.of(1060L), Optional.ofNullable(mine.getStartedAt()));
-    Assert.assertEquals(Optional.of(1300L), Optional.ofNullable(mine.getFinishedAt()));
+    Assert.assertEquals(Optional.of(4), Optional.ofNullable(result.getLevel()));
+    Assert.assertEquals(Optional.of(400), Optional.ofNullable(result.getHp()));
+    Assert.assertEquals(Optional.of(1060L), Optional.ofNullable(result.getStartedAt()));
+    Assert.assertEquals(Optional.of(1300L), Optional.ofNullable(result.getFinishedAt()));
+  }
+
+
+  @Test
+  public void findBuildingByIdShouldReturnWithCorrectBuildingType() {
+    BuildingEntity buildingEntity = new BuildingEntity(null, BuildingType.FARM, 0);
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+
+    String buildingType = buildingService.findBuildingById(1L).getType().toString();
+
+    Assert.assertEquals("FARM", buildingType);
+  }
+
+  @Test
+  public void findBuildingByIdShouldReturnWithUnCorrectBuildingType() {
+    BuildingEntity buildingEntity = new BuildingEntity(null, BuildingType.MINE, 0);
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+
+    String buildingType = buildingService.findBuildingById(1L).getType().toString();
+
+    Assert.assertNotEquals("FARM", buildingType);
+  }
+
+  @Test
+  public void showBuildingShouldReturnCorrectBuildingDetails() {
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.of(buildingEntity));
+
+    BuildingDetailsDTO result = buildingService.showBuilding(kingdomEntity, 1L);
+
+    Assert.assertEquals(1, result.getId());
+    Assert.assertEquals(1, result.getLevel());
+    Assert.assertEquals("farm", result.getType());
+    Assert.assertEquals(100, result.getHp());
+  }
+
+  @Test
+  public void showBuildingShouldNotReturnWithBuildingDetails() {
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
+
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.of(buildingEntity));
+
+    BuildingDetailsDTO result = buildingService.showBuilding(kingdomEntity, 2L);
+
+    Assert.assertNotEquals(1, result.getId());
+    Assert.assertNotEquals(1, result.getLevel());
+    Assert.assertNotEquals("farm", result.getType());
+    Assert.assertNotEquals(100, result.getHp());
+  }
+
+  @Test(expected = IdNotFoundException.class)
+  public void showBuildingShouldReturnWithIdNotFoundException() {
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity buildingEntity = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(buildingEntity);
+    kingdomEntity.setBuildings(fakeList);
+
+    Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.empty());
+
+    BuildingDetailsDTO response = buildingService.showBuilding(kingdomEntity, 3L);
+  }
+
+  @Test(expected = ForbiddenActionException.class)
+  public void showBuildingShouldReturnWithForbiddenException() {
+    BuildingEntity fakeBuilding2 = new BuildingEntity(3L, BuildingType.MINE, 2, 200, 100L, 200L, null);
+    KingdomEntity kingdomEntity = new KingdomEntity();
+    BuildingEntity fakeBuilding = new BuildingEntity(2L, BuildingType.MINE, 2, 200, 100L, 200L, null);
+    List<BuildingEntity> fakeList = new ArrayList<>();
+    fakeList.add(fakeBuilding);
+    kingdomEntity.setBuildings(fakeList);
+
+    Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(fakeBuilding2));
+
+    BuildingDetailsDTO response = buildingService.showBuilding(kingdomEntity, 3L);
   }
 }

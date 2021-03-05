@@ -1,15 +1,10 @@
 package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -68,58 +63,24 @@ public class BuildingControllerTest {
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
-  @Test(expected = IdNotFoundException.class)
-  public void updateTheGivenBuildingDetailsShouldReturnNoId() {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingLevelDTO level = new BuildingLevelDTO(3);
-
-    Mockito.when(buildingService.updateBuilding(kingdom, 3L, level)).thenThrow(IdNotFoundException.class);
-
-    ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(3L, authentication, level);
-  }
-
-  @Test(expected = MissingParameterException.class)
-  public void updateTheGivenBuildingDetailsShouldReturnParameterMissing() {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingLevelDTO level = new BuildingLevelDTO(3);
-
-    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenThrow(MissingParameterException.class);
-
-    ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
-  }
-
-  @Test(expected = TownhallLevelException.class)
-  public void updateTheGivenBuildingDetailsShouldReturnTownHallNeedHigherLevel() {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingLevelDTO level = new BuildingLevelDTO(3);
-
-    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenThrow(TownhallLevelException.class);
-
-    ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
-  }
-
-  @Test(expected = NotEnoughResourceException.class)
-  public void updateTheGivenBuildingDetailsShouldReturnNoResource() {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BuildingLevelDTO level = new BuildingLevelDTO(3);
-
-    Mockito.when(buildingService.updateBuilding(kingdom, 1L, level)).thenThrow(NotEnoughResourceException.class);
-
-    ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, level);
-  }
-
   @Test
-  public void updateTheGivenBuildingDetailsShouldReturnOkWithUpdatedBuildings() {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
-    BuildingEntity building = kingdom.getBuildings().get(2);
-    BuildingLevelDTO levelDTO = new BuildingLevelDTO(3);
+  public void getBuildingByIdShouldReturnCorrectBuildingDetails() {
+    BuildingEntity buildingEntity = new BuildingEntity(1L, BuildingType.FARM, 1, 100, 100L, 200L, null);
+    BuildingDetailsDTO buildingDetailsDTO = new BuildingDetailsDTO();
+    buildingDetailsDTO.setType(buildingEntity.getType().toString().toLowerCase());
+    buildingDetailsDTO.setLevel(buildingEntity.getLevel());
+    buildingDetailsDTO.setHp(buildingEntity.getHp());
+    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
-    Mockito.when(buildingService.updateBuilding(kingdom, 1L, levelDTO))
-        .thenReturn(building);
+    Mockito.when(buildingService.showBuilding(kingdomEntity, 1L)).thenReturn(buildingDetailsDTO);
 
-    ResponseEntity<?> response = buildingController.updateTheGivenBuildingDetails(1L, authentication, levelDTO);
+    ResponseEntity<?> response = buildingController.getBuildingById(1L, authentication);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    Assert.assertEquals("farm", ((BuildingDetailsDTO) response.getBody()).getType());
+    Assert.assertEquals(1, ((BuildingDetailsDTO) response.getBody()).getLevel());
+    Assert.assertEquals(100, ((BuildingDetailsDTO) response.getBody()).getHp());
   }
 }
+
+

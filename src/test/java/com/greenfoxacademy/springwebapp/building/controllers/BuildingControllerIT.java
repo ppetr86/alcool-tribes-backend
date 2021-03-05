@@ -224,16 +224,44 @@ public class BuildingControllerIT {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(post(BuildingController.URI)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(json)
-        .principal(authentication))
-        .andExpect(status().isNotAcceptable())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isNotAcceptable())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
 
   @Test
-  public void updateTheGivenBuildingDetailsShouldReturn404WithNoId() throws Exception {
+  public void getBuildingByIdShouldReturnOkAndProperBuilding() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/1")
+      .principal(authentication))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.level", is(1)))
+      .andExpect(jsonPath("$.hp", is(100)))
+      .andExpect(jsonPath("$.startedAt", is(100)))
+      .andExpect(jsonPath("$.finishedAt", is(200)))
+      .andExpect(jsonPath("$.type", is("townhall")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturn404WhenNonExistingBuildingIdGiven() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/16")
+      .principal(authentication))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.message", is("Id not found")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturn403WhenNotOwnBuildingRequested() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/5")
+      .principal(authentication))
+      .andExpect(status().isForbidden())
+      .andExpect(jsonPath("$.message", is("Forbidden action")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnNotFoundWithNoIdMessage() throws Exception {
     BuildingLevelDTO request = new BuildingLevelDTO();
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -248,7 +276,7 @@ public class BuildingControllerIT {
   }
 
   @Test
-  public void updateTheGivenBuildingDetailsShouldReturn400WithKingdomParameterMissing() throws Exception {
+  public void updateTheGivenBuildingDetailsShouldReturnBadRequestWithKingdomParameterMissing() throws Exception {
     BuildingLevelDTO request = new BuildingLevelDTO();
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -263,7 +291,7 @@ public class BuildingControllerIT {
   }
 
   @Test
-  public void updateTheGivenBuildingDetailsShouldReturn406withTownHallNeedHigherLevel() throws Exception {
+  public void updateTheGivenBuildingDetailsShouldReturnNotAcceptablewithTownHallNeedHigherLevel() throws Exception {
     BuildingLevelDTO request = new BuildingLevelDTO(2);
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -281,7 +309,7 @@ public class BuildingControllerIT {
   }
 
   @Test
-  public void updateTheGivenBuildingDetailsShouldReturn409WithNoResource() throws Exception {
+  public void updateTheGivenBuildingDetailsShouldReturnConflictWithNoResource() throws Exception {
     BuildingLevelDTO request = new BuildingLevelDTO(2);
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -299,7 +327,7 @@ public class BuildingControllerIT {
   }
 
   @Test
-  public void updateTheGivenBuildingDetailsShouldReturn200WithBuildingDetails() throws Exception {
+  public void updateTheGivenBuildingDetailsShouldReturnOkWithBuildingDetails() throws Exception {
     BuildingLevelDTO request = new BuildingLevelDTO(3);
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);

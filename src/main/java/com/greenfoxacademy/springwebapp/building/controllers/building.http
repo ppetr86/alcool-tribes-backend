@@ -9,7 +9,13 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MjgyMDA4MDAsImtpbmdkb21JZ
 ### Get buildings
 
 GET http://localhost:8080/kingdom/buildings
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTQ1NTMyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.CI2ccQIkAidRFkqxN1GYQ2OM3qraSwOnC5Kk9_T-eIxdPVshmrQWaIOyNwYUyQlJIKPxg21kMoEW7njjfXqaSQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM4NjIwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.cZ8yOkXJrJjgyEyFbC0Jtbdg3F0i48GzVtJ6K0XRyCDbCRi1P2l18xnx9tj9ZyhH8bCAaKE-TWaU-WVbAtunQg
+Accept: application/json
+
+### Get buildings
+
+GET http://localhost:8080/kingdom/buildings/5
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM4NjIwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.cZ8yOkXJrJjgyEyFbC0Jtbdg3F0i48GzVtJ6K0XRyCDbCRi1P2l18xnx9tj9ZyhH8bCAaKE-TWaU-WVbAtunQg
 Accept: application/json
 
 ### PUT buildings

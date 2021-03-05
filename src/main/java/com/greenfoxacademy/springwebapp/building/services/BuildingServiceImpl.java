@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,13 +64,19 @@ public class BuildingServiceImpl implements BuildingService {
 
     BuildingEntity building = checkBuildingDetails(kingdom, id, levelDTO);
 
-    if (building.getType().equals(BuildingType.TOWNHALL)) {
-      return updateTownHall(building, levelDTO);
-    } else if (building.getType().equals(BuildingType.ACADEMY)) {
-      return updateAcademy(building, levelDTO);
-    } else {
-      return updateFarmOrMine(building, levelDTO);
-    }
+    int buildingHp = Integer.parseInt(
+        Objects.requireNonNull(
+            env.getProperty(String.format("building.%s.hp", building.getType().buildingType.toLowerCase()))));
+
+    int buildingTime = Integer.parseInt(
+        Objects.requireNonNull(
+            env.getProperty(String.format("building.%s.buildingTime", building.getType().buildingType.toLowerCase()))));
+
+    building.setLevel(levelDTO.getLevel());
+    building.setHp(levelDTO.getLevel() * buildingHp);
+    building.setStartedAt(timeService.getTime());
+    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * buildingTime));
+    return repo.save(building);
   }
 
   private BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
@@ -99,35 +107,6 @@ public class BuildingServiceImpl implements BuildingService {
         .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
         .findFirst()
         .get();
-  }
-
-  private BuildingEntity updateTownHall(BuildingEntity building, BuildingLevelDTO levelDTO) {
-    building.setLevel(levelDTO.getLevel());
-    building.setHp(levelDTO.getLevel() * 200);
-    building.setStartedAt(timeService.getTime());
-    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 120));
-    return repo.save(building);
-  }
-
-  private BuildingEntity updateAcademy(BuildingEntity building, BuildingLevelDTO levelDTO) {
-    building.setLevel(levelDTO.getLevel());
-    building.setHp(levelDTO.getLevel() * 150);
-    building.setStartedAt(timeService.getTime());
-    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 90));
-    return repo.save(building);
-  }
-
-  private BuildingEntity updateFarmOrMine(BuildingEntity building, BuildingLevelDTO levelDTO) {
-    building.setLevel(levelDTO.getLevel());
-    building.setHp(levelDTO.getLevel() * 100);
-    building.setStartedAt(timeService.getTime());
-    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * 60));
-    return repo.save(building);
-  }
-
-  @Override
-  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
-    return repo.findAllByKingdomId(id);
   }
 
   @Override
@@ -172,6 +151,31 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
+  public BuildingDetailsDTO showBuilding(KingdomEntity kingdom, Long id)
+      throws IdNotFoundException, ForbiddenActionException {
+
+    BuildingEntity myBuilding = kingdom.getBuildings().stream()
+        .filter(b -> b.getId().equals(id))
+        .findFirst()
+        .orElse(null);
+
+    if (myBuilding == null) {
+      BuildingEntity actualBuilding = findBuildingById(id);
+      if (actualBuilding == null) {
+        throw new IdNotFoundException();
+      } else {
+        throw new ForbiddenActionException();
+      }
+    }
+    return new BuildingDetailsDTO(myBuilding);
+  }
+
+  @Override
+  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
+    return repo.findAllByKingdomId(id);
+  }
+
+  @Override
   public List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom) {
     return Arrays.stream(BuildingType.values())
         .map(type -> new BuildingEntity(kingdom,
@@ -193,3 +197,5 @@ public class BuildingServiceImpl implements BuildingService {
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
 }
+
+
