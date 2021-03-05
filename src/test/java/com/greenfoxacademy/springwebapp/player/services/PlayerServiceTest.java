@@ -132,21 +132,11 @@ public class PlayerServiceTest {
     PlayerEntity player3 = PlayerFactory.createPlayer(3L, kingdom3);
     player3.setPoints(30);
     player3.setAvatar("avatar3");
-
-    PlayerResponseDTO playerResponseDTO1 = new PlayerResponseDTO(player1.getId(), player1.getUsername(), player1.getEmail(),
-        player1.getKingdom().getId(), player1.getAvatar(), player1.getPoints());
-
-    PlayerResponseDTO playerResponseDTO2 = new PlayerResponseDTO(player2.getId(), player2.getUsername(), player2.getEmail(),
-        player2.getKingdom().getId(), player2.getAvatar(), player2.getPoints());
-
     List<PlayerEntity> fakeListOfAllPlayers = Arrays.asList(player1, player2, player3);
-    List<PlayerResponseDTO> expectedListOfAllPlayers = Arrays.asList(playerResponseDTO1, playerResponseDTO2);
-    PlayerListResponseDTO expected = new PlayerListResponseDTO(expectedListOfAllPlayers);
 
     Mockito.when(playerRepository.findAll()).thenReturn(fakeListOfAllPlayers);
-
     PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom3, null);
-
-    Assert.assertEquals(expected, response.getPlayers());
+    
+    Assert.assertEquals(2, response.getPlayers().size());
   }
 }
