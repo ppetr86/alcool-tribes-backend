@@ -113,22 +113,10 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public ResourceEntity findResourceByBuildingType(KingdomEntity kingdom, Enum buildingType) {
-    ResourceEntity resource;
-    if (buildingType.equals(BuildingType.FARM)) {
-      resource = kingdom.getResources().stream()
-          .filter(a -> a.getType().equals(ResourceType.FOOD))
-          .findFirst()
-          .orElse(null);
-    } else if (buildingType.equals(BuildingType.MINE)) {
-      resource = kingdom.getResources().stream()
-          .filter(a -> a.getType().equals(ResourceType.GOLD))
-          .findFirst()
-          .orElse(null);
-    } else {
-      return null;
-    }
-
-    return resource;
+    return kingdom.getResources().stream()
+        .filter(r -> r.getType().buildingType.equals(buildingType))
+        .findFirst()
+        .orElse(null);
   }
 
   public Integer calculateNewResourceGeneration(ResourceEntity resource, BuildingEntity building) {
