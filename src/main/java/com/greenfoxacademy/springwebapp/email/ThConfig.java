@@ -4,13 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
-
-import java.util.Collections;
 
 @Configuration
 @EnableWebMvc
@@ -26,7 +23,7 @@ public class ThConfig {
   }
 
 
-  private ITemplateResolver textTemplateResolver(){
+  private ITemplateResolver textTemplateResolver() {
     final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
     templateResolver.setOrder(1);
     //templateResolver.setResolvablePatterns(Collections.singleton("text/*"));
@@ -38,7 +35,7 @@ public class ThConfig {
     return templateResolver;
   }
 
-  private ITemplateResolver htmlTemplateResolver(){
+  private ITemplateResolver htmlTemplateResolver() {
     final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
     templateResolver.setOrder(2);
     //templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
@@ -50,7 +47,7 @@ public class ThConfig {
     return templateResolver;
   }
 
-  private StringTemplateResolver stringTemplateResolver(){
+  private StringTemplateResolver stringTemplateResolver() {
     final StringTemplateResolver stringTemplateResolver = new StringTemplateResolver();
     stringTemplateResolver.setOrder(3);
     stringTemplateResolver.setTemplateMode(TemplateMode.TEXT);

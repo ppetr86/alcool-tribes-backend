@@ -11,7 +11,7 @@ public class ControllerAdvisorUnitTest {
 
   @Test
   public void invalidBuildingTypeException_ReturnsNotAcceptableAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidBuildingTypeException());
+    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidInputException("building type"));
     Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
     Assert.assertEquals("Invalid building type",
         result.getBody().getMessage());
@@ -65,13 +65,6 @@ public class ControllerAdvisorUnitTest {
     ResponseEntity<ErrorDTO> result = ca.handleExceptions(new RuntimeException("Username is already taken."));
     Assert.assertEquals(HttpStatus.CONFLICT, result.getStatusCode());
     Assert.assertEquals("Username is already taken.", result.getBody().getMessage());
-  }
-
-  @Test
-  public void invalidInputException_ReturnsForbiddenAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidInputException("building type"));
-    Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getStatusCode());
-    Assert.assertEquals("Invalid building type", result.getBody().getMessage());
   }
 
   @Test

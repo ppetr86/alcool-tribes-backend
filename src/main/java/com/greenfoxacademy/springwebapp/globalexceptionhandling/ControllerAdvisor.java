@@ -51,7 +51,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({
-      InvalidBuildingTypeException.class,
       TownhallLevelException.class,
       InvalidInputException.class,
       InvalidAcademyIdException.class})
