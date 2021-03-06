@@ -73,16 +73,16 @@ public class TroopServiceImpl implements TroopService {
 
     BuildingEntity academy = findAcademy(kingdomEntity, requestDTO);
 
-    throwExceptions(requestDTO, academy, kingdomEntity, troopId);
+    validateRequest(requestDTO, academy, kingdomEntity, troopId);
 
     TroopEntity troopEntity = updateTroop(academy, troopId, kingdomEntity);
     troopRepository.save(troopEntity);
     return new TroopEntityResponseDTO(troopEntity);
   }
 
-  private void throwExceptions(TroopRequestDTO requestDTO, BuildingEntity academy, KingdomEntity kingdomEntity,
+  private void validateRequest(TroopRequestDTO requestDTO, BuildingEntity academy, KingdomEntity kingdomEntity,
                                Long troopId) {
-    if (requestDTO.getBuildingId() == null || requestDTO.getBuildingId() == 0
+    if (requestDTO.getBuildingId() == null
         || requestDTO.getBuildingId().toString().isEmpty()) {
       throw new MissingParameterException("buildingId");
     } else if (academy == null) {
@@ -98,7 +98,6 @@ public class TroopServiceImpl implements TroopService {
       throw new NotEnoughResourceException();
     } else if (!kingdomEntity.getId().equals(troopRepository.findKingdomIdByTroopId(troopId))) {
       throw new InvalidInputException("troop id!");
-      //throwing invalid troop id in case of wrong id is provided. Not in swagger but i think it's important.
     }
   }
 
