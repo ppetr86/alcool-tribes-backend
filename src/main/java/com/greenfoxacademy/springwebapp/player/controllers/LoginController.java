@@ -1,7 +1,5 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IncorrectUsernameOrPwdException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
@@ -24,7 +22,7 @@ public class LoginController {
 
   @PostMapping
   public ResponseEntity<PlayerTokenDTO> login(@RequestBody @Valid PlayerRequestDTO request)
-      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+      throws RuntimeException {
     return ResponseEntity.ok(playerService.loginPlayer(request));
   }
 }

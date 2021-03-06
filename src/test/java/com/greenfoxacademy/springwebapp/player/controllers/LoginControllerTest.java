@@ -1,8 +1,6 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IncorrectUsernameOrPwdException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
@@ -15,7 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class LoginControllerUnitTest {
+public class LoginControllerTest {
 
   private LoginController loginController;
   private PlayerService playerService;
@@ -30,7 +28,7 @@ public class LoginControllerUnitTest {
 
   @Test
   public void postLoginShouldReturn200AndOkStatus()
-      throws Exception, NotVerifiedRegistrationException, IncorrectUsernameOrPwdException {
+      throws RuntimeException {
     PlayerEntity entity = new PlayerEntity("Mark", "markmark");
     PlayerTokenDTO tokenDTO = new PlayerTokenDTO("12345");
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "markmark");
@@ -44,25 +42,25 @@ public class LoginControllerUnitTest {
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
-  @Test(expected = IncorrectUsernameOrPwdException.class)
+  @Test(expected = RuntimeException.class)
   public void loginShould401_WrongPasswordAndOrUsername()
-      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+      throws RuntimeException {
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "badPassword");
     Mockito
         .when(playerService.loginPlayer(requestDTO))
-        .thenThrow(IncorrectUsernameOrPwdException.class);
+        .thenThrow(RuntimeException.class);
     ResponseEntity<?> response = loginController.login(requestDTO);
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Username or password is incorrect.", ((ErrorDTO) response.getBody()).getMessage());
   }
 
-  @Test(expected = NotVerifiedRegistrationException.class)
+  @Test(expected = RuntimeException.class)
   public void loginShould401_NotVerifiedPlayer()
-      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+      throws RuntimeException {
     PlayerRequestDTO requestDTO = new PlayerRequestDTO("Mark", "badPassword");
     Mockito
         .when(playerService.loginPlayer(requestDTO))
-        .thenThrow(NotVerifiedRegistrationException.class);
+        .thenThrow(RuntimeException.class);
     ResponseEntity<?> response = loginController.login(requestDTO);
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     Assert.assertEquals("Not verified username.", ((ErrorDTO) response.getBody()).getMessage());

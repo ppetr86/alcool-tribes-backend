@@ -11,9 +11,7 @@ import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.RegistrationTokenFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IncorrectUsernameOrPwdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
@@ -27,13 +25,13 @@ import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -195,9 +193,9 @@ public class PlayerServiceTest {
     Assert.assertEquals("MY_TOKEN", tkn.getToken());
   }
 
-  @Test(expected = IncorrectUsernameOrPwdException.class)
+  @Test(expected = RuntimeException.class)
   public void loginPlayerShould_ThrowIncorrectUsernameOrPwdExceptionWhenNotExistingUser()
-      throws NotVerifiedRegistrationException, IncorrectUsernameOrPwdException {
+      throws RuntimeException {
     PlayerRequestDTO rqst = new PlayerRequestDTO("Petr", "password");
 
     Mockito.when(playerService.findByUsernameAndPassword("ABC", "EFG"))
@@ -205,9 +203,9 @@ public class PlayerServiceTest {
     playerService.loginPlayer(rqst);
   }
 
-  @Test(expected = NotVerifiedRegistrationException.class)
+  @Test(expected = RuntimeException.class)
   public void loginPlayerShould_ThrowNotVerifiedRegistrationExceptionWhenNotVerified()
-      throws NotVerifiedRegistrationException, IncorrectUsernameOrPwdException {
+      throws RuntimeException {
     PlayerRequestDTO rqst = new PlayerRequestDTO("Petr", "password");
     PlayerEntity pl = PlayerFactory.createPlayer(1L, null, false);
     Mockito.when(playerRepository.findByUsername(rqst.getUsername()))
@@ -227,7 +225,7 @@ public class PlayerServiceTest {
   }
 
   @Test
-  public void sendRegistrationConfirmationEmail_ReturnsFalse() throws MessagingException {
+  public void sendRegistrationConfirmationEmail_ReturnsFalse() throws MessagingException, IOException {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
 

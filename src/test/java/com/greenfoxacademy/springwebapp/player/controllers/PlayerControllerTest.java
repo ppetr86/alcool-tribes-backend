@@ -2,7 +2,6 @@ package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
@@ -46,12 +45,12 @@ public class PlayerControllerTest {
     Assert.assertEquals(HttpStatus.valueOf(201), response.getStatusCode());
   }
 
-  @Test(expected = UsernameIsTakenException.class)
+  @Test(expected = RuntimeException.class)
   public void registerUser_takenUsername() {
     PlayerRegisterRequestDTO rqst =
         new PlayerRegisterRequestDTO("user1", "user1234", "email");
 
-    Mockito.when(playerService.registerNewPlayer(rqst)).thenThrow(UsernameIsTakenException.class);
+    Mockito.when(playerService.registerNewPlayer(rqst)).thenThrow(RuntimeException.class);
 
     ResponseEntity<?> response = playerController.registerUser(rqst);
     Assert.assertEquals("Username is already taken.", ((ErrorDTO) response.getBody()).getMessage());

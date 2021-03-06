@@ -2,11 +2,10 @@ package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
-
-import java.util.List;
-
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface ResourceService {

@@ -14,7 +14,7 @@ import java.util.Random;
 @Service
 public class LocationServiceImpl implements LocationService {
 
-  private LocationRepository repo;
+  private final LocationRepository repo;
 
   @Override
   public LocationEntity save(LocationEntity entity) {

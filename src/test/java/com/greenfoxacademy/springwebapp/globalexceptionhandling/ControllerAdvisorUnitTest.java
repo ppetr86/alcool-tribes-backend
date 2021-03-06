@@ -34,14 +34,14 @@ public class ControllerAdvisorUnitTest {
 
   @Test
   public void incorrectUsernameOrPwdException_ReturnsUnauthorizedAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new IncorrectUsernameOrPwdException());
+    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new RuntimeException("Username or password is incorrect."));
     Assert.assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
     Assert.assertEquals("Username or password is incorrect.", result.getBody().getMessage());
   }
 
   @Test
   public void notVerifiedRegistrationException_ReturnsUnauthorizedAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new NotVerifiedRegistrationException());
+    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new RuntimeException("Not verified username."));
     Assert.assertEquals(HttpStatus.valueOf(401), result.getStatusCode());
     Assert.assertEquals("Not verified username.", result.getBody().getMessage());
   }
@@ -62,7 +62,7 @@ public class ControllerAdvisorUnitTest {
 
   @Test
   public void usernameIsTakenException_ReturnsForbiddenAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new UsernameIsTakenException());
+    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new RuntimeException("Username is already taken."));
     Assert.assertEquals(HttpStatus.CONFLICT, result.getStatusCode());
     Assert.assertEquals("Username is already taken.", result.getBody().getMessage());
   }
@@ -79,5 +79,19 @@ public class ControllerAdvisorUnitTest {
     ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidAcademyIdException());
     Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getStatusCode());
     Assert.assertEquals("Not a valid academy id", result.getBody().getMessage());
+  }
+
+  @Test
+  public void idNotFoundExceptionShouldReturnNotFoundAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> response = ca.handleExceptions(new IdNotFoundException());
+    Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    Assert.assertEquals("Id not found", response.getBody().getMessage());
+  }
+
+  @Test
+  public void forbiddenActionExceptionShouldReturnForbiddenAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> response = ca.handleExceptions(new ForbiddenActionException());
+    Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    Assert.assertEquals("Forbidden action", response.getBody().getMessage());
   }
 }

@@ -6,10 +6,7 @@ import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IncorrectUsernameOrPwdException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotVerifiedRegistrationException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.UsernameIsTakenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
@@ -28,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,10 +45,10 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
-      throws UsernameIsTakenException {
+      throws RuntimeException {
 
     if (existsPlayerByUsername(request.getUsername())) {
-      throw new UsernameIsTakenException();
+      throw new RuntimeException("Username is already taken.");
     }
 
     PlayerEntity savedPlayer = saveNewPlayer(request);
@@ -75,6 +73,8 @@ public class PlayerServiceImpl implements PlayerService {
     LocationEntity defaultLocation = locationService.defaultLocation(kingdom);
 
     kingdom.setLocation(defaultLocation);
+
+    player.setKingdom(kingdom);
     kingdom.setPlayer(player);
 
     player = playerRepo.save(player);
@@ -99,7 +99,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     try {
       emailService.sendMailWithHtmlAndPlainText(emailContext);
-    } catch (MessagingException e) {
+    } catch (MessagingException | IOException e) {
       e.printStackTrace();
       return false;
     }
@@ -114,17 +114,16 @@ public class PlayerServiceImpl implements PlayerService {
     return responseDTO;
   }
 
-
   @Override
   public PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
-      throws IncorrectUsernameOrPwdException, NotVerifiedRegistrationException {
+      throws RuntimeException {
 
     PlayerEntity player = findByUsernameAndPassword(request.getUsername(), request.getPassword());
 
     if (player == null) {
-      throw new IncorrectUsernameOrPwdException();
+      throw new RuntimeException("Username or password is incorrect.");
     } else if (!player.getIsAccountVerified()) {
-      throw new NotVerifiedRegistrationException();
+      throw new RuntimeException("Not verified username.");
     }
     return tokenService.generateTokenToLoggedInPlayer(player);
   }

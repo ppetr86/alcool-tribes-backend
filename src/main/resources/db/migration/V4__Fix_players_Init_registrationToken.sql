@@ -1,7 +1,8 @@
 ALTER TABLE players
     ADD COLUMN is_account_verified BIT(1);
 
-CREATE TABLE registration_tokens(
+CREATE TABLE registration_tokens
+(
     id         BIGINT      NOT NULL AUTO_INCREMENT,
     token      VARCHAR(20) NOT NULL,
     time_stamp TIMESTAMP   NOT NULL,

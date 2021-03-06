@@ -25,11 +25,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                                                                 HttpStatus status, WebRequest request) {
 
     List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-    if (errors.size() > 1)
+    if (errors.size() > 1) {
       return new ResponseEntity<>(new ErrorDTO(createTextFromFieldErrors(errors)), HttpStatus.BAD_REQUEST);
+    }
 
-    if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters."))
+    if (errors.get(0).getDefaultMessage().equals("Password must be 8 characters.")) {
       return new ResponseEntity<>(new ErrorDTO("Password must be 8 characters."), HttpStatus.NOT_ACCEPTABLE);
+    }
 
     //covers for missing type, password required, username required
     return new ResponseEntity<>(new ErrorDTO(errors.get(0).getDefaultMessage()), HttpStatus.BAD_REQUEST);
@@ -58,12 +60,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
   }
 
-  @ExceptionHandler(UsernameIsTakenException.class)
-  public ResponseEntity<ErrorDTO> handleExceptions(UsernameIsTakenException ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
-  }
-
   @ExceptionHandler(NotEnoughResourceException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
     log.error(ex.getMessage());
@@ -82,15 +78,21 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
   }
 
-  @ExceptionHandler(IncorrectUsernameOrPwdException.class)
-  public ResponseEntity<ErrorDTO> handleExceptions(IncorrectUsernameOrPwdException ex) {
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<ErrorDTO> handleExceptions(RuntimeException ex) {
+    HttpStatus status = HttpStatus.UNAUTHORIZED;
+    if (ex.getMessage().equals("Not verified username.")) {
+      status = HttpStatus.UNAUTHORIZED;
+    }
+    if (ex.getMessage().equals("Username or password is incorrect.")) {
+      status = HttpStatus.UNAUTHORIZED;
+    }
+    if (ex.getMessage().equals("Username is already taken.")) {
+      status = HttpStatus.CONFLICT;
+    }
+
     log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), status);
   }
 
-  @ExceptionHandler(NotVerifiedRegistrationException.class)
-  public ResponseEntity<ErrorDTO> handleExceptions(NotVerifiedRegistrationException ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.UNAUTHORIZED);
-  }
 }
