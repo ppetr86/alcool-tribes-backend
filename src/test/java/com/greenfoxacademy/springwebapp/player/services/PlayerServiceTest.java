@@ -152,29 +152,4 @@ public class PlayerServiceTest {
 
     Assert.assertEquals(0, response.getPlayers().size());
   }
-
-  @Test
-  public void findPlayersAroundMeShouldReturnOnePlayer() {
-    KingdomEntity kingdom1 = KingdomFactory.createFullKingdom(1L, 1L);
-    PlayerEntity player1 = PlayerFactory.createPlayer(1L, kingdom1);
-    player1.setAvatar("avatar1");
-    player1.setPoints(10);
-//    kingdom1.setLocation();
-    KingdomEntity kingdom2 = KingdomFactory.createFullKingdom(2L, 2L);
-    PlayerEntity player2 = PlayerFactory.createPlayer(2L, kingdom2);
-    player2.setPoints(20);
-    player2.setAvatar("avatar2");
-    KingdomEntity kingdom3 = KingdomFactory.createFullKingdom(3L, 3L);
-    PlayerEntity player3 = PlayerFactory.createPlayer(3L, kingdom3);
-    player3.setPoints(30);
-    player3.setAvatar("avatar3");
-    List<PlayerEntity> fakeListOfAllPlayers = Arrays.asList(player1, player2, player3);
-
-    Mockito.when(playerRepository.findAll()).thenReturn(fakeListOfAllPlayers);
-    PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom3, null);
-
-    Assert.assertEquals(2, response.getPlayers().size());
-  }
-
-
 }
