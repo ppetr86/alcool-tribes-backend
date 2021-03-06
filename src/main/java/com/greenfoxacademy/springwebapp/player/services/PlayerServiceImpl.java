@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -92,7 +93,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     try {
       emailService.sendMailWithHtmlAndPlainText(emailContext);
-    } catch (MessagingException e) {
+    } catch (MessagingException | IOException e) {
       e.printStackTrace();
       return false;
     }
