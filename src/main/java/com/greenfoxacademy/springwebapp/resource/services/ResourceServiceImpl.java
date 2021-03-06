@@ -61,8 +61,8 @@ public class ResourceServiceImpl implements ResourceService {
     if (building.getType().equals(BuildingType.FARM) || building.getType().equals(BuildingType.MINE)) {
       ResourceEntity resource = doResourceUpdate(kingdom, building);
       if (resource != null) {
-        log.info("Resource {} with ID {} will be updated. Actual amount is {}, actual generation is {}",
-            resource.getType(), resource.getId(), resource.getAmount(), resource.getGeneration());
+        log.info("Resource {} with ID {} will be updated. Old generation was {}, old total amount was {}",
+            resource.getType(), resource.getId(), resource.getGeneration(), resource.getAmount());
       } else {
         log.warn("Resource generation was not updated when creating new building of type {}!", building.getType());
       }
@@ -80,7 +80,6 @@ public class ResourceServiceImpl implements ResourceService {
     Timer timer = createNewTimer();
     ResourceTimerTask resourceTimerTask = new ResourceTimerTask(resourceToBeUpdated,
         newResourceGeneration, building, this);
-
     timer.schedule(resourceTimerTask, delay);
 
     return resourceToBeUpdated;
@@ -105,9 +104,9 @@ public class ResourceServiceImpl implements ResourceService {
     resourceToBeUpdated.setUpdatedAt(building.getFinishedAt());
     resourceRepository.save(resourceToBeUpdated);
 
-    log.info("Resource {} with ID {} was updated. Actual amount is {}, actual generation is {}",
-        resourceToBeUpdated.getType(), resourceToBeUpdated.getId(), resourceToBeUpdated.getAmount(),
-        resourceToBeUpdated.getGeneration());
+    log.info("Resource {} with ID {} was updated. Actual generation is {}, actual amount is {}",
+        resourceToBeUpdated.getType(), resourceToBeUpdated.getId(), resourceToBeUpdated.getGeneration(),
+        resourceToBeUpdated.getAmount());
 
     return resourceToBeUpdated;
   }
