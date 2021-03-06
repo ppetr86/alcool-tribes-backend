@@ -25,7 +25,8 @@ public class VerificationEmail extends AbstractEmail {
     setRecipientEmail(player.getEmail());
     setKingdomName(player.getKingdom().getKingdomName());
     setUsername(player.getUsername());
-    setTemplateLocation("registration");
+    setTemplateLocationHtml("registration.html");
+    setTemplateLocationText("registrationEmail.txt");
     setSubject("Verify your email for Alcool Game");
   }
 

@@ -15,7 +15,9 @@ public abstract class AbstractEmail {
   private String senderEmail;
   private String senderDisplayName;
   private String username;
-  private String templateLocation;
+  private String templateLocationHtml;
+  private String templateLocationText;
+
   private Map<String, Object> context;
   private String kingdomName;
 

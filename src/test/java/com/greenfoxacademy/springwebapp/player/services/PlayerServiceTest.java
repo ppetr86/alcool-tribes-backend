@@ -24,6 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -181,7 +182,7 @@ public class PlayerServiceTest {
   }
 
   @Test
-  public void sendRegistrationConfirmationEmail_ReturnsFalse() throws MessagingException {
+  public void sendRegistrationConfirmationEmail_ReturnsFalse() throws MessagingException, IOException {
     KingdomEntity ke = KingdomFactory.createFullKingdom(1L, 1L, false);
     RegistrationTokenEntity secureToken = RegistrationTokenFactory.createToken(ke.getPlayer());
 
