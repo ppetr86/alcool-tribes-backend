@@ -50,27 +50,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return result.substring(0, 1).toUpperCase() + result.substring(1, result.lastIndexOf(" and")) + " are required.";
   }
 
-  @ExceptionHandler({
-      TownhallLevelException.class,
-      InvalidInputException.class,
-      InvalidAcademyIdException.class})
-  public ResponseEntity<ErrorDTO> handleExceptions(Exception ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
-  }
-
-  @ExceptionHandler(NotEnoughResourceException.class)
-  public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
-  }
-
-  @ExceptionHandler(IdNotFoundException.class)
-  public ResponseEntity<ErrorDTO> handleExceptions(IdNotFoundException ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
-  }
-
   @ExceptionHandler(ForbiddenActionException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(ForbiddenActionException ex) {
     log.error(ex.getMessage());
@@ -92,6 +71,40 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), status);
+  }
+
+  @ExceptionHandler({
+      InvalidBuildingTypeException.class,
+      TownhallLevelException.class,
+      InvalidInputException.class,
+      InvalidAcademyIdException.class})
+  public ResponseEntity<ErrorDTO> handleExceptionsNotAcceptable(Exception ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+  }
+
+  @ExceptionHandler(NotEnoughResourceException.class)
+  public ResponseEntity<ErrorDTO> handleExceptions(NotEnoughResourceException ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(IdNotFoundException.class)
+  public ResponseEntity<ErrorDTO> handleExceptions(IdNotFoundException ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(ForbiddenActionException.class)
+  public ResponseEntity<ErrorDTO> handleForbiddenException(ForbiddenActionException ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(MissingParameterException.class)
+  public ResponseEntity<ErrorDTO> handleBadRequestExceptions(Exception ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
 }
