@@ -56,3 +56,4 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 }
+
