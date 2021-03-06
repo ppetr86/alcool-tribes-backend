@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.factories;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 
 public class PlayerFactory {
 
@@ -48,5 +49,14 @@ public class PlayerFactory {
         .tokens(null)
         .build();
     return pl;
+  }
+
+  public static PlayerEntity createPlayer(PlayerRegisterRequestDTO rqst, KingdomEntity kingdom, boolean verified){
+    PlayerEntity player = new PlayerEntity();
+    player.setEmail(rqst.getEmail());
+    player.setUsername(rqst.getUsername());
+    player.setKingdom(kingdom);
+    player.setIsAccountVerified(verified);
+    return player;
   }
 }

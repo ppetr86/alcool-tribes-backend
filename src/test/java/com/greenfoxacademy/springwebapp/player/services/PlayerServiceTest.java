@@ -65,38 +65,25 @@ public class PlayerServiceTest {
         registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
   }
 
-  //@Ignore
   @Test
   public void saveNewPlayer_savesWithCorrectData() {
     playerService = Mockito.spy(playerService);
     PlayerRegisterRequestDTO rqst =
         new PlayerRegisterRequestDTO("testUser", "password", "test@test.com", "mycoolEmpire");
-    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
-    List<BuildingEntity> buildings = BuildingFactory.createDefaultBuildings(kingdom);
-    List<ResourceEntity> resources = ResourceFactory.createDefaultResources(kingdom);
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L,false,rqst);
 
     Mockito.doReturn(kingdom).when(playerService).createNewEmptyKingdom();
-    Mockito.when(buildingService.createDefaultBuildings(kingdom)).thenReturn(buildings);
+    Mockito.when(buildingService.createDefaultBuildings(kingdom)).thenReturn(kingdom.getBuildings());
     Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPWD");
-    Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(resources);
+    Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(kingdom.getResources());
+    Mockito.doReturn(kingdom.getPlayer()).when(playerService).copyProperties(kingdom, rqst, false);
+    Mockito.when(locationService.defaultLocation(kingdom)).thenReturn( new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
+    Mockito.when(playerRepository.save(kingdom.getPlayer())).thenReturn(kingdom.getPlayer());
+    PlayerEntity player = playerService.saveNewPlayer(rqst);
 
-    PlayerEntity player = new PlayerEntity();
-    player.setEmail(rqst.getEmail());
-    player.setUsername(rqst.getUsername());
-    player.setKingdom(kingdom);
-    player.setIsAccountVerified(false);
-
-    Mockito.doReturn(player).when(playerService).copyProperties(kingdom, rqst, false);
-
-    LocationEntity location = new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM);
-    Mockito.when(locationService.defaultLocation(kingdom)).thenReturn(location);
-
-    Mockito.when(playerRepository.save(player)).thenReturn(player);
-    player = playerService.saveNewPlayer(rqst);
     Assert.assertEquals("mycoolEmpire", player.getKingdom().getKingdomName());
     Assert.assertEquals("testUser", player.getUsername());
     Assert.assertEquals(4, player.getKingdom().getBuildings().size());
-    Assert.assertEquals(2, player.getKingdom().getResources().size());
     Assert.assertEquals(100, (int) player.getKingdom().getResources().get(0).getAmount());
   }
 
