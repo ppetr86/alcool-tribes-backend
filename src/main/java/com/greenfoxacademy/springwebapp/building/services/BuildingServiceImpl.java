@@ -12,6 +12,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputExce
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
+import com.greenfoxacademy.springwebapp.kingdom.controllers.KingdomController;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;

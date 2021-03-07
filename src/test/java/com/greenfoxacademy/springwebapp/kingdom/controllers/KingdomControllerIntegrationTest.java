@@ -43,7 +43,6 @@ public class KingdomControllerIntegrationTest {
 
   @Test
   public void getKingdomID_returns200_andCorrectResultsWhenExistingKingdom() throws Exception {
-
     mockMvc.perform(get(KingdomController.URI + "/{id}", 1))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))

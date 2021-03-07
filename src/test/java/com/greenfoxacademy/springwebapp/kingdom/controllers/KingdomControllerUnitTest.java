@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
+import com.greenfoxacademy.springwebapp.battle.services.BattleService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -21,12 +22,14 @@ public class KingdomControllerUnitTest {
   private KingdomController kingdomController;
   private KingdomService kingdomService;
   private ResourceService resourceService;
+  private BattleService battleService;
 
   @Before
   public void setUp() {
     resourceService = Mockito.mock(ResourceService.class);
     kingdomService = Mockito.mock(KingdomService.class);
-    kingdomController = new KingdomController(kingdomService, resourceService);
+    battleService = Mockito.mock(BattleService.class);
+    kingdomController = new KingdomController(kingdomService, resourceService, battleService);
 
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setKingdomName("testKingdom");
