@@ -27,12 +27,12 @@ public interface BuildingService {
 
   BuildingEntity defineHp(BuildingEntity entity);
 
-  BuildingEntity findBuildingById(Long id);
-
   BuildingDetailsDTO showBuilding(KingdomEntity kingdomEntity, Long id)
       throws IdNotFoundException, ForbiddenActionException;
 
   boolean hasKingdomTownhall(KingdomEntity kingdom);
+
+  BuildingEntity findBuildingById(Long id);
 
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 

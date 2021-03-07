@@ -11,25 +11,10 @@ public class ControllerAdvisorUnitTest {
 
   @Test
   public void invalidBuildingTypeException_ReturnsNotAcceptableAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidBuildingTypeException());
+    ResponseEntity<ErrorDTO> result = ca.handleExceptionsNotAcceptable(new InvalidBuildingTypeException());
     Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
     Assert.assertEquals("Invalid building type",
         result.getBody().getMessage());
-  }
-
-  @Test
-  public void townhallLevelException_ReturnsNotAcceptableAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new TownhallLevelException());
-    Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
-    Assert.assertEquals("Cannot build buildings with higher level than the Townhall",
-        result.getBody().getMessage());
-  }
-
-  @Test
-  public void notEnoughResourceException_ReturnsConflictAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new NotEnoughResourceException());
-    Assert.assertEquals(HttpStatus.valueOf(409), result.getStatusCode());
-    Assert.assertEquals("Not enough resource", result.getBody().getMessage());
   }
 
   @Test
@@ -53,12 +38,6 @@ public class ControllerAdvisorUnitTest {
     Assert.assertEquals("Forbidden action", result.getBody().getMessage());
   }
 
-  @Test
-  public void idNotFoundException_ReturnsForbiddenAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new IdNotFoundException());
-    Assert.assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-    Assert.assertEquals("Id not found", result.getBody().getMessage());
-  }
 
   @Test
   public void usernameIsTakenException_ReturnsForbiddenAndCorrectMessage() {
@@ -68,17 +47,34 @@ public class ControllerAdvisorUnitTest {
   }
 
   @Test
-  public void invalidInputException_ReturnsForbiddenAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidInputException("building type"));
+  public void invalidAcademyIdException_ReturnsForbiddenAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> result = ca.handleExceptionsNotAcceptable(new InvalidAcademyIdException());
     Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getStatusCode());
-    Assert.assertEquals("Invalid building type", result.getBody().getMessage());
+    Assert.assertEquals("Not a valid academy id", result.getBody().getMessage());
+  }
+
+  ///
+
+  @Test
+  public void townhallLevelException_ReturnsNotAcceptableAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> result = ca.handleExceptionsNotAcceptable(new TownhallLevelException());
+    Assert.assertEquals(HttpStatus.valueOf(406), result.getStatusCode());
+    Assert.assertEquals("Cannot build buildings with higher level than the Townhall",
+        result.getBody().getMessage());
   }
 
   @Test
-  public void invalidAcademyIdException_ReturnsForbiddenAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new InvalidAcademyIdException());
-    Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getStatusCode());
-    Assert.assertEquals("Not a valid academy id", result.getBody().getMessage());
+  public void missingParameterException_ReturnsBadRequestAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> result = ca.handleBadRequestExceptions(new MissingParameterException("id"));
+    Assert.assertEquals(HttpStatus.valueOf(400), result.getStatusCode());
+    Assert.assertEquals("Missing parameter(s): id!", result.getBody().getMessage());
+  }
+
+  @Test
+  public void notEnoughResourceException_ReturnsConflictAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> result = ca.handleExceptions(new NotEnoughResourceException());
+    Assert.assertEquals(HttpStatus.valueOf(409), result.getStatusCode());
+    Assert.assertEquals("Not enough resource", result.getBody().getMessage());
   }
 
   @Test
@@ -86,12 +82,5 @@ public class ControllerAdvisorUnitTest {
     ResponseEntity<ErrorDTO> response = ca.handleExceptions(new IdNotFoundException());
     Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     Assert.assertEquals("Id not found", response.getBody().getMessage());
-  }
-
-  @Test
-  public void forbiddenActionExceptionShouldReturnForbiddenAndCorrectMessage() {
-    ResponseEntity<ErrorDTO> response = ca.handleExceptions(new ForbiddenActionException());
-    Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    Assert.assertEquals("Forbidden action", response.getBody().getMessage());
   }
 }
