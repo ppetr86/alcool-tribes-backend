@@ -114,11 +114,10 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   private List<KingdomEntity> findKingdoms(KingdomEntity kingdom, List<PlayerEntity> allPlayers, Integer distance) {
-    List<KingdomEntity> kingdomEntities = allPlayers.stream()
-        .map(e -> e.getKingdom())
+    return allPlayers.stream()
+        .map(PlayerEntity::getKingdom)
         .filter(e -> !e.getId().equals(kingdom.getId()))
         .filter(x -> isWithinGrid(kingdom, distance, x))
         .collect(Collectors.toList());
-    return kingdomEntities;
   }
 }
