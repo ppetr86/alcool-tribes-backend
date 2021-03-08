@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Coordinate {
-  int x;
-  int y;
+  int row;
+  int col;
 }

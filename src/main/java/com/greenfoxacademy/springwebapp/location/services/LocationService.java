@@ -19,4 +19,6 @@ public interface LocationService {
   void generate50DesertsAnd50Jungles();
 
   List<Coordinate> findShortestPath(KingdomEntity start, KingdomEntity end);
+
+  List<LocationEntity> findAllInRange(KingdomEntity start, KingdomEntity end, int offset);
 }
