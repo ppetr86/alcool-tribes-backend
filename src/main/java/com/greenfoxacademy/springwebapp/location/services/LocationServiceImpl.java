@@ -5,6 +5,8 @@ import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,6 +56,26 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public void generate50DesertsAnd50Jungles() {
     repo.generate50DesertsAnd50Jungles();
+  }
+
+  @Override
+  public List<LocationEntity> findShortestPath(KingdomEntity start, KingdomEntity destination) {
+    int[][] allLocations = new int[100][100];
+    List<LocationEntity> dbLocations = repo.findAll();
+    for (LocationEntity each : dbLocations) {
+      allLocations[each.getY()][each.getX()] = 1;
+    }
+    // 0 = free|| 1=ocuppied
+
+  }
+
+  @Getter
+  @Setter
+  @AllArgsConstructor
+  static class Coordinate {
+    int x;
+    int y;
+    int distanceFromSource;
   }
 
 
