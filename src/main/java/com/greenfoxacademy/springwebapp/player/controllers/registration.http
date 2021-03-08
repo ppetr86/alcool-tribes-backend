@@ -3,7 +3,8 @@ Content-Type: application/json
 
 {
   "username": "furkesz",
-  "password": "password"
+  "password": "password",
+  "email": "furkesz@furkesz.com"
 }
 
 ###

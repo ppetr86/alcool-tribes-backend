@@ -66,6 +66,7 @@ public class LocationServiceImpl implements LocationService {
     result.add(new Coordinate(start.getLocation().getX(), start.getLocation().getY()));
     result.add(new Coordinate(end.getLocation().getX(), end.getLocation().getY()));
 
+    //Legend: 1: Wall, 0: valid path, s: start, e: end
     //string array of 201x201 because DB locations can be -100+100 inclusive
     String[][] grid = new String[201][201];
     List<LocationEntity> dbLocations = repo.findAll();
