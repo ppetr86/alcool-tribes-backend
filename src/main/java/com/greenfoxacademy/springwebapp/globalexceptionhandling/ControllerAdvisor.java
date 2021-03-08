@@ -50,12 +50,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return result.substring(0, 1).toUpperCase() + result.substring(1, result.lastIndexOf(" and")) + " are required.";
   }
 
-  @ExceptionHandler(ForbiddenActionException.class)
-  public ResponseEntity<ErrorDTO> handleExceptions(ForbiddenActionException ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.FORBIDDEN);
-  }
-
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<ErrorDTO> handleExceptions(RuntimeException ex) {
     HttpStatus status = HttpStatus.UNAUTHORIZED;
