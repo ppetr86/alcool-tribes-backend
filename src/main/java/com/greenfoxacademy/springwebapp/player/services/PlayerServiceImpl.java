@@ -97,11 +97,7 @@ public class PlayerServiceImpl implements PlayerService {
           .filter(e -> e.getKingdomId() != kingdom.getId())
           .collect(Collectors.toList());
     } else {
-      List<KingdomEntity> kingdomEntities = allPlayers.stream()
-          .map(e -> e.getKingdom())
-          .filter(e -> !e.getId().equals(kingdom.getId()))
-          .filter(x -> isWithinGrid(kingdom, distance, x))
-          .collect(Collectors.toList());
+      List<KingdomEntity> kingdomEntities = findKingdoms(kingdom, allPlayers, distance);
       playerResponseDTO = kingdomEntities.stream()
           .map(e -> assignResponseDto(e.getPlayer()))
           .collect(Collectors.toList());
@@ -117,4 +113,12 @@ public class PlayerServiceImpl implements PlayerService {
         && passiveKingdom.getLocation().getY() < callerKingdom.getLocation().getY() + distance;
   }
 
+  private List<KingdomEntity> findKingdoms(KingdomEntity kingdom, List<PlayerEntity> allPlayers, Integer distance) {
+    List<KingdomEntity> kingdomEntities = allPlayers.stream()
+        .map(e -> e.getKingdom())
+        .filter(e -> !e.getId().equals(kingdom.getId()))
+        .filter(x -> isWithinGrid(kingdom, distance, x))
+        .collect(Collectors.toList());
+    return kingdomEntities;
+  }
 }
