@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.location.models.Coordinate;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,5 @@ public interface LocationService {
 
   void generate50DesertsAnd50Jungles();
 
-  List<LocationEntity> findShortestPath(KingdomEntity initiative, KingdomEntity target);
+  List<Coordinate> findShortestPath(KingdomEntity initiative, KingdomEntity target);
 }
