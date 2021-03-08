@@ -102,8 +102,7 @@ public class PlayerServiceImpl implements PlayerService {
           .map(e -> assignResponseDto(e.getPlayer()))
           .collect(Collectors.toList());
     }
-    PlayerListResponseDTO playerListResponseDTO = new PlayerListResponseDTO(playerResponseDTO);
-    return playerListResponseDTO;
+    return new PlayerListResponseDTO(playerResponseDTO);
   }
 
   private boolean isWithinGrid(KingdomEntity callerKingdom, Integer distance, KingdomEntity passiveKingdom) {
