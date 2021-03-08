@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.troop.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -45,6 +46,7 @@ public class TroopControllerIT {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(createDefaultLevel1BuildingsWithAllData());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount());
   }
 
   @Test

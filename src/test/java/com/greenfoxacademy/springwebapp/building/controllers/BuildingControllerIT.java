@@ -51,6 +51,7 @@ public class BuildingControllerIT {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(createBuildings(kingdom));
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount());
   }
 
   @Test
@@ -142,8 +143,8 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("farM");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-
-    Mockito.when(timeService.getTime()).thenReturn(222L);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount());
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -159,8 +160,8 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("TOWNhall");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-
-    Mockito.when(timeService.getTime()).thenReturn(222L);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount());
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)
@@ -176,8 +177,8 @@ public class BuildingControllerIT {
     BuildingRequestDTO request = new BuildingRequestDTO("MINE");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-
-    Mockito.when(timeService.getTime()).thenReturn(222L);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount());
 
     mockMvc.perform(post(BuildingController.URI)
         .contentType(MediaType.APPLICATION_JSON)

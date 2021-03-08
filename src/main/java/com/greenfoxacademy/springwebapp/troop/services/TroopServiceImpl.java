@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +51,9 @@ public class TroopServiceImpl implements TroopService {
       throw new ForbiddenActionException();
     } else if (!academy.getType().equals(BuildingType.ACADEMY)) {
       throw new InvalidAcademyIdException();
-    } else if (!resourceService.hasResourcesForTroop()) {
+    }
+    int troopCosts = academy.getLevel() * 25;
+    if (!resourceService.hasResourcesForTroop(kingdom.getId(), troopCosts)) {
       throw new NotEnoughResourceException();
     }
     // TODO: after resources are defined, adjust logic for getting resources and

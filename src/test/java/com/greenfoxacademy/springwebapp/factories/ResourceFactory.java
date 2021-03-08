@@ -27,17 +27,17 @@ public class ResourceFactory {
     );
   }
 
-  public static List<ResourceEntity> createResourcesWithAllDataAndHighAmount(KingdomEntity kingdom) {
+  public static List<ResourceEntity> createResourcesWithAllDataAndHighAmount() {
     return Arrays.asList(
-        new ResourceEntity(1L, ResourceType.GOLD, 1000, 100, 999L, kingdom),
-        new ResourceEntity(2L, ResourceType.FOOD, 1000, 100, 999L, kingdom)
+        new ResourceEntity(1L, ResourceType.GOLD, 1000, 100, 999L, null),
+        new ResourceEntity(2L, ResourceType.FOOD, 1000, 100, 999L, null)
     );
   }
 
   public static List<ResourceEntity> createResourcesWithAllDataAndLowAmount() {
     return Arrays.asList(
-        new ResourceEntity(1L, ResourceType.GOLD, 0, 100, 999L, null),
-        new ResourceEntity(2L, ResourceType.FOOD, 0, 100, 999L, null)
+        new ResourceEntity(1L, ResourceType.GOLD, 0, 100, 999999999999999999L, null),
+        new ResourceEntity(2L, ResourceType.FOOD, 0, 100, 999999999999999999L, null)
     );
   }
 

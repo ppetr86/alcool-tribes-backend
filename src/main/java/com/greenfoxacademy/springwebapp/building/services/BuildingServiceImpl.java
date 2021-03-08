@@ -79,11 +79,9 @@ public class BuildingServiceImpl implements BuildingService {
     }
   }
 
-  //hasResourcesForBuilding part extended
   @Override
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException {
-
 
     if (dto.getType().trim().isEmpty()) throw new MissingParameterException("type");
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
