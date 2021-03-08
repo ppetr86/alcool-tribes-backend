@@ -23,9 +23,5 @@ public class LocationEntity {
   private Long id;
   private Integer x;
   private Integer y;
-
-  public LocationEntity(Integer x, Integer y) {
-    this.x = x;
-    this.y = y;
-  }
+  
 }
