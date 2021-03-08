@@ -88,7 +88,7 @@ public class BuildingServiceImpl implements BuildingService {
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
     int amountChange = defineBuildingCosts(dto.getType());
     if (dto.getType().toUpperCase().equals("ACADEMY")) amountChange = amountChange + 50;
-    if (!resourceService.hasResourcesForBuilding(kingdom.getId(), amountChange)) throw new NotEnoughResourceException();
+    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());

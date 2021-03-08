@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
@@ -48,9 +49,10 @@ public class BuildingControllerTest {
   public void buildBuildings_BuildingCreated_Ok() {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
+    KingdomEntity kingdom = new KingdomEntity();
 
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
-    Mockito.when(resourceService.hasResourcesForBuilding(1L, 100)).thenReturn(true);
+    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 100)).thenReturn(true);
 
     ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request);
 

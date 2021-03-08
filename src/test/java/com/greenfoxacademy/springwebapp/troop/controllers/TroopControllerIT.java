@@ -46,7 +46,7 @@ public class TroopControllerIT {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(createDefaultLevel1BuildingsWithAllData());
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
   }
 
   @Test

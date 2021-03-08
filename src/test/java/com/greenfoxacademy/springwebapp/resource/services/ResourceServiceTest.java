@@ -27,7 +27,7 @@ public class ResourceServiceTest {
     timeService = Mockito.mock(TimeService.class);
     kingdomService = Mockito.mock(KingdomService.class);
     env = Mockito.mock(Environment.class);
-    resourceService = new ResourceServiceImpl(resourceRepository, timeService, kingdomService, env);
+    resourceService = new ResourceServiceImpl(resourceRepository, timeService, env);
   }
 
   @Test
@@ -51,13 +51,13 @@ public class ResourceServiceTest {
   public void hasResourcesForBuildingShouldReturnTrueIfAmountChange100(){
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(1L);
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
     int amountChange = 100;
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(0).getUpdatedAt());
 
-    boolean result = resourceService.hasResourcesForBuilding(1L, amountChange);
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
 
     Assert.assertTrue(result);
   }
@@ -66,12 +66,12 @@ public class ResourceServiceTest {
   public void hasResourcesForBuildingShouldReturnFalseIfAmountChange100(){
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(1L);
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(timeService.getTime()).thenReturn(999L);
 
-    boolean result = resourceService.hasResourcesForBuilding(1L, 100);
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, 100);
 
     Assert.assertFalse(result);
   }
@@ -80,13 +80,13 @@ public class ResourceServiceTest {
   public void hasResourcesForBuildingShouldReturnTrueIfAmountChange150(){
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(1L);
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
     int amountChange = 150;
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
 
-    boolean result = resourceService.hasResourcesForBuilding(1L, amountChange);
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
 
     Assert.assertTrue(result);
   }
@@ -95,13 +95,13 @@ public class ResourceServiceTest {
   public void hasResourcesForBuildingShouldReturnFalseIfAmountChange150(){
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(1L);
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
     int amountChange = 150;
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
 
-    boolean result = resourceService.hasResourcesForBuilding(1L, amountChange);
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
 
     Assert.assertFalse(result);
   }
@@ -110,13 +110,13 @@ public class ResourceServiceTest {
   public void hasResourcesForBuildingShouldReturnTrueIfAmountChange200(){
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(1L);
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndHighAmount());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
     int amountChange = 200;
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
 
-    boolean result = resourceService.hasResourcesForBuilding(1L, amountChange);
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
 
     Assert.assertTrue(result);
   }
@@ -125,13 +125,13 @@ public class ResourceServiceTest {
   public void hasResourcesForBuildingShouldReturnFalseIfAmountChange200(){
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(1L);
-    kingdom.setResources(ResourceFactory.createResourcesWithAllDataAndLowAmount());
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
     int amountChange = 200;
 
     Mockito.when(kingdomService.findByID(1L)).thenReturn(kingdom);
     Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
 
-    boolean result = resourceService.hasResourcesForBuilding(1L, amountChange);
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
 
     Assert.assertFalse(result);
   }

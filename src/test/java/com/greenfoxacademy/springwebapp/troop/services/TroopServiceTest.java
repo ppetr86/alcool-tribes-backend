@@ -98,7 +98,7 @@ public class TroopServiceTest {
     kingdom.setBuildings(buildings);
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    Mockito.when(resourceService.hasResourcesForTroop(kingdom.getId(), 25)).thenThrow(NotEnoughResourceException.class);
+    Mockito.when(resourceService.hasResourcesForTroop(kingdom, 25)).thenThrow(NotEnoughResourceException.class);
     Mockito.when(kingdomService.findByID(kingdom.getId())).thenReturn(kingdom);
     //Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
 
@@ -119,7 +119,7 @@ public class TroopServiceTest {
     Mockito.when(env.getProperty("troop.attack")).thenReturn("10");
     Mockito.when(env.getProperty("troop.defence")).thenReturn("5");
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
-    Mockito.when(resourceService.hasResourcesForTroop(kingdom.getId(), 25)).thenReturn(true);
+    Mockito.when(resourceService.hasResourcesForTroop(kingdom, 25)).thenReturn(true);
     Mockito.when(timeService.getTime()).thenReturn(1L);
     Mockito.when(timeService.getTimeAfter(1
         * Integer.parseInt(env.getProperty("troop.buildingTime")))).thenReturn(30L);

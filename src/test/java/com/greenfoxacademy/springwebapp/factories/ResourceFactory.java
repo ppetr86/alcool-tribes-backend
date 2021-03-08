@@ -4,6 +4,8 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,17 +29,19 @@ public class ResourceFactory {
     );
   }
 
-  public static List<ResourceEntity> createResourcesWithAllDataAndHighAmount() {
+  public static List<ResourceEntity> createResourcesWithAllDataWithHighAmount() {
+    long oneMinuteBefore = Instant.now().minus(1, ChronoUnit.MINUTES).getEpochSecond();
     return Arrays.asList(
-        new ResourceEntity(1L, ResourceType.GOLD, 1000, 100, 999L, null),
-        new ResourceEntity(2L, ResourceType.FOOD, 1000, 100, 999L, null)
+        new ResourceEntity(1L, ResourceType.GOLD, 1000, 100, oneMinuteBefore, null),
+        new ResourceEntity(2L, ResourceType.FOOD, 1000, 100, oneMinuteBefore, null)
     );
   }
 
-  public static List<ResourceEntity> createResourcesWithAllDataAndLowAmount() {
+  public static List<ResourceEntity> createResourcesWithAllDataWithLowAmount() {
+    long oneMinuteBefore = Instant.now().minus(1, ChronoUnit.MINUTES).getEpochSecond();
     return Arrays.asList(
-        new ResourceEntity(1L, ResourceType.GOLD, 0, 100, 999999999999999999L, null),
-        new ResourceEntity(2L, ResourceType.FOOD, 0, 100, 999999999999999999L, null)
+        new ResourceEntity(1L, ResourceType.GOLD, 0, 50, oneMinuteBefore, null),
+        new ResourceEntity(2L, ResourceType.FOOD, 0, 50, oneMinuteBefore, null)
     );
   }
 

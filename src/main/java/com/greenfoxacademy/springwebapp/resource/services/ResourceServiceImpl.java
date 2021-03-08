@@ -25,19 +25,17 @@ public class ResourceServiceImpl implements ResourceService {
 
   private ResourceRepository resourceRepository;
   private TimeService timeService;
-  private KingdomService kingdomService;
   private Environment env;
 
-  public boolean hasResourcesForTroop(Long kingdomId, int amountChange) {
-    // TODO: has Resources For Troops creation
-    KingdomEntity kingdom = kingdomService.findByID(kingdomId);
-
+  @Override
+  public boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange) {
     if (updateResources(kingdom, amountChange)){
      ResourceEntity kingdomsFood = getResourceByResourceType(kingdom, ResourceType.FOOD);
      BuildingEntity academy = getAcademy(kingdom);
      int level = academy.getLevel();
      kingdomsFood.setGeneration(kingdomsFood.getGeneration() + (level * defineTroopFood()));
      saveResource(kingdomsFood);
+     return true;
     }
     return false;
   }
@@ -54,8 +52,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public boolean hasResourcesForBuilding(Long kingdomId, int amountChange) {
-    KingdomEntity kingdom = kingdomService.findByID(kingdomId);
+  public boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange) {
     return updateResources(kingdom, amountChange);
   }
 

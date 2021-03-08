@@ -37,4 +37,13 @@ public class BuildingFactory {
     );
   }
 
+  public static List<BuildingEntity> createBuildingsWhereTownHallsLevelFive() {
+    return Arrays.asList(
+        new BuildingEntity(1L, BuildingType.TOWNHALL, 5, 100, 100L, 200L),
+        new BuildingEntity(2L, BuildingType.ACADEMY, 1, 100, 100L, 200L),
+        new BuildingEntity(3L, BuildingType.FARM, 1, 100, 100L, 200L),
+        new BuildingEntity(4L, BuildingType.MINE, 1, 100, 100L, 200L)
+    );
+  }
+
 }

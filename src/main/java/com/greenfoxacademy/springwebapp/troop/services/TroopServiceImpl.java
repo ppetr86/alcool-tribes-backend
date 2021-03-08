@@ -53,7 +53,7 @@ public class TroopServiceImpl implements TroopService {
       throw new InvalidAcademyIdException();
     }
     int troopCosts = academy.getLevel() * 25;
-    if (!resourceService.hasResourcesForTroop(kingdom.getId(), troopCosts)) {
+    if (!resourceService.hasResourcesForTroop(kingdom, troopCosts)) {
       throw new NotEnoughResourceException();
     }
     // TODO: after resources are defined, adjust logic for getting resources and

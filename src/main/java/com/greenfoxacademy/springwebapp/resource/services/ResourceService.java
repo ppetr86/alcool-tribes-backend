@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ResourceService {
 
-  boolean hasResourcesForTroop(Long kingdomId, int amountChange);
+  boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange);
 
-  boolean hasResourcesForBuilding(Long kingdomId, int amountChange);
+  boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
 
   List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
 
