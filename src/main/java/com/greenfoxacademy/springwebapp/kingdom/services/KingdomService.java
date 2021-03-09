@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import org.springframework.stereotype.Service;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 
@@ -15,4 +16,5 @@ public interface KingdomService {
 
   KingdomEntity saveKingdom(KingdomEntity kingdom);
 
+  KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
 }
