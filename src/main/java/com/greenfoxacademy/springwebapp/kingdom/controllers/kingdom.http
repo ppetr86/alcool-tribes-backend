@@ -7,11 +7,12 @@ Accept: application/json
 
 ### Get kingdom
 ### kingdom/{id}
-GET http://localhost:8080/kingdom/999
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM2ODkyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.viq8mQL99hSTHs6huaDy_S3S21xYHEFwxDruvaQFrvaiIidQV6dUrwzWw_es0WpxwNfPZfXAhWQKHR_xuIlBXQ
+GET http://localhost:8080/kingdom/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM4NjIwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.cZ8yOkXJrJjgyEyFbC0Jtbdg3F0i48GzVtJ6K0XRyCDbCRi1P2l18xnx9tj9ZyhH8bCAaKE-TWaU-WVbAtunQg
 Accept: application/json
 
 ### PUT kingdom
+<<<<<<< HEAD
 ### kingdom
 PUT http://localhost:8080/kingdom
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDU4MzAwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.qmnwrD4qeUup8DczlszDDM74BjqNGlZ8tA5RvuNqT-5mV3_6vFGy8piDWmfFL5UE_0rHtngja_XG_7oDlCDHjw
@@ -20,3 +21,12 @@ Content-Type: application/json
 {
   "name": "test"
 }
+=======
+PUT http://localhost:8080/kingdom
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUzMTE2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.55FYv_lh3cF6by5jzNCD-BypSydYr65fafvataJExuRszu8c7BREhy1kaxl3ExlOwzfFMpCdFy-MrxC8EvF4UA
+
+{
+  "name": "New Kingdom"
+}
+>>>>>>> development

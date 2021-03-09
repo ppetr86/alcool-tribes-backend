@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
@@ -26,7 +25,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -63,8 +61,7 @@ public class PlayerServiceImpl implements PlayerService {
   public PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO dto) {
     KingdomEntity kingdom = createNewEmptyKingdom();
     kingdom.setKingdomName(dto.getKingdomname() == null ? dto.getUsername() + "'s kingdom" : dto.getKingdomname());
-    List<BuildingEntity> defaultBuildings = buildingService.createDefaultBuildings(kingdom);
-    kingdom.setBuildings(defaultBuildings);
+    kingdom.setBuildings(buildingService.createDefaultBuildings(kingdom));
 
     PlayerEntity player = copyProperties(kingdom, dto, false);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
