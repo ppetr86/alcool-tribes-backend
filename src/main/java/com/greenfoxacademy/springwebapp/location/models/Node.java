@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Coordinate {
+public class Node {
   int row;
   int col;
+  int d;
 }
