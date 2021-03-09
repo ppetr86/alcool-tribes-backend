@@ -46,7 +46,7 @@ public class KingdomController {
   }
 
   @PostMapping("/{id}/battle")
-  public ResponseEntity<?>initiateBattle(@PathVariable("id") Long enemyKingdomId,
+  public ResponseEntity<?> initiateBattle(@PathVariable("id") Long enemyKingdomId,
                                          @RequestBody @Valid BattleRequestDTO requestDTO,
                                          Authentication authentication) throws
       MissingParameterException,

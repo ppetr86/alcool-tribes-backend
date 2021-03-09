@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BattleRepository extends JpaRepository <BattleEntity, Long> {
+public interface BattleRepository extends JpaRepository<BattleEntity, Long> {
 
   //repository methods to be defined here
 

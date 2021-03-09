@@ -47,9 +47,9 @@ public class BattleServiceImpl implements BattleService {
         .collect(Collectors.toList());
   }
 
-  public void prepareForBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom,
+  public Boolean prepareForBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom,
                                List<TroopEntity> attackingArmy) {
-
+    return true;
   }
 
 }
