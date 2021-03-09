@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BattleRequestDTO {
 
-  @NotEmpty(message = "No troop was sent to the battle!")
-  private long[] troopIds;
+  @NotEmpty(message = "You cant start battle with no troops in your army!")
+  private Long[] troopIds;
 }

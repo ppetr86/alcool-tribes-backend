@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
 import com.greenfoxacademy.springwebapp.battle.services.BattleService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
@@ -47,7 +48,9 @@ public class KingdomController {
   @PostMapping("/{id}/battle")
   public ResponseEntity<?>initiateBattle(@PathVariable("id") Long enemyKingdomId,
                                          @RequestBody @Valid BattleRequestDTO requestDTO,
-                                         Authentication authentication) throws IdNotFoundException,
+                                         Authentication authentication) throws
+      MissingParameterException,
+      IdNotFoundException,
       ForbiddenActionException {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     BattleResponseDTO battleStarted = battleService.initiateBattle(enemyKingdomId, requestDTO, kingdom);
