@@ -96,7 +96,7 @@ public class PlayerServiceImpl implements PlayerService {
           .filter(e -> e.getKingdomId() != kingdom.getId())
           .collect(Collectors.toList());
     } else {
-      List<KingdomEntity> kingdomEntities = findKingdoms(kingdom, allPlayers, distance);
+      List<KingdomEntity> kingdomEntities = findKingdomsWithinDistance(kingdom, allPlayers, distance);
       playerResponseDTO = kingdomEntities.stream()
           .map(e -> assignResponseDto(e.getPlayer()))
           .collect(Collectors.toList());
@@ -104,18 +104,19 @@ public class PlayerServiceImpl implements PlayerService {
     return new PlayerListResponseDTO(playerResponseDTO);
   }
 
-  private boolean isWithinGrid(KingdomEntity callerKingdom, Integer distance, KingdomEntity passiveKingdom) {
-    return passiveKingdom.getLocation().getX() > callerKingdom.getLocation().getX() - distance
-        && passiveKingdom.getLocation().getX() < callerKingdom.getLocation().getX() + distance
-        && passiveKingdom.getLocation().getY() > callerKingdom.getLocation().getY() - distance
-        && passiveKingdom.getLocation().getY() < callerKingdom.getLocation().getY() + distance;
-  }
-
-  private List<KingdomEntity> findKingdoms(KingdomEntity kingdom, List<PlayerEntity> allPlayers, Integer distance) {
+  private List<KingdomEntity> findKingdomsWithinDistance(KingdomEntity kingdom, List<PlayerEntity> allPlayers,
+                                                         Integer distance) {
     return allPlayers.stream()
         .map(PlayerEntity::getKingdom)
         .filter(e -> !e.getId().equals(kingdom.getId()))
         .filter(x -> isWithinGrid(kingdom, distance, x))
         .collect(Collectors.toList());
+  }
+
+  private boolean isWithinGrid(KingdomEntity thisKingdom, Integer distance, KingdomEntity otherKingdom) {
+    return otherKingdom.getLocation().getX() > thisKingdom.getLocation().getX() - distance
+        && otherKingdom.getLocation().getX() < thisKingdom.getLocation().getX() + distance
+        && otherKingdom.getLocation().getY() > thisKingdom.getLocation().getY() - distance
+        && otherKingdom.getLocation().getY() < thisKingdom.getLocation().getY() + distance;
   }
 }

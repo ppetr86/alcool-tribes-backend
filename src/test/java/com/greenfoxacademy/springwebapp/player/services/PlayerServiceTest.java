@@ -2,8 +2,8 @@ package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
-import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
@@ -120,18 +120,10 @@ public class PlayerServiceTest {
   @Test
   public void findPlayersAroundMeShouldReturnAllPlayers() {
     KingdomEntity kingdom1 = KingdomFactory.createFullKingdom(1L, 1L);
-    PlayerEntity player1 = PlayerFactory.createPlayer(1L, kingdom1);
-    player1.setAvatar("avatar1");
-    player1.setPoints(10);
     KingdomEntity kingdom2 = KingdomFactory.createFullKingdom(2L, 2L);
-    PlayerEntity player2 = PlayerFactory.createPlayer(2L, kingdom2);
-    player2.setPoints(20);
-    player2.setAvatar("avatar2");
     KingdomEntity kingdom3 = KingdomFactory.createFullKingdom(3L, 3L);
-    PlayerEntity player3 = PlayerFactory.createPlayer(3L, kingdom3);
-    player3.setPoints(30);
-    player3.setAvatar("avatar3");
-    List<PlayerEntity> fakeListOfAllPlayers = Arrays.asList(player1, player2, player3);
+    List<PlayerEntity> fakeListOfAllPlayers =
+        Arrays.asList(kingdom1.getPlayer(), kingdom2.getPlayer(), kingdom3.getPlayer());
 
     Mockito.when(playerRepository.findAll()).thenReturn(fakeListOfAllPlayers);
     PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom3, null);
@@ -142,14 +134,27 @@ public class PlayerServiceTest {
   @Test
   public void findPlayersAroundMeShouldReturnEmptyList() {
     KingdomEntity kingdom1 = KingdomFactory.createFullKingdom(1L, 1L);
-    PlayerEntity player1 = PlayerFactory.createPlayer(1L, kingdom1);
-    player1.setAvatar("avatar1");
-    player1.setPoints(10);
-    List<PlayerEntity> fakeListOfAllPlayers = Arrays.asList(player1);
+    List<PlayerEntity> fakeListOfAllPlayers = Arrays.asList(kingdom1.getPlayer());
 
     Mockito.when(playerRepository.findAll()).thenReturn(fakeListOfAllPlayers);
     PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom1, null);
 
     Assert.assertEquals(0, response.getPlayers().size());
   }
+
+  @Test
+  public void findPlayersAroundMeShouldReturnSomePlayersWithinDistance() {
+    KingdomEntity kingdom1 = KingdomFactory.createFullKingdom(1L, 1L);
+    kingdom1.setLocation(new LocationEntity(1L, 65, 65));
+    KingdomEntity kingdom2 = KingdomFactory.createFullKingdom(2L, 2L);
+    KingdomEntity kingdom3 = KingdomFactory.createFullKingdom(3L, 3L);
+    List<PlayerEntity> fakeListOfAllPlayers =
+        Arrays.asList(kingdom1.getPlayer(), kingdom2.getPlayer(), kingdom3.getPlayer());
+
+    Mockito.when(playerRepository.findAll()).thenReturn(fakeListOfAllPlayers);
+    PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom3, 10);
+
+    Assert.assertEquals(1, response.getPlayers().size());
+  }
+
 }
