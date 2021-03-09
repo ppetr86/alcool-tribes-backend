@@ -100,7 +100,7 @@ public class TroopServiceTest {
 
     Mockito.when(resourceService.hasResourcesForTroop(kingdom, 25)).thenThrow(NotEnoughResourceException.class);
     Mockito.when(kingdomService.findByID(kingdom.getId())).thenReturn(kingdom);
-    //Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
+    Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
 
     // TODO: after resources are defined, this method will be updated, so test should be updated as well
 
@@ -113,16 +113,15 @@ public class TroopServiceTest {
     TroopEntity fakeTroop = new TroopEntity(1L,1, 20, 10, 5, 1L, 30L, kingdom);
     TroopRequestDTO requestDTO = new TroopRequestDTO(2L);
     TroopEntityResponseDTO expectedTroop = new TroopEntityResponseDTO(1L,1,20,10,5,1,30);
-
     Mockito.when(env.getProperty("troop.hp")).thenReturn("20");
     Mockito.when(env.getProperty("troop.food")).thenReturn("-5");
     Mockito.when(env.getProperty("troop.attack")).thenReturn("10");
     Mockito.when(env.getProperty("troop.defence")).thenReturn("5");
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
+    Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
     Mockito.when(resourceService.hasResourcesForTroop(kingdom, 25)).thenReturn(true);
     Mockito.when(timeService.getTime()).thenReturn(1L);
-    Mockito.when(timeService.getTimeAfter(1
-        * Integer.parseInt(env.getProperty("troop.buildingTime")))).thenReturn(30L);
+    Mockito.when(timeService.getTimeAfter(1 * Integer.parseInt(env.getProperty("troop.buildingTime")))).thenReturn(30L);
     Mockito.when(troopRepository.save(any())).thenReturn(fakeTroop);
     Mockito.when(kingdomService.findByID(kingdom.getId())).thenReturn(kingdom);
 

@@ -4,7 +4,6 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
@@ -29,13 +28,13 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange) {
-    if (updateResources(kingdom, amountChange)){
-     ResourceEntity kingdomsFood = getResourceByResourceType(kingdom, ResourceType.FOOD);
-     BuildingEntity academy = getAcademy(kingdom);
-     int level = academy.getLevel();
-     kingdomsFood.setGeneration(kingdomsFood.getGeneration() + (level * defineTroopFood()));
-     saveResource(kingdomsFood);
-     return true;
+    if (updateResources(kingdom, amountChange)) {
+      ResourceEntity kingdomsFood = getResourceByResourceType(kingdom, ResourceType.FOOD);
+      BuildingEntity academy = getAcademy(kingdom);
+      int level = academy.getLevel();
+      kingdomsFood.setGeneration(kingdomsFood.getGeneration() + (level * defineTroopFoodFromAppProperty()));
+      saveResource(kingdomsFood);
+      return true;
     }
     return false;
   }
@@ -47,7 +46,7 @@ public class ResourceServiceImpl implements ResourceService {
         .orElse(null);
   }
 
-  private int defineTroopFood(){
+  private int defineTroopFoodFromAppProperty() {
     return Integer.parseInt(Objects.requireNonNull(env.getProperty("troop.food")));
   }
 
@@ -85,7 +84,7 @@ public class ResourceServiceImpl implements ResourceService {
     long actualTime = timeService.getTime();
     int betweenUpdateAndActualTime = (int) (actualTime - updatedTime);
 
-    if (updatedTime < actualTime){
+    if (updatedTime < actualTime) {
       betweenUpdateAndActualAmount = (betweenUpdateAndActualTime / 60 * resource.getGeneration());
     }
 

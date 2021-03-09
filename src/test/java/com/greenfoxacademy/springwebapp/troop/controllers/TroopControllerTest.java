@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
-import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
@@ -63,17 +62,16 @@ public class TroopControllerTest {
 
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
-    KingdomEntity ke = new KingdomEntity();
+    KingdomEntity ke = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     ke.setTroops(TroopFactory.createDefaultTroops());
     List<TroopEntityResponseDTO> list = ke.getTroops()
         .stream()
         .map(TroopEntityResponseDTO::new)
         .collect(Collectors.toList());
 
-    Mockito.when(troopService.troopsToListDTO(KingdomFactory.createKingdomEntityWithId(1L)))
-        .thenReturn(new TroopListResponseDto(list));
+    Mockito.when(troopService.troopsToListDTO(ke)).thenReturn(new TroopListResponseDto(list));
 
-    ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));
+    ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(authentication);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assert.assertEquals(3, response.getBody().getTroops().size());
