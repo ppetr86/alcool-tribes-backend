@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.troop.models;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 @Table(name = "troops")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TroopEntity {
 
   @Id
@@ -30,6 +32,7 @@ public class TroopEntity {
   private Long finishedAt;
   @ManyToOne
   private KingdomEntity kingdom;
+  private Boolean isHome;
 
   public TroopEntity(Long id, int level, int hp, int attack,
                      int defence, long startedAt, long finishedAt) {

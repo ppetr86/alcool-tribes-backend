@@ -105,7 +105,7 @@ public class TroopServiceTest {
   @Test
   public void createTroopReturnsLevel1CreatedTroopAsDTO() {
     KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L); //academy is id2
-    TroopEntity fakeTroop = new TroopEntity(1L, 1, 20, 10, 5, 1L, 30L, kingdom);
+    TroopEntity fakeTroop = new TroopEntity(1L, 1, 20, 10, 5, 1L, 30L, kingdom,true);
     TroopRequestDTO requestDTO = new TroopRequestDTO(2L);
     TroopEntityResponseDTO expectedTroop = new TroopEntityResponseDTO(1L, 1, 20, 10, 5, 1, 30);
 
@@ -194,7 +194,7 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(2L);
 
@@ -211,7 +211,7 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO();
 
@@ -228,7 +228,7 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(5L);
 
