@@ -4,7 +4,6 @@ import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -33,8 +32,8 @@ public class BattleServiceImpl implements BattleService {
     if (defendingKingdom == null) throw new IdNotFoundException();
 
     List<TroopEntity> attackingArmy = getAttackingArmy(requestDTO, attackingKingdom);
-    if(attackingArmy.isEmpty()) throw new MissingParameterException
-        ("none of the provided troop IDs is available in your kingdom. Your army is empty");
+    if (attackingArmy.isEmpty()) throw new MissingParameterException(
+        "none of the provided troop IDs is available in your kingdom. Your army is empty");
 
     prepareForBattle(attackingKingdom, defendingKingdom, attackingArmy);
 

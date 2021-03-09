@@ -155,7 +155,7 @@ public class KingdomControllerIT {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    mockMvc.perform(get(KingdomController.URI + "/"+null+"/battle")
+    mockMvc.perform(get(KingdomController.URI + "/" + null + "/battle")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
         .principal(authentication))
