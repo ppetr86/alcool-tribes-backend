@@ -7,6 +7,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionE
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -17,10 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -45,10 +50,17 @@ public class KingdomController {
     return ResponseEntity.ok().body(allResources);
   }
 
+  @PutMapping
+  public ResponseEntity<?> updateKingdomByName(Authentication auth,
+                                               @RequestBody @Valid KingdomNameDTO nameDTO) {
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
+  }
+
   @PostMapping("/{id}/battle")
   public ResponseEntity<?> initiateBattle(@PathVariable("id") Long enemyKingdomId,
-                                         @RequestBody @Valid BattleRequestDTO requestDTO,
-                                         Authentication authentication) throws
+                                          @RequestBody @Valid BattleRequestDTO requestDTO,
+                                          Authentication authentication) throws
       MissingParameterException,
       IdNotFoundException,
       ForbiddenActionException {
@@ -56,6 +68,4 @@ public class KingdomController {
     BattleResponseDTO battleStarted = battleService.initiateBattle(enemyKingdomId, requestDTO, kingdom);
     return ResponseEntity.ok().body(battleStarted);
   }
-
-
 }

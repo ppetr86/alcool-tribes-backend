@@ -2,11 +2,15 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.services.BattleService;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class KingdomControllerIntegrationTest {
+public class KingdomControllerIT {
 
   @Autowired
   private MockMvc mockMvc;
@@ -44,7 +49,12 @@ public class KingdomControllerIntegrationTest {
   public void setUp() throws Exception {
     authentication = createAuth("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setKingdomName("Test Name");
+    kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
+    kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
     kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
+    kingdom.setTroops(TroopFactory.createTroops(kingdom));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10));
   }
 
   @Test
@@ -76,6 +86,51 @@ public class KingdomControllerIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.resources[0].amount", is(100)));
+  }
+
+  @Test
+  public void updateKingdomWithNameShouldReturnUpdatedKingdom() throws Exception {
+    KingdomNameDTO request = new KingdomNameDTO("New Kingdom");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(KingdomController.URI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(1)))
+        .andExpect(jsonPath("$.name", is("New Kingdom")));
+  }
+
+  @Test
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfNameIsEmpty() throws Exception {
+    KingdomNameDTO request = new KingdomNameDTO("");
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(KingdomController.URI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message", is("Missing parameter(s): name!")));
+  }
+
+  @Test
+  public void updateKingdomWithNameShouldReturnMissingParameterExceptionIfNameIsNull() throws Exception {
+    KingdomNameDTO request = new KingdomNameDTO();
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(KingdomController.URI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message", is("Missing parameter(s): name!")));
   }
 
   //TODO: not working - the test is stuck in debug mode and never finishes
@@ -161,6 +216,4 @@ public class KingdomControllerIntegrationTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.status", is("error")));
   }
-
-
 }
