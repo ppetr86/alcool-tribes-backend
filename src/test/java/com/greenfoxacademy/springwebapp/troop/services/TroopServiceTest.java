@@ -215,7 +215,7 @@ public class TroopServiceTest {
     fakeTroopList.get(0).setKingdom(fakeKingdom);
     List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
-    TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(0L);
+    TroopRequestDTO fakeTroopRequest = new TroopRequestDTO();
 
     Mockito.when(buildingService.findBuildingById(2L)).thenReturn(fakeBuildingList.get(1));
     Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
