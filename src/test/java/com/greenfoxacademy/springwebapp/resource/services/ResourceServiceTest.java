@@ -1,9 +1,13 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
+import static org.mockito.ArgumentMatchers.any;
+
+
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
@@ -36,7 +40,6 @@ public class ResourceServiceTest {
   private ResourceRepository resourceRepository;
   private Environment env;
 
-  //resourceServiceImpl is for testing public methods which are not in interface
   private ResourceServiceImpl resourceServiceImpl;
 
   @Before
@@ -57,7 +60,8 @@ public class ResourceServiceTest {
     BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100,
         10L, 1000L);
 
-    Mockito.doReturn(resource).when(resourceServiceImpl).doResourceUpdate(kingdom,building);
+    Mockito.doReturn(resource).when(resourceServiceImpl).findResourceByBuildingType(kingdom,building.getType());
+    Mockito.doReturn(null).when(resourceServiceImpl).doResourceUpdate(kingdom,building,resource);
 
     ResourceEntity resourceToBeUpdated = resourceServiceImpl.updateResourceGeneration(kingdom, building);
 
@@ -66,7 +70,7 @@ public class ResourceServiceTest {
 
   @Test
   public void updateResourceGeneration_wrongBuildingTypeReturnsNull() {
-    KingdomEntity kingdom = new KingdomEntity();
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
     BuildingEntity building = new BuildingEntity(10L, BuildingType.ACADEMY, 1, 100,
         10L, 1000L);
 
@@ -83,11 +87,10 @@ public class ResourceServiceTest {
     BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100, 10L, 1000L);
 
     Timer mockTimer = Mockito.mock(Timer.class);
-    Mockito.doReturn(resource).when(resourceServiceImpl).findResourceByBuildingType(kingdom, building.getType());
     Mockito.doReturn(100).when(resourceServiceImpl).calculateNewResourceGeneration(resource, building);
     Mockito.doReturn(mockTimer).when(resourceServiceImpl).createNewTimer();
 
-    resourceServiceImpl.doResourceUpdate(kingdom,building);
+    resourceServiceImpl.doResourceUpdate(kingdom,building, resource);
 
     Mockito.verify(mockTimer).schedule(resourceTimerTaskCaptor.capture(), delayCaptor.capture());
     ResourceTimerTask task = resourceTimerTaskCaptor.getValue();

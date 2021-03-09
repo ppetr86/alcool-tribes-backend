@@ -58,8 +58,9 @@ public class ResourceServiceImpl implements ResourceService {
   // TODO: when PUT kingdom/buildings/{buildingId} then also update resources
   @Override
   public ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building) {
-    if (building.getType().equals(BuildingType.FARM) || building.getType().equals(BuildingType.MINE)) {
-      ResourceEntity resource = doResourceUpdate(kingdom, building);
+    ResourceEntity resource = findResourceByBuildingType(kingdom,building.getType());
+    if (resource != null) {
+      doResourceUpdate(kingdom, building, resource);
       if (resource != null) {
         log.info("Resource {} with ID {} will be updated. Old generation was {}, old total amount was {}",
             resource.getType(), resource.getId(), resource.getGeneration(), resource.getAmount());
@@ -68,11 +69,13 @@ public class ResourceServiceImpl implements ResourceService {
       }
       return resource;
     }
+
     return null;
   }
 
-  public ResourceEntity doResourceUpdate(KingdomEntity kingdom, BuildingEntity building) {
-    ResourceEntity resourceToBeUpdated = findResourceByBuildingType(kingdom, building.getType());
+  public ResourceEntity doResourceUpdate(KingdomEntity kingdom, BuildingEntity building,
+                                         ResourceEntity resourceToBeUpdated) {
+
     Integer newResourceGeneration = calculateNewResourceGeneration(resourceToBeUpdated, building);
 
     //sheduling the update to later time (when building is actually finished)
@@ -121,7 +124,6 @@ public class ResourceServiceImpl implements ResourceService {
 
   public Integer calculateNewResourceGeneration(ResourceEntity resource, BuildingEntity building) {
 
-    //universal solution for food/gold in case the values would differ in future
     Integer defaultGeneration = Integer
         .parseInt(env.getProperty("resourceEntity." + resource.getType().resourceType));
     return resource.getGeneration() + building.getLevel() * defaultGeneration + defaultGeneration;
