@@ -10,5 +10,4 @@ import lombok.Setter;
 public class Node {
   int row;
   int col;
-  int d;
 }

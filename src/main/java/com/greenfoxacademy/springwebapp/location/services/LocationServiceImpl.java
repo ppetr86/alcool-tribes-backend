@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 @AllArgsConstructor
@@ -85,7 +87,10 @@ public class LocationServiceImpl implements LocationService {
     grid[end.getLocation().getY() * (-1) + 100][end.getLocation().getX() + 100] = 4;
     System.out.println(Arrays.deepToString(grid));
 
-    result.addAll(methodM(grid, start, end));
+
+    HashMap<Node, Integer> visitedNodes = new HashMap<>();
+    HashMap<Node, Integer> currentShortestDistance = new HashMap<>();
+    PriorityQueue<Node> queue = new PriorityQueue<>();
     return result;
   }
 
