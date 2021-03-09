@@ -64,6 +64,7 @@ public class KingdomController {
       MissingParameterException,
       IdNotFoundException,
       ForbiddenActionException {
+
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     BattleResponseDTO battleStarted = battleService.initiateBattle(enemyKingdomId, requestDTO, kingdom);
     return ResponseEntity.ok().body(battleStarted);
