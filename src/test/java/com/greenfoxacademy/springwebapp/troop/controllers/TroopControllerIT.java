@@ -1,5 +1,15 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
+import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
+import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultLevel1BuildingsWithAllData;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
@@ -21,14 +31,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
-import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultLevel1BuildingsWithAllData;
-import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(TestNoSecurityConfig.class)
 @RunWith(SpringRunner.class)
@@ -191,6 +193,10 @@ public class TroopControllerIT {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
+    TroopRequestDTO request = new TroopRequestDTO(2L);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
     mockMvc.perform(get(TroopController.URI + "/6")
         .principal(authentication))
         .andDo(MockMvcResultHandlers.print())
@@ -214,5 +220,65 @@ public class TroopControllerIT {
         .andExpect(jsonPath("$.message", is("Id not found")));
   }
 
+  @Test
+  public void updateTroop_ReturnsCorrectUpdateValues() throws Exception {
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
 
+    TroopRequestDTO request = new TroopRequestDTO(4L);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(TroopController.URI + "/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(200))
+        .andExpect(jsonPath("$.id", is(1)))
+        .andExpect(jsonPath("$.level", is(1)))
+        .andExpect(jsonPath("$.startedAt", is(greaterThan(0))))
+        .andExpect(jsonPath("$.finishedAt", is(greaterThan(0))));
+  }
+
+  @Test
+  public void updateTroop_ReturnsInvalidException() throws Exception {
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    TroopRequestDTO request = new TroopRequestDTO(4L);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(TroopController.URI + "/999")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(406))
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Invalid troop id!")));
+  }
+
+  @Test
+  public void updateTroop_ReturnsMissingParameterException() throws Exception {
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    TroopRequestDTO request = new TroopRequestDTO();
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(TroopController.URI + "/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(400))
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Missing parameter(s): buildingId!")));
+  }
 }

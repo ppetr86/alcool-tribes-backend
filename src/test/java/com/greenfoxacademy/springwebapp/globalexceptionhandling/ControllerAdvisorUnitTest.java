@@ -38,4 +38,18 @@ public class ControllerAdvisorUnitTest {
     Assert.assertEquals(HttpStatus.valueOf(409), result.getStatusCode());
     Assert.assertEquals("Not enough resource", result.getBody().getMessage());
   }
+
+  @Test
+  public void idNotFoundExceptionShouldReturnNotFoundAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> response = ca.handleExceptions(new IdNotFoundException());
+    Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    Assert.assertEquals("Id not found", response.getBody().getMessage());
+  }
+
+  @Test
+  public void forbiddenActionExceptionShouldReturnForbiddenAndCorrectMessage() {
+    ResponseEntity<ErrorDTO> response = ca.handleForbiddenException(new ForbiddenActionException());
+    Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    Assert.assertEquals("Forbidden action", response.getBody().getMessage());
+  }
 }

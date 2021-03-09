@@ -22,7 +22,7 @@ public class KingdomFactory {
 
     kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
     kingdom.setLocation(new LocationEntity(1L, 10, 10));
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 
     return kingdom;
