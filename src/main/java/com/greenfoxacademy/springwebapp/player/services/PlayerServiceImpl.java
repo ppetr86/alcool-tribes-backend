@@ -47,7 +47,6 @@ public class PlayerServiceImpl implements PlayerService {
     return responseDTO;
   }
 
-
   private KingdomEntity assignKingdomName(PlayerRegistrationRequestDTO dto) {
     KingdomEntity kingdom = new KingdomEntity();
     if (dto.getKingdomname() != null) {
