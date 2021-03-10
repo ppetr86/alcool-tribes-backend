@@ -20,6 +20,7 @@ public class BattleServiceImpl implements BattleService {
   private int defenderHP = 0;
 
 
+  //Before Battle
   public Boolean prepareForBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom,
                                   List<TroopEntity> attackingArmy) {
     calculateAttackPoints(attackingArmy, defendingKingdom);
