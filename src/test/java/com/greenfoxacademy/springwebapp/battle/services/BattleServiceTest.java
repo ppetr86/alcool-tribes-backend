@@ -48,15 +48,6 @@ public class BattleServiceTest {
   }
 
   @Test (expected = MissingParameterException.class)
-  public void initiateBattle_nullKingdomId_ReturnsMissingParameterException() {
-    Long[] troopsIds = {1L,2L};
-    BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
-    KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
-
-    BattleResponseDTO response = battleService.initiateBattle(null,requestDTO,attackingKingdom);
-  }
-
-  @Test (expected = MissingParameterException.class)
   public void initiateBattle_troopIdsNotInTheKingdom_ReturnsMissingParameterException() {
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
     List<TroopEntity> troops = TroopFactory.createDefaultTroops(); //3 troops with ids 1-3
@@ -67,14 +58,6 @@ public class BattleServiceTest {
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(enemyKingdom);
-
-    BattleResponseDTO response = battleService.initiateBattle(2L,requestDTO,attackingKingdom);
-  }
-
-  @Test (expected = MissingParameterException.class)
-  public void initiateBattle_nullRequestDTO_ReturnsMissingParameterException() {
-    BattleRequestDTO requestDTO = null;
-    KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
 
     BattleResponseDTO response = battleService.initiateBattle(2L,requestDTO,attackingKingdom);
   }

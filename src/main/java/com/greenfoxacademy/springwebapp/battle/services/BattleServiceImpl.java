@@ -24,8 +24,6 @@ public class BattleServiceImpl implements BattleService {
                                           KingdomEntity attackingKingdom)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException {
 
-    if (enemyKingdomId == null) throw new MissingParameterException("enemy kingdom ID not set");
-    if (requestDTO == null) throw new MissingParameterException("troops in your army not set");
     if (enemyKingdomId == attackingKingdom.getId()) throw new ForbiddenActionException();
 
     KingdomEntity defendingKingdom = kingdomService.findByID(enemyKingdomId);

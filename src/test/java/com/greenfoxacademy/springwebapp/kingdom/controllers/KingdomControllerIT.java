@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -134,11 +136,11 @@ public class KingdomControllerIT {
   @Test
   public void initiateBattleShouldReturnOkStatusAndBattleResponseDTO() throws Exception {
     Long[] troopIds = {1L,2L};
-    String json = new ObjectMapper().writeValueAsString(troopIds);
+    String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(troopIds));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    mockMvc.perform(get(KingdomController.URI + "/2/battle")
+    mockMvc.perform(post(KingdomController.URI + "/2/battle")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
         .principal(authentication))
@@ -149,46 +151,29 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void initiateBattleWithNullEnemyKingdomIdShouldReturn400Status() throws Exception {
-    Long[] troopIds = {1L,2L};
-    String json = new ObjectMapper().writeValueAsString(troopIds);
+  public void initiateBattleWithNoTroopIdsShouldReturn400Status() throws Exception {
+    String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(null));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    mockMvc.perform(get(KingdomController.URI + "/" + null + "/battle")
+    mockMvc.perform(post(KingdomController.URI + "/2/battle")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
         .principal(authentication))
         .andExpect(status().is(400))
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message", is("enemy kingdom ID not set")))
-        .andExpect(jsonPath("$.status", is("error")));
-  }
-
-  @Test
-  public void initiateBattleWithNullBodyShouldReturn400Status() throws Exception {
-    String json = null;
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    kingdom.setTroops(TroopFactory.createDefaultTroops());
-
-    mockMvc.perform(get(KingdomController.URI + "/2/battle")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(json)
-        .principal(authentication))
-        .andExpect(status().is(400))
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message", is("troops in your army not set")))
+        .andExpect(jsonPath("$.message", is("You cant start battle with no troops in your army!")))
         .andExpect(jsonPath("$.status", is("error")));
   }
 
   @Test
   public void initiateBattle_sameAttackerAndDefendantKinkdomId_ShouldReturn403Status() throws Exception {
     Long[] troopIds = {1L,2L};
-    String json = new ObjectMapper().writeValueAsString(troopIds);
+    String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(troopIds));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    mockMvc.perform(get(KingdomController.URI + "/1/battle")
+    mockMvc.perform(post(KingdomController.URI + "/1/battle")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
         .principal(authentication))
@@ -200,11 +185,11 @@ public class KingdomControllerIT {
   @Test
   public void initiateBattle_nonExistentDefendantKinkdomId_ShouldReturn404Status() throws Exception {
     Long[] troopIds = {1L,2L};
-    String json = new ObjectMapper().writeValueAsString(troopIds);
+    String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(troopIds));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    mockMvc.perform(get(KingdomController.URI + "/987654321/battle")
+    mockMvc.perform(post(KingdomController.URI + "/987654321/battle")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
         .principal(authentication))
