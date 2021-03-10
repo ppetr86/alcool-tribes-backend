@@ -18,11 +18,44 @@ public class BattleServiceImpl implements BattleService {
   private int defenderAP = 0;
   private int defenderDP = 0;
   private int defenderHP = 0;
-  private int defenderBonusDefence = 0;
 
 
   public Boolean prepareForBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom,
                                   List<TroopEntity> attackingArmy) {
+    calculateAttackPoints(attackingArmy, defendingKingdom);
+    calculateHealthPoints(attackingKingdom, attackingArmy, defendingKingdom);
+    calculateDefencePoints(attackingArmy, defendingKingdom);
+
     return true;
+  }
+
+  private int calculateAttackPoints(List<TroopEntity> attackingArmy,
+                                    KingdomEntity defendingKingdom) {
+
+    return 0;
+  }
+
+  private int calculateHealthPoints(KingdomEntity attackingKingdom, List<TroopEntity> attackingArmy,
+                                    KingdomEntity defendingKingdom) {
+    int distance = calculateDistanceTraveled(attackingKingdom, defendingKingdom);
+
+    return 0;
+  }
+
+  private int calculateDistanceTraveled(KingdomEntity attackingKingdom,
+                                        KingdomEntity defendingKingdom) {
+
+    return 0;
+  }
+
+  private int calculateDefencePoints(List<TroopEntity> attackingArmy,
+                                     KingdomEntity defendingKingdom) {
+    float bonusDefence = calculateBonusDefence(defendingKingdom);
+    return 0;
+  }
+
+  private float calculateBonusDefence(KingdomEntity defendingKingdom) {
+
+    return 0.0f;
   }
 }
