@@ -250,5 +250,4 @@ public class TroopServiceTest {
 
     TroopEntityResponseDTO response = troopService.updateTroopLevel(fakeKingdom, fakeTroopRequest, 1L);
   }
-
 }

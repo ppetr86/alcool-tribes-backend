@@ -2,16 +2,17 @@ package com.greenfoxacademy.springwebapp.building.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,51 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
+  public BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
+
+    BuildingEntity building = checkBuildingDetails(kingdom, id, levelDTO);
+
+    int buildingHp = fetchBuildingSetting(building.getType(), "hp");
+    int buildingTime = fetchBuildingSetting(building.getType(), "buildingTime");
+
+    building.setLevel(levelDTO.getLevel());
+    building.setHp(levelDTO.getLevel() * buildingHp);
+    building.setStartedAt(timeService.getTime());
+    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * buildingTime));
+    return repo.save(building);
+  }
+
+  private BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException, ForbiddenActionException {
+    BuildingEntity townHall = getTownHallFromKingdom(kingdom);
+    BuildingEntity building = findBuildingById(id);
+
+    if (building == null) throw new IdNotFoundException();
+    if (levelDTO == null || levelDTO.getLevel() == 0) throw new MissingParameterException("level");
+    if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)) throw new ForbiddenActionException();
+    int cost = fetchBuildingSetting(building.getType(), "buildingCosts");
+    int amountChange = cost * levelDTO.getLevel();
+    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
+    if (building.getType() == townHall.getType()) return building;
+    if (townHall.getLevel() < levelDTO.getLevel()) throw new TownhallLevelException();
+    return building;
+  }
+
+  private BuildingEntity getTownHallFromKingdom(KingdomEntity kingdom) {
+    return kingdom.getBuildings().stream()
+        .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
+        .findFirst()
+        .get();
+  }
+
+  private int fetchBuildingSetting(BuildingType buildingType, String setting) {
+    return Integer
+        .parseInt(Objects.requireNonNull(
+            env.getProperty(String.format("building.%s.%s", buildingType.buildingType.toLowerCase(), setting))));
+  }
+
+  @Override
   public boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto) {
     try {
       BuildingType.valueOf(dto.getType().toUpperCase());
@@ -101,7 +147,7 @@ public class BuildingServiceImpl implements BuildingService {
     return result;
   }
 
-  private int defineBuildingCosts(String buildingType) {
+  public int defineBuildingCosts(String buildingType) {
     return Integer.parseInt(Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts",
         buildingType.toLowerCase()))));
   }

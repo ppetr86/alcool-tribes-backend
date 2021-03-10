@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
@@ -10,6 +11,7 @@ import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +28,7 @@ import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuthW
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -238,5 +241,84 @@ public class BuildingControllerIT {
       .principal(authentication))
       .andExpect(status().isForbidden())
       .andExpect(jsonPath("$.message", is("Forbidden action")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnNotFoundWithNoIdMessage() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO();
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(BuildingController.URI + "/1123")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Id not found")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnBadRequestWithKingdomParameterMissing() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO();
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(BuildingController.URI + "/4")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Missing parameter(s): level!")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnNotAcceptablewithTownHallNeedHigherLevel() throws Exception {
+    Authentication auth = createAuthWithResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    BuildingLevelDTO request = new BuildingLevelDTO(2);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(BuildingController.URI + "/2")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(auth))
+      .andExpect(status().isNotAcceptable())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnConflictWithNoResource() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO(2);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(BuildingController.URI + "/1")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isConflict())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Not enough resource")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnOkWithBuildingDetails() throws Exception {
+    Authentication auth = createAuthWithResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    BuildingLevelDTO request = new BuildingLevelDTO(3);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(BuildingController.URI + "/1")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(auth))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id", is(1)))
+      .andExpect(jsonPath("$.type", is("TOWNHALL")))
+      .andExpect(jsonPath("$.level", is(3)))
+      .andExpect(jsonPath("$.hp", is(600)));
   }
 }
