@@ -87,11 +87,13 @@ public class LocationServiceImpl implements LocationService {
     System.out.println(Arrays.deepToString(grid));
 
     Maze maze = new Maze(grid);
+    maze.setStart(new Coordinate(start.getLocation().getY(),start.getLocation().getX()));
+    maze.setEnd(new Coordinate(end.getLocation().getY(),end.getLocation().getX()));
     List<Coordinate> path = solve(maze);
     maze.printPath(path);
     maze.reset();
 
-    return result;
+    return path;
   }
 
   public List<Coordinate> solve(Maze maze) {
