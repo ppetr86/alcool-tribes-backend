@@ -131,8 +131,6 @@ public class KingdomControllerIT {
         .andExpect(jsonPath("$.message", is("Missing parameter(s): name!")));
   }
 
-  //TODO: not working - the test is stuck in debug mode and never finishes
-  // I suspect this stack overflow which we now always get from kingdom in all tests
   @Test
   public void initiateBattleShouldReturnOkStatusAndBattleResponseDTO() throws Exception {
     Long[] troopIds = {1L,2L};
