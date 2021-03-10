@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.location.models.Node;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import org.springframework.stereotype.Service;
 
