@@ -29,32 +29,32 @@ public class BattleServiceImpl implements BattleService {
     return true;
   }
 
-  private int calculateAttackPoints(List<TroopEntity> attackingArmy,
+  public int calculateAttackPoints(List<TroopEntity> attackingArmy,
                                     KingdomEntity defendingKingdom) {
 
     return 0;
   }
 
-  private int calculateHealthPoints(KingdomEntity attackingKingdom, List<TroopEntity> attackingArmy,
+  public int calculateHealthPoints(KingdomEntity attackingKingdom, List<TroopEntity> attackingArmy,
                                     KingdomEntity defendingKingdom) {
     int distance = calculateDistanceTraveled(attackingKingdom, defendingKingdom);
 
     return 0;
   }
 
-  private int calculateDistanceTraveled(KingdomEntity attackingKingdom,
+  public int calculateDistanceTraveled(KingdomEntity attackingKingdom,
                                         KingdomEntity defendingKingdom) {
 
     return 0;
   }
 
-  private int calculateDefencePoints(List<TroopEntity> attackingArmy,
+  public int calculateDefencePoints(List<TroopEntity> attackingArmy,
                                      KingdomEntity defendingKingdom) {
     float bonusDefence = calculateBonusDefence(defendingKingdom);
     return 0;
   }
 
-  private float calculateBonusDefence(KingdomEntity defendingKingdom) {
+  public float calculateBonusDefence(KingdomEntity defendingKingdom) {
 
     return 0.0f;
   }
