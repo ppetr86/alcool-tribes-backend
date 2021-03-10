@@ -17,6 +17,6 @@ public interface LocationService {
 
   void generate50DesertsAnd50Jungles();
 
-  List<Node> findShortestPath(KingdomEntity start, KingdomEntity end);
+  void findShortestPathV99(KingdomEntity start, KingdomEntity end);
 
 }

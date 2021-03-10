@@ -83,11 +83,9 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public List<Node> findShortestPathV99(KingdomEntity start, KingdomEntity end) {
+  public void findShortestPathV99(KingdomEntity start, KingdomEntity end) {
 
     List<Node> result = new ArrayList<>();
-    result.add(new Node(new int[]{start.getLocation().getX(), start.getLocation().getY()}));
-    result.add(new Node(end.getLocation().getX(), end.getLocation().getY()));
 
     //Legend: 1: Wall, 0: valid path, 3: start, 4: end
     int[][] grid = new int[201][201];
@@ -108,7 +106,7 @@ public class LocationServiceImpl implements LocationService {
 
     Node[][] net = nodeArray(grid);
     shortestPath(net, 0, 0);
-    return result;
+
   }
 
 
@@ -216,5 +214,6 @@ public class LocationServiceImpl implements LocationService {
         System.out.print("(" + temp.coordinate[0] + " " + temp.coordinate[1] + ") ");
       }
     } else System.out.print("No Solution Possible.");
+    System.out.println(Arrays.deepToString(nodes));
   }
 }
