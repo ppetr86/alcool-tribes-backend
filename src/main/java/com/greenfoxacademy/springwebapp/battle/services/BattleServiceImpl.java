@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class BattleServiceImpl implements BattleService {
   private final KingdomService kingdomService;
 
+  //Endpoint methods
   @Override
   public BattleResponseDTO initiateBattle(Long enemyKingdomId, BattleRequestDTO requestDTO,
                                           KingdomEntity attackingKingdom)
