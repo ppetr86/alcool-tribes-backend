@@ -16,6 +16,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelExc
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class BuildingServiceImpl implements BuildingService {
@@ -147,6 +149,9 @@ public class BuildingServiceImpl implements BuildingService {
     result = defineFinishedAt(result);
     result = defineHp(result);
     result = save(result);
+
+    resourceService.updateResourceGeneration(kingdom, result);
+
     return result;
   }
 
