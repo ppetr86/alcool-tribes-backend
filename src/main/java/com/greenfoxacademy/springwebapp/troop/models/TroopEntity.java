@@ -28,6 +28,7 @@ public class TroopEntity {
   private Integer defence;
   private Long startedAt;
   private Long finishedAt;
+  private boolean isHome = true;
   @ManyToOne
   private KingdomEntity kingdom;
 

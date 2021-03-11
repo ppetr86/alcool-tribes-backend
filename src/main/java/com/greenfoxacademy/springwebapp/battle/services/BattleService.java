@@ -12,4 +12,7 @@ public interface BattleService {
   BattleResponseDTO initiateBattle(Long enemyKingdomId, BattleRequestDTO requestDTO,
                                    KingdomEntity kingdom)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException;
+
+  int calculateDistanceTraveled(KingdomEntity attackingKingdom,
+                                KingdomEntity defendingKingdom);
 }

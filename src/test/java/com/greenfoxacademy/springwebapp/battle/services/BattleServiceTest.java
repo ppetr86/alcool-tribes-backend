@@ -40,7 +40,7 @@ public class BattleServiceTest {
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(enemyKingdom);
-    Mockito.doReturn(null).when(battleService).prepareForBattle(any(),any(),any());
+    Mockito.doReturn(null).when(battleService).prepareForBattle(any(),any(),any(),any());
 
     BattleResponseDTO response = battleService.initiateBattle(2L,requestDTO,attackingKingdom);
     Assert.assertEquals("ok", response.getStatus());
