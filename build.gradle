@@ -1,3 +1,4 @@
+
 plugins {
     id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -26,7 +27,8 @@ jacocoTestReport {
     reports {
         xml.enabled false
         html.enabled true
-        html.destination file("${buildDir}/jacoco")    }
+        html.destination file("${buildDir}/jacoco")
+    }
 }
 
 repositories {
@@ -34,9 +36,36 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    compile 'org.springframework.security:spring-security-crypto:5.4.2'
+
+    compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    implementation 'org.flywaydb:flyway-core'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'junit:junit:4.12'
+    compile 'junit:junit:4.12'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'org.springframework.security:spring-security-test'      //This is need for PasswordEncoder class
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'        //This is need for JwtProvider class
+
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.4.3' // spring boot starter email
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
+
+    testImplementation group: 'com.icegreen', name: 'greenmail', version: '1.6.2'
+
 }
 
 test {

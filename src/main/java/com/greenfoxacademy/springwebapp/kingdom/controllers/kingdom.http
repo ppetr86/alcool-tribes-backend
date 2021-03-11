@@ -1,0 +1,21 @@
+### Get kingdom
+### kingdom/resources
+GET http://localhost:8080/kingdom/resources
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM3NzU2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.DtUdBear4jyYArWfPOCmvbxwFqY0lXPkxyGP8Kqs_2KrVLs_q1oF7Q6VWiaUgWyTNqyIKSjGEQyLcrXDB7X5_w
+Accept: application/json
+
+
+### Get kingdom
+### kingdom/{id}
+GET http://localhost:8080/kingdom/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM4NjIwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.cZ8yOkXJrJjgyEyFbC0Jtbdg3F0i48GzVtJ6K0XRyCDbCRi1P2l18xnx9tj9ZyhH8bCAaKE-TWaU-WVbAtunQg
+Accept: application/json
+
+### PUT kingdom
+PUT http://localhost:8080/kingdom
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUzMTE2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.55FYv_lh3cF6by5jzNCD-BypSydYr65fafvataJExuRszu8c7BREhy1kaxl3ExlOwzfFMpCdFy-MrxC8EvF4UA
+
+{
+  "name": "New Kingdom"
+}

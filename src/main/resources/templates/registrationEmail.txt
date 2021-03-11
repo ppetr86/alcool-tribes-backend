@@ -1,0 +1,10 @@
+Welcome  [(${username})]!
+
+
+[(${kingdomname})] is ready! You just need to confirm your email address
+and then you are ready to conquer the world :)
+Please confirm your email address by opening the following url:
+[(${verificationURL})]
+
+Confirm Email Address
+ — The Tribes Team
