@@ -268,12 +268,12 @@ public class BuildingControllerIT {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(put(BuildingController.URI + "/1123")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isNotFound())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Id not found")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Id not found")));
   }
 
   @Test
@@ -283,12 +283,12 @@ public class BuildingControllerIT {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(put(BuildingController.URI + "/4")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Missing parameter(s): level!")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Missing parameter(s): level!")));
   }
 
   @Test
@@ -301,12 +301,12 @@ public class BuildingControllerIT {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(put(BuildingController.URI + "/2")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isNotAcceptable())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isNotAcceptable())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
   }
 
   @Test
@@ -319,12 +319,12 @@ public class BuildingControllerIT {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
 
     mockMvc.perform(put(BuildingController.URI + "/1")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isConflict())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Not enough resource")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
   @Test
@@ -337,13 +337,13 @@ public class BuildingControllerIT {
     Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
 
     mockMvc.perform(put(BuildingController.URI + "/1")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.id", is(1)))
-      .andExpect(jsonPath("$.type", is("TOWNHALL")))
-      .andExpect(jsonPath("$.level", is(3)))
-      .andExpect(jsonPath("$.hp", is(600)));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(1)))
+        .andExpect(jsonPath("$.type", is("TOWNHALL")))
+        .andExpect(jsonPath("$.level", is(3)))
+        .andExpect(jsonPath("$.hp", is(600)));
   }
 }

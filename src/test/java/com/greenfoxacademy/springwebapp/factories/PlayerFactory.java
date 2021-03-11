@@ -51,7 +51,7 @@ public class PlayerFactory {
     return pl;
   }
 
-  public static PlayerEntity createPlayer(PlayerRegisterRequestDTO rqst, KingdomEntity kingdom, boolean verified){
+  public static PlayerEntity createPlayer(PlayerRegisterRequestDTO rqst, KingdomEntity kingdom, boolean verified) {
     PlayerEntity player = new PlayerEntity();
     player.setEmail(rqst.getEmail());
     player.setUsername(rqst.getUsername());

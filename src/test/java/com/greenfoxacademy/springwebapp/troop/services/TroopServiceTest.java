@@ -194,7 +194,7 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(2L);
 
@@ -211,7 +211,7 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO();
 
@@ -228,7 +228,7 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(5L);
 

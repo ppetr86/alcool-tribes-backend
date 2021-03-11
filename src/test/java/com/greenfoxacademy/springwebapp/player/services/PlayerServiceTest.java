@@ -1,16 +1,13 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.TestConfig;
-import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
-import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.RegistrationTokenFactory;
-import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
@@ -21,7 +18,6 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequest
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -70,14 +65,14 @@ public class PlayerServiceTest {
     playerService = Mockito.spy(playerService);
     PlayerRegisterRequestDTO rqst =
         new PlayerRegisterRequestDTO("testUser", "password", "test@test.com", "mycoolEmpire");
-    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L,false,rqst);
-
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L, false, rqst);
     Mockito.doReturn(kingdom).when(playerService).createNewEmptyKingdom();
     Mockito.when(buildingService.createDefaultBuildings(kingdom)).thenReturn(kingdom.getBuildings());
     Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPWD");
     Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(kingdom.getResources());
     Mockito.doReturn(kingdom.getPlayer()).when(playerService).copyProperties(kingdom, rqst, false);
-    Mockito.when(locationService.defaultLocation(kingdom)).thenReturn( new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
+    Mockito.when(locationService.defaultLocation(kingdom))
+        .thenReturn(new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
     Mockito.when(playerRepository.save(kingdom.getPlayer())).thenReturn(kingdom.getPlayer());
     PlayerEntity player = playerService.saveNewPlayer(rqst);
 
