@@ -28,6 +28,7 @@ public class LocationServiceTest {
   public void defaultLocation_generatesUnoccupiedLocationInRangePlusMinus100() {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(11L);
     List<LocationEntity> occupiedLocations = LocationFactory.createOccupiedLocations();
+    Mockito.when(locationRepository.findAll()).thenReturn(occupiedLocations);
 
     for (int i = 0; i < 1000; i++) {
       LocationEntity startingLocation = locationService.defaultLocation(kingdom);
