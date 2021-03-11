@@ -66,7 +66,11 @@ public class KingdomController {
       ForbiddenActionException {
 
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BattleResponseDTO battleStarted = battleService.initiateBattle(enemyKingdomId, requestDTO, kingdom);
+
+    //TODO: distance will later come from the method which will call initialBattle()
+    int distance = 1;
+    BattleResponseDTO battleStarted = battleService.initiateBattle(enemyKingdomId, requestDTO, kingdom, distance);
+
     return ResponseEntity.ok().body(battleStarted);
   }
 }

@@ -124,7 +124,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(2L,requestDTO,kingdom)).thenReturn(new BattleResponseDTO());
+    Mockito.when(battleService.initiateBattle(2L,requestDTO,kingdom,1)).thenReturn(new BattleResponseDTO());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
 
@@ -140,7 +140,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(2L,requestDTO,kingdom))
+    Mockito.when(battleService.initiateBattle(2L,requestDTO,kingdom,1))
         .thenThrow(new MissingParameterException("anything"));
 
     ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
@@ -153,7 +153,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(20L,requestDTO,kingdom))
+    Mockito.when(battleService.initiateBattle(20L,requestDTO,kingdom,1))
         .thenThrow(new IdNotFoundException());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(20L, requestDTO, authentication);
@@ -166,7 +166,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(1L,requestDTO,kingdom))
+    Mockito.when(battleService.initiateBattle(1L,requestDTO,kingdom,1))
         .thenThrow(new ForbiddenActionException());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(1L, requestDTO, authentication);

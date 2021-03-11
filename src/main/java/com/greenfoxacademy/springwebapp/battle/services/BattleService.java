@@ -10,9 +10,7 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 public interface BattleService {
 
   BattleResponseDTO initiateBattle(Long enemyKingdomId, BattleRequestDTO requestDTO,
-                                   KingdomEntity kingdom)
+                                   KingdomEntity kingdom, int distance)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException;
 
-  int calculateDistanceTraveled(KingdomEntity attackingKingdom,
-                                KingdomEntity defendingKingdom);
 }

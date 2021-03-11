@@ -36,7 +36,7 @@ public class BattleServiceImpl implements BattleService {
   //Endpoint methods
   @Override
   public BattleResponseDTO initiateBattle(Long enemyKingdomId, BattleRequestDTO requestDTO,
-                                          KingdomEntity attackingKingdom)
+                                          KingdomEntity attackingKingdom, int distance)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException {
 
     if (enemyKingdomId == attackingKingdom.getId()) throw new ForbiddenActionException();
@@ -50,7 +50,7 @@ public class BattleServiceImpl implements BattleService {
 
     List<TroopEntity> defendingArmy = getDefendingArmy(defendingKingdom);
 
-    prepareForBattle(attackingKingdom, defendingKingdom, attackingArmy, defendingArmy);
+    prepareForBattle(attackingKingdom, defendingKingdom, attackingArmy, defendingArmy, distance);
 
     return new BattleResponseDTO();
   }
@@ -58,33 +58,37 @@ public class BattleServiceImpl implements BattleService {
   public List<TroopEntity> getAttackingArmy(BattleRequestDTO requestDTO,
                                             KingdomEntity attackingKingdom) {
     return attackingKingdom.getTroops().stream()
-        .filter(troop -> Arrays.stream(requestDTO.getTroopIds())
+        .filter(troop -> (Arrays.stream(requestDTO.getTroopIds())
             .filter(a -> a == troop.getId())
             .findFirst()
-            .orElse(null) ==  troop.getId())
+            .orElse(null)) ==  troop.getId())
         .collect(Collectors.toList());
   }
 
   public List<TroopEntity> getDefendingArmy(KingdomEntity defendingKingdom) {
-    return defendingKingdom.getTroops().stream()
+    //TODO: use and adjust when isHome method is available
+    /*  return defendingKingdom.getTroops().stream()
         .filter(troop -> troop.isHome())
-        .collect(Collectors.toList());
+        .collect(Collectors.toList());*/
+    return defendingKingdom.getTroops();
   }
 
   //Before Battle
   public Boolean prepareForBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom,
-                                  List<TroopEntity> attackingArmy, List<TroopEntity> defendingArmy) {
-    calculateHealthPoints(attackingKingdom, defendingKingdom, attackingArmy, defendingArmy);
+                                  List<TroopEntity> attackingArmy, List<TroopEntity> defendingArmy,
+                               int distance) {
+    calculateHealthPoints(attackingKingdom, defendingKingdom, attackingArmy, defendingArmy, distance);
     calculateAttackPoints(attackingArmy, defendingArmy);
     calculateDefencePoints(attackingArmy, defendingKingdom);
 
     return true;
   }
 
-  public boolean calculateHealthPoints(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom,
+  public boolean calculateHealthPoints(KingdomEntity attackingKingdom,
+                                       KingdomEntity defendingKingdom,
                                        List<TroopEntity> attackingArmy,
-                                       List<TroopEntity> defendingArmy) {
-    this.attackerHP = calculateAttackerHP(attackingKingdom, defendingKingdom, attackingArmy);
+                                       List<TroopEntity> defendingArmy, int distance) {
+    this.attackerHP = calculateAttackerHP(attackingKingdom, defendingKingdom, attackingArmy, distance);
     if (this.attackerHP == 0) {
       log.info("Deffending Army won automatically - attacking kingdom did not survived travel!");
       //TODO: finish scenario when defending army wins automatically
@@ -104,21 +108,11 @@ public class BattleServiceImpl implements BattleService {
   }
 
   public int calculateAttackerHP(KingdomEntity attackingKingdom,
-                                 KingdomEntity defendingKingdom, List<TroopEntity> attackingArmy) {
-    int distance = calculateDistanceTraveled(attackingKingdom, defendingKingdom);
+                                 KingdomEntity defendingKingdom, List<TroopEntity> attackingArmy,
+                                 int distance) {
     int attackerArmyHP = attackingArmy.stream().mapToInt(troop -> troop.getHp()).sum();
     int finalHP = attackerArmyHP - (int)(attackerArmyHP*distance*0.02);
     return finalHP < 0 ? 0 : finalHP;
-  }
-
-  public int calculateDistanceTraveled(KingdomEntity attackingKingdom,
-                                       KingdomEntity defendingKingdom) {
-    int travelX = Math.abs(attackingKingdom.getLocation().getX()
-        -defendingKingdom.getLocation().getX());
-    int travelY = Math.abs(attackingKingdom.getLocation().getY()
-        -defendingKingdom.getLocation().getY());
-
-    return travelX + travelY;
   }
 
   public void calculateAttackPoints(List<TroopEntity> attackingArmy,
