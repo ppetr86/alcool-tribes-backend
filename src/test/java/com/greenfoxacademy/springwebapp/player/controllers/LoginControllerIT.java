@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -105,7 +104,8 @@ public class LoginControllerIT {
         .content(json))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.status", is("error")))
-        .andExpect(jsonPath("$.message", is("Username and password are required.")));
+        .andExpect(jsonPath("$.message", is("Password and username are required.")));
+
   }
 
   @Test

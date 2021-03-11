@@ -3,7 +3,7 @@ package com.greenfoxacademy.springwebapp.troop.controllers;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidBuildingTypeException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -54,7 +54,7 @@ public class TroopController {
   public ResponseEntity<?> updateTroop(@PathVariable Long troopId, Authentication authentication,
                                        @RequestBody TroopRequestDTO requestDTO) throws
       MissingParameterException, ForbiddenActionException, IdNotFoundException,
-      InvalidBuildingTypeException, NotEnoughResourceException {
+      NotEnoughResourceException, InvalidInputException {
 
     KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 

@@ -18,7 +18,6 @@ public class BuildingFactory {
     );
   }
 
-
   public static List<BuildingEntity> createBuildings(KingdomEntity kingdom) {
     return Arrays.asList(
         new BuildingEntity(1L, BuildingType.TOWNHALL, 1, 100, 100L, 200L, kingdom),
