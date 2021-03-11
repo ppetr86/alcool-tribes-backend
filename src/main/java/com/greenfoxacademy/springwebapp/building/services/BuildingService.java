@@ -25,7 +25,7 @@ public interface BuildingService {
   BuildingEntity setBuildingTypeOnEntity(String type);
 
   BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
-      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException, MissingParameterException;
+      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException;
 
   BuildingEntity defineHp(BuildingEntity entity);
 
