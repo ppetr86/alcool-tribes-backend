@@ -7,29 +7,29 @@ import org.springframework.stereotype.Service;
 public class BattleServiceImp implements BattleService{
 
   @Override
-  public Integer battleHasTime(KingdomEntity ownKingdom, KingdomEntity enemyKingdom) {
-    Integer ownX = ownKingdom.getLocation().getX();
-    Integer ownY = ownKingdom.getLocation().getY();
-    Integer enemyX = enemyKingdom.getLocation().getX();
-    Integer enemyY = enemyKingdom.getLocation().getY();
+  public Integer battleHasTime(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom) {
+    Integer attackX = attackingKingdom.getLocation().getX();
+    Integer attackY = attackingKingdom.getLocation().getY();
+    Integer defendX = defendingKingdom.getLocation().getX();
+    Integer defendY = defendingKingdom.getLocation().getY();
 
-    Integer differenceX = differenceBetweenTwoKingdomsXOrYPlaces(ownX, enemyX);
-    Integer differenceY = differenceBetweenTwoKingdomsXOrYPlaces(ownY, enemyY);
+    Integer differenceX = differenceBetweenTwoKingdomsXOrYPlaces(attackX, defendX);
+    Integer differenceY = differenceBetweenTwoKingdomsXOrYPlaces(attackY, defendY);
 
     return differenceX + differenceY;
   }
 
-  private Integer differenceBetweenTwoKingdomsXOrYPlaces(int ownXOrY, int enemyXOrY) {
-    if ((ownXOrY <= 0 && enemyXOrY <= 0) || (0 <= ownXOrY && 0 <= enemyXOrY)){
-      if (ownXOrY < enemyXOrY){
-        return enemyXOrY - ownXOrY;
+  public Integer differenceBetweenTwoKingdomsXOrYPlaces(int attackXOrY, int defendXOrY) {
+    if ((attackXOrY <= 0 && defendXOrY <= 0) || (0 <= attackXOrY && 0 <= defendXOrY)){
+      if (attackXOrY < defendXOrY){
+        return defendXOrY - attackXOrY;
       } else {
-        return ownXOrY - enemyXOrY;
+        return attackXOrY - defendXOrY;
       }
-    } else if (ownXOrY <= 0){
-      return enemyXOrY - ownXOrY;
+    } else if (attackXOrY <= 0){
+      return defendXOrY - attackXOrY;
     } else {
-      return ownXOrY - enemyXOrY;
+      return attackXOrY - defendXOrY;
     }
   }
 }
