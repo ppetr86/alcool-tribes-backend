@@ -187,8 +187,8 @@ public class PlayerServiceImpl implements PlayerService {
 
   public boolean verifyUser(String token) throws InvalidTokenException {
     RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
-    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) ||
-        secureToken.isExpired()) {
+    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken())
+        || secureToken.isExpired()) {
       throw new InvalidTokenException();
     }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
