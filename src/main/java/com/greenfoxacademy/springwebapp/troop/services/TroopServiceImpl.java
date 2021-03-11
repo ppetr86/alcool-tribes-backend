@@ -7,7 +7,6 @@ import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidBuildingTypeException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
@@ -29,11 +28,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TroopServiceImpl implements TroopService {
 
-  private ResourceService resourceService;
-  private TimeService timeService;
-  private TroopRepository troopRepository;
   private final Environment env;
-  private BuildingService buildingService;
+  private final ResourceService resourceService;
+  private final TimeService timeService;
+  private final TroopRepository troopRepository;
+  private final BuildingService buildingService;
 
   @Override
   public TroopListResponseDto troopsToListDTO(KingdomEntity entity) {
@@ -67,9 +66,8 @@ public class TroopServiceImpl implements TroopService {
 
   @Override
   public TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO,
-                                                 Long troopId) throws
-      MissingParameterException, ForbiddenActionException, IdNotFoundException,
-      InvalidBuildingTypeException, NotEnoughResourceException {
+                                                 Long troopId) throws MissingParameterException,
+      ForbiddenActionException, IdNotFoundException, InvalidInputException, NotEnoughResourceException {
 
     BuildingEntity academy = findAcademy(kingdomEntity, requestDTO);
 

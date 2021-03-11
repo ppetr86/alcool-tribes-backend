@@ -34,11 +34,9 @@ public class BuildingServiceTest {
   private BuildingRepository buildingRepository;
   private TimeService timeService;
   private ResourceService resourceService;
-  private Environment env;
 
   @Before
   public void init() {
-    env = Mockito.mock(Environment.class);
     buildingRepository = Mockito.mock(BuildingRepository.class);
     timeService = Mockito.mock(TimeService.class);
     resourceService = Mockito.mock(ResourceService.class);
@@ -236,9 +234,6 @@ public class BuildingServiceTest {
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(buildingRepository.save(any())).thenReturn(townHall);
     Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 800)).thenReturn(true);
-    Mockito.when(env.getProperty("building.townhall.buildingCosts")).thenReturn("200");
-    Mockito.when(env.getProperty("building.townhall.hp")).thenReturn("200");
-    Mockito.when(env.getProperty("building.townhall.buildingTime")).thenReturn("120");
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 5L, new BuildingLevelDTO(4));
 
@@ -260,10 +255,7 @@ public class BuildingServiceTest {
     Mockito.when(buildingRepository.findById(2L)).thenReturn(java.util.Optional.of(academy));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(buildingRepository.save(any())).thenReturn(academy);
-    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 200)).thenReturn(true);
-    Mockito.when(env.getProperty("building.academy.buildingCosts")).thenReturn("100");
-    Mockito.when(env.getProperty("building.academy.hp")).thenReturn("150");
-    Mockito.when(env.getProperty("building.academy.buildingTime")).thenReturn("90");
+    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 300)).thenReturn(true);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 2L, new BuildingLevelDTO(3));
 
@@ -285,7 +277,7 @@ public class BuildingServiceTest {
     Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(farm));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(buildingRepository.save(any())).thenReturn(farm);
-    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 300)).thenReturn(true);
+    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 200)).thenReturn(true);
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 3L, new BuildingLevelDTO(2));
 
@@ -308,9 +300,6 @@ public class BuildingServiceTest {
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(buildingRepository.save(any())).thenReturn(mine);
     Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 400)).thenReturn(true);
-    Mockito.when(env.getProperty("building.mine.buildingCosts")).thenReturn("100");
-    Mockito.when(env.getProperty("building.mine.hp")).thenReturn("100");
-    Mockito.when(env.getProperty("building.mine.buildingTime")).thenReturn("60");
 
     BuildingEntity result = buildingService.updateBuilding(kingdom, 4L, new BuildingLevelDTO(4));
 
