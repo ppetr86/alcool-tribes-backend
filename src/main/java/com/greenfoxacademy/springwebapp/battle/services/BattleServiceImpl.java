@@ -11,13 +11,17 @@ import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 public class BattleServiceImpl implements BattleService {
+
   private final KingdomService kingdomService;
+
+  public BattleServiceImpl(
+      KingdomService kingdomService) {
+    this.kingdomService = kingdomService;
+  }
 
   //Endpoint methods
   @Override
