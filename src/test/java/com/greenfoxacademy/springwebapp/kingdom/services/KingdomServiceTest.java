@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -17,7 +18,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class KingdomServiceTest {
   private KingdomService kingdomService;
@@ -65,7 +68,9 @@ public class KingdomServiceTest {
     List<BuildingEntity> fakeBuildings = new ArrayList<>();
     List<TroopEntity> fakeTroops = new ArrayList<>();
     List<ResourceEntity> fakeResources = new ArrayList<>();
-    PlayerEntity fakePlayer = new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null);
+    Set<RegistrationTokenEntity> tokens = new HashSet<>();
+    PlayerEntity fakePlayer =
+        new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, tokens);
     KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
         new LocationEntity(1L, 10, 10));
 
@@ -80,7 +85,9 @@ public class KingdomServiceTest {
     List<BuildingEntity> fakeBuildings = new ArrayList<>();
     List<TroopEntity> fakeTroops = new ArrayList<>();
     List<ResourceEntity> fakeResources = new ArrayList<>();
-    PlayerEntity fakePlayer = new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null);
+    Set<RegistrationTokenEntity> tokens = new HashSet<>();
+    PlayerEntity fakePlayer =
+        new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, tokens);
     KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
         new LocationEntity(1L, 10, 10));
 

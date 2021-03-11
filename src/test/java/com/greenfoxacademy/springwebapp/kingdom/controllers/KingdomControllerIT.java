@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.factories.AuthFactory;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
@@ -22,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -43,7 +43,7 @@ public class KingdomControllerIT {
 
   @Before
   public void setUp() throws Exception {
-    authentication = createAuth("Furkesz", 1L);
+    authentication = AuthFactory.createAuthFullKingdom("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setKingdomName("Test Name");
     kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));

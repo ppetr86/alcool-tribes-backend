@@ -24,9 +24,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
   public static final String AUTHORIZATION = "Authorization";
 
-  private JwtProvider jwtProvider;
-  private CustomUserDetailsService customUserDetailsService;
-  private EndpointsInterceptor endpointsInterceptor;
+  private final JwtProvider jwtProvider;
+  private final CustomUserDetailsService customUserDetailsService;
+  private final EndpointsInterceptor endpointsInterceptor;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -37,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
     String token = getTokenFromServletRequest(request);
-    Boolean tokenIsValid = validateToken(token, request,response);
+    Boolean tokenIsValid = validateToken(token, request, response);
     if (token != null && tokenIsValid) {
       authenticateUser(token);
     }
