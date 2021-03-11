@@ -19,15 +19,15 @@ INSERT INTO players (id, avatar, username, email, password, points, is_account_v
 VALUES (100, '', 'occupied_username', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG',
         0, true);
 
-INSERT INTO locations (id, x, y)
-VALUES (1, 10, 10);
-INSERT INTO locations (id, x, y)
-VALUES (2, 20, 20);
-
 INSERT INTO kingdoms (id, kingdomname, player_id)
 VALUES (1, 'furkesz''s kingdom', 1);
 INSERT INTO kingdoms (id, kingdomname, player_id)
 VALUES (2, 'zdenek kingdom', 2);
+
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (1, 10, 10, 1, 'KINGDOM');
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (2, 20, 20, 2, 'KINGDOM');
 
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
 VALUES (1, 0, 0, 1, 0, 'TOWNHALL', 1);
