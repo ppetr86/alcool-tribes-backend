@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
 import com.greenfoxacademy.springwebapp.battle.services.BattleService;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
+import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
@@ -48,8 +49,7 @@ public class KingdomControllerTest {
     kingdom.setKingdomName("testKingdom");
     kingdom.setId(1L);
 
-    PlayerEntity pl = new PlayerEntity(1L, "testUser", "password", "test@test.com", null, null, kingdom);
-    kingdom.setPlayer(pl);
+    PlayerEntity pl = PlayerFactory.createPlayer(1L, kingdom);
 
     KingdomResponseDTO result = kingdomService.entityToKingdomResponseDTO(1L);
 
@@ -71,6 +71,7 @@ public class KingdomControllerTest {
 
   @Test(expected = IdNotFoundException.class)
   public void non_existingKingdomReturns400_AndRelevantResponse() {
+
     Mockito.when(kingdomService.entityToKingdomResponseDTO(1111L)).thenThrow(IdNotFoundException.class);
 
     ResponseEntity<Object> response = kingdomController.getKingdomByID(1111L);

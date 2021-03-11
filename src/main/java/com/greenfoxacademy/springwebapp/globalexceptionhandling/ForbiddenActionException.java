@@ -6,4 +6,3 @@ public class ForbiddenActionException extends RuntimeException {
     super("Forbidden action");
   }
 }
-
