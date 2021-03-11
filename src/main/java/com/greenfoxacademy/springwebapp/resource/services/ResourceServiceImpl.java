@@ -31,7 +31,7 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange) {
-    if (updateResources(kingdom, amountChange)) {
+    if (isResourceUpdatable(kingdom, amountChange)) {
       ResourceEntity kingdomsFood = getResourceByResourceType(kingdom, ResourceType.FOOD);
       BuildingEntity academy = getAcademy(kingdom);
       int level = academy.getLevel();
@@ -55,10 +55,10 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange) {
-    return updateResources(kingdom, amountChange);
+    return isResourceUpdatable(kingdom, amountChange);
   }
 
-  private boolean updateResources(KingdomEntity kingdom, int amountChange) {
+  private boolean isResourceUpdatable(KingdomEntity kingdom, int amountChange) {
     ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
     int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
 
