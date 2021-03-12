@@ -53,4 +53,20 @@ public class LocationEntity {
   public int hashCode() {
     return Objects.hash(x, y);
   }
+
+  @Override
+  public String toString() {
+    String kingdomName = "";
+    if (kingdom == null) {
+      kingdomName = " this is not a kingdom";
+    } else {
+      kingdomName = kingdom.getKingdomName();
+    }
+    return "LocationEntity" +
+        "id=" + id +
+        ", x=" + x +
+        ", y=" + y +
+        ", kingdom=" + kingdomName  +
+        ", type=" + type;
+  }
 }
