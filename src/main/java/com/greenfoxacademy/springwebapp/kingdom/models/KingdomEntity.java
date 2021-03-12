@@ -7,7 +7,9 @@ import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -23,7 +25,8 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "kingdoms")
@@ -53,5 +56,16 @@ public class KingdomEntity {
   @OneToOne(mappedBy = "kingdom", cascade = CascadeType.PERSIST)
   private LocationEntity location;
 
-
+  @Override
+  public String toString() {
+    return "KingdomEntity{" +
+        "id=" + id +
+        ", player name=" + player.getUsername()+
+        ", buildings count=" + (long) buildings.size() +
+        ", kingdomName='" + kingdomName + '\'' +
+        ", troops count=" + (long) troops.size() +
+        ", resources sum=" + resources.stream().mapToInt(ResourceEntity::getAmount).sum()+
+        ", location type=" + location.getType() +
+        '}';
+  }
 }

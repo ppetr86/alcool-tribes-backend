@@ -24,6 +24,30 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public LocationEntity defaultLocation(KingdomEntity kingdom) {
 
+    LocationEntity startingLocation = null;
+    Random random = new Random();
+
+    while (startingLocation == null) {
+      int randX = random.nextInt(201);
+      int randY = random.nextInt(201);
+
+      LocationEntity found = repo.findByXAndY(randX, randY);
+
+      if (found == null || found.getType().equals(LocationType.EMPTY)) {
+        if (found !=null) startingLocation.setId(found.getId());
+        startingLocation = new LocationEntity();
+        startingLocation.setX(randX);
+        startingLocation.setY(randY);
+        startingLocation.setKingdom(kingdom);
+        startingLocation.setType(LocationType.KINGDOM);
+      }
+    }
+    return startingLocation;
+  }
+
+ /* @Override
+  public LocationEntity defaultLocation(KingdomEntity kingdom) {
+
     boolean isOccupied = true;
     LocationEntity startingLocation = null;
     List<LocationEntity> allLocations = findAll();
@@ -44,6 +68,35 @@ public class LocationServiceImpl implements LocationService {
     result.setX(new Random().nextInt(201) - 100);
     result.setY(new Random().nextInt(201) - 100);
     return result;
+  }*/
+
+  /*@Override
+  public LocationEntity defaultLocation(KingdomEntity kingdom) {
+
+    LocationEntity startingLocation = null;
+
+    while (startingLocation==null){
+      Random random = new Random();
+      long randomLocationID = (long)(random.nextDouble()*repo.getMaxID());
+      LocationEntity found = repo.findById(randomLocationID).orElse(null);
+      if (found.getType().equals(LocationType.EMPTY))
+        startingLocation = found;
+    }
+
+    startingLocation.setKingdom(kingdom);
+    startingLocation.setType(LocationType.KINGDOM);
+    return startingLocation;
+  }
+
+  private List<LocationEntity> findAllByLocationType(LocationType type) {
+    return repo.findAllByTypeIs(type);
+  }*/
+
+  private LocationEntity generateRandomLocation() {
+    LocationEntity result = new LocationEntity();
+    result.setX(new Random().nextInt(201) - 100);
+    result.setY(new Random().nextInt(201) - 100);
+    return result;
   }
 
   @Override
@@ -52,8 +105,9 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public void generate50DesertsAnd50Jungles() {
-    repo.generate50DesertsAnd50Jungles();
+  public void generateNDesertsAndJungles(int n) {
+
+    repo.generateNDesertsAndJungles(n);
   }
 
 

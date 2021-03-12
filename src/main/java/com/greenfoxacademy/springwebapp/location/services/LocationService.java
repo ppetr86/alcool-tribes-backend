@@ -15,5 +15,5 @@ public interface LocationService {
 
   List<LocationEntity> findAll();
 
-  void generate50DesertsAnd50Jungles();
+  void generateNDesertsAndJungles(int n);
 }

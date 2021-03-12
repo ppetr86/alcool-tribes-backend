@@ -1,6 +1,6 @@
 DELIMITER $$
 
-CREATE PROCEDURE generate50DesertsAnd50Jungles()
+CREATE PROCEDURE generateNDesertsAndJungles(IN n INTEGER)
 BEGIN
     SET @i = 0;
     REPEAT
@@ -29,7 +29,7 @@ BEGIN
             INSERT INTO locations (x, y, type) VALUES (RandomJungleX, RandomJungleY, 'JUNGLE');
         END;
         SET @i = @i +1;
-    UNTIL @i = 50
+    UNTIL @i = n
         END REPEAT;
 END $$
 
