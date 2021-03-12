@@ -148,20 +148,20 @@ public class BattleServiceImpl implements BattleService {
     return townhall.getLevel() * 0.02 + academy.getLevel() * 0.01;
   }
 
-  //"Do battle" section
-  public List<Army> doBattle(Army attackingArmy, Army defendingArmy) {
-
-    //do battle
-
-    return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
-  }
-
   //TODO: finish scenario when attacking army wins automatically
   public void attackingArmyWins() {
   }
 
   //TODO: finish scenario when defending army wins automatically
   public void defendingArmyWins() {
+  }
+
+  //"Do battle" section
+  public List<Army> doBattle(Army attackingArmy, Army defendingArmy) {
+
+    //do battle
+
+    return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
   }
 
   //"After battle" section
