@@ -1,8 +1,10 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
+import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.factories.ArmyFactory;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
@@ -38,12 +40,14 @@ public class BattleServiceTest {
     KingdomEntity enemyKingdom = KingdomFactory.createFullKingdom(2L,2L);
     Long[] troopsIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
+    List<Army> armies = ArmyFactory.createListOf2Armies();
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(enemyKingdom);
     Mockito.doReturn(null).when(battleService)
         .prepareAttackingArmy(requestDTO,attackingKingdom,1);
     Mockito.doReturn(null).when(battleService)
         .prepareDefendingArmy(enemyKingdom);
+    Mockito.doReturn(armies).when(battleService).doBattle(null,null);
 
     BattleResponseDTO response = battleService.initiateBattle(2L, requestDTO, attackingKingdom,1);
     Assert.assertEquals("ok", response.getStatus());
@@ -96,6 +100,9 @@ public class BattleServiceTest {
     List<TroopEntity> army = battleService.getAttackingTroops(requestDTO,attackingKingdom);
 
     Assert.assertEquals(2, army.size());
+    //checking whether army contains troop with set id or not
+    Assert.assertTrue((army.stream().filter(a -> a.getId().equals(1L)).findFirst().orElse(null)) != null);
+    Assert.assertTrue((army.stream().filter(a -> a.getId().equals(2L)).findFirst().orElse(null)) != null);
   }
 
   @Test
@@ -109,6 +116,10 @@ public class BattleServiceTest {
     List<TroopEntity> army = battleService.getAttackingTroops(requestDTO,attackingKingdom);
 
     Assert.assertEquals(2, army.size());
+    //checking whether army contains troop with set id or not
+    Assert.assertTrue((army.stream().filter(a -> a.getId().equals(1L)).findFirst().orElse(null)) != null);
+    Assert.assertTrue((army.stream().filter(a -> a.getId().equals(2L)).findFirst().orElse(null)) != null);
+    Assert.assertFalse((army.stream().filter(a -> a.getId().equals(10L)).findFirst().orElse(null)) != null);
   }
 
   @Test

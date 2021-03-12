@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.battle.services;
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
+import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
@@ -12,28 +13,22 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
+@Slf4j
+@AllArgsConstructor
 public class BattleServiceImpl implements BattleService {
-  private Army attackingArmy;
-  private Army defendingArmy;
-
   private final KingdomService kingdomService;
   private final BuildingService buildingService;
 
-  public BattleServiceImpl(KingdomService kingdomService, BuildingService buildingService) {
-    this.kingdomService = kingdomService;
-    this.buildingService = buildingService;
-  }
-
-  //Endpoint methods
   @Override
   public BattleResponseDTO initiateBattle(Long enemyKingdomId, BattleRequestDTO requestDTO,
                                           KingdomEntity attackingKingdom, int distance)
@@ -44,8 +39,15 @@ public class BattleServiceImpl implements BattleService {
     KingdomEntity defendingKingdom = kingdomService.findByID(enemyKingdomId);
     if (defendingKingdom == null) throw new IdNotFoundException();
 
-    this.attackingArmy = prepareAttackingArmy(requestDTO, attackingKingdom, distance);
-    this.defendingArmy = prepareDefendingArmy(defendingKingdom);
+    Army attackingArmy = prepareAttackingArmy(requestDTO, attackingKingdom, distance);
+    Army defendingArmy = prepareDefendingArmy(defendingKingdom);
+
+    List<Army> armiesAfterBattle = doBattle(attackingArmy, defendingArmy);
+
+    if (armiesAfterBattle.get(0).getTroops().isEmpty()
+        && armiesAfterBattle.get(1).getTroops().isEmpty()) return new BattleResponseDTO();
+
+    performAfterBattleActions(armiesAfterBattle);
 
     return new BattleResponseDTO();
   }
@@ -62,6 +64,8 @@ public class BattleServiceImpl implements BattleService {
     attackingArmy.setHealthPoints(calculateHPforAttackingArmy(attackingTroops,distance));
     attackingArmy.setAttackPoints(calculateAttackPoints(attackingTroops));
     attackingArmy.setDefencePoints(calculateDPforAttackingArmy(attackingTroops));
+    attackingArmy.setKingdom(attackingKingdom);
+    attackingArmy.setArmyType(ArmyType.ATTACKINGARMY);
 
     return attackingArmy;
   }
@@ -108,6 +112,8 @@ public class BattleServiceImpl implements BattleService {
     defendingArmy.setHealthPoints(alculateHPforDefendingArmy(defendingTroops));
     defendingArmy.setAttackPoints(calculateAttackPoints(defendingTroops));
     defendingArmy.setDefencePoints(calculateDPforDefendingArmy(defendingTroops, defendingKingdom));
+    defendingArmy.setKingdom(defendingKingdom);
+    defendingArmy.setArmyType(ArmyType.DEFENDINGARMY);
 
     return defendingArmy;
   }
@@ -142,11 +148,13 @@ public class BattleServiceImpl implements BattleService {
     return townhall.getLevel() * 0.02 + academy.getLevel() * 0.01;
   }
 
+  //"Do battle" section
+  public List<Army> doBattle(Army attackingArmy, Army defendingArmy) {
 
+    //do battle
 
-
-
-
+    return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
+  }
 
   //TODO: finish scenario when attacking army wins automatically
   public void attackingArmyWins() {
@@ -154,5 +162,9 @@ public class BattleServiceImpl implements BattleService {
 
   //TODO: finish scenario when defending army wins automatically
   public void defendingArmyWins() {
+  }
+
+  //"After battle" section
+  public void performAfterBattleActions(List<Army> armiesAfterBattle) {
   }
 }
