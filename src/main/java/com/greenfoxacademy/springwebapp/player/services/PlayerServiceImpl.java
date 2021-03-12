@@ -26,7 +26,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -152,30 +151,13 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance) {
-    List<PlayerResponseDTO> playerResponseDTO;
-    List<PlayerEntity> allPlayers = (List<PlayerEntity>) playerRepo.findAll();
-
-    if (distance == null) {
-      playerResponseDTO = allPlayers.stream()
-          .map(this::playerToResponseDTO)
-          .filter(e -> e.getKingdomId() != kingdom.getId())
-          .collect(Collectors.toList());
-    } else {
-      List<KingdomEntity> kingdomEntities = findKingdomsWithinDistance(kingdom, allPlayers, distance);
-      playerResponseDTO = kingdomEntities.stream()
-          .map(e -> playerToResponseDTO(e.getPlayer()))
-          .collect(Collectors.toList());
-    }
-    return new PlayerListResponseDTO(playerResponseDTO);
-  }
-
-  private List<KingdomEntity> findKingdomsWithinDistance(KingdomEntity kingdom, List<PlayerEntity> allPlayers,
-                                                         Integer distance) {
-    return allPlayers.stream()
-        .map(PlayerEntity::getKingdom)
-        .filter(e -> !e.getId().equals(kingdom.getId()))
-        .filter(x -> isWithinGrid(kingdom, distance, x))
-        .collect(Collectors.toList());
+    return new PlayerListResponseDTO(
+        playerRepo.findAll().stream()
+            .filter(p -> !p.getKingdom().getId().equals(kingdom.getId()))
+            .filter(p -> distance == null || isWithinGrid(kingdom, distance, p.getKingdom()))
+            .map(this::playerToResponseDTO)
+            .collect(Collectors.toList())
+    );
   }
 
   private boolean isWithinGrid(KingdomEntity thisKingdom, Integer distance, KingdomEntity otherKingdom) {

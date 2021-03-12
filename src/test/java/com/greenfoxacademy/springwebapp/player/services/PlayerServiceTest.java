@@ -155,6 +155,9 @@ public class PlayerServiceTest {
     PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom3, null);
 
     Assert.assertEquals(2, response.getPlayers().size());
+    Assert.assertEquals(1L, response.getPlayers().get(0).getKingdomId());
+    Assert.assertEquals(2L, response.getPlayers().get(1).getKingdomId());
+
   }
 
   @Test
@@ -166,6 +169,7 @@ public class PlayerServiceTest {
     PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom1, null);
 
     Assert.assertEquals(0, response.getPlayers().size());
+    Assert.assertTrue(response.getPlayers().isEmpty());
   }
 
   @Test
@@ -181,6 +185,8 @@ public class PlayerServiceTest {
     PlayerListResponseDTO response = playerService.findPlayersAroundMe(kingdom3, 10);
 
     Assert.assertEquals(1, response.getPlayers().size());
+    Assert.assertFalse(response.getPlayers().isEmpty());
+    Assert.assertEquals("testUsername", response.getPlayers().get(0).getUsername());
   }
 
   @Test
