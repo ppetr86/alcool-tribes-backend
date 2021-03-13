@@ -56,27 +56,25 @@ public class BattleServiceImpl implements BattleService {
     //calculate distance
 
     //do the delay logic here such as in case of ResourceServiceImpl - doResourceUpdate
+    //you will be delaying this method: runBattle and passing 5 variables into it using custom BattleTimeTask
 
     //set the troops that they are not home (later - after peter has this method ready)
 
     return 1;
   }
 
-  private void runBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom, BattleRequestDTO requestDTO, int distance) {
-    Army attackingArmy = prepareAttackingArmy(requestDTO, attackingKingdom, distance);
+  private void runBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
+                         KingdomEntity defendingKingdom, BattleRequestDTO requestDTO, int distance) {
+    Army attackingArmy = prepareAttackingArmy(attackingTroops, requestDTO, attackingKingdom, distance);
     Army defendingArmy = prepareDefendingArmy(defendingKingdom);
     List<Army> armiesAfterBattle = fightArmies(attackingArmy, defendingArmy);
     BattleResultDTO resultDTO = performAfterBattleActions(armiesAfterBattle);
   }
 
   //"Prepare attacking army" section
-  public Army prepareAttackingArmy(BattleRequestDTO requestDTO, KingdomEntity attackingKingdom,
-                                    int distance) throws MissingParameterException {
+  public Army prepareAttackingArmy(List<TroopEntity> attackingTroops, BattleRequestDTO requestDTO,
+                                   KingdomEntity attackingKingdom, int distance) {
     Army attackingArmy = new Army();
-    List<TroopEntity> attackingTroops = getAttackingTroops(requestDTO, attackingKingdom);
-    if (attackingTroops.isEmpty()) throw new MissingParameterException(
-        "none of the provided troop IDs is available in your kingdom. Your army is empty");
-
     attackingArmy.setTroops(attackingTroops);
     attackingArmy.setHealthPoints(calculateHPforAttackingArmy(attackingTroops,distance));
     attackingArmy.setAttackPoints(calculateAttackPoints(attackingTroops));

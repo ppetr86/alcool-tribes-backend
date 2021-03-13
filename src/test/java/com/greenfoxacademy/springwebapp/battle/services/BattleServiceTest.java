@@ -1,10 +1,8 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
-import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.factories.ArmyFactory;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
@@ -33,21 +31,17 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void initiateBattleReturnsCorrectResponseDTO() {
+  public void goToWarReturnsCorrectResponseDTO() {
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
     List<TroopEntity> troops = TroopFactory.createDefaultTroops(); //3 troops with ids 1-3
     attackingKingdom.setTroops(troops);
-    KingdomEntity enemyKingdom = KingdomFactory.createFullKingdom(2L,2L);
+    KingdomEntity defendingKingdom = KingdomFactory.createFullKingdom(2L,2L);
     Long[] troopsIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
-    List<Army> armies = ArmyFactory.createListOf2Armies();
 
-    Mockito.when(kingdomService.findByID(2L)).thenReturn(enemyKingdom);
-    Mockito.doReturn(null).when(battleService)
-        .prepareAttackingArmy(requestDTO,attackingKingdom,1);
-    Mockito.doReturn(null).when(battleService)
-        .prepareDefendingArmy(enemyKingdom);
-    Mockito.doReturn(armies).when(battleService).fightArmies(null,null);
+    Mockito.when(kingdomService.findByID(2L)).thenReturn(defendingKingdom);
+    Mockito.doReturn(troops).when(battleService).getAttackingTroops(requestDTO, attackingKingdom);
+    Mockito.doReturn(1).when(battleService).scheduleBattle(attackingKingdom,troops, defendingKingdom, requestDTO);
 
     BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom);
     Assert.assertEquals("ok", response.getStatus());
@@ -55,7 +49,7 @@ public class BattleServiceTest {
   }
 
   @Test (expected = MissingParameterException.class)
-  public void initiateBattle_troopIdsNotInTheKingdom_ReturnsMissingParameterException() {
+  public void goToWar_troopIdsNotInTheKingdom_ReturnsMissingParameterException() {
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
     List<TroopEntity> troops = TroopFactory.createDefaultTroops(); //3 troops with ids 1-3
     attackingKingdom.setTroops(troops);
@@ -70,7 +64,7 @@ public class BattleServiceTest {
   }
 
   @Test (expected = ForbiddenActionException.class)
-  public void initiateBattle_bothKingdomsHaveSameId_ReturnsForbiddenActionException() {
+  public void goToWar_bothKingdomsHaveSameId_ReturnsForbiddenActionException() {
     Long[] troopsIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
@@ -79,7 +73,7 @@ public class BattleServiceTest {
   }
 
   @Test (expected = IdNotFoundException.class)
-  public void initiateBattle_ReturnsIdNotFoundException() {
+  public void goToWar_ReturnsIdNotFoundException() {
     Long[] troopsIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
