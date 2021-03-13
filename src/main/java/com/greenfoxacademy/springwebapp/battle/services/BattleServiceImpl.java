@@ -56,7 +56,7 @@ public class BattleServiceImpl implements BattleService {
     //calculate distance
 
     //do the delay logic here such as in case of ResourceServiceImpl - doResourceUpdate
-    //you will be delaying this method: runBattle and passing 5 variables into it using custom BattleTimeTask
+    //you will be delaying this method: runBattle and passing 5 variables into it using custom BattleTimerTask
 
     //set the troops that they are not home (later - after peter has this method ready)
 
