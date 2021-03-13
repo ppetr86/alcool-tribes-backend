@@ -46,11 +46,11 @@ public class ResourceEntity {
 
   @Override
   public String toString() {
-    return "ResourceEntity{" +
-        "id=" + id +
-        ", type=" + type +
-        ", amount=" + amount +
-        ", generation=" + generation +
-        ", updatedAt=" + updatedAt;
+    return "ResourceEntity"
+        + "id=" + id
+        + ", type=" + type
+        + ", amount=" + amount
+        + ", generation=" + generation
+        + ", updatedAt=" + updatedAt;
   }
 }

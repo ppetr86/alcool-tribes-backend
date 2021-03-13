@@ -25,18 +25,44 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void defaultLocation_generatesUnoccupiedLocationInRangePlusMinus100() {
+  public void defaultLocation_hasNoNeighbouringLocationTypeKingdom() {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(11L);
-    List<LocationEntity> occupiedLocations = LocationFactory.createOccupiedLocations();
-    Mockito.when(locationRepository.findAll()).thenReturn(occupiedLocations);
+    List<LocationEntity> emptyLocations = LocationFactory.createOccupiedLocations();
+    Mockito.when(locationRepository.findAllLocationsByTypeIs(LocationType.EMPTY)).thenReturn(emptyLocations);
 
-    for (int i = 0; i < 1000; i++) {
-      LocationEntity startingLocation = locationService.defaultLocation(kingdom);
+    LocationEntity startingLocation = locationService.defaultLocation(kingdom);
+    LocationEntity firstInQueue =
+        emptyLocations.stream().filter(x -> x.getX() == 0 && x.getY() == 0).findFirst().orElse(null);
 
-      Assert.assertFalse(occupiedLocations.contains(startingLocation));
-      Assert.assertEquals(startingLocation.getType(), LocationType.KINGDOM);
-      Assert.assertTrue(startingLocation.getX() >= -100 && startingLocation.getX() <= 100);
-      Assert.assertTrue(startingLocation.getY() >= -100 && startingLocation.getY() <= 100);
-    }
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() - 1, firstInQueue.getY()));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() + 1, firstInQueue.getY()));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() + 1));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() - 1));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() - 1, firstInQueue.getY()));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() + 1, firstInQueue.getY()));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() + 1));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() - 1));
+
+    LocationEntity toLeft = emptyLocations.stream()
+        .filter(x -> x.getX() - 1 == startingLocation.getX() && x.getY() == startingLocation.getY()).findFirst()
+        .orElse(null);
+    LocationEntity toRight = emptyLocations.stream()
+        .filter(x -> x.getX() + 1 == startingLocation.getX() && x.getY() == startingLocation.getY()).findFirst()
+        .orElse(null);
+    LocationEntity toUp = emptyLocations.stream()
+        .filter(x -> x.getX() == startingLocation.getX() && x.getY() - 1 == startingLocation.getY()).findFirst()
+        .orElse(null);
+    LocationEntity toDown = emptyLocations.stream()
+        .filter(x -> x.getX() == startingLocation.getX() && x.getY() + 1 == startingLocation.getY()).findFirst()
+        .orElse(null);
+
+
+    Assert.assertTrue(emptyLocations.contains(startingLocation));
+    Assert.assertFalse(toLeft.getType().equals(LocationType.KINGDOM));
+    Assert.assertFalse(toRight.getType().equals(LocationType.KINGDOM));
+    Assert.assertFalse(toUp.getType().equals(LocationType.KINGDOM));
+    Assert.assertFalse(toDown.getType().equals(LocationType.KINGDOM));
+    Assert.assertEquals(startingLocation.getType(), LocationType.KINGDOM);
+
   }
 }

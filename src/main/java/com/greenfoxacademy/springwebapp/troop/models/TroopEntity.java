@@ -57,14 +57,14 @@ public class TroopEntity {
 
   @Override
   public String toString() {
-    return "TroopEntity" +
-        "id=" + id +
-        ", level=" + level +
-        ", hp=" + hp +
-        ", attack=" + attack +
-        ", defence=" + defence +
-        ", startedAt=" + startedAt +
-        ", finishedAt=" + finishedAt +
-        ", kingdom name=" + kingdom.getKingdomName();
+    return "TroopEntity"
+        + "id=" + id
+        + ", level=" + level
+        + ", hp=" + hp
+        + ", attack=" + attack
+        + ", defence=" + defence
+        + ", startedAt=" + startedAt
+        + ", finishedAt=" + finishedAt
+        + ", kingdom name=" + kingdom.getKingdomName();
   }
 }

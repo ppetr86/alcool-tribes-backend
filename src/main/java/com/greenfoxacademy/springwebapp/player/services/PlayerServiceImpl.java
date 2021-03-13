@@ -7,7 +7,6 @@ import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
@@ -41,7 +40,6 @@ public class PlayerServiceImpl implements PlayerService {
   private final ResourceService resourceService;
   private final LocationService locationService;
   private final Environment env;
-  private final KingdomService kingdomService;
 
   @Override
   public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)

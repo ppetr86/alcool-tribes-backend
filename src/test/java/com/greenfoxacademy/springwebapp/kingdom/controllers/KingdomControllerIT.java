@@ -51,7 +51,7 @@ public class KingdomControllerIT {
     kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
     kingdom.setResources(ResourceFactory.createDefaultResources(null));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
-    kingdom.setLocation(new LocationEntity(1L, 10, 10,kingdom, LocationType.KINGDOM));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
   }
 
   @Test

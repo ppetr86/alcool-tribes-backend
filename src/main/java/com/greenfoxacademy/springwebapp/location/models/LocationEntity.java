@@ -73,11 +73,11 @@ public class LocationEntity {
     } else {
       kingdomName = kingdom.getKingdomName();
     }
-    return "LocationEntity" +
-        "id=" + id +
-        ", x=" + x +
-        ", y=" + y +
-        ", kingdom=" + kingdomName  +
-        ", type=" + type;
+    return "LocationEntity "
+        + " id=" + id
+        + ", x=" + x
+        + ", y=" + y
+        + ", kingdom=" + kingdomName
+        + ", type=" + type;
   }
 }

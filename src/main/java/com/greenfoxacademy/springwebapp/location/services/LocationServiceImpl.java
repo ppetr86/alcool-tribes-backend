@@ -47,19 +47,21 @@ public class LocationServiceImpl implements LocationService {
     LocationEntity compareThisWithFirstInQueue = new LocationEntity(targetType);
     int range = 1;
 
-    for (int i = 0; i < 4; i++) {
-      if (i == 0) {
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() - range, firstInQueue.getY());
-      }
-      if (i == 1) {
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY());
-      }
-      if (i == 2) {
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() - range);
-      }
-      if (i == 3) {
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() + range);
-      }
+    // make it 8 to check diagonally not adjacent to another kingdom too??
+    for (int i = 0; i < 8; i++) {
+      if (i == 0) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() - range, firstInQueue.getY());
+      if (i == 1) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY());
+      if (i == 2) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() - range);
+      if (i == 3) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() + range);
+      //
+      if (i == 4)
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY()-range);
+      if (i == 5)
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY()+range);
+      if (i == 6)
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX()-range, firstInQueue.getY() - range);
+      if (i == 7)
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX()-range, firstInQueue.getY() + range);
     }
     return compareThisWithFirstInQueue.getType().equals(targetType);
   }
@@ -68,20 +70,6 @@ public class LocationServiceImpl implements LocationService {
     PriorityQueue<LocationEntity> result = new PriorityQueue<>(locations.size(), new LocationComparator(x, y));
     result.addAll(locations);
     return result;
-  }
-
-  @Override
-  public List<LocationEntity> findAll() {
-    return repo.findAll();
-  }
-
-  @Override
-  public void generateNDesertsAndJungles(int n) {
-    repo.generateNDesertsAndJungles(n);
-  }
-
-  private long countOfLocationTypeInDB(LocationType type) {
-    return repo.countAllByTypeIs(type);
   }
 
   @AllArgsConstructor
