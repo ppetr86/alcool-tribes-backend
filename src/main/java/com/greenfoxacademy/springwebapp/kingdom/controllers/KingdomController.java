@@ -21,11 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -67,10 +64,8 @@ public class KingdomController {
 
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
-    //TODO: distance will later come from the method which will call initialBattle()
-    int distance = 1;
-    BattleResponseDTO battleStarted = battleService.initiateBattle(enemyKingdomId, requestDTO, kingdom, distance);
+    BattleResponseDTO battleHasStarted = battleService.goToWar(enemyKingdomId, requestDTO, kingdom);
 
-    return ResponseEntity.ok().body(battleStarted);
+    return ResponseEntity.ok().body(battleHasStarted);
   }
 }

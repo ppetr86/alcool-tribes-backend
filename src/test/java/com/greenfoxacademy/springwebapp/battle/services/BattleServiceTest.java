@@ -47,9 +47,9 @@ public class BattleServiceTest {
         .prepareAttackingArmy(requestDTO,attackingKingdom,1);
     Mockito.doReturn(null).when(battleService)
         .prepareDefendingArmy(enemyKingdom);
-    Mockito.doReturn(armies).when(battleService).doBattle(null,null);
+    Mockito.doReturn(armies).when(battleService).fightArmies(null,null);
 
-    BattleResponseDTO response = battleService.initiateBattle(2L, requestDTO, attackingKingdom,1);
+    BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom,1);
     Assert.assertEquals("ok", response.getStatus());
     Assert.assertEquals("Battle started", response.getMessage());
   }
@@ -66,7 +66,7 @@ public class BattleServiceTest {
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(enemyKingdom);
 
-    BattleResponseDTO response = battleService.initiateBattle(2L, requestDTO, attackingKingdom, 1);
+    BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom, 1);
   }
 
   @Test (expected = ForbiddenActionException.class)
@@ -75,7 +75,7 @@ public class BattleServiceTest {
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
 
-    BattleResponseDTO response = battleService.initiateBattle(1L, requestDTO, attackingKingdom, 1);
+    BattleResponseDTO response = battleService.goToWar(1L, requestDTO, attackingKingdom, 1);
   }
 
   @Test (expected = IdNotFoundException.class)
@@ -86,7 +86,7 @@ public class BattleServiceTest {
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(null);
 
-    BattleResponseDTO response = battleService.initiateBattle(2L, requestDTO, attackingKingdom, 1);
+    BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom, 1);
   }
 
   @Test

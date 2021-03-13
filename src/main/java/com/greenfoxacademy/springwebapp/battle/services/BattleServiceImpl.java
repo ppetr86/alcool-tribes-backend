@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.battle.services;
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
+import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResultDTO;
 import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
@@ -30,8 +31,8 @@ public class BattleServiceImpl implements BattleService {
   private final BuildingService buildingService;
 
   @Override
-  public BattleResponseDTO initiateBattle(Long enemyKingdomId, BattleRequestDTO requestDTO,
-                                          KingdomEntity attackingKingdom, int distance)
+  public BattleResponseDTO goToWar(Long enemyKingdomId, BattleRequestDTO requestDTO,
+                                   KingdomEntity attackingKingdom)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException {
 
     if (enemyKingdomId == attackingKingdom.getId()) throw new ForbiddenActionException();
@@ -39,17 +40,28 @@ public class BattleServiceImpl implements BattleService {
     KingdomEntity defendingKingdom = kingdomService.findByID(enemyKingdomId);
     if (defendingKingdom == null) throw new IdNotFoundException();
 
-    Army attackingArmy = prepareAttackingArmy(requestDTO, attackingKingdom, distance);
-    Army defendingArmy = prepareDefendingArmy(defendingKingdom);
-
-    List<Army> armiesAfterBattle = doBattle(attackingArmy, defendingArmy);
-
-    if (armiesAfterBattle.get(0).getTroops().isEmpty()
-        && armiesAfterBattle.get(1).getTroops().isEmpty()) return new BattleResponseDTO();
-
-    performAfterBattleActions(armiesAfterBattle);
+    int delay = scheduleBattle(attackingKingdom, defendingKingdom, requestDTO);
 
     return new BattleResponseDTO();
+  }
+
+  //"scheduling the battle
+  public int scheduleBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom, BattleRequestDTO requestDTO) {
+
+    //calculate distance
+
+    //do the delay logic here such as in case of ResourceServiceImpl - doResourceUpdate
+
+    //set the troops that they are not home (later - after peter has this method ready)
+
+    return 1;
+  }
+
+  private void runBattle(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom, BattleRequestDTO requestDTO, int distance) {
+    Army attackingArmy = prepareAttackingArmy(requestDTO, attackingKingdom, distance);
+    Army defendingArmy = prepareDefendingArmy(defendingKingdom);
+    List<Army> armiesAfterBattle = fightArmies(attackingArmy, defendingArmy);
+    BattleResultDTO resultDTO = performAfterBattleActions(armiesAfterBattle);
   }
 
   //"Prepare attacking army" section
@@ -88,8 +100,6 @@ public class BattleServiceImpl implements BattleService {
     if (finalHP <= 0) {
       log.info("Deffending Army won automatically - attacking kingdom did not survived travel!");
       //TODO: finish scenario when defending army wins automatically
-      defendingArmyWins();
-      return 0;
     }
 
     return finalHP;
@@ -127,8 +137,6 @@ public class BattleServiceImpl implements BattleService {
     if (defendingTroops.isEmpty()) {
       log.info("Attacking Army has won automatically - defending kingdom has no troops at home!");
       //TODO: finish scenario when attacking army wins automatically
-      attackingArmyWins();
-      return 0;
     }
     return defendingTroops.stream().mapToInt(troop -> troop.getHp()).sum();
   }
@@ -148,23 +156,17 @@ public class BattleServiceImpl implements BattleService {
     return townhall.getLevel() * 0.02 + academy.getLevel() * 0.01;
   }
 
-  //TODO: finish scenario when attacking army wins automatically
-  public void attackingArmyWins() {
-  }
+  //"Fight Armies" section
+  public List<Army> fightArmies(Army attackingArmy, Army defendingArmy) {
 
-  //TODO: finish scenario when defending army wins automatically
-  public void defendingArmyWins() {
-  }
-
-  //"Do battle" section
-  public List<Army> doBattle(Army attackingArmy, Army defendingArmy) {
-
-    //do battle
+    //fighting
 
     return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
   }
 
   //"After battle" section
-  public void performAfterBattleActions(List<Army> armiesAfterBattle) {
+  public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle) {
+
+    return null;
   }
 }
