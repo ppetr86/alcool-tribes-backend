@@ -20,11 +20,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 public class BattleServiceTest {
   private KingdomService kingdomService;
   private BuildingService buildingService;
@@ -162,7 +159,7 @@ public class BattleServiceTest {
   @Test
   public void killTroops_returnsIDsOfKilledTroops() {
     List<TroopEntity> troopsToBeKilled = TroopFactory.createDefaultTroops();
-    List<Long>deadTroopsIds = new ArrayList<>(Arrays.asList(1L,2L,3L));
+    List<Long> deadTroopsIds = new ArrayList<>(Arrays.asList(1L,2L,3L));
 
     List<Long> ids = battleService.killTroops(troopsToBeKilled);
 
