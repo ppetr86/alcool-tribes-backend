@@ -162,4 +162,9 @@ public class TroopServiceImpl implements TroopService {
   public TroopEntity findTroopById(Long id) {
     return troopRepository.findById(id).orElse(null);
   }
+
+  @Override
+  public void saveAllTroops(List<TroopEntity> attackingTroops, List<TroopEntity> defendingTroops) {
+
+  }
 }

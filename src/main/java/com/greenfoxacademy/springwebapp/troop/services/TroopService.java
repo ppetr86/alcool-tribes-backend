@@ -12,6 +12,8 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 
+import java.util.List;
+
 public interface TroopService {
 
   TroopListResponseDto troopsToListDTO(KingdomEntity entity);
@@ -27,5 +29,7 @@ public interface TroopService {
       ForbiddenActionException, IdNotFoundException;
 
   TroopEntity findTroopById(Long id);
+
+  void saveAllTroops(List<TroopEntity> attackingTroops, List<TroopEntity> defendingTroops);
 
 }
