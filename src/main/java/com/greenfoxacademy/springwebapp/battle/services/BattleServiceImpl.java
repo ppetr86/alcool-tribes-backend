@@ -14,6 +14,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
+import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class BattleServiceImpl implements BattleService {
   private final KingdomService kingdomService;
   private final BuildingService buildingService;
+  private final TroopService troopService;
 
   @Override
   public BattleResponseDTO goToWar(Long enemyKingdomId, BattleRequestDTO requestDTO,
@@ -44,14 +46,14 @@ public class BattleServiceImpl implements BattleService {
     if (attackingTroops.isEmpty()) throw new MissingParameterException(
         "none of the provided troop IDs is available in your kingdom. Your army is empty");
 
-    int delay = scheduleBattle(attackingKingdom, attackingTroops, defendingKingdom, requestDTO);
+    int delay = scheduleBattle(attackingKingdom, attackingTroops, defendingKingdom);
 
     return new BattleResponseDTO();
   }
 
   //"scheduling the battle
   public int scheduleBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
-                            KingdomEntity defendingKingdom, BattleRequestDTO requestDTO) {
+                            KingdomEntity defendingKingdom) {
 
     //calculate distance
 
@@ -64,16 +66,16 @@ public class BattleServiceImpl implements BattleService {
   }
 
   private void runBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
-                         KingdomEntity defendingKingdom, BattleRequestDTO requestDTO, int distance) {
-    Army attackingArmy = prepareAttackingArmy(attackingTroops, requestDTO, attackingKingdom, distance);
+                         KingdomEntity defendingKingdom, int distance) {
+    Army attackingArmy = prepareAttackingArmy(attackingTroops, attackingKingdom, distance);
     Army defendingArmy = prepareDefendingArmy(defendingKingdom);
     List<Army> armiesAfterBattle = fightArmies(attackingArmy, defendingArmy);
     BattleResultDTO resultDTO = performAfterBattleActions(armiesAfterBattle);
   }
 
   //"Prepare attacking army" section
-  public Army prepareAttackingArmy(List<TroopEntity> attackingTroops, BattleRequestDTO requestDTO,
-                                   KingdomEntity attackingKingdom, int distance) {
+  public Army prepareAttackingArmy(List<TroopEntity> attackingTroops,KingdomEntity attackingKingdom,
+                                   int distance) {
     Army attackingArmy = new Army();
     attackingArmy.setTroops(attackingTroops);
     attackingArmy.setHealthPoints(calculateHPforAttackingArmy(attackingTroops,distance));
@@ -101,11 +103,22 @@ public class BattleServiceImpl implements BattleService {
     int finalHP = armyHP - hpLoss;
 
     if (finalHP <= 0) {
-      log.info("Deffending Army won automatically - attacking kingdom did not survived travel!");
-      //TODO: finish scenario when defending army wins automatically
+      killTroops(attackingTroops); //deleting dead troops from DB
+      attackingTroops = new ArrayList<>();
+      log.info("Attacking army did not survive the travel to the enemy!");
+
+      return 0;
     }
 
     return finalHP;
+  }
+
+  public List<Long> killTroops(List<TroopEntity> attackingTroops) {
+    List<Long> deadTroops = attackingTroops.stream()
+        .map(troop -> troop.getId())
+        .collect(Collectors.toList());
+    troopService.deleteMoreTroopsById(deadTroops);
+    return deadTroops;
   }
 
   public int calculateAttackPoints(List<TroopEntity> troops) {
@@ -139,6 +152,7 @@ public class BattleServiceImpl implements BattleService {
   public int alculateHPforDefendingArmy(List<TroopEntity> defendingTroops) {
     if (defendingTroops.isEmpty()) {
       log.info("Attacking Army has won automatically - defending kingdom has no troops at home!");
+
       //TODO: finish scenario when attacking army wins automatically
     }
     return defendingTroops.stream().mapToInt(troop -> troop.getHp()).sum();

@@ -162,4 +162,9 @@ public class TroopServiceImpl implements TroopService {
   public TroopEntity findTroopById(Long id) {
     return troopRepository.findById(id).orElse(null);
   }
+
+  @Override
+  public List<Long> deleteMoreTroopsById(List<Long> ids) {
+    return troopRepository.deleteMoreTroopsById(ids);
+  }
 }

@@ -1,7 +1,9 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
+import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
+import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
@@ -11,22 +13,30 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
+import com.greenfoxacademy.springwebapp.troop.services.TroopService;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 public class BattleServiceTest {
   private KingdomService kingdomService;
   private BuildingService buildingService;
+  private TroopService troopService;
   private BattleServiceImpl battleService;
 
   @Before
   public void init() {
     kingdomService = Mockito.mock(KingdomService.class);
     buildingService = Mockito.mock(BuildingService.class);
-    battleService = new BattleServiceImpl(kingdomService, buildingService);
+    troopService = Mockito.mock(TroopService.class);
+    battleService = new BattleServiceImpl(kingdomService, buildingService, troopService);
     battleService = Mockito.spy(battleService);
   }
 
@@ -41,7 +51,7 @@ public class BattleServiceTest {
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(defendingKingdom);
     Mockito.doReturn(troops).when(battleService).getAttackingTroops(requestDTO, attackingKingdom);
-    Mockito.doReturn(1).when(battleService).scheduleBattle(attackingKingdom,troops, defendingKingdom, requestDTO);
+    Mockito.doReturn(1).when(battleService).scheduleBattle(attackingKingdom,troops, defendingKingdom);
 
     BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom);
     Assert.assertEquals("ok", response.getStatus());
@@ -128,5 +138,71 @@ public class BattleServiceTest {
 
     Assert.assertEquals(0, army.size());
   }
+
+  @Test
+  public void calculateHPforAttackingArmy_returnsCorrectHP() {
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+    int distance = 10;
+
+    int hp = battleService.calculateHPforAttackingArmy(troops,distance);
+
+    Assert.assertEquals(245, hp);
+  }
+
+  @Test
+  public void calculateHPforAttackingArmy_ArmyNotSurvivesTravel_returns0hp() {
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+    int distance = 1000;
+
+    int hp = battleService.calculateHPforAttackingArmy(troops,distance);
+
+    Assert.assertEquals(0, hp);
+  }
+
+  @Test
+  public void killTroops_returnsIDsOfKilledTroops() {
+    List<TroopEntity> troopsToBeKilled = TroopFactory.createDefaultTroops();
+    List<Long>deadTroopsIds = new ArrayList<>(Arrays.asList(1L,2L,3L));
+
+    List<Long> ids = battleService.killTroops(troopsToBeKilled);
+
+    Assert.assertEquals(deadTroopsIds, ids);
+  }
+
+  @Test
+  public void calculateAttackPoints_returnsCorrectAP() {
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+
+    int dp = battleService.calculateAttackPoints(troops);
+
+    Assert.assertEquals(306, dp);
+  }
+
+  @Test
+  public void calculateDPforAttackingArmy_returnsCorrectDP() {
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+
+    int dp = battleService.calculateDPforAttackingArmy(troops);
+
+    Assert.assertEquals(306, dp);
+  }
+
+  @Test
+  public void prepareAttackingArmy_returnsDefendingArmy() {
+    List<TroopEntity> attackingTroops = TroopFactory.createDefaultTroops();
+    KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L, 1L);
+    attackingKingdom.setTroops(attackingTroops);
+    int distance = 10;
+
+    Army army = battleService.prepareAttackingArmy(attackingTroops, attackingKingdom, distance);
+
+    Assert.assertEquals(3, army.getTroops().size());
+    Assert.assertEquals(245, army.getHealthPoints());
+    Assert.assertEquals(306, army.getAttackPoints());
+    Assert.assertEquals(306, army.getDefencePoints());
+    Assert.assertEquals(attackingKingdom, army.getKingdom());
+    Assert.assertEquals(ArmyType.ATTACKINGARMY, army.getArmyType());
+  }
+
 
 }
