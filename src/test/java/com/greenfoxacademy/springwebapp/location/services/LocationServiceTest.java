@@ -34,16 +34,17 @@ public class LocationServiceTest {
     LocationEntity firstInQueue =
         emptyLocations.stream().filter(x -> x.getX() == 0 && x.getY() == 0).findFirst().orElse(null);
 
-    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() - 1, firstInQueue.getY()));
+    Mockito.when(locationService.hasNeighbourOfType(firstInQueue, LocationType.KINGDOM)).thenReturn(false);
+    /*Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() - 1, firstInQueue.getY()));
     Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() + 1, firstInQueue.getY()));
     Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() + 1));
     Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() - 1));
     Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() - 1, firstInQueue.getY()));
     Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() + 1, firstInQueue.getY()));
     Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() + 1));
-    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() - 1));
+    Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX(), firstInQueue.getY() - 1));*/
 
-    LocationEntity toLeft = emptyLocations.stream()
+    /*LocationEntity toLeft = emptyLocations.stream()
         .filter(x -> x.getX() - 1 == startingLocation.getX() && x.getY() == startingLocation.getY()).findFirst()
         .orElse(null);
     LocationEntity toRight = emptyLocations.stream()
@@ -54,14 +55,14 @@ public class LocationServiceTest {
         .orElse(null);
     LocationEntity toDown = emptyLocations.stream()
         .filter(x -> x.getX() == startingLocation.getX() && x.getY() + 1 == startingLocation.getY()).findFirst()
-        .orElse(null);
+        .orElse(null);*/
 
 
     Assert.assertTrue(emptyLocations.contains(startingLocation));
-    Assert.assertFalse(toLeft.getType().equals(LocationType.KINGDOM));
+    /*Assert.assertFalse(toLeft.getType().equals(LocationType.KINGDOM));
     Assert.assertFalse(toRight.getType().equals(LocationType.KINGDOM));
     Assert.assertFalse(toUp.getType().equals(LocationType.KINGDOM));
-    Assert.assertFalse(toDown.getType().equals(LocationType.KINGDOM));
+    Assert.assertFalse(toDown.getType().equals(LocationType.KINGDOM));*/
     Assert.assertEquals(startingLocation.getType(), LocationType.KINGDOM);
 
   }

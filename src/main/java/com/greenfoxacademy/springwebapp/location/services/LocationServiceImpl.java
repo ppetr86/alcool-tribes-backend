@@ -40,7 +40,8 @@ public class LocationServiceImpl implements LocationService {
     return firstInQueue;
   }
 
-  private boolean hasNeighbourOfType(LocationEntity firstInQueue, LocationType targetType) {
+  @Override
+  public boolean hasNeighbourOfType(LocationEntity firstInQueue, LocationType targetType) {
     if (firstInQueue == null) {
       return true;
     }

@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.factories;
 
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 
@@ -17,7 +16,7 @@ public class LocationFactory {
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-        locationEntities.add(new LocationEntity((long) id+1, j-cols/2, i-rows/2, null, LocationType.EMPTY));
+        locationEntities.add(new LocationEntity((long) id + 1, j - cols / 2, i - rows / 2, null, LocationType.EMPTY));
         id++;
       }
     }
