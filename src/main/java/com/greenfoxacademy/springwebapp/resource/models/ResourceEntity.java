@@ -3,8 +3,9 @@ package com.greenfoxacademy.springwebapp.resource.models;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,7 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -40,5 +42,15 @@ public class ResourceEntity {
     this.amount = amount;
     this.generation = generation;
     this.updatedAt = updatedAt;
+  }
+
+  @Override
+  public String toString() {
+    return "ResourceEntity{" +
+        "id=" + id +
+        ", type=" + type +
+        ", amount=" + amount +
+        ", generation=" + generation +
+        ", updatedAt=" + updatedAt;
   }
 }

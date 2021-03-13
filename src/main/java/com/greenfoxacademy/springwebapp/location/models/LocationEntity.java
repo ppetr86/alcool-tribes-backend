@@ -37,6 +37,17 @@ public class LocationEntity {
   @Enumerated(EnumType.STRING)
   private LocationType type;
 
+  public LocationEntity(Integer x, Integer y, KingdomEntity kingdom,
+                        LocationType type) {
+    this.x = x;
+    this.y = y;
+    this.kingdom = kingdom;
+    this.type = type;
+  }
+
+  public LocationEntity(LocationType kingdom) {
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

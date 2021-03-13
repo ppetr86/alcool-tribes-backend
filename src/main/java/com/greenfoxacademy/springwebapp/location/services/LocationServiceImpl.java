@@ -7,8 +7,9 @@ import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
+import java.util.PriorityQueue;
 
 @AllArgsConstructor
 @Service
@@ -24,78 +25,48 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public LocationEntity defaultLocation(KingdomEntity kingdom) {
 
-    LocationEntity startingLocation = null;
-    Random random = new Random();
+    List<LocationEntity> thisTypeLocations = repo.findAllLocationsByTypeIs(LocationType.EMPTY);
 
-    while (startingLocation == null) {
-      int randX = random.nextInt(201);
-      int randY = random.nextInt(201);
+    PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, thisTypeLocations);
+    LocationEntity firstInQueue = locationsInQueue.poll();
 
-      LocationEntity found = repo.findByXAndY(randX, randY);
+    while (hasNeighbourOfType(firstInQueue, LocationType.KINGDOM)) {
+      firstInQueue = locationsInQueue.poll();
+    }
+    firstInQueue.setKingdom(kingdom);
+    firstInQueue.setType(LocationType.KINGDOM);
+    repo.save(firstInQueue);
 
-      if (found == null || found.getType().equals(LocationType.EMPTY)) {
-        if (found !=null) startingLocation.setId(found.getId());
-        startingLocation = new LocationEntity();
-        startingLocation.setX(randX);
-        startingLocation.setY(randY);
-        startingLocation.setKingdom(kingdom);
-        startingLocation.setType(LocationType.KINGDOM);
+    return firstInQueue;
+  }
+
+  private boolean hasNeighbourOfType(LocationEntity firstInQueue, LocationType targetType) {
+    if (firstInQueue == null) {
+      return true;
+    }
+    LocationEntity compareThisWithFirstInQueue = new LocationEntity(targetType);
+    int range = 1;
+
+    for (int i = 0; i < 4; i++) {
+      if (i == 0) {
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() - range, firstInQueue.getY());
+      }
+      if (i == 1) {
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY());
+      }
+      if (i == 2) {
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() - range);
+      }
+      if (i == 3) {
+        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() + range);
       }
     }
-    return startingLocation;
+    return compareThisWithFirstInQueue.getType().equals(targetType);
   }
 
- /* @Override
-  public LocationEntity defaultLocation(KingdomEntity kingdom) {
-
-    boolean isOccupied = true;
-    LocationEntity startingLocation = null;
-    List<LocationEntity> allLocations = findAll();
-
-    while (isOccupied) {
-      startingLocation = generateRandomLocation();
-      if (!allLocations.contains(startingLocation)) {
-        isOccupied = false;
-      }
-    }
-    startingLocation.setKingdom(kingdom);
-    startingLocation.setType(LocationType.KINGDOM);
-    return startingLocation;
-  }
-
-  private LocationEntity generateRandomLocation() {
-    LocationEntity result = new LocationEntity();
-    result.setX(new Random().nextInt(201) - 100);
-    result.setY(new Random().nextInt(201) - 100);
-    return result;
-  }*/
-
-  /*@Override
-  public LocationEntity defaultLocation(KingdomEntity kingdom) {
-
-    LocationEntity startingLocation = null;
-
-    while (startingLocation==null){
-      Random random = new Random();
-      long randomLocationID = (long)(random.nextDouble()*repo.getMaxID());
-      LocationEntity found = repo.findById(randomLocationID).orElse(null);
-      if (found.getType().equals(LocationType.EMPTY))
-        startingLocation = found;
-    }
-
-    startingLocation.setKingdom(kingdom);
-    startingLocation.setType(LocationType.KINGDOM);
-    return startingLocation;
-  }
-
-  private List<LocationEntity> findAllByLocationType(LocationType type) {
-    return repo.findAllByTypeIs(type);
-  }*/
-
-  private LocationEntity generateRandomLocation() {
-    LocationEntity result = new LocationEntity();
-    result.setX(new Random().nextInt(201) - 100);
-    result.setY(new Random().nextInt(201) - 100);
+  private PriorityQueue<LocationEntity> prioritizeLocationsByCoordinates(int x, int y, List<LocationEntity> locations) {
+    PriorityQueue<LocationEntity> result = new PriorityQueue<>(locations.size(), new LocationComparator(x, y));
+    result.addAll(locations);
     return result;
   }
 
@@ -106,9 +77,33 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   public void generateNDesertsAndJungles(int n) {
-
     repo.generateNDesertsAndJungles(n);
   }
 
+  private long countOfLocationTypeInDB(LocationType type) {
+    return repo.countAllByTypeIs(type);
+  }
 
+  @AllArgsConstructor
+  static class LocationComparator implements Comparator<LocationEntity> {
+    private int x;
+    private int y;
+
+    public int compare(LocationEntity l1, LocationEntity l2) {
+      double maxDist1 = distanceTo(l1, this.x, this.y);
+      double maxDist2 = distanceTo(l2, this.x, this.y);
+
+      if (maxDist1 > maxDist2) {
+        return 1;
+      } else if (maxDist1 < maxDist2) {
+        return -1;
+      }
+      return 0;
+    }
+
+    private double distanceTo(LocationEntity l2, int x, int y) {
+      double result = Math.sqrt((Math.pow(l2.getX() - x, 2) + Math.pow(l2.getY() - y, 2)));
+      return result;
+    }
+  }
 }

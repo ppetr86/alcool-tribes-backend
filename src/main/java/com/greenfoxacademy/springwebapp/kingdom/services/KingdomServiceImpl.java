@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class KingdomServiceImpl implements KingdomService {
 
-
   private final KingdomRepository kingdomRepository;
 
   public KingdomServiceImpl(KingdomRepository kingdomRepository) {
