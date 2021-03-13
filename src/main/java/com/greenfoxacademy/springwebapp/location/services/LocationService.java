@@ -12,5 +12,5 @@ public interface LocationService {
 
   LocationEntity defaultLocation(KingdomEntity kingdom);
 
-  boolean hasNeighbourOfType(LocationEntity firstInQueue, LocationType targetType);
+  boolean isEligibleToBecomeKingdom(LocationEntity firstInQueue, LocationType targetType);
 }

@@ -26,45 +26,37 @@ public class LocationServiceImpl implements LocationService {
   public LocationEntity defaultLocation(KingdomEntity kingdom) {
 
     List<LocationEntity> thisTypeLocations = repo.findAllLocationsByTypeIs(LocationType.EMPTY);
-
     PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, thisTypeLocations);
-    LocationEntity firstInQueue = locationsInQueue.poll();
+    LocationEntity first = locationsInQueue.poll();
 
-    while (hasNeighbourOfType(firstInQueue, LocationType.KINGDOM)) {
-      firstInQueue = locationsInQueue.poll();
+    while (!isEligibleToBecomeKingdom(first, LocationType.KINGDOM)) {
+      first = locationsInQueue.poll();
     }
-    firstInQueue.setKingdom(kingdom);
-    firstInQueue.setType(LocationType.KINGDOM);
-    repo.save(firstInQueue);
+    first.setKingdom(kingdom);
+    first.setType(LocationType.KINGDOM);
+    repo.save(first);
 
-    return firstInQueue;
+    return first;
   }
 
   @Override
-  public boolean hasNeighbourOfType(LocationEntity firstInQueue, LocationType targetType) {
-    if (firstInQueue == null) {
-      return true;
-    }
-    LocationEntity compareThisWithFirstInQueue = new LocationEntity(targetType);
+  public boolean isEligibleToBecomeKingdom(LocationEntity first, LocationType targetType) {
+    if (first == null) return false;
+    LocationEntity compareToPoll = new LocationEntity(targetType);
     int range = 1;
-
-    // make it 8 to check diagonally not adjacent to another kingdom too??
+    // make it 8 to check diagonally adjacent???
     for (int i = 0; i < 8; i++) {
-      if (i == 0) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() - range, firstInQueue.getY());
-      if (i == 1) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY());
-      if (i == 2) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() - range);
-      if (i == 3) compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX(), firstInQueue.getY() + range);
-      //
-      if (i == 4)
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY()-range);
-      if (i == 5)
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX() + range, firstInQueue.getY()+range);
-      if (i == 6)
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX()-range, firstInQueue.getY() - range);
-      if (i == 7)
-        compareThisWithFirstInQueue = repo.findByXIsAndYIs(firstInQueue.getX()-range, firstInQueue.getY() + range);
+      if (i == 0) compareToPoll = repo.findByXIsAndYIs(first.getX() - range, first.getY());
+      if (i == 1) compareToPoll = repo.findByXIsAndYIs(first.getX() + range, first.getY());
+      if (i == 2) compareToPoll = repo.findByXIsAndYIs(first.getX(), first.getY() - range);
+      if (i == 3) compareToPoll = repo.findByXIsAndYIs(first.getX(), first.getY() + range);
+      if (i == 4) compareToPoll = repo.findByXIsAndYIs(first.getX() + range, first.getY() - range);
+      if (i == 5) compareToPoll = repo.findByXIsAndYIs(first.getX() + range, first.getY() + range);
+      if (i == 6) compareToPoll = repo.findByXIsAndYIs(first.getX() - range, first.getY() - range);
+      if (i == 7) compareToPoll = repo.findByXIsAndYIs(first.getX() - range, first.getY() + range);
+      if (compareToPoll.getType().equals(targetType)) return false;
     }
-    return compareThisWithFirstInQueue.getType().equals(targetType);
+    return true;
   }
 
   private PriorityQueue<LocationEntity> prioritizeLocationsByCoordinates(int x, int y, List<LocationEntity> locations) {
