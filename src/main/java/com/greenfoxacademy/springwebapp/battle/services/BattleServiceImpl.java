@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
+
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
@@ -77,11 +78,11 @@ public class BattleServiceImpl implements BattleService {
   public Army prepareAttackingArmy(List<TroopEntity> attackingTroops,KingdomEntity attackingKingdom,
                                    int distance) {
     Army attackingArmy = new Army();
+    attackingArmy.setKingdom(attackingKingdom);
     attackingArmy.setTroops(attackingTroops);
-    attackingArmy.setHealthPoints(calculateHPforAttackingArmy(attackingTroops,distance));
+    attackingArmy.setHealthPoints(calculateHPforAttackingArmy(attackingArmy, distance));
     attackingArmy.setAttackPoints(calculateAttackPoints(attackingTroops));
     attackingArmy.setDefencePoints(calculateDPforAttackingArmy(attackingTroops));
-    attackingArmy.setKingdom(attackingKingdom);
     attackingArmy.setArmyType(ArmyType.ATTACKINGARMY);
 
     return attackingArmy;
@@ -97,14 +98,16 @@ public class BattleServiceImpl implements BattleService {
         .collect(Collectors.toList());
   }
 
-  public int calculateHPforAttackingArmy(List<TroopEntity> attackingTroops, int distance) {
-    int armyHP = attackingTroops.stream().mapToInt(troop -> troop.getHp()).sum();
+  public int calculateHPforAttackingArmy(Army attackingArmy, int distance) {
+    int armyHP = attackingArmy.getTroops().stream().mapToInt(troop -> troop.getHp()).sum();
     int hpLoss = (int)(armyHP * distance * 0.02);
     int finalHP = armyHP - hpLoss;
 
     if (finalHP <= 0) {
-      killTroops(attackingTroops); //deleting dead troops from DB
-      attackingTroops = new ArrayList<>();
+      attackingArmy.setTroops(new ArrayList<>());
+      attackingArmy.getKingdom().setTroops(new ArrayList<>());
+      killTroops(attackingArmy.getTroops()); //deleting dead troops from DB
+
       log.info("Attacking army did not survive the travel to the enemy!");
 
       return 0;

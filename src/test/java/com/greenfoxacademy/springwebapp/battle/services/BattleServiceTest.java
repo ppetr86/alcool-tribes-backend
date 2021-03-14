@@ -138,22 +138,30 @@ public class BattleServiceTest {
 
   @Test
   public void calculateHPforAttackingArmy_returnsCorrectHP() {
+    Army attackingArmy = new Army();
     List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+    attackingArmy.setTroops(troops);
     int distance = 10;
 
-    int hp = battleService.calculateHPforAttackingArmy(troops,distance);
+    int hp = battleService.calculateHPforAttackingArmy(attackingArmy,distance);
 
     Assert.assertEquals(245, hp);
   }
 
   @Test
   public void calculateHPforAttackingArmy_ArmyNotSurvivesTravel_returns0hp() {
+    Army attackingArmy = new Army();
     List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+    attackingArmy.setTroops(troops);
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    kingdom.setTroops(troops);
+    attackingArmy.setKingdom(kingdom);
     int distance = 1000;
 
-    int hp = battleService.calculateHPforAttackingArmy(troops,distance);
+    int hp = battleService.calculateHPforAttackingArmy(attackingArmy,distance);
 
     Assert.assertEquals(0, hp);
+    Assert.assertEquals(0,attackingArmy.getTroops().size());
   }
 
   @Test
@@ -193,12 +201,42 @@ public class BattleServiceTest {
 
     Army army = battleService.prepareAttackingArmy(attackingTroops, attackingKingdom, distance);
 
+    Assert.assertEquals(attackingKingdom, army.getKingdom());
+    Assert.assertEquals(3, army.getKingdom().getTroops().size());
     Assert.assertEquals(3, army.getTroops().size());
     Assert.assertEquals(245, army.getHealthPoints());
     Assert.assertEquals(306, army.getAttackPoints());
     Assert.assertEquals(306, army.getDefencePoints());
-    Assert.assertEquals(attackingKingdom, army.getKingdom());
     Assert.assertEquals(ArmyType.ATTACKINGARMY, army.getArmyType());
+  }
+
+  @Test
+  public void prepareAttackingArmy_TroopsDidNotSurviveTravel() {
+    List<TroopEntity> attackingTroops = TroopFactory.createDefaultTroops();
+    KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L, 1L);
+    attackingKingdom.setTroops(attackingTroops);
+    int distance = 1000;
+
+    Army army = battleService.prepareAttackingArmy(attackingTroops, attackingKingdom, distance);
+
+    Assert.assertEquals(attackingKingdom, army.getKingdom());
+    Assert.assertEquals(0, army.getKingdom().getTroops().size());
+    Assert.assertEquals(0, army.getTroops().size());
+    Assert.assertEquals(0, army.getHealthPoints());
+    Assert.assertEquals(306, army.getAttackPoints());
+    Assert.assertEquals(306, army.getDefencePoints());
+    Assert.assertEquals(ArmyType.ATTACKINGARMY, army.getArmyType());
+  }
+
+  @Test
+  public void getDefendingTroops_ReturnsCorrectSizeTroopsList() {
+    KingdomEntity defendingKingdom = KingdomFactory.createFullKingdom(1L,1L);
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops(); //3 troops with ids 1-3
+    defendingKingdom.setTroops(troops);
+
+    List<TroopEntity> army = battleService.getDefendingTroops(defendingKingdom);
+
+    Assert.assertEquals(3, army.size());
   }
 
 
