@@ -8,6 +8,7 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
@@ -15,6 +16,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourc
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -388,5 +390,21 @@ public class BuildingServiceTest {
     Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(fakeBuilding2));
 
     BuildingDetailsDTO response = buildingService.showBuilding(kingdomEntity, 3L);
+  }
+
+  @Test
+  public void findBuildingWithHighestLevel_typeAcademy_returnsHighestAcademy() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    BuildingEntity academy1 = new BuildingEntity(kingdom, BuildingType.ACADEMY,1);
+    BuildingEntity academy2 = new BuildingEntity(kingdom, BuildingType.ACADEMY,2);
+    BuildingEntity academy3 = new BuildingEntity(kingdom, BuildingType.ACADEMY,3);
+    BuildingEntity farm4 = new BuildingEntity(kingdom, BuildingType.FARM,4);
+    List<BuildingEntity> buildins = new ArrayList<>();
+    buildins.addAll(Arrays.asList(academy1,academy2,academy3,farm4));
+    kingdom.setBuildings(buildins);
+
+    BuildingEntity building = buildingService.findBuildingWithHighestLevel(kingdom, BuildingType.ACADEMY);
+
+    Assert.assertEquals(academy3, building);
   }
 }

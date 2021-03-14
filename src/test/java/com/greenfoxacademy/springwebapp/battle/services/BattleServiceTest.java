@@ -4,6 +4,8 @@ import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
 import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
@@ -165,13 +167,19 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void killTroops_returnsIDsOfKilledTroops() {
-    List<TroopEntity> troopsToBeKilled = TroopFactory.createDefaultTroops();
-    List<Long> deadTroopsIds = new ArrayList<>(Arrays.asList(1L,2L,3L));
+  public void killAllTroopsInArmy_returnsIDsOfKilledTroops() {
+    Army army = new Army();
+    army.setTroops(TroopFactory.createDefaultTroops());
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    kingdom.setTroops(army.getTroops());
+    army.setKingdom(kingdom);
+    List<Long> deadTroops = new ArrayList<>(Arrays.asList(1L,2L,3L));
 
-    List<Long> ids = battleService.killTroops(troopsToBeKilled);
+    List<Long> ids = battleService.killAllTroopsInArmy(army);
 
-    Assert.assertEquals(deadTroopsIds, ids);
+    Assert.assertEquals(deadTroops, ids);
+    Assert.assertEquals(0,army.getTroops().size());
+    Assert.assertEquals(0,army.getKingdom().getTroops().size());
   }
 
   @Test
@@ -193,7 +201,7 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void prepareAttackingArmy_returnsDefendingArmy() {
+  public void prepareAttackingArmy_returnsAttackingArmy() {
     List<TroopEntity> attackingTroops = TroopFactory.createDefaultTroops();
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L, 1L);
     attackingKingdom.setTroops(attackingTroops);
@@ -238,6 +246,78 @@ public class BattleServiceTest {
 
     Assert.assertEquals(3, army.size());
   }
+
+  @Test
+  public void calculateHPforDefendingArmy_ReturnsCorrectHealthPoints() {
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops(); //3 troops with ids 1-3
+
+    int hp = battleService.calculateHPforDefendingArmy(troops);
+
+    Assert.assertEquals(306, hp);
+  }
+
+  @Test
+  public void calculateHPforDefendingArmy_NoTroopsHome_Returns0HealthPoints() {
+    List<TroopEntity> troops = new ArrayList<>(); //empty list = no troop at home
+
+    int hp = battleService.calculateHPforDefendingArmy(troops);
+
+    Assert.assertEquals(0, hp);
+  }
+
+  @Test
+  public void calculateDPforDefendingArmy_returnsCorrectDP() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    Army army = new Army();
+    army.setKingdom(kingdom);
+    army.setTroops(kingdom.getTroops()); //2 troops, each 100DP
+
+    Mockito.doReturn(0.03).when(battleService).calculateDefenceBonusCoeficient(kingdom);
+
+    int defencePoints = battleService.calculateDPforDefendingArmy(army);
+
+    Assert.assertEquals(206, defencePoints);
+  }
+
+  @Test
+  public void calculateDefenceBonusCoeficient_Level1TownhallAndAcademy_returnsCorrectCoeficient() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    BuildingEntity townhall = new BuildingEntity(kingdom, BuildingType.TOWNHALL,1);
+    BuildingEntity academy = new BuildingEntity(kingdom, BuildingType.ACADEMY,1);
+
+    Mockito.when(buildingService.findBuildingWithHighestLevel(kingdom,BuildingType.TOWNHALL))
+        .thenReturn(townhall);
+    Mockito.when(buildingService.findBuildingWithHighestLevel(kingdom,BuildingType.ACADEMY))
+        .thenReturn(academy);
+
+    double coef = battleService.calculateDefenceBonusCoeficient(kingdom);
+
+    Assert.assertEquals(0.03, coef, 0);
+  }
+
+  @Test
+  public void prepareDefendingArmy_Level1TownhallAndAcademy_returnsDefendingArmy() {
+    KingdomEntity defendingKingdom = KingdomFactory.createFullKingdom(1L, 1L);
+    BuildingEntity townhall = new BuildingEntity(defendingKingdom, BuildingType.TOWNHALL,1);
+    BuildingEntity academy = new BuildingEntity(defendingKingdom, BuildingType.ACADEMY,1);
+
+    Mockito.when(buildingService.findBuildingWithHighestLevel(defendingKingdom,BuildingType.TOWNHALL))
+        .thenReturn(townhall);
+    Mockito.when(buildingService.findBuildingWithHighestLevel(defendingKingdom,BuildingType.ACADEMY))
+        .thenReturn(academy);
+
+    Army army = battleService.prepareDefendingArmy(defendingKingdom);
+
+    Assert.assertEquals(defendingKingdom, army.getKingdom());
+    Assert.assertEquals(2, army.getKingdom().getTroops().size());
+    Assert.assertEquals(2, army.getTroops().size());
+    Assert.assertEquals(200, army.getHealthPoints());
+    Assert.assertEquals(200, army.getAttackPoints());
+    Assert.assertEquals(206, army.getDefencePoints());
+    Assert.assertEquals(ArmyType.DEFENDINGARMY, army.getArmyType());
+  }
+
+
 
 
 }

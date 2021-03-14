@@ -104,9 +104,7 @@ public class BattleServiceImpl implements BattleService {
     int finalHP = armyHP - hpLoss;
 
     if (finalHP <= 0) {
-      attackingArmy.setTroops(new ArrayList<>());
-      attackingArmy.getKingdom().setTroops(new ArrayList<>());
-      killTroops(attackingArmy.getTroops()); //deleting dead troops from DB
+      killAllTroopsInArmy(attackingArmy);
 
       log.info("Attacking army did not survive the travel to the enemy!");
 
@@ -116,11 +114,16 @@ public class BattleServiceImpl implements BattleService {
     return finalHP;
   }
 
-  public List<Long> killTroops(List<TroopEntity> attackingTroops) {
-    List<Long> deadTroops = attackingTroops.stream()
+  public List<Long> killAllTroopsInArmy(Army army) {
+    //collecting dead troops ids, removing them from related objects and deleting them from DB
+    List<Long> deadTroops = army.getTroops().stream()
         .map(troop -> troop.getId())
         .collect(Collectors.toList());
+    army.setTroops(new ArrayList<>());
+    army.getKingdom().setTroops(new ArrayList<>());
+
     troopService.deleteMoreTroopsById(deadTroops);
+
     return deadTroops;
   }
 
@@ -135,13 +138,12 @@ public class BattleServiceImpl implements BattleService {
   //"Prepare defending army" section
   public Army prepareDefendingArmy(KingdomEntity defendingKingdom) {
     Army defendingArmy = new Army();
-    List<TroopEntity> defendingTroops = getDefendingTroops(defendingKingdom);
-
-    defendingArmy.setTroops(defendingTroops);
-    defendingArmy.setHealthPoints(alculateHPforDefendingArmy(defendingTroops));
-    defendingArmy.setAttackPoints(calculateAttackPoints(defendingTroops));
-    defendingArmy.setDefencePoints(calculateDPforDefendingArmy(defendingTroops, defendingKingdom));
     defendingArmy.setKingdom(defendingKingdom);
+    defendingArmy.setTroops(getDefendingTroops(defendingKingdom));
+    defendingArmy.setHealthPoints(calculateHPforDefendingArmy(defendingArmy.getTroops()));
+    defendingArmy.setAttackPoints(calculateAttackPoints(defendingArmy.getTroops()));
+    defendingArmy.setDefencePoints(calculateDPforDefendingArmy(defendingArmy));
+
     defendingArmy.setArmyType(ArmyType.DEFENDINGARMY);
 
     return defendingArmy;
@@ -152,19 +154,18 @@ public class BattleServiceImpl implements BattleService {
     return defendingKingdom.getTroops();
   }
 
-  public int alculateHPforDefendingArmy(List<TroopEntity> defendingTroops) {
+  public int calculateHPforDefendingArmy(List<TroopEntity> defendingTroops) {
     if (defendingTroops.isEmpty()) {
-      log.info("Attacking Army has won automatically - defending kingdom has no troops at home!");
-
-      //TODO: finish scenario when attacking army wins automatically
+      log.info("Defending kingdom has no troops at home to fight attacking army!");
+      return 0;
     }
+
     return defendingTroops.stream().mapToInt(troop -> troop.getHp()).sum();
   }
 
-  public int calculateDPforDefendingArmy(List<TroopEntity> defendingTroops,
-                                         KingdomEntity kingdom) {
-    int armyDP = defendingTroops.stream().mapToInt(troop -> troop.getDefence()).sum();
-    int dpBonus = (int)(armyDP * calculateDefenceBonusCoeficient(kingdom));
+  public int calculateDPforDefendingArmy(Army defendingArmy) {
+    int armyDP = defendingArmy.getTroops().stream().mapToInt(troop -> troop.getDefence()).sum();
+    int dpBonus = (int)(armyDP * calculateDefenceBonusCoeficient(defendingArmy.getKingdom()));
     return armyDP + dpBonus;
   }
 
