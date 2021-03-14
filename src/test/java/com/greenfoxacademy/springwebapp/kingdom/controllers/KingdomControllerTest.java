@@ -125,7 +125,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.goToWar(2L,requestDTO,kingdom)).thenReturn(new BattleResponseDTO());
+    Mockito.when(battleService.war(2L,requestDTO,kingdom)).thenReturn(new BattleResponseDTO());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
 
@@ -141,7 +141,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.goToWar(2L,requestDTO,kingdom))
+    Mockito.when(battleService.war(2L,requestDTO,kingdom))
         .thenThrow(new MissingParameterException("anything"));
 
     ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
@@ -154,7 +154,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.goToWar(20L,requestDTO,kingdom))
+    Mockito.when(battleService.war(20L,requestDTO,kingdom))
         .thenThrow(new IdNotFoundException());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(20L, requestDTO, authentication);
@@ -167,7 +167,7 @@ public class KingdomControllerTest {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.goToWar(1L,requestDTO,kingdom))
+    Mockito.when(battleService.war(1L,requestDTO,kingdom))
         .thenThrow(new ForbiddenActionException());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(1L, requestDTO, authentication);
