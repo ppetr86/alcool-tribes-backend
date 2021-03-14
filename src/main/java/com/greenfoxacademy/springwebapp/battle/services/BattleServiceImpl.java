@@ -180,10 +180,39 @@ public class BattleServiceImpl implements BattleService {
   //"Fight Armies" section
   public List<Army> fightArmies(Army attackingArmy, Army defendingArmy) {
 
-    //fighting
+    while (attackingArmy.getTroops().size() > 0 && defendingArmy.getTroops().size() > 0) {
+
+      for(int i=0; i<10; i++) {
+        Army attackingArmyAfterFight = fightOponent(attackingArmy, defendingArmy);
+        Army defendingArmyAfterFight = fightOponent(defendingArmy, attackingArmy);
+
+
+      }
+    }
+
 
     return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
   }
+
+  public Army fightOponent(Army army1, Army army2) {
+    int damage = calculateDamage(army1, army2);
+    List<TroopEntity> survivedTroops = damageTroops(army1.getTroops(), damage); //share damage + substract HP + delete troops with HP <= 0;
+    army1.setTroops(survivedTroops);
+
+    return army1;
+  }
+
+
+  public int calculateDamage(Army army1, Army army2) {
+
+    return 0;
+  }
+
+  private List<TroopEntity> damageTroops(List<TroopEntity> troops, int damage) {
+
+    return new ArrayList<>();
+  }
+
 
   //"After battle" section
   public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle) {
