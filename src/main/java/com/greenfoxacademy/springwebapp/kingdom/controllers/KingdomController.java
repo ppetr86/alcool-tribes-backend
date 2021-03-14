@@ -64,7 +64,7 @@ public class KingdomController {
 
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
-    BattleResponseDTO battleHasStarted = battleService.goToWar(enemyKingdomId, requestDTO, kingdom);
+    BattleResponseDTO battleHasStarted = battleService.war(enemyKingdomId, requestDTO, kingdom);
 
     return ResponseEntity.ok().body(battleHasStarted);
   }

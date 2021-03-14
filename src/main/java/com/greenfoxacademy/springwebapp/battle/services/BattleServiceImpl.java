@@ -34,8 +34,8 @@ public class BattleServiceImpl implements BattleService {
   private final TroopService troopService;
 
   @Override
-  public BattleResponseDTO goToWar(Long enemyKingdomId, BattleRequestDTO requestDTO,
-                                   KingdomEntity attackingKingdom)
+  public BattleResponseDTO war(Long enemyKingdomId, BattleRequestDTO requestDTO,
+                               KingdomEntity attackingKingdom)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException {
 
     if (enemyKingdomId == attackingKingdom.getId()) throw new ForbiddenActionException();
@@ -115,16 +115,21 @@ public class BattleServiceImpl implements BattleService {
   }
 
   public List<Long> killAllTroopsInArmy(Army army) {
-    //collecting dead troops ids, removing them from related objects and deleting them from DB
-    List<Long> deadTroops = army.getTroops().stream()
+    //collecting dead troops ids and deleting them from DB and removing them from related kingdom/army
+    List<Long> deadTroopsIds = army.getTroops().stream()
         .map(troop -> troop.getId())
         .collect(Collectors.toList());
-    army.setTroops(new ArrayList<>());
-    army.getKingdom().setTroops(new ArrayList<>());
 
-    troopService.deleteMoreTroopsById(deadTroops);
+    troopService.deleteMoreTroopsById(deadTroopsIds);
 
-    return deadTroops;
+    List<TroopEntity> aliveTroopsInKingdom = army.getKingdom().getTroops().stream()
+        .filter(troop -> !army.getTroops().contains(troop))
+        .collect(Collectors.toList());
+    army.getKingdom().setTroops(aliveTroopsInKingdom); //removing all dead troops from kingdom
+
+    army.setTroops(new ArrayList<>()); //removing all dead troops from army troops - whole army died
+
+    return deadTroopsIds;
   }
 
   public int calculateAttackPoints(List<TroopEntity> troops) {

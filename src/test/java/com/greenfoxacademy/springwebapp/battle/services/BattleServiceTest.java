@@ -40,7 +40,7 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void goToWarReturnsCorrectResponseDTO() {
+  public void warReturnsCorrectResponseDTO() {
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
     List<TroopEntity> troops = TroopFactory.createDefaultTroops(); //3 troops with ids 1-3
     attackingKingdom.setTroops(troops);
@@ -52,13 +52,13 @@ public class BattleServiceTest {
     Mockito.doReturn(troops).when(battleService).getAttackingTroops(requestDTO, attackingKingdom);
     Mockito.doReturn(1).when(battleService).scheduleBattle(attackingKingdom,troops, defendingKingdom);
 
-    BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom);
+    BattleResponseDTO response = battleService.war(2L, requestDTO, attackingKingdom);
     Assert.assertEquals("ok", response.getStatus());
     Assert.assertEquals("Battle started", response.getMessage());
   }
 
   @Test (expected = MissingParameterException.class)
-  public void goToWar_troopIdsNotInTheKingdom_ReturnsMissingParameterException() {
+  public void war_troopIdsNotInTheKingdom_ReturnsMissingParameterException() {
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
     List<TroopEntity> troops = TroopFactory.createDefaultTroops(); //3 troops with ids 1-3
     attackingKingdom.setTroops(troops);
@@ -69,27 +69,27 @@ public class BattleServiceTest {
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(enemyKingdom);
 
-    BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom);
+    BattleResponseDTO response = battleService.war(2L, requestDTO, attackingKingdom);
   }
 
   @Test (expected = ForbiddenActionException.class)
-  public void goToWar_bothKingdomsHaveSameId_ReturnsForbiddenActionException() {
+  public void war_bothKingdomsHaveSameId_ReturnsForbiddenActionException() {
     Long[] troopsIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
 
-    BattleResponseDTO response = battleService.goToWar(1L, requestDTO, attackingKingdom);
+    BattleResponseDTO response = battleService.war(1L, requestDTO, attackingKingdom);
   }
 
   @Test (expected = IdNotFoundException.class)
-  public void goToWar_ReturnsIdNotFoundException() {
+  public void war_ReturnsIdNotFoundException() {
     Long[] troopsIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
     KingdomEntity attackingKingdom = KingdomFactory.createFullKingdom(1L,1L);
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(null);
 
-    BattleResponseDTO response = battleService.goToWar(2L, requestDTO, attackingKingdom);
+    BattleResponseDTO response = battleService.war(2L, requestDTO, attackingKingdom);
   }
 
   @Test
@@ -167,19 +167,23 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void killAllTroopsInArmy_returnsIDsOfKilledTroops() {
+  public void killAllTroopsInArmy_returnsCorrectIDsOfKilledTroops_AndCorrecArmyAndKingdomTroopSizes() {
     Army army = new Army();
     army.setTroops(TroopFactory.createDefaultTroops());
     KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
-    kingdom.setTroops(army.getTroops());
     army.setKingdom(kingdom);
+    //adding 1 extra troop which will not die in battle
+    List<TroopEntity> troops = new ArrayList<>();
+    troops.addAll(army.getTroops());
+    troops.add(new TroopEntity(10L,1,100,100,100,100,100));
+    army.getKingdom().setTroops(troops);
     List<Long> deadTroops = new ArrayList<>(Arrays.asList(1L,2L,3L));
 
     List<Long> ids = battleService.killAllTroopsInArmy(army);
 
     Assert.assertEquals(deadTroops, ids);
     Assert.assertEquals(0,army.getTroops().size());
-    Assert.assertEquals(0,army.getKingdom().getTroops().size());
+    Assert.assertEquals(1,army.getKingdom().getTroops().size());
   }
 
   @Test
