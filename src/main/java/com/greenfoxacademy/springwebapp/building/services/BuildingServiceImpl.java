@@ -201,6 +201,16 @@ public class BuildingServiceImpl implements BuildingService {
     return kingdom.getBuildings().stream()
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
   }
+
+  @Override
+  public BuildingEntity findBuildingWithHighestLevel(KingdomEntity kingdom, BuildingType buildingType) {
+    List<BuildingEntity> buildings = kingdom.getBuildings().stream()
+        .filter(a -> a.getType() == buildingType)
+        .collect(Collectors.toList());
+    return buildings.stream()
+        .max((building1, building2) -> building1.getLevel() > building2.getLevel() ? 1 : -1)
+        .orElse(null);
+  }
 }
 
 

@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidInputException;
@@ -42,4 +43,6 @@ public interface BuildingService {
   List<BuildingEntity> findBuildingsByKingdomId(Long id);
 
   List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
+
+  BuildingEntity findBuildingWithHighestLevel(KingdomEntity kingdom, BuildingType townhall);
 }

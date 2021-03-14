@@ -21,11 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -66,7 +63,9 @@ public class KingdomController {
       ForbiddenActionException {
 
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    BattleResponseDTO battleStarted = battleService.initiateBattle(enemyKingdomId, requestDTO, kingdom);
-    return ResponseEntity.ok().body(battleStarted);
+
+    BattleResponseDTO battleHasStarted = battleService.war(enemyKingdomId, requestDTO, kingdom);
+
+    return ResponseEntity.ok().body(battleHasStarted);
   }
 }

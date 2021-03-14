@@ -9,7 +9,8 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 
 public interface BattleService {
 
-  BattleResponseDTO initiateBattle(Long enemyKingdomId, BattleRequestDTO requestDTO,
-                                   KingdomEntity kingdom)
+  BattleResponseDTO war(Long enemyKingdomId, BattleRequestDTO requestDTO,
+                        KingdomEntity kingdom)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException;
+
 }
