@@ -29,6 +29,19 @@ VALUES (1, 10, 10, 1, 'KINGDOM');
 INSERT INTO locations (id, x, y, kingdom_id, type)
 VALUES (2, 20, 20, 2, 'KINGDOM');
 
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (3, 0, 0, NULL, 'EMPTY');
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (4, 0, 1, NULL, 'EMPTY');
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (5, 0, -1, NULL, 'EMPTY');
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (6, -1, 0, NULL, 'EMPTY');
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (7, 1, 0, NULL, 'EMPTY');
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (8, 1, -1, NULL, 'EMPTY');
+
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
 VALUES (1, 0, 0, 1, 0, 'TOWNHALL', 1);
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
