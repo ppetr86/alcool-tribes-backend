@@ -149,7 +149,6 @@ public class BuildingServiceImpl implements BuildingService {
     result = defineFinishedAt(result);
     result = defineHp(result);
     result = save(result);
-
     resourceService.updateResourceGeneration(kingdom, result);
 
     return result;

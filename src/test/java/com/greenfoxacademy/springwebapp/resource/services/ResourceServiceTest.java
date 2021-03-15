@@ -218,7 +218,6 @@ public class ResourceServiceTest {
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
 
-    Mockito.when(env.getProperty("troop.food")).thenReturn("-5");
     Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
 
     boolean result = resourceService.hasResourcesForTroop(kingdom, 25);
