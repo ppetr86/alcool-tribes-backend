@@ -13,12 +13,9 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerRegistrationRequestDTO {
+public class PlayerRegisterRequestDTO {
 
-  private long id;
   @NotBlank(message = "Username is required.")
-  @Size(min = 5, message = "Username has to be at least 5 characters.")
-  // TODO: need to have at least 5 chars but can be modified since it's not requested.
   private String username;
 
   @NotBlank(message = "Password is required.")
@@ -30,16 +27,9 @@ public class PlayerRegistrationRequestDTO {
 
   private String kingdomname;
 
-  public PlayerRegistrationRequestDTO(String username, String password, String email) {
+  public PlayerRegisterRequestDTO(String username, String password, String email) {
     this.username = username;
     this.password = password;
     this.email = email;
-  }
-
-  public PlayerRegistrationRequestDTO(String username, String password, String email, String kingdomname) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.kingdomname = kingdomname;
   }
 }

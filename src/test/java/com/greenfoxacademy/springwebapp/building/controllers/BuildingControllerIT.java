@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.building.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -27,6 +28,7 @@ import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createB
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BuildingControllerIntegrationTest {
+public class BuildingControllerIT {
 
   @Autowired
   private MockMvc mockMvc;
@@ -95,7 +97,7 @@ public class BuildingControllerIntegrationTest {
   }
 
   @Test
-  public void buildBuilding_EmptyInputV2_NoTypeProvidedReturnsMissingType() throws Exception {
+  public void buildBuilding_EmptyInput_NoTypeProvidedReturnsMissingType() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO();
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -110,7 +112,7 @@ public class BuildingControllerIntegrationTest {
   }
 
   @Test
-  public void buildBuilding_EmptyInputV3_WhitespaceInputReturnsMissingType() throws Exception {
+  public void buildBuilding_EmptyInput_WhitespaceInputReturnsInvalidBuildingType() throws Exception {
     BuildingRequestDTO request = new BuildingRequestDTO("  ");
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -119,9 +121,10 @@ public class BuildingControllerIntegrationTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
         .principal(authentication))
-        .andExpect(status().isBadRequest())
+        .andExpect(status().isNotAcceptable())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message", is("Missing parameter(s): type!")));
+        .andExpect(jsonPath("$.message", is("Invalid building type")));
+
   }
 
   @Test
@@ -228,5 +231,119 @@ public class BuildingControllerIntegrationTest {
         .andExpect(status().isNotAcceptable())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturnOkAndProperBuilding() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/1")
+        .principal(authentication))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.level", is(1)))
+        .andExpect(jsonPath("$.hp", is(100)))
+        .andExpect(jsonPath("$.startedAt", is(100)))
+        .andExpect(jsonPath("$.finishedAt", is(200)))
+        .andExpect(jsonPath("$.type", is("townhall")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturn404WhenNonExistingBuildingIdGiven() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/16")
+        .principal(authentication))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message", is("Id not found")));
+  }
+
+  @Test
+  public void getBuildingByIdShouldReturn403WhenNotOwnBuildingRequested() throws Exception {
+    mockMvc.perform(get(BuildingController.URI + "/5")
+        .principal(authentication))
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.message", is("Forbidden action")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnNotFoundWithNoIdMessage() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO();
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(BuildingController.URI + "/1123")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Id not found")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnBadRequestWithKingdomParameterMissing() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO();
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    mockMvc.perform(put(BuildingController.URI + "/4")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Missing parameter(s): level!")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnNotAcceptablewithTownHallNeedHigherLevel() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO(2);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    //TODO: have to remove after hasResourceForBuilding will modify
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+
+    mockMvc.perform(put(BuildingController.URI + "/2")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isNotAcceptable())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnConflictWithNoResource() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO(2);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    //TODO: have to remove after hasResourceForBuilding will modify
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(false);
+
+    mockMvc.perform(put(BuildingController.URI + "/1")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isConflict())
+      .andExpect(jsonPath("$.status", is("error")))
+      .andExpect(jsonPath("$.message", is("Not enough resource")));
+  }
+
+  @Test
+  public void updateTheGivenBuildingDetailsShouldReturnOkWithBuildingDetails() throws Exception {
+    BuildingLevelDTO request = new BuildingLevelDTO(3);
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(request);
+
+    //TODO: have to remove after hasResourceForBuilding will modify
+    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+
+    mockMvc.perform(put(BuildingController.URI + "/1")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(json)
+      .principal(authentication))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id", is(1)))
+      .andExpect(jsonPath("$.type", is("TOWNHALL")))
+      .andExpect(jsonPath("$.level", is(3)))
+      .andExpect(jsonPath("$.hp", is(600)));
   }
 }

@@ -26,7 +26,8 @@ public class JwtProvider {
     //creating Expiration date - by using LocalDate, which is preferred
     Date date = Date.from(LocalDate.now().plusDays(jwtExpireDays).atStartOfDay(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
-        .setClaims(new HashMap<String, Object>() {{
+        .setClaims(new HashMap<String, Object>() {
+          {
             put("username", playerEntity.getUsername());
             put("kingdomId", playerEntity.getKingdom().getId());
           }
