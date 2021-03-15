@@ -23,4 +23,5 @@ public class LocationEntity {
   private Long id;
   private Integer x;
   private Integer y;
+
 }

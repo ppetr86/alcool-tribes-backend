@@ -1,7 +1,9 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
@@ -16,6 +18,8 @@ public interface PlayerService {
   PlayerEntity findByUsername(String username);
 
   PlayerEntity findByUsernameAndPassword(String username, String password);
+
+  PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance);
 
   boolean sendRegistrationConfirmationEmail(final PlayerEntity user);
 
