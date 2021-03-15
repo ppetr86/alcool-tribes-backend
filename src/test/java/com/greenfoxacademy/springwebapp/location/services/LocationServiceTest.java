@@ -12,19 +12,110 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
 public class LocationServiceTest {
 
   private LocationServiceImpl locationService;
   private LocationRepository locationRepository;
+  private Comparator<LocationEntity> comparator;
 
   @Before
   public void setUp() {
     locationRepository = Mockito.mock(LocationRepository.class);
     locationService = new LocationServiceImpl(locationRepository);
+    comparator = new LocationServiceImpl.LocationComparator(0, 0);
+    locationService = Mockito.spy(locationService);
+  }
+
+  @Test
+  public void defaultLocation_setsKingdomToLocation() {
+    List<LocationEntity> locations = Arrays.asList(
+        new LocationEntity(0, 0, null, LocationType.EMPTY),
+        new LocationEntity(0, 1, null, LocationType.EMPTY)
+    );
+    mockLocations(locations);
+    Mockito.doReturn(true).when(locationService).isEligibleToBecomeKingdom(any(), any(), any());
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+
+    LocationEntity location = locationService.defaultLocation(kingdom);
+
+    Assert.assertEquals(kingdom, location.getKingdom());
+  }
+
+  @Test
+  public void defaultLocation_savesSelectedLocationToDB() {
+    List<LocationEntity> locations = Arrays.asList(
+        new LocationEntity(0, 0, null, LocationType.EMPTY),
+        new LocationEntity(0, 1, null, LocationType.EMPTY)
+    );
+    mockLocations(locations);
+    Mockito.doReturn(true).when(locationService).isEligibleToBecomeKingdom(any(), any(), any());
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+
+    LocationEntity location = locationService.defaultLocation(kingdom);
+
+    Mockito.verify(locationRepository).save(location);
+  }
+
+  @Test
+  public void defaultLocation_doesntSetKingdomNextToAnotherKingdom() {
+    List<LocationEntity> locations = Arrays.asList(
+        new LocationEntity(0, 0, null, LocationType.EMPTY),
+        new LocationEntity(0, 1, null, LocationType.KINGDOM),
+        new LocationEntity(0, 10, null, LocationType.EMPTY)
+    );
+    mockLocations(locations);
+    Mockito.doReturn(false).when(locationService)
+        .isEligibleToBecomeKingdom(locations.get(0), LocationType.KINGDOM, locations);
+    Mockito.doReturn(false).when(locationService)
+        .isEligibleToBecomeKingdom(locations.get(1), LocationType.KINGDOM, locations);
+    Mockito.doReturn(true).when(locationService)
+        .isEligibleToBecomeKingdom(locations.get(2), LocationType.KINGDOM, locations);
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+
+    LocationEntity location = locationService.defaultLocation(kingdom);
+
+    Assert.assertEquals(locations.get(2), location);
+  }
+
+  @Ignore
+  @Test
+  public void defaultLocation_setKingdomToNearestProperLocation() {
+    List<LocationEntity> locations = Arrays.asList(
+        new LocationEntity(0, 2, null, LocationType.EMPTY),
+        new LocationEntity(0, -1, null, LocationType.EMPTY)
+    );
+    mockLocations(locations);
+    Mockito.doReturn(false).when(locationService)
+        .isEligibleToBecomeKingdom(any(), any(), any());
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+
+    LocationEntity location = locationService.defaultLocation(kingdom);
+
+    Assert.assertEquals(locations.get(1), location);
+  }
+
+  @Ignore
+  @Test
+  public void defaultLocation_doesntSetKingdom_when_NoFreeLocation() {
+    List<LocationEntity> locations = Arrays.asList(
+        new LocationEntity(0, 2, null, LocationType.KINGDOM)
+    );
+    mockLocations(locations);
+    Mockito.doReturn(false).when(locationService)
+        .isEligibleToBecomeKingdom(any(), any(), any());
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+
+    LocationEntity location = locationService.defaultLocation(kingdom);
+
+    Assert.assertEquals(null, location);
   }
 
   @Ignore
@@ -70,5 +161,14 @@ public class LocationServiceTest {
     Assert.assertFalse(toDown.getType().equals(LocationType.KINGDOM));*/
     Assert.assertEquals(startingLocation.getType(), LocationType.KINGDOM);
 
+  }
+
+  private void mockLocations(List<LocationEntity> locations) {
+    PriorityQueue<LocationEntity> orderedLocations = new PriorityQueue<>(comparator);
+    orderedLocations.addAll(locations);
+    Mockito.when(locationRepository.findAllLocationsByTypeIs(LocationType.EMPTY))
+        .thenReturn(locations);
+    Mockito.doReturn(orderedLocations).when(locationService)
+        .prioritizeLocationsByCoordinates(0, 0, locations);
   }
 }

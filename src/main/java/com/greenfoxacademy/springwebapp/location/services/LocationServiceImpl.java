@@ -62,14 +62,14 @@ public class LocationServiceImpl implements LocationService {
   }
 
 
-  private PriorityQueue<LocationEntity> prioritizeLocationsByCoordinates(int x, int y, List<LocationEntity> locations) {
+  public PriorityQueue<LocationEntity> prioritizeLocationsByCoordinates(int x, int y, List<LocationEntity> locations) {
     PriorityQueue<LocationEntity> result = new PriorityQueue<>(locations.size(), new LocationComparator(x, y));
     result.addAll(locations);
     return result;
   }
 
   @AllArgsConstructor
-  static class LocationComparator implements Comparator<LocationEntity> {
+  public static class LocationComparator implements Comparator<LocationEntity> {
     private int x;
     private int y;
 

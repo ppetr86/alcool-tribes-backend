@@ -45,9 +45,6 @@ public class LocationEntity {
     this.type = type;
   }
 
-  public LocationEntity(LocationType kingdom) {
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
