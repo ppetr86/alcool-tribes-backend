@@ -166,7 +166,13 @@ public class TroopServiceImpl implements TroopService {
 
   @Transactional
   @Override
-  public List<Long> deleteListOfTroopsByTroopsIds(List<Long> ids) {
-    return troopRepository.deleteListOfTroopsByTroopsIds(ids);
+  public void deleteListOfTroopsByTroopsIds(List<Long> ids) {
+    troopRepository.deleteListOfTroopsByTroopsIds(ids);
+  }
+
+  @Transactional
+  @Override
+  public void deleteListOfTroops(List<TroopEntity> deadTroops) {
+    troopRepository.deleteListOfTroops(deadTroops);
   }
 }

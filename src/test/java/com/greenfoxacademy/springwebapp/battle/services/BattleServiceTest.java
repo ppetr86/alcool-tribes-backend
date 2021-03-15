@@ -17,7 +17,6 @@ import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -169,19 +168,19 @@ public class BattleServiceTest {
   @Test
   public void killAllTroopsInArmy_returnsCorrectIDsOfKilledTroops_AndCorrecArmyAndKingdomTroopSizes() {
     Army army = new Army();
-    army.setTroops(TroopFactory.createDefaultTroops());
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+    army.setTroops(troops);
     KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
-    army.setKingdom(kingdom);
+    List<TroopEntity> kingdomTroops = new ArrayList<>();
+    kingdomTroops.addAll(troops);
     //adding 1 extra troop which will not die in battle
-    List<TroopEntity> troops = new ArrayList<>();
-    troops.addAll(army.getTroops());
-    troops.add(new TroopEntity(10L,1,100,100,100,100,100));
-    army.getKingdom().setTroops(troops);
-    List<Long> deadTroops = new ArrayList<>(Arrays.asList(1L,2L,3L));
+    kingdomTroops.add(new TroopEntity(10L,1,100,100,100,100,100));
+    kingdom.setTroops(kingdomTroops);
+    army.setKingdom(kingdom);
 
-    List<Long> ids = battleService.killAllTroopsInArmy(army);
+    List<TroopEntity> deadTroops = battleService.killAllTroopsInArmy(army);
 
-    Assert.assertEquals(deadTroops, ids);
+    Assert.assertEquals(troops, deadTroops);
     Assert.assertEquals(0,army.getTroops().size());
     Assert.assertEquals(1,army.getKingdom().getTroops().size());
   }
