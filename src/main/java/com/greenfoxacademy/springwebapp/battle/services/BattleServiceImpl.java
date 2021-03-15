@@ -115,7 +115,7 @@ public class BattleServiceImpl implements BattleService {
 
   public int killAllTroopsInArmy(Army army) {
     List<TroopEntity> deadTroops = army.getTroops();
-    int deadTroopsCount = deadTroops.size();
+    final int deadCount = deadTroops.size();
 
     army.setTroops(new ArrayList<>()); //removing all dead troops from army troops - whole army died
 
@@ -125,7 +125,7 @@ public class BattleServiceImpl implements BattleService {
 
     troopService.deleteListOfTroops(deadTroops); //deleting dead troops from DB
 
-    return deadTroopsCount;
+    return deadCount;
   }
 
   public int calculateAttackPoints(List<TroopEntity> troops) {
