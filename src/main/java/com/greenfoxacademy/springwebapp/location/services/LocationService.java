@@ -5,6 +5,8 @@ import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface LocationService {
 
@@ -12,5 +14,6 @@ public interface LocationService {
 
   LocationEntity defaultLocation(KingdomEntity kingdom);
 
-  boolean isEligibleToBecomeKingdom(LocationEntity firstInQueue, LocationType targetType);
+  boolean isEligibleToBecomeKingdom(LocationEntity firstInQueue, LocationType targetType,
+                                    List<LocationEntity> emptyLocations);
 }

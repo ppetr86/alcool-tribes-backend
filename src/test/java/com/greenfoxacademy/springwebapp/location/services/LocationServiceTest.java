@@ -38,7 +38,7 @@ public class LocationServiceTest {
     LocationEntity first =
         emptyLocations.stream().filter(x -> x.getX() == 0 && x.getY() == 0).findFirst().orElse(null);
     Mockito.when(locationRepository.findByXIsAndYIs(anyInt(), anyInt())).thenReturn(new LocationEntity());
-    Mockito.when(locationService.isEligibleToBecomeKingdom(first, LocationType.KINGDOM)).thenReturn(false);
+    Mockito.when(locationService.isEligibleToBecomeKingdom(first, LocationType.KINGDOM, emptyLocations)).thenReturn(false);
 
     /*Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() - 1, firstInQueue.getY()));
     Mockito.when(locationRepository.findByXIsAndYIs(startingLocation.getX() + 1, firstInQueue.getY()));

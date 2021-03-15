@@ -25,11 +25,11 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public LocationEntity defaultLocation(KingdomEntity kingdom) {
 
-    List<LocationEntity> thisTypeLocations = repo.findAllLocationsByTypeIs(LocationType.EMPTY);
-    PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, thisTypeLocations);
+    List<LocationEntity> emptyLocations = repo.findAllLocationsByTypeIs(LocationType.EMPTY);
+    PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, emptyLocations);
     LocationEntity first = locationsInQueue.poll();
 
-    while (!isEligibleToBecomeKingdom(first, LocationType.KINGDOM)) {
+    while (!isEligibleToBecomeKingdom(first, LocationType.KINGDOM, emptyLocations)) {
       first = locationsInQueue.poll();
     }
     first.setKingdom(kingdom);
@@ -40,24 +40,27 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public boolean isEligibleToBecomeKingdom(LocationEntity first, LocationType targetType) {
+  public boolean isEligibleToBecomeKingdom(LocationEntity first, LocationType targetType, List<LocationEntity> emptyLocations) {
     if (first == null) return false;
-    LocationEntity compareToPoll = new LocationEntity(targetType);
     int range = 1;
-    // make it 8 to check diagonally adjacent???
+
     for (int i = 0; i < 8; i++) {
-      if (i == 0) compareToPoll = repo.findByXIsAndYIs(first.getX() - range, first.getY());
-      if (i == 1) compareToPoll = repo.findByXIsAndYIs(first.getX() + range, first.getY());
-      if (i == 2) compareToPoll = repo.findByXIsAndYIs(first.getX(), first.getY() - range);
-      if (i == 3) compareToPoll = repo.findByXIsAndYIs(first.getX(), first.getY() + range);
-      if (i == 4) compareToPoll = repo.findByXIsAndYIs(first.getX() + range, first.getY() - range);
-      if (i == 5) compareToPoll = repo.findByXIsAndYIs(first.getX() + range, first.getY() + range);
-      if (i == 6) compareToPoll = repo.findByXIsAndYIs(first.getX() - range, first.getY() - range);
-      if (i == 7) compareToPoll = repo.findByXIsAndYIs(first.getX() - range, first.getY() + range);
-      if (compareToPoll.getType().equals(targetType)) return false;
+      if (i == 0 && findByCoordinates(emptyLocations, first.getX(), first.getY()).getType().equals(targetType))
+        return false;
+      if (i == 1 && repo.findByXIsAndYIs(first.getX() + range, first.getY()).getType().equals(targetType))
+        return false;
+      if (i == 2 && repo.findByXIsAndYIs(first.getX(), first.getY() - range).getType().equals(targetType))
+        return false;
+      if (i == 3 && repo.findByXIsAndYIs(first.getX(), first.getY() + range).getType().equals(targetType))
+        return false;
     }
     return true;
   }
+
+  private LocationEntity findByCoordinates(List<LocationEntity> emptyLocations, int x, int y){
+    return emptyLocations.stream().filter(each->each.getX()==x && each.getY()==y).findFirst().orElse(null);
+  }
+
 
   private PriorityQueue<LocationEntity> prioritizeLocationsByCoordinates(int x, int y, List<LocationEntity> locations) {
     PriorityQueue<LocationEntity> result = new PriorityQueue<>(locations.size(), new LocationComparator(x, y));
