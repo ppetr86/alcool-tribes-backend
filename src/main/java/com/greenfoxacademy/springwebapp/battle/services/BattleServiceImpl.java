@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -120,7 +119,7 @@ public class BattleServiceImpl implements BattleService {
         .map(troop -> troop.getId())
         .collect(Collectors.toList());
 
-    troopService.deleteMoreTroopsById(deadTroopsIds);
+    troopService.deleteListOfTroopsByTroopsIds(deadTroopsIds);
 
     List<TroopEntity> aliveTroopsInKingdom = army.getKingdom().getTroops().stream()
         .filter(troop -> !army.getTroops().contains(troop))
@@ -184,24 +183,24 @@ public class BattleServiceImpl implements BattleService {
 
   //"Fight Armies" section
   public List<Army> fightArmies(Army attackingArmy, Army defendingArmy) {
+    List<TroopEntity> attackingTroopsBeforeFight = attackingArmy.getTroops();
+    List<TroopEntity> defendingTroopsBeforeFight = defendingArmy.getTroops();
 
     while (attackingArmy.getTroops().size() > 0 && defendingArmy.getTroops().size() > 0) {
-
       for(int i=0; i<10; i++) {
-        Army attackingArmyAfterFight = fightOponent(attackingArmy, defendingArmy);
-        Army defendingArmyAfterFight = fightOponent(defendingArmy, attackingArmy);
-
-
+        fightOponent(attackingArmy, defendingArmy);
+        fightOponent(defendingArmy, attackingArmy);
       }
     }
-
+    removeDeadTroopsFromKingdom(attackingArmy, attackingTroopsBeforeFight);
+    removeDeadTroopsFromKingdom(defendingArmy, defendingTroopsBeforeFight);
 
     return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
   }
 
   public Army fightOponent(Army army1, Army army2) {
-    int damage = calculateDamage(army1, army2);
-    List<TroopEntity> survivedTroops = damageTroops(army1.getTroops(), damage); //share damage + substract HP + delete troops with HP <= 0;
+    int armyDamage = calculateDamage(army1, army2);
+    List<TroopEntity> survivedTroops = damageTroops(army1.getTroops(), armyDamage);
     army1.setTroops(survivedTroops);
 
     return army1;
@@ -209,15 +208,41 @@ public class BattleServiceImpl implements BattleService {
 
 
   public int calculateDamage(Army army1, Army army2) {
-
-    return 0;
+    return Math.max(army2.getAttackPoints()-army1.getDefencePoints(),0);
   }
 
-  private List<TroopEntity> damageTroops(List<TroopEntity> troops, int damage) {
+  private List<TroopEntity> damageTroops(List<TroopEntity> troops, int armyDamage) {
+    //getting total army defence points
+    int armyDefencePoints = troops.stream().mapToInt(troop -> troop.getDefence()).sum();
 
-    return new ArrayList<>();
+    //sharing damage among troops
+    List<TroopEntity> damagedTroops = shareDamageAmongTroops(troops,armyDamage,armyDefencePoints);
+
+    //removing dead troops
+    List<TroopEntity> survivedTroops = removeTroopsWithZeroHp(damagedTroops);
+
+    return survivedTroops;
   }
 
+  public List<TroopEntity> shareDamageAmongTroops(List<TroopEntity> troops, int armyDamage,
+                                                  int armyDefencePoints) {
+    List<TroopEntity> damagedTroops = troops;
+    damagedTroops.stream()
+        .forEach(troop -> {
+          int troopDamage = (int) (armyDamage - ((armyDamage / armyDefencePoints) * troop.getDefence()));
+          int troopHP = troop.getHp() - troopDamage;
+          troop.setHp(troopHP > 0 ? troopHP : 0);
+        });
+    return damagedTroops;
+  }
+
+  private List<TroopEntity> removeTroopsWithZeroHp(List<TroopEntity> damagedTroops) {
+    List<TroopEntity> survivedTroops = damagedTroops;
+    survivedTroops.stream()
+        .filter(troop -> troop.getHp() > 0)
+        .collect(Collectors.toList());
+    return survivedTroops;
+  }
 
   //"After battle" section
   public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle) {
