@@ -69,7 +69,7 @@ public class PlayerServiceImpl implements PlayerService {
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
-    LocationEntity defaultLocation = locationService.defaultLocation(kingdom);
+    LocationEntity defaultLocation = locationService.assignKingdomLocation(kingdom);
     kingdom.setLocation(defaultLocation);
 
     player.setKingdom(kingdom);

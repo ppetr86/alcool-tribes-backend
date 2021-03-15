@@ -74,7 +74,7 @@ public class PlayerServiceTest {
     Mockito.when(passwordEncoder.encode(rqst.getPassword())).thenReturn("hashedPWD");
     Mockito.when(resourceService.createDefaultResources(kingdom)).thenReturn(kingdom.getResources());
     Mockito.doReturn(kingdom.getPlayer()).when(playerService).copyProperties(kingdom, rqst, false);
-    Mockito.when(locationService.defaultLocation(kingdom))
+    Mockito.when(locationService.assignKingdomLocation(kingdom))
         .thenReturn(new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
     Mockito.when(playerRepository.save(kingdom.getPlayer())).thenReturn(kingdom.getPlayer());
     PlayerEntity player = playerService.saveNewPlayer(rqst);

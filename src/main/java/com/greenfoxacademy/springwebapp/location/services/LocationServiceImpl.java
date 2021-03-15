@@ -23,15 +23,20 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public LocationEntity defaultLocation(KingdomEntity kingdom) {
-
+  public LocationEntity assignKingdomLocation(KingdomEntity kingdom) {
     List<LocationEntity> emptyLocations = repo.findAllLocationsByTypeIs(LocationType.EMPTY);
+    List<LocationEntity> kingdoms = repo.findAllLocationsByTypeIs(LocationType.KINGDOM);
+    if (emptyLocations == null || emptyLocations.size() == 0)
+      throw new RuntimeException("There is no location to place the kingdom");
     PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, emptyLocations);
     LocationEntity first = locationsInQueue.poll();
 
-    while (!isEligibleToBecomeKingdom(first, LocationType.KINGDOM, emptyLocations)) {
+    while (!isTypeChangeableToTarget(first, LocationType.KINGDOM, kingdoms)) {
+      if (first == null)
+        throw new RuntimeException("There is no location to place the kingdom");
       first = locationsInQueue.poll();
     }
+
     first.setKingdom(kingdom);
     first.setType(LocationType.KINGDOM);
     repo.save(first);
@@ -40,25 +45,28 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public boolean isEligibleToBecomeKingdom(LocationEntity first, LocationType targetType, List<LocationEntity> emptyLocations) {
-    if (first == null) return false;
+  public boolean isTypeChangeableToTarget(LocationEntity first, LocationType targetType,
+                                          List<LocationEntity> kingdoms) {
     int range = 1;
-
-    for (int i = 0; i < 8; i++) {
-      if (i == 0 && findByCoordinates(emptyLocations, first.getX(), first.getY()).getType().equals(targetType))
-        return false;
-      if (i == 1 && repo.findByXIsAndYIs(first.getX() + range, first.getY()).getType().equals(targetType))
-        return false;
-      if (i == 2 && repo.findByXIsAndYIs(first.getX(), first.getY() - range).getType().equals(targetType))
-        return false;
-      if (i == 3 && repo.findByXIsAndYIs(first.getX(), first.getY() + range).getType().equals(targetType))
-        return false;
+    if (!isEligible(kingdoms, first.getX() + range, first.getY(), targetType)) {
+      return false;
+    } else if (!isEligible(kingdoms, first.getX(), first.getY() + range, targetType)) {
+      return false;
+    } else if (!isEligible(kingdoms, first.getX() - range, first.getY(), targetType)) {
+      return false;
+    } else if (!isEligible(kingdoms, first.getX(), first.getY() - range, targetType)) {
+      return false;
+    } else {
+      return true;
     }
-    return true;
   }
 
-  private LocationEntity findByCoordinates(List<LocationEntity> emptyLocations, int x, int y){
-    return emptyLocations.stream().filter(each->each.getX()==x && each.getY()==y).findFirst().orElse(null);
+  public boolean isEligible(List<LocationEntity> kingdoms, int x, int y, LocationType targetType) {
+    LocationEntity found = kingdoms
+        .stream()
+        .filter(each -> each.getX() == x && each.getY() == y)
+        .findFirst().orElse(null);
+    return found == null || (!found.getType().equals(targetType));
   }
 
 

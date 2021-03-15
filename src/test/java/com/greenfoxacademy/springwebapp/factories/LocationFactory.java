@@ -1,9 +1,11 @@
 package com.greenfoxacademy.springwebapp.factories;
 
+import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LocationFactory {
@@ -21,5 +23,14 @@ public class LocationFactory {
       }
     }
     return locationEntities;
+  }
+
+  public static List<LocationEntity> createKingdoms() {
+    List<LocationEntity> kingdoms = Arrays.asList(
+        new LocationEntity(0, 2, new KingdomEntity(), LocationType.KINGDOM),
+        new LocationEntity(0, 4, new KingdomEntity(), LocationType.KINGDOM),
+        new LocationEntity(0, 6, new KingdomEntity(), LocationType.KINGDOM)
+    );
+    return kingdoms;
   }
 }

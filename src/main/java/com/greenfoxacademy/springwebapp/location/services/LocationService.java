@@ -12,8 +12,7 @@ public interface LocationService {
 
   LocationEntity save(LocationEntity entity);
 
-  LocationEntity defaultLocation(KingdomEntity kingdom);
+  LocationEntity assignKingdomLocation(KingdomEntity kingdom);
 
-  boolean isEligibleToBecomeKingdom(LocationEntity firstInQueue, LocationType targetType,
-                                    List<LocationEntity> emptyLocations);
+  boolean isTypeChangeableToTarget(LocationEntity first, LocationType targetType, List<LocationEntity> kingdoms);
 }
