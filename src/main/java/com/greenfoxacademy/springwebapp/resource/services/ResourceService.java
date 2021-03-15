@@ -13,7 +13,11 @@ public interface ResourceService {
 
   boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange);
 
+  void updateResourcesBasedOnTroop(KingdomEntity kingdom, int amountChange);
+
   boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
+
+  void updateResourcesBasedOnBuilding(KingdomEntity kingdom, int amountChange);
 
   List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
 

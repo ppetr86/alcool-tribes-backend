@@ -58,6 +58,7 @@ public class TroopServiceImpl implements TroopService {
     if (!resourceService.hasResourcesForTroop(kingdom, troopCosts)) {
       throw new NotEnoughResourceException();
     }
+    resourceService.updateResourcesBasedOnTroop(kingdom, troopCosts);
     Integer troopLevel = academy.getLevel();
     TroopEntity troop = buildTroopFromTroopProperties(kingdom, troopLevel);
     troop = troopRepository.save(troop);

@@ -138,9 +138,10 @@ public class BuildingServiceImpl implements BuildingService {
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
     int amountChange = defineBuildingCosts(dto.getType());
-    if (dto.getType().toUpperCase().equals("ACADEMY")) amountChange = amountChange + 50;
+    if (dto.getType().toUpperCase().equals("ACADEMY")) amountChange = defineAcademyCosts(dto.getType());
     if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
+    resourceService.updateResourcesBasedOnBuilding(kingdom, amountChange);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result.setKingdom(kingdom);
@@ -152,6 +153,11 @@ public class BuildingServiceImpl implements BuildingService {
     resourceService.updateResourceGeneration(kingdom, result);
 
     return result;
+  }
+
+  public int defineAcademyCosts(String buildingType) {
+    return Integer.parseInt(Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts.firstLevel",
+        buildingType.toLowerCase()))));
   }
 
   public int defineBuildingCosts(String buildingType) {

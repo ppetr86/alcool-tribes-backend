@@ -31,15 +31,24 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange) {
-    if (isResourceUpdatable(kingdom, amountChange)) {
-      ResourceEntity kingdomsFood = getResourceByResourceType(kingdom, ResourceType.FOOD);
-      BuildingEntity academy = getAcademy(kingdom);
-      int level = academy.getLevel();
-      kingdomsFood.setGeneration(kingdomsFood.getGeneration() + (level * defineTroopFoodFromAppProperty()));
-      resourceRepository.save(kingdomsFood);
-      return true;
-    }
-    return false;
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+    return amountChange <= actualAmount;
+  }
+
+  @Override
+  public void updateResourcesBasedOnTroop(KingdomEntity kingdom, int amountChange) {
+    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
+    ResourceEntity kingdomsFood = getResourceByResourceType(kingdom, ResourceType.FOOD);
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+
+    kingdomsGold.setAmount(actualAmount - amountChange);
+    kingdomsGold.setUpdatedAt(timeService.getTime());
+    BuildingEntity academy = getAcademy(kingdom);
+    int level = academy.getLevel();
+    kingdomsFood.setGeneration(kingdomsFood.getGeneration() + (level * defineTroopFoodFromAppProperty()));
+
+    List<ResourceEntity> resources = Arrays.asList(kingdomsFood, kingdomsGold);
+    resourceRepository.saveAll(resources);
   }
 
   private BuildingEntity getAcademy(KingdomEntity kingdom) {
@@ -55,20 +64,18 @@ public class ResourceServiceImpl implements ResourceService {
 
   @Override
   public boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange) {
-    return isResourceUpdatable(kingdom, amountChange);
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+    return amountChange <= actualAmount;
   }
 
-  private boolean isResourceUpdatable(KingdomEntity kingdom, int amountChange) {
+  @Override
+  public void updateResourcesBasedOnBuilding(KingdomEntity kingdom, int amountChange) {
     ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
     int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
 
-    if (amountChange <= actualAmount) {
-      kingdomsGold.setAmount(actualAmount - amountChange);
-      kingdomsGold.setUpdatedAt(timeService.getTime());
-      resourceRepository.save(kingdomsGold);
-      return true;
-    }
-    return false;
+    kingdomsGold.setAmount(actualAmount - amountChange);
+    kingdomsGold.setUpdatedAt(timeService.getTime());
+    resourceRepository.save(kingdomsGold);
   }
 
   private ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType) {
@@ -113,7 +120,7 @@ public class ResourceServiceImpl implements ResourceService {
   // TODO: when PUT kingdom/buildings/{buildingId} then also update resources
   @Override
   public ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building) {
-    ResourceEntity resource = findResourceByBuildingType(kingdom,building.getType());
+    ResourceEntity resource = findResourceByBuildingType(kingdom, building.getType());
     if (resource != null) {
       doResourceUpdate(kingdom, building, resource);
       if (resource != null) {
