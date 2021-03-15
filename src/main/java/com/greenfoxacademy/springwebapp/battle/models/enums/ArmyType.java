@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.battle.models.enums;
 
-public enum  ArmyType {
+public enum ArmyType {
   ATTACKINGARMY("attackingArmy"),
   DEFENDINGARMY("defendingArmy");
 

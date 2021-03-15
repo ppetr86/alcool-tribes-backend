@@ -119,13 +119,13 @@ public class KingdomControllerTest {
   }
 
   @Test
-  public void inititateBattleShouldReturnProperResponseDTO() {
+  public void goToWarShouldReturnProperResponseDTO() {
     Long[] troopIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(2L,requestDTO,kingdom)).thenReturn(new BattleResponseDTO());
+    Mockito.when(battleService.war(2L,requestDTO,kingdom)).thenReturn(new BattleResponseDTO());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
 
@@ -135,39 +135,39 @@ public class KingdomControllerTest {
   }
 
   @Test(expected = MissingParameterException.class)
-  public void inititateBattleShouldReturnMissingParameterException() {
+  public void goToWarShouldReturnMissingParameterException() {
     Long[] troopIds = {10L,20L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(2L,requestDTO,kingdom))
+    Mockito.when(battleService.war(2L,requestDTO,kingdom))
         .thenThrow(new MissingParameterException("anything"));
 
     ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
   }
 
   @Test(expected = IdNotFoundException.class)
-  public void inititateBattleShouldReturnIdNotFoundException() {
+  public void goToWarShouldReturnIdNotFoundException() {
     Long[] troopIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(20L,requestDTO,kingdom))
+    Mockito.when(battleService.war(20L,requestDTO,kingdom))
         .thenThrow(new IdNotFoundException());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(20L, requestDTO, authentication);
   }
 
   @Test(expected = ForbiddenActionException.class)
-  public void inititateBattleShouldReturnForbiddenActionException() {
+  public void goToWarShouldReturnForbiddenActionException() {
     Long[] troopIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
 
-    Mockito.when(battleService.initiateBattle(1L,requestDTO,kingdom))
+    Mockito.when(battleService.war(1L,requestDTO,kingdom))
         .thenThrow(new ForbiddenActionException());
 
     ResponseEntity<?> response = kingdomController.initiateBattle(1L, requestDTO, authentication);

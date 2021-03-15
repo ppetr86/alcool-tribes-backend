@@ -39,6 +39,19 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
+  public ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType) {
+    return kingdom.getResources().stream()
+        .filter(r -> r.getType().equals(resourceType))
+        .findFirst()
+        .orElse(null);
+  }
+
+  @Override
+  public void saveResources (List<ResourceEntity> resources){
+    resourceRepository.saveAll(resources);
+  }
+
+  @Override
   public List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity) {
     return Arrays.stream(ResourceType.values())
         .map(type -> new ResourceEntity(kingdomEntity, type, 100, 10, timeService.getTime()))
