@@ -113,8 +113,9 @@ public class BattleServiceImpl implements BattleService {
     return finalHP;
   }
 
-  public List<TroopEntity> killAllTroopsInArmy(Army army) {
+  public int killAllTroopsInArmy(Army army) {
     List<TroopEntity> deadTroops = army.getTroops();
+    int deadTroopsCount = deadTroops.size();
 
     army.setTroops(new ArrayList<>()); //removing all dead troops from army troops - whole army died
 
@@ -124,7 +125,7 @@ public class BattleServiceImpl implements BattleService {
 
     troopService.deleteListOfTroops(deadTroops); //deleting dead troops from DB
 
-    return deadTroops;
+    return deadTroopsCount;
   }
 
   public int calculateAttackPoints(List<TroopEntity> troops) {
@@ -190,7 +191,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     removeDeadTroopsFromKingdom(attackingArmy, attackingTroopsBeforeFight);
-    //removeDeadTroopsFromKingdom(defendingArmy, defendingTroopsBeforeFight);
+    removeDeadTroopsFromKingdom(defendingArmy, defendingTroopsBeforeFight);
 
     return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
   }

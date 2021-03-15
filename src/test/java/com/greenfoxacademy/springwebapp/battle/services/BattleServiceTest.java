@@ -178,9 +178,9 @@ public class BattleServiceTest {
     kingdom.setTroops(kingdomTroops);
     army.setKingdom(kingdom);
 
-    List<TroopEntity> deadTroops = battleService.killAllTroopsInArmy(army);
+    int deadTroops = battleService.killAllTroopsInArmy(army);
 
-    Assert.assertEquals(troops, deadTroops);
+    Assert.assertEquals(3, deadTroops);
     Assert.assertEquals(0,army.getTroops().size());
     Assert.assertEquals(1,army.getKingdom().getTroops().size());
   }
@@ -234,8 +234,8 @@ public class BattleServiceTest {
     Assert.assertEquals(0, army.getKingdom().getTroops().size());
     Assert.assertEquals(0, army.getTroops().size());
     Assert.assertEquals(0, army.getHealthPoints());
-    Assert.assertEquals(306, army.getAttackPoints());
-    Assert.assertEquals(306, army.getDefencePoints());
+    Assert.assertEquals(0, army.getAttackPoints());
+    Assert.assertEquals(0, army.getDefencePoints());
     Assert.assertEquals(ArmyType.ATTACKINGARMY, army.getArmyType());
   }
 
