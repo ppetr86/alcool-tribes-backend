@@ -13,9 +13,6 @@ import java.util.List;
 public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
 
   @Procedure
-  List<LocationEntity> generateNDesertsAndJungles(int n);
-
-  @Procedure
   List<LocationEntity> generateNDesertsAndJunglesRandSelect(int n);
 
   @Procedure

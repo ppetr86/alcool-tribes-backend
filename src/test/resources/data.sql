@@ -41,6 +41,8 @@ INSERT INTO locations (id, x, y, kingdom_id, type)
 VALUES (7, 1, 0, NULL, 'EMPTY');
 INSERT INTO locations (id, x, y, kingdom_id, type)
 VALUES (8, 1, -1, NULL, 'EMPTY');
+INSERT INTO locations (id, x, y, kingdom_id, type)
+VALUES (9, 5, -5, NULL, 'EMPTY');
 
 INSERT INTO buildings (id, finished_at, hp, level, started_at, type, kingdom_id)
 VALUES (1, 0, 0, 1, 0, 'TOWNHALL', 1);

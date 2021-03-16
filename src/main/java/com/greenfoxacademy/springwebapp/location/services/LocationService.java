@@ -2,10 +2,9 @@ package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
-import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public interface LocationService {
@@ -14,5 +13,5 @@ public interface LocationService {
 
   LocationEntity assignKingdomLocation(KingdomEntity kingdom);
 
-  boolean isTypeChangeableToTarget(LocationEntity first, LocationType targetType, List<LocationEntity> kingdoms);
+  boolean isTypeChangeableToTarget(LocationEntity first, Set<LocationEntity> kingdoms);
 }

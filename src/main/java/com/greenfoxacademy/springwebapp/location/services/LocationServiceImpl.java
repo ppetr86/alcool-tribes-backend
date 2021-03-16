@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -24,47 +26,46 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   public LocationEntity assignKingdomLocation(KingdomEntity kingdom) {
-    List<LocationEntity> emptyLocations = repo.findAllLocationsByTypeIs(LocationType.EMPTY);
-    List<LocationEntity> kingdoms = repo.findAllLocationsByTypeIs(LocationType.KINGDOM);
+    List<LocationEntity> allLocations = repo.findAll();
+    Set<LocationEntity> kingdoms = allLocations.stream().filter(x -> x.getType().equals(LocationType.KINGDOM)).collect(
+        Collectors.toSet());
+    List<LocationEntity> emptyLocations =
+        allLocations.stream().filter(x -> x.getType().equals(LocationType.EMPTY)).collect(
+            Collectors.toList());
     PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, emptyLocations);
     LocationEntity first = locationsInQueue.poll();
 
-    while (!isTypeChangeableToTarget(first, LocationType.KINGDOM, kingdoms)) {
+    while (!isTypeChangeableToTarget(first, kingdoms)) {
       first = locationsInQueue.poll();
     }
 
     first.setKingdom(kingdom);
     first.setType(LocationType.KINGDOM);
-    // do not save location to db it will be saved from where this is called
     return first;
   }
 
   @Override
-  public boolean isTypeChangeableToTarget(LocationEntity first, LocationType targetType,
-                                          List<LocationEntity> kingdoms) {
+  public boolean isTypeChangeableToTarget(LocationEntity first, Set<LocationEntity> kingdoms) {
 
-    if (first == null)
+    if (first == null) {
       throw new RuntimeException("There is no location to place the kingdom");
+    }
     int range = 1;
-    if (!isEligible(kingdoms, first.getX() + range, first.getY(), targetType)) {
+    if (!isEligible(kingdoms, first.getX() + range, first.getY())) {
       return false;
-    } else if (!isEligible(kingdoms, first.getX(), first.getY() + range, targetType)) {
+    } else if (!isEligible(kingdoms, first.getX(), first.getY() + range)) {
       return false;
-    } else if (!isEligible(kingdoms, first.getX() - range, first.getY(), targetType)) {
+    } else if (!isEligible(kingdoms, first.getX() - range, first.getY())) {
       return false;
-    } else if (!isEligible(kingdoms, first.getX(), first.getY() - range, targetType)) {
+    } else if (!isEligible(kingdoms, first.getX(), first.getY() - range)) {
       return false;
     } else {
       return true;
     }
   }
 
-  public boolean isEligible(List<LocationEntity> kingdoms, int x, int y, LocationType targetType) {
-    LocationEntity found = kingdoms
-        .stream()
-        .filter(each -> each.getX() == x && each.getY() == y)
-        .findFirst().orElse(null);
-    return found == null || (!found.getType().equals(targetType));
+  public boolean isEligible(Set<LocationEntity> kingdoms, int x, int y) {
+    return !kingdoms.contains(new LocationEntity(x, y));
   }
 
 
