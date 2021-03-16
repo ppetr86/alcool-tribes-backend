@@ -64,17 +64,17 @@ public class TroopControllerTest {
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
 
-    KingdomEntity ke = new KingdomEntity();
-    ke.setTroops(TroopFactory.createDefaultTroops());
-    List<TroopEntityResponseDTO> list = ke.getTroops()
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+    List<TroopEntityResponseDTO> list = kingdom.getTroops()
         .stream()
         .map(TroopEntityResponseDTO::new)
         .collect(Collectors.toList());
 
-    Mockito.when(troopService.troopsToListDTO(KingdomFactory.createKingdomEntityWithId(1L)))
+    Mockito.when(troopService.troopsToListDTO(kingdom))
         .thenReturn(new TroopListResponseDto(list));
 
-    ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));
+    ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(authentication);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assert.assertEquals(3, response.getBody().getTroops().size());
