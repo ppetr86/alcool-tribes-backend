@@ -26,14 +26,10 @@ public class LocationServiceImpl implements LocationService {
   public LocationEntity assignKingdomLocation(KingdomEntity kingdom) {
     List<LocationEntity> emptyLocations = repo.findAllLocationsByTypeIs(LocationType.EMPTY);
     List<LocationEntity> kingdoms = repo.findAllLocationsByTypeIs(LocationType.KINGDOM);
-    if (emptyLocations == null || emptyLocations.size() == 0)
-      throw new RuntimeException("There is no location to place the kingdom");
     PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, emptyLocations);
     LocationEntity first = locationsInQueue.poll();
 
     while (!isTypeChangeableToTarget(first, LocationType.KINGDOM, kingdoms)) {
-      if (first == null)
-        throw new RuntimeException("There is no location to place the kingdom");
       first = locationsInQueue.poll();
     }
 
@@ -46,6 +42,9 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public boolean isTypeChangeableToTarget(LocationEntity first, LocationType targetType,
                                           List<LocationEntity> kingdoms) {
+
+    if (first == null)
+      throw new RuntimeException("There is no location to place the kingdom");
     int range = 1;
     if (!isEligible(kingdoms, first.getX() + range, first.getY(), targetType)) {
       return false;

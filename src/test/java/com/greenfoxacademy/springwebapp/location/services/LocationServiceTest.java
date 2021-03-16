@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -92,11 +93,11 @@ public class LocationServiceTest {
 
   @Test(expected = RuntimeException.class)
   public void giveNewKindomALocation_doesntSetKingdom_when_NoFreeLocation() {
-    List<LocationEntity> locations = Arrays.asList(
-        new LocationEntity(0, 2, null, LocationType.KINGDOM)
-    );
+    List<LocationEntity> locations = new ArrayList<>();
+    locations.add(new LocationEntity(0, 2, null, LocationType.KINGDOM));
+
     mockLocations(locations);
-    Mockito.doReturn(false).when(locationService)
+    Mockito.doReturn(RuntimeException.class).when(locationService)
         .isTypeChangeableToTarget(any(), any(), any());
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
 
