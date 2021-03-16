@@ -213,14 +213,8 @@ public class BattleServiceImpl implements BattleService {
     Army attackingArmy = getArmyByType(armiesAfterBattle, ArmyType.ATTACKINGARMY);
     Army defendingArmy = getArmyByType(armiesAfterBattle, ArmyType.DEFENDINGARMY);
 
-    if (defendingArmy.getTroops() == null && attackingArmy.getTroops() == null) {
-      return new BattleResultDTO("Every Troops were dead");
-    }
-    if (defendingArmy.getTroops() != null) {
-      healAliveTroops(defendingArmy);
-      if (attackingArmy.getTroops() == null) {
-        return new BattleResultDTO("Defending Kingdom won");
-      }
+    if (nobodyOrDefKingdomWon(defendingArmy, attackingArmy) != null){
+      return nobodyOrDefKingdomWon(defendingArmy, attackingArmy);
     }
     int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
     int stolenGold = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.GOLD, ResourceType.FOOD);
@@ -232,6 +226,19 @@ public class BattleServiceImpl implements BattleService {
       }
     }
     return new BattleResultDTO(stolenFood, stolenGold);
+  }
+
+  public BattleResultDTO nobodyOrDefKingdomWon(Army defendingArmy, Army attackingArmy){
+    if (defendingArmy.getTroops() == null && attackingArmy.getTroops() == null) {
+      return new BattleResultDTO("Every Troops were dead");
+    }
+    if (defendingArmy.getTroops() != null) {
+      healAliveTroops(defendingArmy);
+      if (attackingArmy.getTroops() == null) {
+        return new BattleResultDTO("Defending Kingdom won");
+      }
+    }
+    return null;
   }
 
   public void healAliveTroops(Army army) {
@@ -282,7 +289,6 @@ public class BattleServiceImpl implements BattleService {
     resourceService.saveResources(resources);
   }
 
-  //TODO: here I have to use the delay(travelTime) method
   private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange, int distance) {
     killTroopWhichCanNotReachHome(attackingArmy, distance);
 
@@ -291,6 +297,7 @@ public class BattleServiceImpl implements BattleService {
     ResourceEntity attackingKingdomGold =
         resourceService.getResourceByResourceType(attackingArmy.getKingdom(), ResourceType.GOLD);
 
+    //TODO: here I have to use the delay(travelTime) method
     attackingKingdomFood.setAmount(attackingKingdomFood.getAmount() + foodChange);
     attackingKingdomGold.setAmount(attackingKingdomGold.getAmount() + goldChange);
 

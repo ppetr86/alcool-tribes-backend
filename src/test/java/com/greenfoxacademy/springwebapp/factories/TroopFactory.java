@@ -20,4 +20,18 @@ public class TroopFactory {
         new TroopEntity(1L, 1, 100, 100, 100, 999L, 1111L, kingdom),
         new TroopEntity(2L, 1, 100, 100, 100, 999L, 1111L, kingdom)));
   }
+
+  public static List<TroopEntity> createTroopsWithProperDetails() {
+    return (Arrays.asList(
+        new TroopEntity(1L, 1, 20, 10, 5, 101L, 101L, null),
+        new TroopEntity(2L, 2, 40, 20, 10, 102L, 102L, null),
+        new TroopEntity(3L, 3, 60, 30, 15, 103L, 103L, null)));
+  }
+
+  public static List<TroopEntity> createTroopsWithLowHp() {
+    return (Arrays.asList(
+        new TroopEntity(1L, 1, 2, 10, 5, 101L, 101L, null),
+        new TroopEntity(2L, 2, 4, 20, 10, 102L, 102L, null),
+        new TroopEntity(3L, 3, 6, 30, 15, 103L, 103L, null)));
+  }
 }

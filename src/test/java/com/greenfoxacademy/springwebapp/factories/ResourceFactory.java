@@ -27,6 +27,12 @@ public class ResourceFactory {
     );
   }
 
+  public static List<ResourceEntity> createResourcesWithAllDataAndHighAMount(KingdomEntity kingdom) {
+    return Arrays.asList(
+        new ResourceEntity(1L, ResourceType.GOLD, 1000, 100, 999L, kingdom),
+        new ResourceEntity(2L, ResourceType.FOOD, 1000, 100, 999L, kingdom)
+    );
+  }
 
 }
 
