@@ -17,7 +17,7 @@ public interface ResourceService {
 
   boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
 
-  void updateResourcesBasedOnBuilding(KingdomEntity kingdom, int amountChange);
+  void updateResourcesByBuildingType(KingdomEntity kingdom, int amountChange);
 
   List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
 

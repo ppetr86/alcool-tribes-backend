@@ -89,8 +89,8 @@ public class BuildingServiceImpl implements BuildingService {
     int amountChange = cost * levelDTO.getLevel();
     if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
+    if (building.getType().equals(BuildingType.TOWNHALL)) return building;
     BuildingEntity townHall = getTownHallFromKingdom(kingdom);
-    if (building.getType() == townHall.getType()) return building;
     if (townHall.getLevel() < levelDTO.getLevel()) throw new TownhallLevelException();
     return building;
   }
@@ -138,10 +138,10 @@ public class BuildingServiceImpl implements BuildingService {
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
     int amountChange = defineBuildingCosts(dto.getType());
-    if (dto.getType().toUpperCase().equals("ACADEMY")) amountChange = defineAcademyCosts(dto.getType());
+    if (dto.getType().toUpperCase().equals("ACADEMY")) amountChange = defineAcademyCosts();
     if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
-    resourceService.updateResourcesBasedOnBuilding(kingdom, amountChange);
+    resourceService.updateResourcesByBuildingType(kingdom, amountChange);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result.setKingdom(kingdom);
@@ -154,9 +154,8 @@ public class BuildingServiceImpl implements BuildingService {
     return result;
   }
 
-  public int defineAcademyCosts(String buildingType) {
-    return Integer.parseInt(Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts.firstLevel",
-        buildingType.toLowerCase()))));
+  public int defineAcademyCosts() {
+    return Integer.parseInt(Objects.requireNonNull(env.getProperty("building.academy.buildingCosts.firstLevel")));
   }
 
   public int defineBuildingCosts(String buildingType) {

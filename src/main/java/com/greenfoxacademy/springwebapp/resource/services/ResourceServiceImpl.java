@@ -69,7 +69,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public void updateResourcesBasedOnBuilding(KingdomEntity kingdom, int amountChange) {
+  public void updateResourcesByBuildingType(KingdomEntity kingdom, int amountChange) {
     ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
     int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
 
@@ -92,7 +92,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     long updatedTime = resource.getUpdatedAt();
     long actualTime = timeService.getTime();
-    int betweenUpdateAndActualTime = (int) (actualTime - updatedTime);
+    int betweenUpdateAndActualTime = timeService.getTimeBetween(updatedTime, actualTime);
 
     if (updatedTime < actualTime) {
       betweenUpdateAndActualAmount = (betweenUpdateAndActualTime / 60 * resource.getGeneration());
