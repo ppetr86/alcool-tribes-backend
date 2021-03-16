@@ -39,8 +39,7 @@ public class LocationServiceImpl implements LocationService {
 
     first.setKingdom(kingdom);
     first.setType(LocationType.KINGDOM);
-    repo.save(first);
-
+    // do not save location to db it will be saved from where this is called
     return first;
   }
 

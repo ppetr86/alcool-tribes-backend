@@ -49,21 +49,6 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void giveNewKindomALocation_savesSelectedLocationToDB() {
-    List<LocationEntity> locations = Arrays.asList(
-        new LocationEntity(0, 0, null, LocationType.EMPTY),
-        new LocationEntity(0, 1, null, LocationType.EMPTY)
-    );
-    mockLocations(locations);
-    Mockito.doReturn(true).when(locationService).isTypeChangeableToTarget(any(), any(), any());
-    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
-
-    LocationEntity location = locationService.assignKingdomLocation(kingdom);
-
-    Mockito.verify(locationRepository).save(location);
-  }
-
-  @Test
   public void giveNewKindomALocation_doesntSetKingdomNextToAnotherKingdom() {
     List<LocationEntity> locations = Arrays.asList(
         new LocationEntity(0, 1, null, LocationType.EMPTY),
