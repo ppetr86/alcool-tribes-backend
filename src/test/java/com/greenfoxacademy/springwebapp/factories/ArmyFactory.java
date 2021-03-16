@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.factories;
 
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
+import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,9 @@ public class ArmyFactory {
         ArmyType.ATTACKINGARMY
     );
     //setting same troops for Army and Kingdom (which is in Army)
-    attackingArmy.getKingdom().setTroops(attackingArmy.getTroops());
+    List<TroopEntity> kingdomTroops = new ArrayList<>();
+    kingdomTroops.addAll(attackingArmy.getTroops());
+    attackingArmy.getKingdom().setTroops(kingdomTroops);
 
     return attackingArmy;
   }
@@ -33,7 +36,10 @@ public class ArmyFactory {
         ArmyType.DEFENDINGARMY
     );
     //setting same troops for Army and Kingdom (which is in Army)
-    defendingArmy.getKingdom().setTroops(defendingArmy.getTroops());
+    List<TroopEntity> kingdomTroops = new ArrayList<>();
+    kingdomTroops.addAll(defendingArmy.getTroops());
+    defendingArmy.getKingdom().setTroops(kingdomTroops);
+
     return defendingArmy;
   }
 

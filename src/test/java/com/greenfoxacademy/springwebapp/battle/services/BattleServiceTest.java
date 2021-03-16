@@ -1,5 +1,8 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
+import static org.mockito.ArgumentMatchers.any;
+
+
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
@@ -392,7 +395,13 @@ public class BattleServiceTest {
   @Test
   public void removeDeadTroopsFromKingdom_returnsUpdtedArmy() {
     Army army = ArmyFactory.createAttackingArmy();
+    List<TroopEntity> troopsInArmyBeforeFight = new ArrayList<>(); //3 troops
+    troopsInArmyBeforeFight.addAll(army.getTroops());
+    army.getTroops().remove(0); //removing one troop from fighting troops (he died)
 
+    Army updatedArmy = battleService.removeDeadTroopsFromKingdom(army,troopsInArmyBeforeFight);
+
+    Assert.assertEquals(2,updatedArmy.getKingdom().getTroops().size());
   }
 
 
