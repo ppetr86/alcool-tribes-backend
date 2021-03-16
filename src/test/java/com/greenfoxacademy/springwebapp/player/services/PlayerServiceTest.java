@@ -199,7 +199,7 @@ public class PlayerServiceTest {
   @Test
   public void findPlayersAroundMeShouldReturnOnePlayerWithinDistance() {
     KingdomEntity kingdom1 = KingdomFactory.createFullKingdom(1L, 1L);
-    kingdom1.setLocation(new LocationEntity(1L, 65, 65,kingdom1,LocationType.KINGDOM));
+    kingdom1.setLocation(new LocationEntity(1L, 65, 65, kingdom1, LocationType.KINGDOM));
     KingdomEntity kingdom2 = KingdomFactory.createFullKingdom(2L, 2L);
     KingdomEntity kingdom3 = KingdomFactory.createFullKingdom(3L, 3L);
     List<PlayerEntity> fakeListOfAllPlayers =

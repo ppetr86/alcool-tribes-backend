@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.troop.controllers;
 
-import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;

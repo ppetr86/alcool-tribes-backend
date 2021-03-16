@@ -4,7 +4,6 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

@@ -5,10 +5,6 @@ import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
-import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class KingdomFactory {
 
