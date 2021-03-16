@@ -224,19 +224,18 @@ public class BattleServiceImpl implements BattleService {
 
   public List<TroopEntity> shareDamageAmongTroops(List<TroopEntity> troops, int armyDamage,
                                                   int armyDefencePoints) {
-    List<TroopEntity> damagedTroops = troops;
-    damagedTroops.stream()
+    troops.stream()
         .forEach(troop -> {
-          int troopDamage = (int) (armyDamage - ((armyDamage / armyDefencePoints) * troop.getDefence()));
+          int troopDamage = armyDamage - (int)(((double)armyDamage /(double)armyDefencePoints) * (troop.getDefence()));
           int troopHP = troop.getHp() - troopDamage;
           troop.setHp(troopHP > 0 ? troopHP : 0);
         });
-    return damagedTroops;
+    return troops;
   }
 
   public List<TroopEntity> removeTroopsWithZeroHp(List<TroopEntity> damagedTroops) {
-    List<TroopEntity> survivedTroops = damagedTroops;
-    survivedTroops.stream()
+    List<TroopEntity> survivedTroops = new ArrayList<>();
+    survivedTroops = damagedTroops.stream()
         .filter(troop -> troop.getHp() > 0)
         .collect(Collectors.toList());
     return survivedTroops;

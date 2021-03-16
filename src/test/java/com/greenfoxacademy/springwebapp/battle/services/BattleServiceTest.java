@@ -7,6 +7,7 @@ import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.factories.ArmyFactory;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
@@ -18,6 +19,7 @@ import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,6 +93,7 @@ public class BattleServiceTest {
     BattleResponseDTO response = battleService.war(2L, requestDTO, attackingKingdom);
   }
 
+  //"Prepare attacking army" section
   @Test
   public void getAttackingTroopsReturnsCorrectTroops() {
     Long[] troopsIds = {1L,2L};
@@ -239,6 +242,7 @@ public class BattleServiceTest {
     Assert.assertEquals(ArmyType.ATTACKINGARMY, army.getArmyType());
   }
 
+  //"Prepare defending army" section
   @Test
   public void getDefendingTroops_ReturnsCorrectSizeTroopsList() {
     KingdomEntity defendingKingdom = KingdomFactory.createFullKingdom(1L,1L);
@@ -318,6 +322,77 @@ public class BattleServiceTest {
     Assert.assertEquals(200, army.getAttackPoints());
     Assert.assertEquals(206, army.getDefencePoints());
     Assert.assertEquals(ArmyType.DEFENDINGARMY, army.getArmyType());
+  }
+
+  //"Fight Armies" section
+  @Test
+  public void fightOpponent_returnsArmyWithUpdatedTroops() {
+    Army army1 = ArmyFactory.createAttackingArmy();
+    Army army2 = ArmyFactory.createDefendingArmy();
+    List<TroopEntity> survivedTroops = TroopFactory.createDefaultTroops();
+
+    Mockito.doReturn(50).when(battleService).calculateDamage(army1,army2);
+    Mockito.doReturn(survivedTroops).when(battleService).damageTroops(army1.getTroops(),50);
+
+    Army updatedArmy = battleService.fightOponent(army1,army2);
+
+    Assert.assertEquals(survivedTroops,updatedArmy.getTroops());
+  }
+
+  @Test
+  public void calculateDamage_shouldReturnCorrectDamage() {
+    Army army1 = ArmyFactory.createAttackingArmy();
+    Army army2 = ArmyFactory.createDefendingArmy();
+
+    int damage = battleService.calculateDamage(army1,army2);
+
+    Assert.assertEquals(150, damage);
+  }
+
+  @Test
+  public void damageTroops_returnsSurvivedTroops() {
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+    final int armyDamage = 150;
+    final int armyDefencePoints = 306;
+    List<TroopEntity> damagedTroops = troops;
+    List<TroopEntity> survivedTroops = troops.subList(0,1);
+
+    Mockito.doReturn(damagedTroops).when(battleService).shareDamageAmongTroops(troops,armyDamage,armyDefencePoints);
+    Mockito.doReturn(survivedTroops).when(battleService).removeTroopsWithZeroHp(damagedTroops);
+
+    List<TroopEntity> resultTroops = battleService.damageTroops(troops,armyDamage);
+
+    Assert.assertEquals(survivedTroops,resultTroops);
+  }
+
+  @Test
+  public void shareDamageAmongTroops_returnsDamagedTroops() {
+    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
+    final int armyDamage = 100;
+    final int armyDefencePoints = 306;
+
+    List<TroopEntity> damagedTroops = battleService.shareDamageAmongTroops(troops,armyDamage,armyDefencePoints);
+
+    Assert.assertEquals(3,damagedTroops.size());
+    Assert.assertEquals(34,damagedTroops.get(0).getHp().intValue());
+    Assert.assertEquals(35,damagedTroops.get(1).getHp().intValue());
+    Assert.assertEquals(36,damagedTroops.get(2).getHp().intValue());
+  }
+
+  @Test
+  public void removeTroopsWithZeroHp_returnsOnlySurvivedTroops() {
+    List<TroopEntity> damagedTroops = TroopFactory.createDefaultTroops(); //3 troops
+    damagedTroops.get(0).setHp(0);
+
+    List<TroopEntity> survivedTroops = battleService.removeTroopsWithZeroHp(damagedTroops);
+
+    Assert.assertEquals(2,survivedTroops.size());
+  }
+
+  @Test
+  public void removeDeadTroopsFromKingdom_returnsUpdtedArmy() {
+    Army army = ArmyFactory.createAttackingArmy();
+
   }
 
 
