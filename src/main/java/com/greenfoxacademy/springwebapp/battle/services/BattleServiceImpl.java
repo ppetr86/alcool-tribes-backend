@@ -165,9 +165,15 @@ public class BattleServiceImpl implements BattleService {
   }
 
   public int calculateDPforDefendingArmy(Army defendingArmy) {
+    double defenceBonusCoef = calculateDefenceBonusCoeficient(defendingArmy.getKingdom());
+    //setting new DP for each defending troop
+    defendingArmy.getTroops().stream()
+        .forEach(troop -> troop.setDefence((int)(troop.getDefence() * defenceBonusCoef)));
+
+    //calculating dp for whole arm
     int armyDP = defendingArmy.getTroops().stream().mapToInt(troop -> troop.getDefence()).sum();
-    int dpBonus = (int)(armyDP * calculateDefenceBonusCoeficient(defendingArmy.getKingdom()));
-    return armyDP + dpBonus;
+    int armyDpBonus = (int)(armyDP * defenceBonusCoef);
+    return armyDP + armyDpBonus;
   }
 
   public double calculateDefenceBonusCoeficient(KingdomEntity kingdom) {
@@ -179,15 +185,20 @@ public class BattleServiceImpl implements BattleService {
   }
 
   //"Fight Armies" section
-  public List<Army> fightArmies(Army attackingArmy, Army defendingArmy) {
-    List<TroopEntity> attackingTroopsBeforeFight = attackingArmy.getTroops();
-    List<TroopEntity> defendingTroopsBeforeFight = defendingArmy.getTroops();
 
-    while (attackingArmy.getTroops().size() > 0 && defendingArmy.getTroops().size() > 0) {
-      for (int i = 0; i < 10; i++) {
-        fightOponent(attackingArmy, defendingArmy);
-        fightOponent(defendingArmy, attackingArmy);
-      }
+  public List<Army> fightArmies(Army attackingArmy, Army defendingArmy) {
+    List<TroopEntity> attackingTroopsBeforeFight = new ArrayList<>();
+    attackingTroopsBeforeFight.addAll(attackingArmy.getTroops());
+    List<TroopEntity> defendingTroopsBeforeFight = new ArrayList<>();
+    defendingTroopsBeforeFight.addAll(defendingArmy.getTroops());
+    //after each round dead troops are removed from Army (but not from Kingdom - this is done in the end)
+    for (int i = 0; i < 10; i++) {
+      fightOponent(attackingArmy, defendingArmy);
+      fightOponent(defendingArmy, attackingArmy);
+      removeTroopsWithZeroHp(attackingArmy);
+      removeTroopsWithZeroHp(defendingArmy);
+      if (attackingArmy.getTroops().size() <= 0 || defendingArmy.getTroops().size() <= 0) break;
+      i++;
     }
 
     removeDeadTroopsFromKingdom(attackingArmy, attackingTroopsBeforeFight);
@@ -197,48 +208,53 @@ public class BattleServiceImpl implements BattleService {
   }
 
   public Army fightOponent(Army army1, Army army2) {
-    int armyDamage = calculateDamage(army1, army2);
-    List<TroopEntity> survivedTroops = damageTroops(army1.getTroops(), armyDamage);
-    army1.setTroops(survivedTroops);
+    int absorbedDamage = calculateIncuredDamage(army1, army2);
+    shareDamageAmongTroops(army1, absorbedDamage);
 
     return army1;
   }
 
+  public int calculateIncuredDamage(Army army1, Army army2) {
+    int army1DefencePoints = army1.getTroops().stream().mapToInt(troop -> troop.getDefence()).sum();
+    int army2AttackPoints = army2.getTroops().stream().mapToInt(troop -> troop.getAttack()).sum();
 
-  public int calculateDamage(Army army1, Army army2) {
-    return Math.max(army2.getAttackPoints() - army1.getDefencePoints(),0);
+    return Math.max(army2AttackPoints - army1DefencePoints,0);
   }
 
-  public List<TroopEntity> damageTroops(List<TroopEntity> troops, int armyDamage) {
-    //getting total army defence points
-    int armyDefencePoints = troops.stream().mapToInt(troop -> troop.getDefence()).sum();
+  /* note: damage is distributed to troops based on calculated "shares". Troop with max DP represents 1 share.
+Weeker troops are assigned more shares. General formula is: maxDP/troop´s defence points.
+All these shares of individual troops are summed as totalShares, which allows calculation of damage per share.
+Each troop is finally calculated his portion of shares (troopSharesOnDamage) and damage he incures.
+This damage is then substracted from his health points. */
 
-    //sharing damage among troops
-    List<TroopEntity> damagedTroops = shareDamageAmongTroops(troops,armyDamage,armyDefencePoints);
+  public List<TroopEntity> shareDamageAmongTroops(Army army, int incuredDamage) {
+    List<TroopEntity> troops = army.getTroops();
+    int maxDP = troops.stream().mapToInt(troop -> troop.getDefence()).max().orElse(0);
+    double totalShares = 0;
+    for (TroopEntity troop : troops) {
+      totalShares += (double)maxDP / (double)troop.getDefence();
+    }
+    double damagePerShare = (double)incuredDamage / totalShares;
 
-    //removing dead troops
-    List<TroopEntity> survivedTroops = removeTroopsWithZeroHp(damagedTroops);
-
-    return survivedTroops;
-  }
-
-  public List<TroopEntity> shareDamageAmongTroops(List<TroopEntity> troops, int armyDamage,
-                                                  int armyDefencePoints) {
     troops.stream()
         .forEach(troop -> {
-          int troopDamage = armyDamage - (int)(((double)armyDamage /(double)armyDefencePoints) * (troop.getDefence()));
+          double troopSharesOnDamage = maxDP / troop.getDefence();
+          int troopDamage = (int) (damagePerShare * troopSharesOnDamage);
           int troopHP = troop.getHp() - troopDamage;
           troop.setHp(troopHP > 0 ? troopHP : 0);
         });
+
     return troops;
   }
 
-  public List<TroopEntity> removeTroopsWithZeroHp(List<TroopEntity> damagedTroops) {
-    List<TroopEntity> survivedTroops = new ArrayList<>();
-    survivedTroops = damagedTroops.stream()
-        .filter(troop -> troop.getHp() > 0)
+  public List<TroopEntity> removeTroopsWithZeroHp(Army army) {
+    List<TroopEntity> deadTroops = army.getTroops().stream()
+        .filter(troop -> troop.getHp() <= 0)
         .collect(Collectors.toList());
-    return survivedTroops;
+
+    army.getTroops().removeAll(deadTroops);
+
+    return army.getTroops();
   }
 
 
