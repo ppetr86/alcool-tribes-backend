@@ -12,20 +12,18 @@ public class LocationFactory {
 
   public static List<LocationEntity> createLocations() {
     List<LocationEntity> locationEntities = new ArrayList<>();
-    int rows = 10;
-    int cols = 10;
+    int rows = 6;
+    int cols = 6;
     int id = 0;
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
+
         if (id % 9 == 0) {
           locationEntities.add(new LocationEntity((long) ++id, j - cols / 2, i - rows / 2, null, LocationType.KINGDOM));
-          id++;
         } else {
           locationEntities.add(new LocationEntity((long) ++id, j - cols / 2, i - rows / 2, null, LocationType.EMPTY));
-          id++;
         }
-
       }
     }
     return locationEntities;

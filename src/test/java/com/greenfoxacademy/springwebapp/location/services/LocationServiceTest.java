@@ -51,7 +51,6 @@ public class LocationServiceTest {
   @Test
   public void giveNewKindomALocation_doesntSetKingdomNextToAnotherKingdom() {
     List<LocationEntity> locations = createLocations();
-
     Set<LocationEntity> kingdoms = locations.stream().filter(x -> x.getType().equals(LocationType.KINGDOM)).collect(
         Collectors.toSet());
 
@@ -65,7 +64,7 @@ public class LocationServiceTest {
 
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     LocationEntity location = locationService.assignKingdomLocation(kingdom);
-    Assert.assertEquals(locations.get(2), location);
+    Assert.assertEquals(locations.get(20), location);
   }
 
   @Test
