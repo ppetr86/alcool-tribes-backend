@@ -7,6 +7,7 @@ import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.factories.ArmyFactory;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
@@ -14,6 +15,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundExcept
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
 import java.util.ArrayList;
@@ -29,8 +31,9 @@ public class BattleServiceTest {
   private KingdomService kingdomService;
   private BuildingService buildingService;
   private TroopService troopService;
-  private BattleServiceImpl battleService;
   private Environment env;
+  private ResourceService resourceService;
+  private BattleServiceImpl battleService;
 
   @Before
   public void init() {
@@ -38,7 +41,8 @@ public class BattleServiceTest {
     buildingService = Mockito.mock(BuildingService.class);
     troopService = Mockito.mock(TroopService.class);
     env = Mockito.mock(Environment.class);
-    battleService = new BattleServiceImpl(kingdomService, buildingService, troopService, env);
+    resourceService = Mockito.mock(ResourceService.class);
+    battleService = new BattleServiceImpl(kingdomService, buildingService, troopService, env, resourceService);
     battleService = Mockito.spy(battleService);
   }
 
@@ -324,6 +328,15 @@ public class BattleServiceTest {
     Assert.assertEquals(ArmyType.DEFENDINGARMY, army.getArmyType());
   }
 
+  @Test
+  public void getArmyByType_ShouldReturn_CorrectArmy(){
+    List<Army> armies = Arrays.asList(
+        ArmyFactory.createAttackingArmy(),
+        ArmyFactory.createDefendingArmy()
+    );
+
+    Army result = battleService.getArmyByType(armies, )
+  }
 
 
 

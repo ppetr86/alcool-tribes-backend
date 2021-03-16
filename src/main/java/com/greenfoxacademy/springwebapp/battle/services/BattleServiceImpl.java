@@ -207,6 +207,33 @@ public class BattleServiceImpl implements BattleService {
     return new ArrayList<>(Arrays.asList(attackingArmy, defendingArmy));
   }
 
+  //Mark's section
+  //"After battle" section
+  public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle, int distance) {
+    Army attackingArmy = getArmyByType(armiesAfterBattle, ArmyType.ATTACKINGARMY);
+    Army defendingArmy = getArmyByType(armiesAfterBattle, ArmyType.DEFENDINGARMY);
+
+    if (defendingArmy.getTroops() == null && attackingArmy.getTroops() == null) {
+      return new BattleResultDTO("Every Troops were dead");
+    }
+    if (defendingArmy.getTroops() != null) {
+      healAliveTroops(defendingArmy);
+      if (attackingArmy.getTroops() == null) {
+        return new BattleResultDTO("Defending Kingdom won");
+      }
+    }
+    int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
+    int stolenGold = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.GOLD, ResourceType.FOOD);
+    if (attackingArmy.getTroops() != null) {
+      modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
+      modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold, distance);
+      if (defendingArmy.getTroops() == null) {
+        return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
+      }
+    }
+    return new BattleResultDTO(stolenFood, stolenGold);
+  }
+
   public void healAliveTroops(Army army) {
     army.getTroops()
         .forEach(troop -> troop.setHp(troop.getLevel() * defineTroopHp()));
@@ -220,94 +247,67 @@ public class BattleServiceImpl implements BattleService {
     troopService.deleteAllTroops(deadTroops);
   }
 
-  public ResourceEntity calculateStolenResources(Army defendingArmy, Army attackingArmy) {
-    ResourceEntity resourceEntity = resourceService.getResourceByResourceType(defendingArmy.getKingdom(), ResourceType.FOOD);
-    int resourceAmount = resourceEntity.getAmount();
+  public int calculateStolenResource(Army defendingArmy, Army attackingArmy, ResourceType stolen,
+                                     ResourceType notStolen) {
+    ResourceEntity stolenResource =
+        resourceService.getResourceByResourceType(defendingArmy.getKingdom(), stolen);
+    ResourceEntity notStolenResource =
+        resourceService.getResourceByResourceType(defendingArmy.getKingdom(), notStolen);
 
-    int remainArmyHP = attackingArmy.getTroops().stream()
-        .mapToInt(troop -> troop.getHp()).sum();
+    int halfOfRemainAttackArmyHP = attackingArmy.getTroops().stream()
+        .mapToInt(troop -> troop.getHp()).sum() / 2;
 
-    int halfOfRemainAttackArmyHP = remainArmyHP / 2;
+    int actualGoldAmount = notStolenResource.getAmount();
+    int actualFoodAmount = stolenResource.getAmount();
 
-    if (halfOfRemainAttackArmyHP < resourceAmount) {
-      resourceEntity.setAmount(resourceAmount - halfOfRemainAttackArmyHP);
+    if (halfOfRemainAttackArmyHP <= actualFoodAmount && halfOfRemainAttackArmyHP <= actualGoldAmount) {
+      return halfOfRemainAttackArmyHP;
+    } else if (halfOfRemainAttackArmyHP <= actualFoodAmount) {
+      return halfOfRemainAttackArmyHP + (halfOfRemainAttackArmyHP - actualGoldAmount);
     } else {
-      resourceEntity.setAmount(resourceAmount);
+      return actualFoodAmount;
     }
-    return resourceEntity;
   }
 
-  public void calculateStolenGold(Army defendingArmy, Army attackingArmy) {
+  private void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
     ResourceEntity defendingKingdomFood =
         resourceService.getResourceByResourceType(defendingArmy.getKingdom(), ResourceType.FOOD);
     ResourceEntity defendingKingdomGold =
         resourceService.getResourceByResourceType(defendingArmy.getKingdom(), ResourceType.GOLD);
+
+    defendingKingdomFood.setAmount(defendingKingdomFood.getAmount() - foodChange);
+    defendingKingdomGold.setAmount(defendingKingdomGold.getAmount() - goldChange);
+
+    List<ResourceEntity> resources =  Arrays.asList(defendingKingdomFood, defendingKingdomGold);
+    resourceService.saveResources(resources);
+  }
+
+  //TODO: here I have to use the delay(travelTime) method
+  private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange, int distance) {
+    killTroopWhichCanNotReachHome(attackingArmy, distance);
 
     ResourceEntity attackingKingdomFood =
         resourceService.getResourceByResourceType(attackingArmy.getKingdom(), ResourceType.FOOD);
     ResourceEntity attackingKingdomGold =
         resourceService.getResourceByResourceType(attackingArmy.getKingdom(), ResourceType.GOLD);
 
-    int defKingGolds = defendingKingdomGold.getAmount();
-    int defKingFoods = defendingKingdomFood.getAmount();
+    attackingKingdomFood.setAmount(attackingKingdomFood.getAmount() + foodChange);
+    attackingKingdomGold.setAmount(attackingKingdomGold.getAmount() + goldChange);
 
-    int remainArmyHP = attackingArmy.getTroops().stream()
-        .mapToInt(troop -> troop.getHp()).sum();
+    healAliveTroops(attackingArmy);
 
-    int halfOfRemainAttackArmyHP = remainArmyHP / 2;
-
-    List<ResourceEntity> resourcesList = new ArrayList<>();
-
-    if (halfOfRemainAttackArmyHP < defKingFoods && halfOfRemainAttackArmyHP < defKingGolds) {
-      defendingKingdomFood.setAmount(defKingFoods - halfOfRemainAttackArmyHP);
-      defendingKingdomGold.setAmount(defKingGolds - halfOfRemainAttackArmyHP);
-
-      //TODO: here I have to use the delay(travelTime) method
-      attackingKingdomFood.setAmount(attackingKingdomFood.getAmount() + halfOfRemainAttackArmyHP);
-      attackingKingdomGold.setAmount(attackingKingdomGold.getAmount() + halfOfRemainAttackArmyHP);
-
-      resourcesList.add(defendingKingdomFood);
-      resourcesList.add(defendingKingdomGold);
-
-      resourcesList.add(attackingKingdomFood);
-      resourcesList.add(attackingKingdomGold);
-
-      resourceService.saveResources(resourcesList);
-    }
+    List<ResourceEntity> resources = Arrays.asList(attackingKingdomFood, attackingKingdomGold);
+    resourceService.saveResources(resources);
   }
 
-  //"After battle" section
-  public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle, int distance) {
-    Army attackingArmy = getArmyByType(armiesAfterBattle, ArmyType.ATTACKINGARMY);
-    Army defendingArmy = getArmyByType(armiesAfterBattle, ArmyType.DEFENDINGARMY);
-
-    if (defendingArmy.getTroops() != null) {
-      healAliveTroops(defendingArmy);
-      if (attackingArmy.getTroops() == null) {
-        return new BattleResultDTO("Defending Kingdom won");
-      }
-    }
-    if (attackingArmy.getTroops() != null) {
-      killTroopWhichCanNotReachHome(attackingArmy, distance);
-      healAliveTroops(attackingArmy);
-    }
-
-
-    //TODO: have to calculate the the options when one resources is higher than the other
-    if (defendingArmy.getTroops() == null) {
-      return new BattleResultDTO("Attacking Kingdom won", halfOfRemainAttackArmyHP, halfOfRemainAttackArmyHP);
-    }
-    return null;
-  }
-
-  private Army getArmyByType(List<Army> armiesAfterBattle, ArmyType type) {
+  public Army getArmyByType(List<Army> armiesAfterBattle, ArmyType type) {
     return armiesAfterBattle.stream()
         .filter(army -> army.getArmyType().equals(type))
         .findFirst()
         .orElse(null);
   }
 
-  private Integer defineTroopHp() {
+  public Integer defineTroopHp() {
     return Integer.valueOf(Objects.requireNonNull(env.getProperty("troop.hp")));
   }
 
