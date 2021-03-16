@@ -344,7 +344,7 @@ public class BattleServiceTest {
     Mockito.doReturn(armies.get(1)).when(battleService).getArmyByType(armies, ArmyType.DEFENDINGARMY);
     Mockito.doReturn(null).when(battleService).nobodyOrDefKingdomWon(armies.get(1), armies.get(0));
 
-    
+
     BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
 
     Assert.assertEquals("Defending Kingdom won", resultDTO.getWinningTeam());
