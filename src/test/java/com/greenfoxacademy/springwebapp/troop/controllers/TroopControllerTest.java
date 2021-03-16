@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
+import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuthFullKingdom;
 import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultLevel1BuildingsWithAllData;
+import static com.greenfoxacademy.springwebapp.factories.TroopFactory.createTroops;
 
 public class TroopControllerTest {
   private TroopController troopController;
@@ -64,20 +66,16 @@ public class TroopControllerTest {
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
 
-    KingdomEntity ke = new KingdomEntity();
-    ke.setTroops(TroopFactory.createDefaultTroops());
-    List<TroopEntityResponseDTO> list = ke.getTroops()
-        .stream()
-        .map(TroopEntityResponseDTO::new)
-        .collect(Collectors.toList());
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    TroopListResponseDto dto = new TroopListResponseDto(kingdom.getTroops().stream().map(TroopEntityResponseDTO::new).collect(Collectors.toList()));
+    Mockito.when(troopService.troopsToListDTO(kingdom)).thenReturn(dto);
 
-    Mockito.when(troopService.troopsToListDTO(KingdomFactory.createKingdomEntityWithId(1L)))
-        .thenReturn(new TroopListResponseDto(list));
-
-    ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(createAuth("test", 1L));
+    Authentication authentication = createAuthFullKingdom("test", 1L);
+    ResponseEntity<TroopListResponseDto> response =
+        troopController.getTroopsOfKingdom(authentication);
 
     Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assert.assertEquals(3, response.getBody().getTroops().size());
+    Assert.assertEquals(2, response.getBody().getTroops().size());
   }
 
   @Test
