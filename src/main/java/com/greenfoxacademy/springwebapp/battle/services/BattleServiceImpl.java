@@ -166,14 +166,19 @@ public class BattleServiceImpl implements BattleService {
 
   public int calculateDPforDefendingArmy(Army defendingArmy) {
     double defenceBonusCoef = calculateDefenceBonusCoeficient(defendingArmy.getKingdom());
-    //setting new DP for each defending troop
-    defendingArmy.getTroops().stream()
-        .forEach(troop -> troop.setDefence((int)(troop.getDefence() * defenceBonusCoef)));
-
-    //calculating dp for whole arm
+    //calculating dp for whole army
     int armyDP = defendingArmy.getTroops().stream().mapToInt(troop -> troop.getDefence()).sum();
     int armyDpBonus = (int)(armyDP * defenceBonusCoef);
-    return armyDP + armyDpBonus;
+    int armyDPincludingBonus = armyDP + armyDpBonus;
+
+    //setting new DP for each defending troop
+    defendingArmy.getTroops().stream()
+        .forEach(troop -> {
+          double troopShare = (double)troop.getDefence()/(double)armyDP;
+          troop.setDefence((int)(troopShare * armyDPincludingBonus));
+        });
+
+    return armyDPincludingBonus;
   }
 
   public double calculateDefenceBonusCoeficient(KingdomEntity kingdom) {
@@ -222,24 +227,24 @@ public class BattleServiceImpl implements BattleService {
   }
 
   /* note: damage is distributed to troops based on calculated "shares". Troop with max DP represents 1 share.
-Weeker troops are assigned more shares. General formula is: maxDP/troop´s defence points.
+Weaker troops are assigned more shares. General formula for number of shares is: maxDP/troop´s defence points.
 All these shares of individual troops are summed as totalShares, which allows calculation of damage per share.
-Each troop is finally calculated his portion of shares (troopSharesOnDamage) and damage he incures.
+Each troop is finally calculated his portion of damage (troopSharesOnDamage*damagePerShare).
 This damage is then substracted from his health points. */
 
   public List<TroopEntity> shareDamageAmongTroops(Army army, int incuredDamage) {
     List<TroopEntity> troops = army.getTroops();
     int maxDP = troops.stream().mapToInt(troop -> troop.getDefence()).max().orElse(0);
-    double totalShares = 0;
+    float totalShares = 0;
     for (TroopEntity troop : troops) {
-      totalShares += (double)maxDP / (double)troop.getDefence();
+      totalShares += (float) maxDP / troop.getDefence();
     }
-    double damagePerShare = (double)incuredDamage / totalShares;
+    float damagePerShare = (float) incuredDamage / totalShares;
 
     troops.stream()
         .forEach(troop -> {
-          double troopSharesOnDamage = maxDP / troop.getDefence();
-          int troopDamage = (int) (damagePerShare * troopSharesOnDamage);
+          float troopSharesOnDamage = (float) maxDP / troop.getDefence();
+          int troopDamage = Math.round(damagePerShare * troopSharesOnDamage);
           int troopHP = troop.getHp() - troopDamage;
           troop.setHp(troopHP > 0 ? troopHP : 0);
         });

@@ -343,26 +343,37 @@ public class BattleServiceTest {
   @Test
   public void calculateIncuredDamage_shouldReturnCorrectDamage() {
     Army army1 = ArmyFactory.createAttackingArmy();
+    army1.getTroops().get(0).setDefence(1);
     Army army2 = ArmyFactory.createDefendingArmy();
 
     int damage = battleService.calculateIncuredDamage(army1,army2);
 
-    Assert.assertEquals(150, damage);
+    Assert.assertEquals(100, damage);
+  }
+
+  @Test
+  public void calculateIncuredDamage_shouldReturnZeroDamage() {
+    Army army1 = ArmyFactory.createAttackingArmy();
+    Army army2 = ArmyFactory.createDefendingArmy();
+    army2.getTroops().get(0).setAttack(1);
+
+    int damage = battleService.calculateIncuredDamage(army1,army2);
+
+    Assert.assertEquals(0, damage);
   }
 
   @Test
   public void shareDamageAmongTroops_returnsDamagedTroops() {
     Army army = ArmyFactory.createAttackingArmy();
     final int incuredDamage = 100;
-
-    //troops.get(0).setDefence(300);
+    army.getTroops().get(0).setDefence(300);
 
     List<TroopEntity> damagedTroops = battleService.shareDamageAmongTroops(army,incuredDamage);
 
     Assert.assertEquals(3,damagedTroops.size());
-    Assert.assertEquals(34,damagedTroops.get(0).getHp().intValue());
-    Assert.assertEquals(35,damagedTroops.get(1).getHp().intValue());
-    Assert.assertEquals(36,damagedTroops.get(2).getHp().intValue());
+    Assert.assertEquals(86,damagedTroops.get(0).getHp().intValue());
+    Assert.assertEquals(59,damagedTroops.get(1).getHp().intValue());
+    Assert.assertEquals(61,damagedTroops.get(2).getHp().intValue());
   }
 
   @Test
