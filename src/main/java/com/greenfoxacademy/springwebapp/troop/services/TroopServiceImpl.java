@@ -123,7 +123,7 @@ public class TroopServiceImpl implements TroopService {
     Integer defence = troopLevel * getAppPropertyAsInt("troop.defence");
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
-    return new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
+    return new TroopEntity(null,troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom,true);
   }
 
   private Integer getAppPropertyAsInt(String propertyName) {

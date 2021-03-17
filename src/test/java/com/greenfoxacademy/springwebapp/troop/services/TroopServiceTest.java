@@ -105,7 +105,7 @@ public class TroopServiceTest {
   @Test
   public void createTroopReturnsLevel1CreatedTroopAsDTO() {
     KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L); //academy is id2
-    TroopEntity fakeTroop = new TroopEntity(1L, 1, 20, 10, 5, 1L, 30L, kingdom);
+    TroopEntity fakeTroop = new TroopEntity(1L, 1, 20, 10, 5, 1L, 30L, kingdom,true);
     TroopRequestDTO requestDTO = new TroopRequestDTO(2L);
     TroopEntityResponseDTO expectedTroop = new TroopEntityResponseDTO(1L, 1, 20, 10, 5, 1, 30);
 

@@ -12,6 +12,17 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDcxMjYwMDAsImtpbmdkb21JZ
 Accept: application/json
 
 ### PUT kingdom
+### kingdom
+PUT http://localhost:8080/kingdom
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDY4NjY4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.TrrhSXz6j-SS0t3vzZqZS002XnUexSaXJlwTeIZOYdRc0mRQaDW_YX5_94HWuydREAorVbo2QMzOMzdERlJx_Q
+Content-Type: application/json
+
+{
+  "name": "test"
+}
+
+### PUT kingdom
+### kingdom
 PUT http://localhost:8080/kingdom
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUzMTE2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.55FYv_lh3cF6by5jzNCD-BypSydYr65fafvataJExuRszu8c7BREhy1kaxl3ExlOwzfFMpCdFy-MrxC8EvF4UA

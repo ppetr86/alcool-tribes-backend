@@ -71,16 +71,16 @@ VALUES (3, 10, 10, 'FOOD', 111, 2);
 INSERT INTO resources (id, amount, generation, type, updated_at, kingdom_id)
 VALUES (4, 11, 10, 'GOLD', 222, 2);
 
-INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
-VALUES (1, 1, 1, 0, 100, 1, 1, 1);
-INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
-VALUES (2, 2, 2, 1, 100, 1, 1, 1);
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id, is_home)
+VALUES (1, 1, 1, 0, 100, 1, 1, 1,true);
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id, is_home)
+VALUES (2, 2, 2, 1, 100, 1, 1, 1,true);
 
-INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
-VALUES (3, 10, 5, 1613070182, 20, 1, 1613070152, 1);
-INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
-VALUES (4, 1, 1, 0, 100, 1, 1, 2);
-INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
-VALUES (5, 2, 2, 1, 100, 1, 1, 2);
-INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id)
-VALUES (6, 10, 5, 1613070182, 20, 1, 1613070152, 2);
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id, is_home)
+VALUES (3, 10, 5, 1613070182, 20, 1, 1613070152, 1,true);
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id, is_home)
+VALUES (4, 1, 1, 0, 100, 1, 1, 2,true);
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id, is_home)
+VALUES (5, 2, 2, 1, 100, 1, 1, 2,true);
+INSERT INTO troops (id, attack, defence, finished_at, hp, level, started_at, kingdom_id, is_home)
+VALUES (6, 10, 5, 1613070182, 20, 1, 1613070152, 2,true);
