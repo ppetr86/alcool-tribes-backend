@@ -169,23 +169,48 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void killAllTroopsInArmy_returnsCorrectIDsOfKilledTroops_AndCorrecArmyAndKingdomTroopSizes() {
-    Army army = new Army();
-    List<TroopEntity> troops = TroopFactory.createDefaultTroops();
-    army.setTroops(troops);
-    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
-    List<TroopEntity> kingdomTroops = new ArrayList<>();
-    kingdomTroops.addAll(troops);
-    //adding 1 extra troop which will not die in battle
-    kingdomTroops.add(new TroopEntity(10L,1,100,100,100,100,100));
-    kingdom.setTroops(kingdomTroops);
-    army.setKingdom(kingdom);
+  public void calculateHPforAttackingArmy_nobodyDies_returnsCorrecArmyHP() {
+    Army army = ArmyFactory.createAttackingArmy();
+    int distance = 10;
 
-    int deadTroops = battleService.killAllTroopsInArmy(army);
+    int armyHP = battleService.calculateHPforAttackingArmy(army, distance);
 
-    Assert.assertEquals(3, deadTroops);
-    Assert.assertEquals(0,army.getTroops().size());
-    Assert.assertEquals(1,army.getKingdom().getTroops().size());
+    Assert.assertEquals(245,armyHP);
+  }
+
+  @Test
+  public void calculateHPforAttackingArmy_everyoneDies_returns0ArmyHP() {
+    Army army = ArmyFactory.createAttackingArmy();
+    int distance = 50;
+
+    int armyHP = battleService.calculateHPforAttackingArmy(army, distance);
+
+    Assert.assertEquals(0,armyHP);
+  }
+
+  @Test
+  public void applyHpLossDueToTravelling_nobodyDies_returnsCorrecArmyAndKingdomTroopSizes() {
+    Army army = ArmyFactory.createAttackingArmy();
+    int distance = 10;
+
+    Army updatedArmy = battleService.applyHpLossDueToTravelling(army, distance);
+
+    Assert.assertEquals(3,updatedArmy.getTroops().size());
+    Assert.assertEquals(3,updatedArmy.getKingdom().getTroops().size());
+    Assert.assertEquals(81,updatedArmy.getTroops().get(0).getHp().intValue());
+    Assert.assertEquals(82,updatedArmy.getTroops().get(1).getHp().intValue());
+    Assert.assertEquals(82,updatedArmy.getTroops().get(2).getHp().intValue());
+  }
+
+  @Test
+  public void applyHpLossDueToTravelling_everyoneDies_returnsCorrecArmyAndKingdomTroopSizes() {
+    Army army = ArmyFactory.createAttackingArmy();
+    int distance = 50; //since troops looses 2% per distance, every troop dies after 50 distance
+
+    Army updatedArmy = battleService.applyHpLossDueToTravelling(army, distance);
+
+    Assert.assertEquals(0,updatedArmy.getTroops().size());
+    Assert.assertEquals(0,updatedArmy.getKingdom().getTroops().size());
   }
 
   @Test
@@ -389,11 +414,11 @@ public class BattleServiceTest {
   @Test
   public void removeDeadTroopsFromKingdom_returnsUpdtedArmy() {
     Army army = ArmyFactory.createAttackingArmy();
-    List<TroopEntity> troopsInArmyBeforeFight = new ArrayList<>(); //3 troops
-    troopsInArmyBeforeFight.addAll(army.getTroops());
+    List<TroopEntity> originalListOfTroops = new ArrayList<>(); //3 troops
+    originalListOfTroops.addAll(army.getTroops());
     army.getTroops().remove(0); //removing one troop from fighting troops (he died)
 
-    Army updatedArmy = battleService.removeDeadTroopsFromKingdom(army,troopsInArmyBeforeFight);
+    Army updatedArmy = battleService.removeDeadTroopsFromKingdom(army,originalListOfTroops);
 
     Assert.assertEquals(2,updatedArmy.getKingdom().getTroops().size());
   }

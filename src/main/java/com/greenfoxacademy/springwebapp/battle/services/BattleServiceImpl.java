@@ -97,7 +97,7 @@ public class BattleServiceImpl implements BattleService {
         .collect(Collectors.toList());
   }
 
-  public int calculateHPforAttackingArmy(Army attackingArmy, int distance) {
+  /*  public int calculateHPforAttackingArmy(Army attackingArmy, int distance) {
     int armyHP = attackingArmy.getTroops().stream().mapToInt(troop -> troop.getHp()).sum();
     int hpLoss = (int)(armyHP * distance * 0.02);
     int finalHP = armyHP - hpLoss;
@@ -111,9 +111,41 @@ public class BattleServiceImpl implements BattleService {
     }
 
     return finalHP;
+  }*/
+
+  public int calculateHPforAttackingArmy(Army attackingArmy, int distance) {
+    Army armyAfterTravel = applyHpLossDueToTravelling(attackingArmy, distance);
+
+    int armyHP = armyAfterTravel.getTroops().stream().mapToInt(troop -> troop.getHp()).sum();
+
+    if (armyHP <= 0) {
+      log.info("Attacking army did not survive the travel to the enemy!");
+      return 0;
+    }
+
+    return armyHP;
   }
 
-  public int killAllTroopsInArmy(Army army) {
+  public Army applyHpLossDueToTravelling(Army attackingArmy, int distance) {
+    List<TroopEntity> attackingTroopsBeforeTravel = new ArrayList<>();
+    attackingTroopsBeforeTravel.addAll(attackingArmy.getTroops());
+
+    //1. each troop looses 2% of his original HP per distance
+    for (TroopEntity troop: attackingArmy.getTroops()) {
+      int troopHpLoss = Math.round(troop.getHp() * distance * 0.02f);
+      troop.setHp(troop.getHp() - troopHpLoss);
+    }
+
+    //2. removing dead troops from Army
+    removeTroopsWithZeroHp(attackingArmy);
+
+    //3.removing dead troops from Kingdom and also from database
+    removeDeadTroopsFromKingdom(attackingArmy,attackingTroopsBeforeTravel);
+
+    return attackingArmy;
+  }
+
+  /*  public int killAllTroopsInArmy(Army army) {
     List<TroopEntity> deadTroops = army.getTroops();
     final int deadCount = deadTroops.size();
 
@@ -126,7 +158,7 @@ public class BattleServiceImpl implements BattleService {
     troopService.deleteListOfTroops(deadTroops); //deleting dead troops from DB
 
     return deadCount;
-  }
+  }*/
 
   public int calculateAttackPoints(List<TroopEntity> troops) {
     return troops.stream().mapToInt(troop -> troop.getAttack()).sum();
@@ -174,7 +206,7 @@ public class BattleServiceImpl implements BattleService {
     //setting new DP for each defending troop
     defendingArmy.getTroops().stream()
         .forEach(troop -> {
-          double troopShare = (double)troop.getDefence()/(double)armyDP;
+          double troopShare = (double)troop.getDefence() / (double)armyDP;
           troop.setDefence((int)(troopShare * armyDPincludingBonus));
         });
 
@@ -263,14 +295,17 @@ This damage is then substracted from his health points. */
   }
 
 
-  public Army removeDeadTroopsFromKingdom(Army army, List<TroopEntity> troopsInArmyBeforeFight) {
-    List<TroopEntity> deadTroops = troopsInArmyBeforeFight;
+  public Army removeDeadTroopsFromKingdom(Army army, List<TroopEntity> originalListOfTroops) {
+    //1.creating list of deadTroops
+    List<TroopEntity> deadTroops = originalListOfTroops;
     deadTroops.removeAll(army.getTroops());
 
+    //2.removing dead troops from kingdom
     List<TroopEntity> aliveKingdomTroops = army.getKingdom().getTroops();
     aliveKingdomTroops.removeAll(deadTroops);
-    army.getKingdom().setTroops(aliveKingdomTroops); //removing dead troops from kingdom.
+    army.getKingdom().setTroops(aliveKingdomTroops);
 
+    //3.deleting dead troops from DB
     troopService.deleteListOfTroops(deadTroops); //deleting dead troops from DB
 
     return army;
