@@ -12,4 +12,8 @@ services:
       - "8080:8080"
     environment:
       - DB_URL
-      - JWT_SECRETl  
+      - JWT_SECRET
+      - PWD
+      - HIB_DIA
+      - EMAIL_USER
+      - EMAIL_PWD
