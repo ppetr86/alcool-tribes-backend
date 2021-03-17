@@ -97,22 +97,6 @@ public class BattleServiceImpl implements BattleService {
         .collect(Collectors.toList());
   }
 
-  /*  public int calculateHPforAttackingArmy(Army attackingArmy, int distance) {
-    int armyHP = attackingArmy.getTroops().stream().mapToInt(troop -> troop.getHp()).sum();
-    int hpLoss = (int)(armyHP * distance * 0.02);
-    int finalHP = armyHP - hpLoss;
-
-    if (finalHP <= 0) {
-      killAllTroopsInArmy(attackingArmy);
-
-      log.info("Attacking army did not survive the travel to the enemy!");
-
-      return 0;
-    }
-
-    return finalHP;
-  }*/
-
   public int calculateHPforAttackingArmy(Army attackingArmy, int distance) {
     Army armyAfterTravel = applyHpLossDueToTravelling(attackingArmy, distance);
 
@@ -144,21 +128,6 @@ public class BattleServiceImpl implements BattleService {
 
     return attackingArmy;
   }
-
-  /*  public int killAllTroopsInArmy(Army army) {
-    List<TroopEntity> deadTroops = army.getTroops();
-    final int deadCount = deadTroops.size();
-
-    army.setTroops(new ArrayList<>()); //removing all dead troops from army troops - whole army died
-
-    List<TroopEntity> aliveTroopsInKingdom = army.getKingdom().getTroops();
-    aliveTroopsInKingdom.removeAll(deadTroops);
-    army.getKingdom().setTroops(aliveTroopsInKingdom); //removing all dead troops from kingdom
-
-    troopService.deleteListOfTroops(deadTroops); //deleting dead troops from DB
-
-    return deadCount;
-  }*/
 
   public int calculateAttackPoints(List<TroopEntity> troops) {
     return troops.stream().mapToInt(troop -> troop.getAttack()).sum();
@@ -237,10 +206,10 @@ public class BattleServiceImpl implements BattleService {
       if (attackingArmy.getTroops().size() <= 0 || defendingArmy.getTroops().size() <= 0) break;
       i++;
     }
-
     removeDeadTroopsFromKingdom(attackingArmy, attackingTroopsBeforeFight);
     removeDeadTroopsFromKingdom(defendingArmy, defendingTroopsBeforeFight);
-
+    updateArmyPointsAfterFight(attackingArmy);
+    updateArmyPointsAfterFight(defendingArmy);
     return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
   }
 
@@ -259,10 +228,10 @@ public class BattleServiceImpl implements BattleService {
   }
 
   /* note: damage is distributed to troops based on calculated "shares". Troop with max DP represents 1 share.
-Weaker troops are assigned more shares. General formula for number of shares is: maxDP/troop´s defence points.
-All these shares of individual troops are summed as totalShares, which allows calculation of damage per share.
-Each troop is finally calculated his portion of damage (troopSharesOnDamage*damagePerShare).
-This damage is then substracted from his health points. */
+  Weaker troops are assigned more shares. General formula for number of shares is: maxDP/troop´s defence points.
+  All these shares of individual troops are summed as totalShares, which allows calculation of damage per share.
+  Each troop is finally calculated his portion of damage (troopSharesOnDamage*damagePerShare).
+  This damage is then substracted from his health points. */
 
   public List<TroopEntity> shareDamageAmongTroops(Army army, int incuredDamage) {
     List<TroopEntity> troops = army.getTroops();
@@ -307,6 +276,24 @@ This damage is then substracted from his health points. */
 
     //3.deleting dead troops from DB
     troopService.deleteListOfTroops(deadTroops); //deleting dead troops from DB
+
+    return army;
+  }
+
+  public Army updateArmyPointsAfterFight(Army army) {
+    int ap = 0;
+    int dp = 0;
+    int hp = 0;
+
+    for (TroopEntity troop : army.getTroops()) {
+      ap += troop.getAttack();
+      dp += troop.getDefence();
+      hp += troop.getHp();
+    }
+
+    army.setAttackPoints(ap);
+    army.setDefencePoints(dp);
+    army.setHealthPoints(hp);
 
     return army;
   }
