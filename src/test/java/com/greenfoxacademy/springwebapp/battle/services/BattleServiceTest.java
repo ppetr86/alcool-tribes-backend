@@ -402,11 +402,11 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void removeTroopsWithZeroHp_returnsOnlySurvivedTroops() {
+  public void removeDeadTroopsFromArmy_returnsOnlySurvivedTroops() {
     Army army = ArmyFactory.createAttackingArmy(); //3 troops
     army.getTroops().get(0).setHp(0);
 
-    List<TroopEntity> aliveTroops = battleService.removeTroopsWithZeroHp(army);
+    List<TroopEntity> aliveTroops = battleService.removeDeadTroopsFromArmy(army);
 
     Assert.assertEquals(2,aliveTroops.size());
   }

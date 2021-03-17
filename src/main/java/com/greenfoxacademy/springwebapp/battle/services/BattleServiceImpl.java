@@ -137,7 +137,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     //2. removing dead troops from Army
-    removeTroopsWithZeroHp(attackingArmy);
+    removeDeadTroopsFromArmy(attackingArmy);
 
     //3.removing dead troops from Kingdom and also from database
     removeDeadTroopsFromKingdom(attackingArmy,attackingTroopsBeforeTravel);
@@ -232,8 +232,8 @@ public class BattleServiceImpl implements BattleService {
     for (int i = 0; i < 10; i++) {
       fightOponent(attackingArmy, defendingArmy);
       fightOponent(defendingArmy, attackingArmy);
-      removeTroopsWithZeroHp(attackingArmy);
-      removeTroopsWithZeroHp(defendingArmy);
+      removeDeadTroopsFromArmy(attackingArmy);
+      removeDeadTroopsFromArmy(defendingArmy);
       if (attackingArmy.getTroops().size() <= 0 || defendingArmy.getTroops().size() <= 0) break;
       i++;
     }
@@ -284,7 +284,7 @@ This damage is then substracted from his health points. */
     return troops;
   }
 
-  public List<TroopEntity> removeTroopsWithZeroHp(Army army) {
+  public List<TroopEntity> removeDeadTroopsFromArmy(Army army) {
     List<TroopEntity> deadTroops = army.getTroops().stream()
         .filter(troop -> troop.getHp() <= 0)
         .collect(Collectors.toList());
