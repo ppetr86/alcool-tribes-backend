@@ -343,20 +343,43 @@ public class BattleServiceTest {
     Mockito.doReturn(armies.get(0)).when(battleService).getArmyByType(armies, ArmyType.ATTACKINGARMY);
     Mockito.doReturn(armies.get(1)).when(battleService).getArmyByType(armies, ArmyType.DEFENDINGARMY);
     Mockito.doReturn(null).when(battleService).nobodyOrDefKingdomWon(armies.get(1), armies.get(0));
-
-
+    Mockito.doReturn(50).when(battleService).calculateStolenResource(armies.get(1), armies.get(0), ResourceType.FOOD, ResourceType.GOLD);
+    Mockito.doReturn(50).when(battleService).calculateStolenResource(armies.get(1), armies.get(0), ResourceType.GOLD, ResourceType.FOOD);
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(1).getKingdom(), ResourceType.GOLD)).thenReturn(armies.get(1).getKingdom().getResources().get(0));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(1).getKingdom(), ResourceType.FOOD)).thenReturn(armies.get(1).getKingdom().getResources().get(1));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(0).getKingdom(), ResourceType.GOLD)).thenReturn(armies.get(1).getKingdom().getResources().get(0));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(0).getKingdom(), ResourceType.FOOD)).thenReturn(armies.get(1).getKingdom().getResources().get(1));
     BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
 
-    Assert.assertEquals("Defending Kingdom won", resultDTO.getWinningTeam());
-    Assert.assertEquals(java.util.Optional.of(20), java.util.Optional.ofNullable(armies.get(1).getTroops().get(0).getHp()));
-    Assert.assertEquals(java.util.Optional.of(40), java.util.Optional.ofNullable(armies.get(1).getTroops().get(1).getHp()));
-    Assert.assertEquals(java.util.Optional.of(60), java.util.Optional.ofNullable(armies.get(1).getTroops().get(2).getHp()));
-
+    Assert.assertEquals("Attacking Kingdom won", resultDTO.getWinningTeam());
+    Assert.assertEquals(50, resultDTO.getStolenFood());
+    Assert.assertEquals(50, resultDTO.getStolenGold());
+    Assert.assertEquals(java.util.Optional.of(60), java.util.Optional.ofNullable(armies.get(0).getTroops().get(2).getHp()));
+    //TODO: have to check that the deleteAllTroops is working well or not
   }
 
   @Test
   public void performAfterBattleActions_ShouldReturn_JustStolenThings_BecauseNobodyWon() {
+    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    int distance = 10;
+    armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
 
+    Mockito.doReturn(armies.get(0)).when(battleService).getArmyByType(armies, ArmyType.ATTACKINGARMY);
+    Mockito.doReturn(armies.get(1)).when(battleService).getArmyByType(armies, ArmyType.DEFENDINGARMY);
+    Mockito.doReturn(null).when(battleService).nobodyOrDefKingdomWon(armies.get(1), armies.get(0));
+    Mockito.doReturn(50).when(battleService).calculateStolenResource(armies.get(1), armies.get(0), ResourceType.FOOD, ResourceType.GOLD);
+    Mockito.doReturn(50).when(battleService).calculateStolenResource(armies.get(1), armies.get(0), ResourceType.GOLD, ResourceType.FOOD);
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(1).getKingdom(), ResourceType.GOLD)).thenReturn(armies.get(1).getKingdom().getResources().get(0));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(1).getKingdom(), ResourceType.FOOD)).thenReturn(armies.get(1).getKingdom().getResources().get(1));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(0).getKingdom(), ResourceType.GOLD)).thenReturn(armies.get(1).getKingdom().getResources().get(0));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(0).getKingdom(), ResourceType.FOOD)).thenReturn(armies.get(1).getKingdom().getResources().get(1));
+
+    BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
+
+    Assert.assertNull(resultDTO.getWinningTeam());
+    Assert.assertEquals(50, resultDTO.getStolenFood());
+    Assert.assertEquals(50, resultDTO.getStolenGold());
+    Assert.assertEquals(java.util.Optional.of(60), java.util.Optional.ofNullable(armies.get(0).getTroops().get(2).getHp()));
   }
 
   @Test

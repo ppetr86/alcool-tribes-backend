@@ -249,7 +249,7 @@ public class BattleServiceImpl implements BattleService {
 
   public void killTroopWhichCanNotReachHome(Army army, int distance) {
     List<TroopEntity> deadTroops = army.getTroops().stream()
-        .filter(troop -> troop.getHp() < troop.getHp() * distance * 0.02)
+        .filter(troop -> troop.getHp() * distance * 0.02 < 1)
         .collect(Collectors.toList());
     troopService.deleteAllTroops(deadTroops);
   }
