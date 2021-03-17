@@ -5,28 +5,36 @@ import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LocationFactory {
 
-  public static List<LocationEntity> createOccupiedLocations() {
+  public static List<LocationEntity> createLocations() {
     List<LocationEntity> locationEntities = new ArrayList<>();
-    locationEntities.add(new LocationEntity(1L, -65, -77, new KingdomEntity(), LocationType.KINGDOM));
-    locationEntities.add(new LocationEntity(2L, -97, -63, new KingdomEntity(), LocationType.KINGDOM));
-    locationEntities.add(new LocationEntity(3L, -26, -16, new KingdomEntity(), LocationType.KINGDOM));
-    locationEntities.add(new LocationEntity(4L, -72, -32, new KingdomEntity(), LocationType.KINGDOM));
-    locationEntities.add(new LocationEntity(5L, -38, -44, new KingdomEntity(), LocationType.KINGDOM));
-    locationEntities.add(new LocationEntity(6L, -64, -38, new KingdomEntity(), LocationType.KINGDOM));
-    locationEntities.add(new LocationEntity(8L, 94, -71, null, LocationType.DESERT));
-    locationEntities.add(new LocationEntity(9L, 65, 36, null, LocationType.JUNGLE));
-    locationEntities.add(new LocationEntity(10L, 85, 18, null, LocationType.DESERT));
-    locationEntities.add(new LocationEntity(11L, -64, -74, null, LocationType.JUNGLE));
-    locationEntities.add(new LocationEntity(12L, -77, -64, null, LocationType.DESERT));
-    locationEntities.add(new LocationEntity(13L, 9, -60, null, LocationType.JUNGLE));
-    locationEntities.add(new LocationEntity(14L, -29, -65, null, LocationType.DESERT));
-    locationEntities.add(new LocationEntity(15L, 64, 14, null, LocationType.JUNGLE));
-    locationEntities.add(new LocationEntity(16L, -22, -50, null, LocationType.DESERT));
-    locationEntities.add(new LocationEntity(17L, -86, 20, null, LocationType.JUNGLE));
+    int rows = 6;
+    int cols = 6;
+    int id = 0;
+
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+
+        if (id % 9 == 0) {
+          locationEntities.add(new LocationEntity((long) ++id, j - cols / 2, i - rows / 2, null, LocationType.KINGDOM));
+        } else {
+          locationEntities.add(new LocationEntity((long) ++id, j - cols / 2, i - rows / 2, null, LocationType.EMPTY));
+        }
+      }
+    }
     return locationEntities;
+  }
+
+  public static List<LocationEntity> createKingdoms() {
+    List<LocationEntity> kingdoms = Arrays.asList(
+        new LocationEntity(0, 2, new KingdomEntity(), LocationType.KINGDOM),
+        new LocationEntity(0, 4, new KingdomEntity(), LocationType.KINGDOM),
+        new LocationEntity(0, 6, new KingdomEntity(), LocationType.KINGDOM)
+    );
+    return kingdoms;
   }
 }

@@ -72,8 +72,9 @@ public class KingdomServiceTest {
     Set<RegistrationTokenEntity> tokens = new HashSet<>();
     PlayerEntity fakePlayer =
         new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, tokens);
-    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
-        new LocationEntity(1L, 10, 10,null, LocationType.KINGDOM ));
+    KingdomEntity kingdom =
+        new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
+            new LocationEntity(1L, 10, 10, null, LocationType.KINGDOM));
 
     KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
 

@@ -37,6 +37,19 @@ public class LocationEntity {
   @Enumerated(EnumType.STRING)
   private LocationType type;
 
+  public LocationEntity(Integer x, Integer y, KingdomEntity kingdom,
+                        LocationType type) {
+    this.x = x;
+    this.y = y;
+    this.kingdom = kingdom;
+    this.type = type;
+  }
+
+  public LocationEntity(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -52,5 +65,21 @@ public class LocationEntity {
   @Override
   public int hashCode() {
     return Objects.hash(x, y);
+  }
+
+  @Override
+  public String toString() {
+    String kingdomName = "";
+    if (kingdom == null) {
+      kingdomName = " this is not a kingdom";
+    } else {
+      kingdomName = kingdom.getKingdomName();
+    }
+    return "LocationEntity "
+        + " id=" + id
+        + ", x=" + x
+        + ", y=" + y
+        + ", kingdom=" + kingdomName
+        + ", type=" + type;
   }
 }

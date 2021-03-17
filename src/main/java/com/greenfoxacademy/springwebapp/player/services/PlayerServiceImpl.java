@@ -10,6 +10,7 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
@@ -26,6 +27,7 @@ import org.thymeleaf.util.StringUtils;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +69,7 @@ public class PlayerServiceImpl implements PlayerService {
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
-    LocationEntity defaultLocation = locationService.defaultLocation(kingdom);
+    LocationEntity defaultLocation = locationService.assignKingdomLocation(kingdom);
     kingdom.setLocation(defaultLocation);
 
     player.setKingdom(kingdom);
@@ -101,6 +103,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
     return true;
   }
+
 
   @Override
   public PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity) {
@@ -147,9 +150,27 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance) {
+    return new PlayerListResponseDTO(
+        playerRepo.findAll().stream()
+            .filter(p -> !p.getKingdom().getId().equals(kingdom.getId()))
+            .filter(p -> distance == null || isWithinGrid(kingdom, distance, p.getKingdom()))
+            .map(this::playerToResponseDTO)
+            .collect(Collectors.toList())
+    );
+  }
+
+  private boolean isWithinGrid(KingdomEntity thisKingdom, Integer distance, KingdomEntity otherKingdom) {
+    return otherKingdom.getLocation().getX() > thisKingdom.getLocation().getX() - distance
+        && otherKingdom.getLocation().getX() < thisKingdom.getLocation().getX() + distance
+        && otherKingdom.getLocation().getY() > thisKingdom.getLocation().getY() - distance
+        && otherKingdom.getLocation().getY() < thisKingdom.getLocation().getY() + distance;
+  }
+
   public boolean verifyUser(String token) throws InvalidTokenException {
     RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
-    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
+    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken())
+        || secureToken.isExpired()) {
       throw new InvalidTokenException();
     }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());

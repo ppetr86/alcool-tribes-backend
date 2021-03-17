@@ -25,7 +25,7 @@ public class KingdomFactory {
     kingdom.setPlayer(pl);
 
     kingdom.setBuildings(BuildingFactory.createDefaultBuildings(kingdom));
-    kingdom.setLocation(new LocationEntity(1L, 10, 10,null,LocationType.KINGDOM));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10, null, LocationType.KINGDOM));
     kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 
@@ -44,7 +44,7 @@ public class KingdomFactory {
     kingdom.setPlayer(pl);
 
     kingdom.setBuildings(BuildingFactory.createDefaultBuildings(kingdom));
-    kingdom.setLocation(new LocationEntity(1L, 10, 10,kingdom, LocationType.KINGDOM));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
     kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 
@@ -57,14 +57,14 @@ public class KingdomFactory {
     kingdom.setKingdomName(rqst.getKingdomname());
     kingdom.setId(kingdomID);
 
-    PlayerEntity pl = PlayerFactory.createPlayer(rqst,kingdom,isAccountVerified);
+    PlayerEntity pl = PlayerFactory.createPlayer(rqst, kingdom, isAccountVerified);
     pl.setUsername(rqst.getUsername());
     pl.setEmail("test@mail.com");
     pl.setIsAccountVerified(isAccountVerified);
     kingdom.setPlayer(pl);
 
     kingdom.setBuildings(BuildingFactory.createDefaultBuildings(kingdom));
-    kingdom.setLocation(new LocationEntity(1L, 10, 10,kingdom, LocationType.KINGDOM));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
     kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
 
