@@ -2,8 +2,9 @@ package com.greenfoxacademy.springwebapp.troop.models;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "troops")
 @NoArgsConstructor
@@ -51,5 +53,18 @@ public class TroopEntity {
     this.startedAt = startedAt;
     this.finishedAt = finishedAt;
     this.kingdom = kingdom;
+  }
+
+  @Override
+  public String toString() {
+    return "TroopEntity"
+        + "id=" + id
+        + ", level=" + level
+        + ", hp=" + hp
+        + ", attack=" + attack
+        + ", defence=" + defence
+        + ", startedAt=" + startedAt
+        + ", finishedAt=" + finishedAt
+        + ", kingdom name=" + kingdom.getKingdomName();
   }
 }
