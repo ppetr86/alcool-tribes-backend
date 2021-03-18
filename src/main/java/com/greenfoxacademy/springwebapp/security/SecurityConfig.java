@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .authorizeRequests()
+        .authorizeRequests().antMatchers("/stomp").permitAll()
         .antMatchers("/register/verify", "/register", "/login").permitAll() //permits these endpoints without auth.
         .anyRequest().authenticated() //any other endpoints requires authentication
         .and()
