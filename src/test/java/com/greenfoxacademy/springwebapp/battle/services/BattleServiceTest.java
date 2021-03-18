@@ -339,7 +339,7 @@ public class BattleServiceTest {
     armies.get(1).setTroops(null);
     armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
 
-    mockingPart_PerformAfterBattleActions_WhenAttackingKingdomWon(armies);
+    mockingPart_PerformAfterBattleActions_WhenAttackingKingdomCanSteal(armies);
     int distance = 10;
 
     BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
@@ -358,7 +358,7 @@ public class BattleServiceTest {
     int distance = 10;
     armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
 
-    mockingPart_PerformAfterBattleActions_WhenAttackingKingdomWon(armies);
+    mockingPart_PerformAfterBattleActions_WhenAttackingKingdomCanSteal(armies);
 
     BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
 
@@ -476,7 +476,7 @@ public class BattleServiceTest {
     Assert.assertEquals(java.util.Optional.of(20), java.util.Optional.ofNullable(result));
   }
 
-  public void mockingPart_PerformAfterBattleActions_WhenAttackingKingdomWon(List<Army> armies) {
+  public void mockingPart_PerformAfterBattleActions_WhenAttackingKingdomCanSteal(List<Army> armies) {
     Mockito.doReturn(armies.get(0)).when(battleService).getArmyByType(armies, ArmyType.ATTACKINGARMY);
     Mockito.doReturn(armies.get(1)).when(battleService).getArmyByType(armies, ArmyType.DEFENDINGARMY);
     Mockito.doReturn(null).when(battleService).nobodyOrDefKingdomWon(armies.get(1), armies.get(0));
