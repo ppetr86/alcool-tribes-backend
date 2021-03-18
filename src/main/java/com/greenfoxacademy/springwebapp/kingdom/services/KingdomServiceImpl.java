@@ -24,12 +24,6 @@ public class KingdomServiceImpl implements KingdomService {
   private final RestAPIController restAPIController;
   private final KingdomRepository kingdomRepository;
 
-
-  @Override
-  public KingdomEntity findByPlayerId(Long id) {
-    return null;
-  }
-
   @Override
   public KingdomEntity findByID(Long id) {
     return kingdomRepository.findById(id).orElse(null);
