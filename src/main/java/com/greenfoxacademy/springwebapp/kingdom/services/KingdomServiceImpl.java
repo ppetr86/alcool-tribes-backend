@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class KingdomServiceImpl implements KingdomService {
 
-
   private final KingdomRepository kingdomRepository;
 
   public KingdomServiceImpl(KingdomRepository kingdomRepository) {
@@ -63,8 +62,8 @@ public class KingdomServiceImpl implements KingdomService {
 
   @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
-    kingdomRepository.saveAndFlush(kingdom);
-    return kingdomRepository.findKingdomEntityByPlayer(kingdom.getPlayer());
+    kingdom = kingdomRepository.save(kingdom);
+    return kingdom;
   }
 
   @Override

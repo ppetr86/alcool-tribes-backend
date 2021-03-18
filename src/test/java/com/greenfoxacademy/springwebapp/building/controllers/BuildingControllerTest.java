@@ -54,9 +54,10 @@ public class BuildingControllerTest {
   public void buildBuildings_BuildingCreated_Ok() {
     BuildingRequestDTO request = new BuildingRequestDTO("farm");
     BindingResult bindingResult = new BeanPropertyBindingResult(null, "");
+    KingdomEntity kingdom = new KingdomEntity();
 
     Mockito.when(buildingService.isBuildingTypeInRequestOk(request)).thenReturn(true);
-    Mockito.when(resourceService.hasResourcesForBuilding()).thenReturn(true);
+    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 100)).thenReturn(true);
 
     ResponseEntity<?> response = buildingController.buildBuilding(createAuth("test", 1L), request);
 
