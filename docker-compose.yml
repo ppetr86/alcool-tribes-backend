@@ -1,19 +1,32 @@
 version: '3'
 
 services:
-  springboot-docker-compose-app-container:
-    image: tribe_backend/v1
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    volumes:
-      - /data/springboot-docker-compose-app
-    ports:
-      - "8080:8080"
+
+  myapp-mysql:
+    image: mysql:8.0
     environment:
-      - DB_URL
-      - JWT_SECRET
-      - PWD
-      - HIB_DIA
-      - EMAIL_USER
-      - EMAIL_PWD
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=MyAppDb
+      - MYSQL_USER=myapp-user
+      - MYSQL_PASSWORD=password
+    ports:
+      - 3306:3306
+
+  myapp-spring:
+    image: tribe_backend/v1
+#    restart: on-failure
+    depends_on:
+      - myapp-mysql
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=myapp-mysql
+      - DATABASE_NAME=MyAppDb
+      - DATABASE_PORT=3306
+      - DB_URL=jdbc:mysql://myapp-mysql:3306/MyAppDb?useSSL=false&allowPublicKeyRetrieval=true
+      - USERNAME=myapp-user
+      - JWT_SECRET=12345
+      - PWD=password
+      - HIB_DIA=org.hibernate.dialect.MySQL5Dialect
+      - EMAIL_USER=e26c1b338d5cff
+      - EMAIL_PWD=abdb0349edb97d
