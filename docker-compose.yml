@@ -14,7 +14,7 @@ services:
 
   myapp-spring:
     image: tribe_backend/v1
-#    restart: on-failure
+    restart: on-failure
     depends_on:
       - myapp-mysql
     ports:
