@@ -12,7 +12,11 @@ public interface KingdomService {
 
   KingdomResponseDTO entityToKingdomResponseDTO(Long id);
 
+  KingdomEntity findByPlayerId(Long id);
+
   KingdomEntity saveKingdom(KingdomEntity kingdom);
+
+  String findKingdomNameByPlayerID(Long id);
 
   KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
 }

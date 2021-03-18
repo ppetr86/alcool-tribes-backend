@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
+
   private final WebSocketController webSocketController;
   private final RestAPIController restAPIController;
   private final KingdomRepository kingdomRepository;
@@ -36,6 +37,11 @@ public class KingdomServiceImpl implements KingdomService {
       throw new IdNotFoundException();
     }
     return convert(kingdom);
+  }
+
+  @Override
+  public KingdomEntity findByPlayerId(Long id) {
+    return null;
   }
 
   public KingdomResponseDTO convert(KingdomEntity e) {
@@ -58,10 +64,13 @@ public class KingdomServiceImpl implements KingdomService {
 
   @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
+
     kingdomRepository.saveAndFlush(kingdom);
     kingdom = kingdomRepository.findKingdomEntityByPlayer(kingdom.getPlayer());
     webSocketController.updateMeAboutKingdom(convert(kingdom));
     restAPIController.updateMeAboutKingdom(convert(kingdom));
+
+    kingdom = kingdomRepository.save(kingdom);
     return kingdom;
   }
 

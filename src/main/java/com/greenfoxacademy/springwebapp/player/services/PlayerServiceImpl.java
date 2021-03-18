@@ -69,14 +69,14 @@ public class PlayerServiceImpl implements PlayerService {
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
-    LocationEntity defaultLocation = new LocationEntity(1L, 10, 10);
-    locationService.save(defaultLocation);
+    LocationEntity defaultLocation = locationService.assignKingdomLocation(kingdom);
     kingdom.setLocation(defaultLocation);
 
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
 
     player = playerRepo.save(player);
+    locationService.save(defaultLocation);
     return player;
   }
 
@@ -185,7 +185,7 @@ public class PlayerServiceImpl implements PlayerService {
     return true;
   }
 
-  private PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
+  public PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
     PlayerEntity player = new PlayerEntity();
     player.setEmail(dto.getEmail());
     player.setUsername(dto.getUsername());
