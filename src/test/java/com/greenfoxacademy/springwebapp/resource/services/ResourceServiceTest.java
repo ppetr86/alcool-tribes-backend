@@ -58,8 +58,8 @@ public class ResourceServiceTest {
     BuildingEntity building = new BuildingEntity(10L, BuildingType.MINE, 1, 100,
         10L, 1000L);
 
-    Mockito.doReturn(resource).when(resourceServiceImpl).findResourceByBuildingType(kingdom,building.getType());
-    Mockito.doReturn(null).when(resourceServiceImpl).doResourceUpdate(kingdom,building,resource);
+    Mockito.doReturn(resource).when(resourceServiceImpl).findResourceByBuildingType(kingdom, building.getType());
+    Mockito.doReturn(null).when(resourceServiceImpl).doResourceUpdate(kingdom, building, resource);
 
     ResourceEntity resourceToBeUpdated = resourceServiceImpl.updateResourceGeneration(kingdom, building);
 
@@ -68,7 +68,7 @@ public class ResourceServiceTest {
 
   @Test
   public void updateResourceGeneration_wrongBuildingTypeReturnsNull() {
-    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
     BuildingEntity building = new BuildingEntity(10L, BuildingType.ACADEMY, 1, 100,
         10L, 1000L);
 
@@ -88,13 +88,13 @@ public class ResourceServiceTest {
     Mockito.doReturn(100).when(resourceServiceImpl).calculateNewResourceGeneration(resource, building);
     Mockito.doReturn(mockTimer).when(resourceServiceImpl).createNewTimer();
 
-    resourceServiceImpl.doResourceUpdate(kingdom,building, resource);
+    resourceServiceImpl.doResourceUpdate(kingdom, building, resource);
 
     Mockito.verify(mockTimer).schedule(resourceTimerTaskCaptor.capture(), delayCaptor.capture());
     ResourceTimerTask task = resourceTimerTaskCaptor.getValue();
-    Assert.assertEquals(resource,task.getResource());
-    Assert.assertEquals(100,task.getGeneration().intValue());
-    Assert.assertEquals(building,task.getBuilding());
+    Assert.assertEquals(resource, task.getResource());
+    Assert.assertEquals(100, task.getGeneration().intValue());
+    Assert.assertEquals(building, task.getBuilding());
   }
 
   @Test
@@ -242,7 +242,7 @@ public class ResourceServiceTest {
   public void findResourceByBuildingType_FarmReturnsFood() {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
     ResourceEntity food = kingdom.getResources().stream()
         .filter(a -> a.getType() == ResourceType.FOOD)
         .findFirst().orElse(null);
@@ -256,7 +256,7 @@ public class ResourceServiceTest {
   public void findResourceByBuildingType_MineReturnsGold() {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
     ResourceEntity gold = kingdom.getResources().stream()
         .filter(a -> a.getType() == ResourceType.GOLD)
         .findFirst().orElse(null);
@@ -270,7 +270,7 @@ public class ResourceServiceTest {
   public void ffindResourceByBuildingType_AcademyReturnsNull() {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(kingdom));
+    kingdom.setResources(ResourceFactory.createDefaultResources(kingdom));
 
     ResourceEntity resource = resourceService.findResourceByBuildingType(kingdom, BuildingType.ACADEMY);
 

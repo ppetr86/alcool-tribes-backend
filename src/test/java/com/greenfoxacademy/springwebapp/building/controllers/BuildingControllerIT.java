@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuthWithResources;
+import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultBuildings;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,6 +50,7 @@ public class BuildingControllerIT {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
+    kingdom.setBuildings(createDefaultBuildings(kingdom));
   }
 
   @Test
@@ -220,7 +222,7 @@ public class BuildingControllerIT {
     mockMvc.perform(get(BuildingController.URI + "/1")
         .principal(authentication))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.level", is(5)))
+        .andExpect(jsonPath("$.level", is(1)))
         .andExpect(jsonPath("$.hp", is(100)))
         .andExpect(jsonPath("$.startedAt", is(100)))
         .andExpect(jsonPath("$.finishedAt", is(200)))
@@ -250,12 +252,12 @@ public class BuildingControllerIT {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(put(BuildingController.URI + "/1123")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isNotFound())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Id not found")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Id not found")));
   }
 
   @Test
@@ -265,12 +267,12 @@ public class BuildingControllerIT {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(put(BuildingController.URI + "/4")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Missing parameter(s): level!")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Missing parameter(s): level!")));
   }
 
   @Test
@@ -296,12 +298,12 @@ public class BuildingControllerIT {
     String json = mapper.writeValueAsString(request);
 
     mockMvc.perform(put(BuildingController.URI + "/1")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(json)
-      .principal(authentication))
-      .andExpect(status().isConflict())
-      .andExpect(jsonPath("$.status", is("error")))
-      .andExpect(jsonPath("$.message", is("Not enough resource")));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .principal(authentication))
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.status", is("error")))
+        .andExpect(jsonPath("$.message", is("Not enough resource")));
   }
 
   @Test

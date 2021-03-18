@@ -62,14 +62,15 @@ public class TroopControllerTest {
 
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
-    KingdomEntity ke = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    ke.setTroops(TroopFactory.createDefaultTroops());
-    List<TroopEntityResponseDTO> list = ke.getTroops()
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+    List<TroopEntityResponseDTO> list = kingdom.getTroops()
         .stream()
         .map(TroopEntityResponseDTO::new)
         .collect(Collectors.toList());
 
-    Mockito.when(troopService.troopsToListDTO(ke)).thenReturn(new TroopListResponseDto(list));
+    Mockito.when(troopService.troopsToListDTO(kingdom))
+        .thenReturn(new TroopListResponseDto(list));
 
     ResponseEntity<TroopListResponseDto> response = troopController.getTroopsOfKingdom(authentication);
 
