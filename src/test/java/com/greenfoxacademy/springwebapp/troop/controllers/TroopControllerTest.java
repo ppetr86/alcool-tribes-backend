@@ -62,7 +62,6 @@ public class TroopControllerTest {
 
   @Test
   public void getKingdomTroops_returnsCorrectStatus_AndBodySize() {
-
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
     List<TroopEntityResponseDTO> list = kingdom.getTroops()

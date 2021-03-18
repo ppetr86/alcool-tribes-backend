@@ -136,6 +136,109 @@ public class ResourceServiceTest {
   }
 
   @Test
+  public void hasResourcesForBuildingShouldReturnTrueIfAmountChange100() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    int amountChange = 100;
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
+
+    Assert.assertTrue(result);
+  }
+
+  @Test
+  public void hasResourcesForBuildingShouldReturnFalseIfAmountChange100() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, 100);
+
+    Assert.assertFalse(result);
+  }
+
+  @Test
+  public void hasResourcesForBuildingShouldReturnTrueIfAmountChange150() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    int amountChange = 150;
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
+
+    Assert.assertTrue(result);
+  }
+
+  @Test
+  public void hasResourcesForBuildingShouldReturnFalseIfAmountChange150() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
+    int amountChange = 150;
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
+
+    Assert.assertFalse(result);
+  }
+
+  @Test
+  public void hasResourcesForBuildingShouldReturnTrueIfAmountChange200() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    int amountChange = 200;
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
+
+    Assert.assertTrue(result);
+  }
+
+  @Test
+  public void hasResourcesForBuildingShouldReturnFalseIfAmountChange200() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
+    int amountChange = 200;
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForBuilding(kingdom, amountChange);
+
+    Assert.assertFalse(result);
+  }
+
+  @Test
+  public void hasResourcesForTroopShouldReturnTrue() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForTroop(kingdom, 25);
+
+    Assert.assertTrue(result);
+  }
+
+  @Test
+  public void hasResourcesForTroopShouldReturnFalse() {
+    KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
+
+    Mockito.when(timeService.getTime()).thenReturn(kingdom.getResources().get(1).getUpdatedAt());
+
+    boolean result = resourceService.hasResourcesForTroop(kingdom, 25);
+
+    Assert.assertFalse(result);
+  }
+
+  @Test
   public void findResourceByBuildingType_FarmReturnsFood() {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
@@ -213,5 +316,4 @@ public class ResourceServiceTest {
 
     Assert.assertEquals(166, resourcesGenerated);
   }
-
 }
