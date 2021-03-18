@@ -170,7 +170,7 @@ public class TroopServiceImpl implements TroopService {
   }
 
   @Override
-  public void deleteAllTroops(List<TroopEntity> deleteTroops){
+  public void deleteAllTroops(List<TroopEntity> deleteTroops) {
     troopRepository.deleteAll(deleteTroops);
   }
 

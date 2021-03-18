@@ -47,7 +47,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public void saveResources (List<ResourceEntity> resources){
+  public void saveResources(List<ResourceEntity> resources) {
     resourceRepository.saveAll(resources);
   }
 

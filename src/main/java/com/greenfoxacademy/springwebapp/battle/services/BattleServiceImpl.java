@@ -61,7 +61,6 @@ public class BattleServiceImpl implements BattleService {
     }
 
     int delay = travelTime(attackingKingdom, attackingTroops, defendingKingdom);
-
     return new BattleResponseDTO();
   }
 
@@ -213,7 +212,7 @@ public class BattleServiceImpl implements BattleService {
     Army attackingArmy = getArmyByType(armiesAfterBattle, ArmyType.ATTACKINGARMY);
     Army defendingArmy = getArmyByType(armiesAfterBattle, ArmyType.DEFENDINGARMY);
 
-    if (nobodyOrDefKingdomWon(defendingArmy, attackingArmy) != null){
+    if (nobodyOrDefKingdomWon(defendingArmy, attackingArmy) != null) {
       return nobodyOrDefKingdomWon(defendingArmy, attackingArmy);
     }
     int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
@@ -228,7 +227,7 @@ public class BattleServiceImpl implements BattleService {
     return new BattleResultDTO(stolenFood, stolenGold);
   }
 
-  public BattleResultDTO nobodyOrDefKingdomWon(Army defendingArmy, Army attackingArmy){
+  public BattleResultDTO nobodyOrDefKingdomWon(Army defendingArmy, Army attackingArmy) {
     if (defendingArmy.getTroops() == null && attackingArmy.getTroops() == null) {
       return new BattleResultDTO("Every Troops were dead");
     }
