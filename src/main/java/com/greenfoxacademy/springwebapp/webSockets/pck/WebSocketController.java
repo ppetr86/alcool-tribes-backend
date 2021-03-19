@@ -19,7 +19,7 @@ public class WebSocketController {
 
   private final KingdomService kingdomService;
 
-  @SubscribeMapping("/kingdoms/get/{kingdomId}")
+  @SubscribeMapping("/topic/kingdoms/get/{kingdomId}")
   public KingdomResponseDTO sendDto(@DestinationVariable Long kingdomId, Authentication auth) throws IdNotFoundException {
     if (!kingdomId.equals(((CustomUserDetails) auth.getPrincipal()).getKingdom().getId()))
       throw new InputMismatchException("Provided ID does not match your kingdom ID");

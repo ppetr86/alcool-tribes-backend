@@ -25,7 +25,7 @@ public class RestAPIController {
 
   private final KingdomService kingdomService;
 
-  @SubscribeMapping("/kingdoms/get/{kingdomId}")
+  @SubscribeMapping("/topic/kingdoms/get/{kingdomId}")
   public KingdomResponseDTO sendDto(@DestinationVariable Long kingdomId, Authentication auth) throws IdNotFoundException {
     if (!kingdomId.equals(((CustomUserDetails) auth.getPrincipal()).getKingdom().getId()))
       throw new InputMismatchException("Provided ID does not match your kingdom ID");
@@ -40,7 +40,7 @@ public class RestAPIController {
   @MessageExceptionHandler
   @SendToUser("/kingdoms/error")
   public String handleException(IdNotFoundException ex) {
-    log.debug("Post not found", ex);
+    log.debug("The requested kingdomID was not found", ex);
     return "The requested kingdomID was not found";
   }
 }
