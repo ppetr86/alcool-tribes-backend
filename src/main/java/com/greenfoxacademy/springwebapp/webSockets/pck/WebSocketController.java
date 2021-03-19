@@ -1,5 +1,4 @@
-/*
-package com.greenfoxacademy.springwebapp.webSockets.obsolete;
+package com.greenfoxacademy.springwebapp.webSockets.pck;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
@@ -32,4 +31,3 @@ public class WebSocketController {
     return updated;
   }
 }
-*/

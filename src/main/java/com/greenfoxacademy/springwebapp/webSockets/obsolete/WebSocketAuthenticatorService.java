@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets.obsolete;
 
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
@@ -39,3 +40,4 @@ public class WebSocketAuthenticatorService {
     );
   }
 }
+*/

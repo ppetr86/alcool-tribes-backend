@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets.obsolete;
 
 import org.springframework.context.annotation.Configuration;
@@ -18,3 +19,4 @@ public class WebSocketAuthorizationSecurityConfig extends AbstractSecurityWebSoc
     return true;
   }
 }
+*/

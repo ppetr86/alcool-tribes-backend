@@ -8,9 +8,9 @@ import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
-import com.greenfoxacademy.springwebapp.webSockets.obsolete.RestAPIController;
-import com.greenfoxacademy.springwebapp.webSockets.obsolete.WebSocketController;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
+import com.greenfoxacademy.springwebapp.webSockets.pck.RestAPIController;
+import com.greenfoxacademy.springwebapp.webSockets.pck.WebSocketController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

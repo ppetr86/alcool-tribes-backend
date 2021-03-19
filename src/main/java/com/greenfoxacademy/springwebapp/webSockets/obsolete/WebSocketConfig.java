@@ -1,7 +1,10 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets.obsolete;
 
+import com.greenfoxacademy.springwebapp.security.CustomUserDetailsService;
 import com.greenfoxacademy.springwebapp.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -21,11 +24,13 @@ import org.thymeleaf.util.StringUtils;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   private final JwtProvider jwtProvider;
+  private final CustomUserDetailsService customUserDetailsService;
 
   @Override
   public void configureClientInboundChannel(ChannelRegistration registration) {
     registration.interceptors(new ChannelInterceptor() {
 
+      @SneakyThrows
       @Override
       public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
@@ -33,9 +38,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-          String jwtToken = accessor.getFirstNativeHeader("Auth-Token");
+          String jwtToken = accessor.getFirstNativeHeader("Authorization");
           if (!StringUtils.isEmpty(jwtToken)) {
-            Http authToken = tokenService.retrieveUserAuthToken(jwtToken);
+            String authToken = jwtProvider.getLoginFromToken(jwtToken);
             SecurityContextHolder.getContext().setAuthentication(authToken);
             accessor.setUser(authToken);
           }
@@ -45,4 +50,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
       }
     });
   }
-}
+}*/

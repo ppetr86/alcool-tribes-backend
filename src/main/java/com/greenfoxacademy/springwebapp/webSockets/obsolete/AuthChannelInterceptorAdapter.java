@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets.obsolete;
 
 import lombok.RequiredArgsConstructor;
@@ -35,3 +36,4 @@ public class AuthChannelInterceptorAdapter implements ChannelInterceptor {
     return message;
   }
 }
+*/
