@@ -11,6 +11,7 @@ import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -65,7 +66,10 @@ public class KingdomServiceImpl implements KingdomService {
     kingdom = kingdomRepository.save(kingdom);
 
     if (kingdom.isSubscribedToChangesChat()) {
-      messaging.convertAndSend("/kingdom-update/feed", convert(kingdom));
+
+      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      messaging.convertAndSendToUser(kingdom.getPlayer().getUsername(),
+          "/kingdom-update/feed", convert(kingdom));
     }
 
     return kingdom;

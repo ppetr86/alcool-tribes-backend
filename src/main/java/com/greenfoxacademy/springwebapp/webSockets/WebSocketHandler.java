@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -34,3 +35,4 @@ public class WebSocketHandler extends TextWebSocketHandler {
     sessionMap.remove(session);
   }
 }
+*/
