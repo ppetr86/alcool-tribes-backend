@@ -55,6 +55,8 @@ public class KingdomEntity {
   @OneToOne(mappedBy = "kingdom", cascade = CascadeType.PERSIST)
   private LocationEntity location;
 
+  private boolean isSubscribedToChangesChat;
+
   @Override
   public String toString() {
 

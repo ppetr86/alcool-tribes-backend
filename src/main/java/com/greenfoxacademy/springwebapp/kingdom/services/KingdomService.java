@@ -19,4 +19,6 @@ public interface KingdomService {
   String findKingdomNameByPlayerID(Long id);
 
   KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
+
+  boolean setSubscription(KingdomEntity kingdom, boolean input);
 }

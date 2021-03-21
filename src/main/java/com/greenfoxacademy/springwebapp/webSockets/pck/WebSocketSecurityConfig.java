@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets.pck;
 
 import org.springframework.context.annotation.Configuration;
@@ -18,3 +19,4 @@ public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBro
     messages.anyMessage().authenticated();
   }
 }
+*/

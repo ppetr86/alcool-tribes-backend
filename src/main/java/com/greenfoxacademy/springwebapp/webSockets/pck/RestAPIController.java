@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets.pck;
 
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
@@ -44,3 +45,4 @@ public class RestAPIController {
     return "The requested kingdomID was not found";
   }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.webSockets.pck;
 
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
@@ -61,3 +62,4 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
     });
   }
 }
+*/

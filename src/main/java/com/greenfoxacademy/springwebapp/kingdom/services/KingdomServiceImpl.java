@@ -9,9 +9,8 @@ import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
-import com.greenfoxacademy.springwebapp.webSockets.pck.RestAPIController;
-import com.greenfoxacademy.springwebapp.webSockets.pck.WebSocketController;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -20,10 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
-
-  private final WebSocketController webSocketController;
-  private final RestAPIController restAPIController;
   private final KingdomRepository kingdomRepository;
+  private final SimpMessageSendingOperations messaging;
 
   @Override
   public KingdomEntity findByID(Long id) {
@@ -65,12 +62,12 @@ public class KingdomServiceImpl implements KingdomService {
   @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
 
-    kingdomRepository.saveAndFlush(kingdom);
-    kingdom = kingdomRepository.findKingdomEntityByPlayer(kingdom.getPlayer());
-    webSocketController.updateMeAboutKingdom(convert(kingdom));
-    restAPIController.updateMeAboutKingdom(convert(kingdom));
-
     kingdom = kingdomRepository.save(kingdom);
+
+    if (kingdom.isSubscribedToChangesChat()) {
+      messaging.convertAndSend("/kingdom-update/feed", convert(kingdom));
+    }
+
     return kingdom;
   }
 
@@ -84,5 +81,12 @@ public class KingdomServiceImpl implements KingdomService {
     kingdom.setKingdomName(nameDTO.getName());
     saveKingdom(kingdom);
     return convert(kingdom);
+  }
+
+  @Override
+  public boolean setSubscription(KingdomEntity kingdom, boolean input) {
+    kingdom.setSubscribedToChangesChat(input);
+    kingdom = kingdomRepository.save(kingdom);
+    return kingdom.isSubscribedToChangesChat();
   }
 }
