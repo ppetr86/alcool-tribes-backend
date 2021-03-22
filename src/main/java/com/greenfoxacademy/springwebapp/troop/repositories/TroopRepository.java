@@ -16,10 +16,6 @@ public interface TroopRepository extends JpaRepository<TroopEntity, Long> {
   Long findKingdomIdByTroopId(Long troopId);
 
   @Modifying
-  @Query("DELETE FROM TroopEntity c where c.id IN ?1")
-  void deleteListOfTroopsByTroopsIds(List<Long> ids);
-
-  @Modifying
   @Query("DELETE FROM TroopEntity c where c IN ?1")
   void deleteListOfTroops(List<TroopEntity> deadTroops);
 }

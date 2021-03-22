@@ -56,9 +56,13 @@ public class BattleServiceImpl implements BattleService {
                             KingdomEntity defendingKingdom) {
 
     //calculate distance
+    //TODO: change this temporary distance when you are implementing scheduleBattle
+    int distance = 10;
 
     //do the delay logic here such as in case of ResourceServiceImpl - doResourceUpdate
     //you will be delaying this method: runBattle and passing 5 variables into it using custom BattleTimerTask
+    //TODO: this method will be replaced by different code when
+    runBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
 
     //set the troops that they are not home (later - after peter has this method ready)
 

@@ -455,7 +455,7 @@ public class BattleServiceTest {
 
   @Test
   public void removeDeadTroopsFromArmy_returnsOnlySurvivedTroops() {
-    Army army = ArmyFactory.createAttackingArmy(); //3 troops
+    Army army = ArmyFactory.createAttackingArmy();
     army.getTroops().get(0).setHp(0);
 
     List<TroopEntity> aliveTroops = battleService.removeDeadTroopsFromArmy(army);
@@ -466,7 +466,7 @@ public class BattleServiceTest {
   @Test
   public void removeDeadTroopsFromKingdom_returnsUpdtedArmy() {
     Army army = ArmyFactory.createAttackingArmy();
-    List<TroopEntity> originalListOfTroops = new ArrayList<>(); //3 troops
+    List<TroopEntity> originalListOfTroops = new ArrayList<>();
     originalListOfTroops.addAll(army.getTroops());
     army.getTroops().remove(0); //removing one troop from fighting troops (he died)
 
