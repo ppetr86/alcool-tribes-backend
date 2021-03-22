@@ -30,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .authorizeRequests().antMatchers("/stomp").permitAll()
-        .antMatchers("/register/verify", "/register", "/login", "/index.html").permitAll() //permits these endpoints without auth.
+        .authorizeRequests()
+        .antMatchers("/register/verify", "/register", "/login", "/ws-test").permitAll() //permits these endpoints without auth.
         .anyRequest().authenticated() //any other endpoints requires authentication
         .and()
         .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)

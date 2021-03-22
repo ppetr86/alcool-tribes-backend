@@ -15,11 +15,12 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
     webSocketHandlerRegistry.addHandler(getHandler(), CHAT_SPECIFIC_USER)
-        .setAllowedOrigins("*");
+        .setAllowedOrigins("*").withSockJS();
   }
 
   @Bean
   public WebSocketHandler getHandler(){
     return new WebSocketHandler();
   }
+
 }
