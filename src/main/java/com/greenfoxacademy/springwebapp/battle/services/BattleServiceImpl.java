@@ -279,7 +279,7 @@ public class BattleServiceImpl implements BattleService {
     army.getKingdom().setTroops(aliveKingdomTroops);
 
     //3.deleting dead troops from DB
-    troopService.deleteListOfTroops(deadTroops); //deleting dead troops from DB
+    troopService.deleteListOfTroops(deadTroops);
 
     return army;
   }
