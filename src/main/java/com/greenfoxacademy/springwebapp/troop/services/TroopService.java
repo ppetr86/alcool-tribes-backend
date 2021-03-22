@@ -29,5 +29,5 @@ public interface TroopService {
 
   TroopEntity findTroopById(Long id);
 
-  List<Long> deleteMoreTroopsById(List<Long> ids);
+  void deleteListOfTroops(List<TroopEntity> deadTroops);
 }
