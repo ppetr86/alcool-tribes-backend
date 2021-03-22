@@ -10,7 +10,6 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-  public final static String SUBSCRIBE_ENDPOINT = "/kingdom-update/{kingdomID}";
   public final static String CHAT_SPECIFIC_USER = "/kingdom-updated";
 
   @Override
