@@ -2,16 +2,13 @@ package com.greenfoxacademy.springwebapp.security;
 
 import com.greenfoxacademy.springwebapp.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public static final int AUTHENTICATION_FAILURE_STATUSCODE = 401;
 
@@ -28,10 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http
         .httpBasic().disable()
         .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+        //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        //.and()
         .authorizeRequests()
-        .antMatchers("/register/verify", "/register", "/login", "/ws-test").permitAll() //permits these endpoints without auth.
+        .antMatchers("/register/verify", "/register", "/login", "/ws-test", "/kingdom-updated").permitAll() //permits these endpoints without auth.
         .anyRequest().authenticated() //any other endpoints requires authentication
         .and()
         .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)

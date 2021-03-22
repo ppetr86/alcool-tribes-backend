@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.webSockets;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -10,17 +10,15 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-  public final static String CHAT_SPECIFIC_USER = "/kingdom-updated";
+  public final static String KINGDOM_UPDATED = "/kingdom-updated";
+
+  @Autowired
+  private WebSocketHandler webSocketHandler;
 
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-    webSocketHandlerRegistry.addHandler(getHandler(), CHAT_SPECIFIC_USER)
-        .setAllowedOrigins("*").withSockJS();
-  }
-
-  @Bean
-  public WebSocketHandler getHandler(){
-    return new WebSocketHandler();
+    webSocketHandlerRegistry.addHandler(webSocketHandler, KINGDOM_UPDATED).withSockJS();
+    webSocketHandlerRegistry.addHandler(webSocketHandler, KINGDOM_UPDATED);
   }
 
 }
