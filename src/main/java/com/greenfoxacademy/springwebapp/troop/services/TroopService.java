@@ -33,7 +33,7 @@ public interface TroopService {
 
   void saveAllTroops(List<TroopEntity> troops);
 
-  void deleteAllTroops(List<TroopEntity> deleteTroops);
+  void deleteListOfTroops(List<TroopEntity> deadTroops);
 
   List<Long> deleteMoreTroopsById(List<Long> ids);
 }

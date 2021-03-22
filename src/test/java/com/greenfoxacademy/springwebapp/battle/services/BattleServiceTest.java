@@ -362,7 +362,7 @@ public class BattleServiceTest {
 
     BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
 
-    Assert.assertNull(resultDTO.getWinningTeam());
+    Assert.assertEquals("Nobody won", resultDTO.getWinningTeam());
     Assert.assertEquals(50, resultDTO.getStolenFood());
     Assert.assertEquals(50, resultDTO.getStolenGold());
     Assert.assertEquals(java.util.Optional.of(60),

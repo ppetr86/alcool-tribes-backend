@@ -45,22 +45,17 @@ public class BattleServiceImpl implements BattleService {
                                KingdomEntity attackingKingdom)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException {
 
-    if (enemyKingdomId == attackingKingdom.getId()) {
-      throw new ForbiddenActionException();
-    }
+    if (enemyKingdomId == attackingKingdom.getId()) throw new ForbiddenActionException();
 
     KingdomEntity defendingKingdom = kingdomService.findByID(enemyKingdomId);
-    if (defendingKingdom == null) {
-      throw new IdNotFoundException();
-    }
+    if (defendingKingdom == null) throw new IdNotFoundException();
 
     List<TroopEntity> attackingTroops = getAttackingTroops(requestDTO, attackingKingdom);
-    if (attackingTroops.isEmpty()) {
-      throw new MissingParameterException(
-          "none of the provided troop IDs is available in your kingdom. Your army is empty");
-    }
+    if (attackingTroops.isEmpty()) throw new MissingParameterException(
+        "none of the provided troop IDs is available in your kingdom. Your army is empty");
 
     int delay = travelTime(attackingKingdom, attackingTroops, defendingKingdom);
+
     return new BattleResponseDTO();
   }
 
@@ -224,7 +219,7 @@ public class BattleServiceImpl implements BattleService {
         return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
       }
     }
-    return new BattleResultDTO(stolenFood, stolenGold);
+    return new BattleResultDTO("Nobody won",stolenFood, stolenGold);
   }
 
   public BattleResultDTO nobodyOrDefKingdomWon(Army defendingArmy, Army attackingArmy) {
@@ -250,7 +245,7 @@ public class BattleServiceImpl implements BattleService {
     List<TroopEntity> deadTroops = army.getTroops().stream()
         .filter(troop -> troop.getHp() * distance * 0.02 < 1)
         .collect(Collectors.toList());
-    troopService.deleteAllTroops(deadTroops);
+    troopService.deleteListOfTroops(deadTroops);
   }
 
   public int calculateStolenResource(Army defendingArmy, Army attackingArmy, ResourceType stolen,
