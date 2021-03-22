@@ -20,5 +20,4 @@ public interface KingdomService {
 
   KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
 
-  boolean setSubscription(KingdomEntity kingdom, boolean input);
 }
