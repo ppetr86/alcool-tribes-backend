@@ -18,9 +18,4 @@ public class BattleResultDTO {
   public BattleResultDTO(String winningTeam) {
     this.winningTeam = winningTeam;
   }
-
-  public BattleResultDTO(int stolenFood, int stolenGold) {
-    this.stolenFood = stolenFood;
-    this.stolenGold = stolenGold;
-  }
 }
