@@ -414,7 +414,8 @@ public class BattleServiceTest {
 
     Army updatedArmy = battleService.fightOponent(army1,army2);
 
-    Assert.assertEquals(damagedTroops,updatedArmy.getTroops());
+    Assert.assertEquals(damagedTroops.size(),updatedArmy.getTroops().size());
+    Assert.assertEquals(damagedTroops.get(0).getId(),updatedArmy.getTroops().get(0).getId());
   }
 
   @Test
