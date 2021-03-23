@@ -8,6 +8,7 @@ import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
@@ -39,6 +40,7 @@ public class BattleServiceImpl implements BattleService {
   private final TroopService troopService;
   private final Environment env;
   private final ResourceService resourceService;
+  private final TimeService timeService;
 
   @Override
   public BattleResponseDTO war(Long enemyKingdomId, BattleRequestDTO requestDTO,
@@ -60,7 +62,7 @@ public class BattleServiceImpl implements BattleService {
   }
 
   //"scheduling the battle
-  public int scheduleBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
+  public int travelTime(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
                             KingdomEntity defendingKingdom) {
 
     //calculate distance
@@ -363,24 +365,23 @@ public class BattleServiceImpl implements BattleService {
 
   public int calculateStolenResource(Army defendingArmy, Army attackingArmy, ResourceType stolen,
                                      ResourceType notStolen) {
-    ResourceEntity stolenResource =
-        resourceService.getResourceByResourceType(defendingArmy.getKingdom(), stolen);
-    ResourceEntity notStolenResource =
-        resourceService.getResourceByResourceType(defendingArmy.getKingdom(), notStolen);
+    Integer actualStolenResourceAmount =
+        resourceService.calculateActualResource(defendingArmy.getKingdom(), stolen);
+    Integer actualNotStolenResourceAmount =
+        resourceService.calculateActualResource(defendingArmy.getKingdom(), notStolen);
 
     int halfOfRemainAttackArmyHP = attackingArmy.getHealthPoints() / 2;
-
-    int actualStolenResourceAmount = stolenResource.getAmount();
-    int actualNotStolenResourceAmount = notStolenResource.getAmount();
 
     if (halfOfRemainAttackArmyHP <= actualStolenResourceAmount
         && halfOfRemainAttackArmyHP <= actualNotStolenResourceAmount) {
       return halfOfRemainAttackArmyHP;
-    } else if (halfOfRemainAttackArmyHP <= actualStolenResourceAmount) {
-      return halfOfRemainAttackArmyHP + (halfOfRemainAttackArmyHP - actualNotStolenResourceAmount);
-    } else {
-      return actualStolenResourceAmount;
+    } else if (actualNotStolenResourceAmount <= halfOfRemainAttackArmyHP
+        && halfOfRemainAttackArmyHP <= actualStolenResourceAmount) {
+      if (halfOfRemainAttackArmyHP * 2 <= actualStolenResourceAmount) {
+        return halfOfRemainAttackArmyHP * 2 - actualNotStolenResourceAmount;
+      }
     }
+    return actualStolenResourceAmount;
   }
 
   private void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
@@ -389,10 +390,15 @@ public class BattleServiceImpl implements BattleService {
     ResourceEntity defendingKingdomGold =
         resourceService.getResourceByResourceType(defendingArmy.getKingdom(), ResourceType.GOLD);
 
-    defendingKingdomFood.setAmount(defendingKingdomFood.getAmount() - foodChange);
-    defendingKingdomGold.setAmount(defendingKingdomGold.getAmount() - goldChange);
+    Integer actualFoodAmount = resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD);
+    Integer actualGoldAmount = resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.GOLD);
 
-    List<ResourceEntity> resources =  Arrays.asList(defendingKingdomFood, defendingKingdomGold);
+    defendingKingdomFood.setAmount(actualFoodAmount - foodChange);
+    defendingKingdomGold.setAmount(actualGoldAmount - goldChange);
+    defendingKingdomFood.setUpdatedAt(timeService.getTime());
+    defendingKingdomGold.setUpdatedAt(timeService.getTime());
+
+    List<ResourceEntity> resources = Arrays.asList(defendingKingdomFood, defendingKingdomGold);
     resourceService.saveResources(resources);
   }
 
@@ -404,9 +410,14 @@ public class BattleServiceImpl implements BattleService {
     ResourceEntity attackingKingdomGold =
         resourceService.getResourceByResourceType(attackingArmy.getKingdom(), ResourceType.GOLD);
 
+    Integer actualFoodAmount = resourceService.calculateActualResource(attackingArmy.getKingdom(), ResourceType.FOOD);
+    Integer actualGoldAmount = resourceService.calculateActualResource(attackingArmy.getKingdom(), ResourceType.GOLD);
+
     //TODO: here I have to use the delay(travelTime) method
-    attackingKingdomFood.setAmount(attackingKingdomFood.getAmount() + foodChange);
-    attackingKingdomGold.setAmount(attackingKingdomGold.getAmount() + goldChange);
+    attackingKingdomFood.setAmount(actualFoodAmount + foodChange);
+    attackingKingdomGold.setAmount(actualGoldAmount + goldChange);
+    attackingKingdomFood.setUpdatedAt(timeService.getTime());
+    attackingKingdomGold.setUpdatedAt(timeService.getTime());
 
     List<ResourceEntity> resources = Arrays.asList(attackingKingdomFood, attackingKingdomGold);
     resourceService.saveResources(resources);
@@ -421,19 +432,5 @@ public class BattleServiceImpl implements BattleService {
 
   public Integer defineTroopHp() {
     return Integer.valueOf(Objects.requireNonNull(env.getProperty("troop.hp")));
-  }
-
-  //scheduling the battle
-  public int travelTime(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
-                        KingdomEntity defendingKingdom) {
-
-    //calculate distance
-
-    //do the delay logic here such as in case of ResourceServiceImpl - doResourceUpdate
-    //you will be delaying this method: runBattle and passing 5 variables into it using custom BattleTimerTask
-
-    //set the troops that they are not home (later - after peter has this method ready)
-
-    return 1;
   }
 }
