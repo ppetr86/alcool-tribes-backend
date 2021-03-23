@@ -164,19 +164,9 @@ public class TroopServiceImpl implements TroopService {
     return troopRepository.findById(id).orElse(null);
   }
 
-  @Override
-  public void saveAllTroops(List<TroopEntity> troops) {
-    troopRepository.saveAll(troops);
-  }
-
+  @Transactional
   @Override
   public void deleteListOfTroops(List<TroopEntity> deadTroops) {
     troopRepository.deleteListOfTroops(deadTroops);
-  }
-
-  @Transactional
-  @Override
-  public List<Long> deleteMoreTroopsById(List<Long> ids) {
-    return troopRepository.deleteMoreTroopsById(ids);
   }
 }

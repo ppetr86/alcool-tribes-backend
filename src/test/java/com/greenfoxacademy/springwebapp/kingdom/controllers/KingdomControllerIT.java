@@ -132,7 +132,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void initiateBattleShouldReturnOkStatusAndBattleResponseDTO() throws Exception {
+  public void warShouldReturnOkStatusAndBattleResponseDTO() throws Exception {
     Long[] troopIds = {1L,2L};
     String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(troopIds));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();

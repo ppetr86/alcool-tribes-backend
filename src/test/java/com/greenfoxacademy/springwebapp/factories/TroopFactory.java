@@ -4,7 +4,10 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.Arrays;
+=======
+>>>>>>> ALTB-32-Zdenek
 import java.util.List;
 
 public class TroopFactory {
@@ -24,6 +27,7 @@ public class TroopFactory {
     newTroops.add(new TroopEntity(1L, 1, 100, 100, 100, 999L, 1111L, kingdom));
     newTroops.add(new TroopEntity(2L, 1, 100, 100, 100, 999L, 1111L, kingdom));
     return newTroops;
+<<<<<<< HEAD
   }
 
   public static List<TroopEntity> createTroopsWithProperDetails() {
@@ -40,5 +44,7 @@ public class TroopFactory {
     newTroops.add(new TroopEntity(2L, 2, 4, 20, 10, 102L, 102L, null));
     newTroops.add(new TroopEntity(3L, 3, 6, 30, 15, 103L, 103L, null));
     return newTroops;
+=======
+>>>>>>> ALTB-32-Zdenek
   }
 }
