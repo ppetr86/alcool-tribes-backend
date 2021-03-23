@@ -22,6 +22,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
+import javax.annotation.Resource;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
@@ -250,6 +253,36 @@ public class ResourceServiceTest {
     ResourceEntity resource = resourceService.findResourceByBuildingType(kingdom, BuildingType.FARM);
 
     Assert.assertEquals(food, resource);
+  }
+
+  @Test
+  public void calculateActualResource_ShouldReturn_ProperGoldResourceAmount() {
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
+    ResourceEntity food = kingdom.getResources().get(0);
+    long now = Instant.now().getEpochSecond();
+
+    Mockito.when(timeService.getTime()).thenReturn(now);
+    Mockito.when(timeService.getTimeBetween(food.getUpdatedAt(), now)).thenReturn((int) (now - food.getUpdatedAt()));
+
+    Integer result = resourceService.calculateActualResource(kingdom, ResourceType.GOLD);
+
+    Assert.assertEquals(Optional.of(50), Optional.ofNullable(result));
+  }
+
+  @Test
+  public void calculateActualResource_ShouldReturn_ProperFoodResourceAmount() {
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
+    ResourceEntity food = kingdom.getResources().get(1);
+    long now = Instant.now().getEpochSecond();
+
+    Mockito.when(timeService.getTime()).thenReturn(now);
+    Mockito.when(timeService.getTimeBetween(food.getUpdatedAt(), now)).thenReturn((int) (now - food.getUpdatedAt()));
+
+    Integer result = resourceService.calculateActualResource(kingdom, ResourceType.FOOD);
+
+    Assert.assertEquals(Optional.of(50), Optional.ofNullable(result));
   }
 
   @Test
