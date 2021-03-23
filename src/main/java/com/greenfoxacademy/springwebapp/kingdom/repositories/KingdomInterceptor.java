@@ -5,12 +5,10 @@ import com.greenfoxacademy.springwebapp.webSockets.WebSocketHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
 @Slf4j
-@Component
 public class KingdomInterceptor extends EmptyInterceptor {
 
   @Override

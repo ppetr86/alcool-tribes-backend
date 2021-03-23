@@ -28,5 +28,5 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDgwNzY0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.uPLLoeygW1Tma8TDYpdZCRuRJZj4v0JXYNBem_6SJbPiL-NTYzyyyNF8ZhvvoaE5xwWEZhsRZvOd0oQUYUvIKQ
 
 {
-  "name": "New1 Kingdom"
+  "name": "New3 Kingdom"
 }
