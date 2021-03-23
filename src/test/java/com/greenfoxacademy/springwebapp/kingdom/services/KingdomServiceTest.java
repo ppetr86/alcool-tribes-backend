@@ -9,6 +9,7 @@ import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
@@ -71,8 +72,9 @@ public class KingdomServiceTest {
     Set<RegistrationTokenEntity> tokens = new HashSet<>();
     PlayerEntity fakePlayer =
         new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, tokens);
-    KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
-        new LocationEntity(1L, 10, 10));
+    KingdomEntity kingdom =
+        new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
+            new LocationEntity(1L, 10, 10, null, LocationType.KINGDOM));
 
     KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
 
@@ -89,7 +91,7 @@ public class KingdomServiceTest {
     PlayerEntity fakePlayer =
         new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, tokens);
     KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
-        new LocationEntity(1L, 10, 10));
+        new LocationEntity(1L, 10, 10, null, LocationType.KINGDOM));
 
     KingdomResponseDTO result = kingdomService.changeKingdomName(kingdom, nameDTO);
 

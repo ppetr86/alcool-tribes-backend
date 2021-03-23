@@ -12,11 +12,15 @@ import java.util.List;
 @Service
 public interface ResourceService {
 
-  boolean hasResourcesForBuilding();
+  boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange);
+
+  void updateResourcesBasedOnTroop(KingdomEntity kingdom, int amountChange);
+
+  boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
+
+  void updateResourcesByBuildingType(KingdomEntity kingdom, int amountChange);
 
   List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
-
-  boolean hasResourcesForTroop();
 
   ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
 

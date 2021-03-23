@@ -373,7 +373,8 @@ public class BattleServiceImpl implements BattleService {
     int actualStolenResourceAmount = stolenResource.getAmount();
     int actualNotStolenResourceAmount = notStolenResource.getAmount();
 
-    if (halfOfRemainAttackArmyHP <= actualStolenResourceAmount && halfOfRemainAttackArmyHP <= actualNotStolenResourceAmount) {
+    if (halfOfRemainAttackArmyHP <= actualStolenResourceAmount
+        && halfOfRemainAttackArmyHP <= actualNotStolenResourceAmount) {
       return halfOfRemainAttackArmyHP;
     } else if (halfOfRemainAttackArmyHP <= actualStolenResourceAmount) {
       return halfOfRemainAttackArmyHP + (halfOfRemainAttackArmyHP - actualNotStolenResourceAmount);

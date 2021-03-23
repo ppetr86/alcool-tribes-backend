@@ -1,13 +1,6 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
-<<<<<<< HEAD
 import com.greenfoxacademy.springwebapp.TestConfig;
-=======
-
-import static org.mockito.ArgumentMatchers.any;
-
-
->>>>>>> ALTB-32-Zdenek
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
@@ -30,13 +23,16 @@ import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
 
 public class BattleServiceTest {
   private KingdomService kingdomService;
@@ -327,7 +323,7 @@ public class BattleServiceTest {
 
     Mockito.doReturn(0.03).when(battleService).calculateDefenceBonusCoeficient(kingdom);
 
-    int defencePoints = battleService.calculateDPForDefendingArmy(army);
+    int defencePoints = battleService.calculateDPforDefendingArmy(army);
 
     Assert.assertEquals(206, defencePoints);
   }
@@ -382,8 +378,6 @@ public class BattleServiceTest {
     Assert.assertEquals(101,armiesAfterBattle.get(1).getTroops().get(0).getHp().intValue());
   }
 
-<<<<<<< HEAD
-  //Mark's tests
   @Test
   public void performAfterBattleActions_ShouldReturn_AttackingKingdomWonMessage() {
     List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
@@ -414,7 +408,7 @@ public class BattleServiceTest {
     Assert.assertEquals("Nobody won", resultDTO.getWinningTeam());
     Assert.assertEquals(50, resultDTO.getStolenFood());
     Assert.assertEquals(50, resultDTO.getStolenGold());
-   }
+  }
 
   @Test
   public void nobodyOrDefKingdomWon_ShouldReturn_EveryTroopsDeadMessage() {
@@ -443,8 +437,8 @@ public class BattleServiceTest {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
     Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
-    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(1);
-    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(0);
+    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
+    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
 
     Mockito.when(resourceService.getResourceByResourceType(defendingArmy.getKingdom(), ResourceType.FOOD))
         .thenReturn(stolenFood);
@@ -457,7 +451,7 @@ public class BattleServiceTest {
 
     Assert.assertEquals(60, result);
   }
-=======
+
   @Test
   public void fightArmies_oneTroopSurvives_returnsCorrectListOfArmiesAndCorrectSizesOfTroopLists() {
     //note: its a kind of "integration" unit test
@@ -578,16 +572,12 @@ public class BattleServiceTest {
     Assert.assertEquals(306,updatedArmy.getAttackPoints());
   }
 
-
-
->>>>>>> ALTB-32-Zdenek
-
   @Test
   public void calculateStolenResource_ShouldReturn_ProperValuesIfFoodAmountIsLessThanGoldAmount() {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
-    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(1);
-    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(0);
+    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
+    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(30);
     Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
 
@@ -607,8 +597,8 @@ public class BattleServiceTest {
   public void calculateStolenResource_ShouldReturn_ProperValuesIfFoodAmountIsHigherThanGoldAmount() {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
-    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(1);
-    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(0);
+    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
+    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     gold.setAmount(30);
     Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
 
@@ -626,10 +616,9 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_() {
-    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
-    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(1);
-    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataAndHighAMount(kingdom).get(0);
+    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
+    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(60);
     gold.setAmount(10);
     Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();

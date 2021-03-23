@@ -2,11 +2,8 @@ package com.greenfoxacademy.springwebapp.factories;
 
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
-<<<<<<< HEAD
-
-=======
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
->>>>>>> ALTB-32-Zdenek
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +28,7 @@ public class ArmyFactory {
   }
 
   public static Army createDefendingArmy() {
-    Army defendingArmy = new Army(
+    return new Army(
         200,
         100,
         200,
@@ -61,12 +58,6 @@ public class ArmyFactory {
         KingdomFactory.createFullKingdom(2L, 2L),
         ArmyType.DEFENDINGARMY
     );
-    //setting same troops for Army and Kingdom (which is in Army)
-    List<TroopEntity> kingdomTroops = new ArrayList<>();
-    kingdomTroops.addAll(defendingArmy.getTroops());
-    defendingArmy.getKingdom().setTroops(kingdomTroops);
-
-    return defendingArmy;
   }
 
   public static List<Army> createListOf2Armies() {
