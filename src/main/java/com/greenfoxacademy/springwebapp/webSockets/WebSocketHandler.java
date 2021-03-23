@@ -1,7 +1,5 @@
 package com.greenfoxacademy.springwebapp.webSockets;
 
-import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -10,7 +8,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
@@ -19,9 +16,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-    TimeUnit.SECONDS.sleep(1);
-    KingdomEntity kingdom = ((CustomUserDetails) session.getPrincipal()).getKingdom();
-    sessionMap.put(kingdom.getId(), session);
+    String[] path = session.getUri().getPath().split("/");
+    long id = Integer.parseInt(path[path.length-1]);
+
+    sessionMap.put(id, session);
   }
 
   @Override

@@ -7,7 +7,7 @@
 <body>
 <script>
     window.onload = () => {
-      const wsClient = new WebSocket('ws://localhost:8080/kingdom-updated')
+      const wsClient = new WebSocket('ws://localhost:8080/kingdom-update/1')
 
       wsClient.onmessage = event => {
         const message = JSON.parse(event.data)
