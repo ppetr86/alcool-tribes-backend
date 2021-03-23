@@ -17,9 +17,6 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
     webSocketHandlerRegistry.addHandler(webSocketHandler, KINGDOM_UPDATE)
-        .setAllowedOrigins("*")
-        .withSockJS();
-    webSocketHandlerRegistry.addHandler(webSocketHandler, KINGDOM_UPDATE)
         .setAllowedOrigins("*");
   }
 

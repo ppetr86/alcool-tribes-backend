@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -25,8 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http
         .httpBasic().disable()
         .csrf().disable()
-        //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        //.and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
         .authorizeRequests()
         .antMatchers("/register/verify", "/register", "/login", "/ws-test", "/kingdom-update/**").permitAll() //permits these endpoints without auth.
         .anyRequest().authenticated() //any other endpoints requires authentication
