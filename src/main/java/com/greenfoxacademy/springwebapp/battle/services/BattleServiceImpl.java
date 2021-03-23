@@ -56,13 +56,13 @@ public class BattleServiceImpl implements BattleService {
     if (attackingTroops.isEmpty()) throw new MissingParameterException(
         "none of the provided troop IDs is available in your kingdom. Your army is empty");
 
-    int delay = travelTime(attackingKingdom, attackingTroops, defendingKingdom);
+    int delay = scheduleBattle(attackingKingdom, attackingTroops, defendingKingdom);
 
     return new BattleResponseDTO();
   }
 
   //"scheduling the battle
-  public int travelTime(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
+  public int scheduleBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
                             KingdomEntity defendingKingdom) {
 
     //calculate distance
