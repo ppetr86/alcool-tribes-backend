@@ -54,11 +54,12 @@ public class TroopServiceImpl implements TroopService {
       throw new ForbiddenActionException();
     } else if (!academy.getType().equals(BuildingType.ACADEMY)) {
       throw new InvalidAcademyIdException();
-    } else if (!resourceService.hasResourcesForTroop()) {
+    }
+    int troopCosts = (int) academy.getLevel() * getAppPropertyAsInt("troop.buildingCosts");
+    if (!resourceService.hasResourcesForTroop(kingdom, troopCosts)) {
       throw new NotEnoughResourceException();
     }
-    // TODO: after resources are defined, adjust logic for getting resources and
-    //  their substracting when new troops are created.
+    resourceService.updateResourcesBasedOnTroop(kingdom, troopCosts);
     Integer troopLevel = academy.getLevel();
     TroopEntity troop = buildTroopFromTroopProperties(kingdom, troopLevel);
     troop = troopRepository.save(troop);
@@ -81,8 +82,7 @@ public class TroopServiceImpl implements TroopService {
 
   private void validateRequest(TroopRequestDTO requestDTO, BuildingEntity academy, KingdomEntity kingdomEntity,
                                Long troopId) {
-    if (requestDTO.getBuildingId() == null
-        || requestDTO.getBuildingId().toString().isEmpty()) {
+    if (requestDTO.getBuildingId() == null || requestDTO.getBuildingId().toString().isEmpty()) {
       throw new MissingParameterException("buildingId");
     } else if (academy == null) {
       BuildingEntity actualBuilding = buildingService.findBuildingById(requestDTO.getBuildingId());
@@ -93,7 +93,9 @@ public class TroopServiceImpl implements TroopService {
       }
     } else if (!academy.getType().equals(BuildingType.ACADEMY)) {
       throw new InvalidAcademyIdException();
-    } else if (!resourceService.hasResourcesForTroop()) {
+    }
+    int troopCosts = (int) academy.getLevel() * getAppPropertyAsInt("troop.buildingCosts");
+    if (!resourceService.hasResourcesForTroop(kingdomEntity, troopCosts)) {
       throw new NotEnoughResourceException();
     } else if (!kingdomEntity.getId().equals(troopRepository.findKingdomIdByTroopId(troopId))) {
       throw new InvalidInputException("troop id!");
@@ -124,7 +126,7 @@ public class TroopServiceImpl implements TroopService {
     Integer defence = troopLevel * getAppPropertyAsInt("troop.defence");
     Long startedAt = timeService.getTime();
     Long finishedAt = timeService.getTimeAfter(troopLevel * getAppPropertyAsInt("troop.buildingTime"));
-    return new TroopEntity(troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom);
+    return new TroopEntity(null,troopLevel, hp, attack, defence, startedAt, finishedAt, kingdom,true);
   }
 
   private Integer getAppPropertyAsInt(String propertyName) {

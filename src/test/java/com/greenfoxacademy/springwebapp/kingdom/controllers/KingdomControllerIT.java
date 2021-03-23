@@ -11,6 +11,7 @@ import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
+import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,11 +49,11 @@ public class KingdomControllerIT {
     authentication = AuthFactory.createAuthFullKingdom("Furkesz", 1L);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setKingdomName("Test Name");
-    kingdom.setBuildings(BuildingFactory.createBuildings(kingdom));
+    kingdom.setBuildings(BuildingFactory.createDefaultBuildings(kingdom));
     kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
-    kingdom.setResources(ResourceFactory.createResourcesWithAllData(null));
+    kingdom.setResources(ResourceFactory.createDefaultResources(null));
     kingdom.setTroops(TroopFactory.createTroops(kingdom));
-    kingdom.setLocation(new LocationEntity(1L, 10, 10));
+    kingdom.setLocation(new LocationEntity(1L, 10, 10, kingdom, LocationType.KINGDOM));
   }
 
   @Test
