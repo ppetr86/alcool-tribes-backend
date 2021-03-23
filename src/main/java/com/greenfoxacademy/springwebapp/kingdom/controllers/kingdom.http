@@ -25,8 +25,8 @@ Content-Type: application/json
 ### kingdom
 PUT http://localhost:8080/kingdom
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUzMTE2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.55FYv_lh3cF6by5jzNCD-BypSydYr65fafvataJExuRszu8c7BREhy1kaxl3ExlOwzfFMpCdFy-MrxC8EvF4UA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDgwNzY0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.uPLLoeygW1Tma8TDYpdZCRuRJZj4v0JXYNBem_6SJbPiL-NTYzyyyNF8ZhvvoaE5xwWEZhsRZvOd0oQUYUvIKQ
 
 {
-  "name": "New Kingdom"
+  "name": "New1 Kingdom"
 }

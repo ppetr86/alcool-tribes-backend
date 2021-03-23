@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.webSockets;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -10,15 +11,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class WebSocketHandler extends TextWebSocketHandler {
 
-  private final HashMap<Long, WebSocketSession> sessionMap = new HashMap<>();
+  public static final HashMap<Long, WebSocketSession> sessionMap = new HashMap<>();
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     String[] path = session.getUri().getPath().split("/");
-    long id = Integer.parseInt(path[path.length-1]);
-
+    long id = Integer.parseInt(path[path.length - 1]);
+    log.info("websocket sessionmap updated. Kingdom ID added: " + id);
     sessionMap.put(id, session);
   }
 
