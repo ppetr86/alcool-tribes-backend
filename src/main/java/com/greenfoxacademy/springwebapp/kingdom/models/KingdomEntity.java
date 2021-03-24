@@ -6,8 +6,9 @@ import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -23,7 +24,8 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "kingdoms")
@@ -53,5 +55,19 @@ public class KingdomEntity {
   @OneToOne(mappedBy = "kingdom", cascade = CascadeType.PERSIST)
   private LocationEntity location;
 
+  @Override
+  public String toString() {
 
+    return new StringBuilder().append("KingdomEntity id")
+        .append(this.getId() == null ? "no id" : String.valueOf(this.getId()))
+        .append("kingdom name ").append(this.getKingdomName() == null ? "no name" : this.getKingdomName())
+        .append("player name ").append(this.getPlayer() == null ? "no playername" : this.getPlayer().getUsername())
+        .append("buildings count ")
+        .append(this.getBuildings() == null ? "no buildings" : String.valueOf(buildings.size()))
+        .append("troops count ").append(this.getTroops() == null ? "no troops" : String.valueOf(troops.size()))
+        .append("resources count ").append(this.getResources() == null ? " no resources" :
+            String.valueOf(resources.stream().mapToInt(ResourceEntity::getAmount).sum()))
+        .append(" location type ").append(this.getLocation() == null ? "no location " : this.getLocation().getType())
+        .toString();
+  }
 }

@@ -2,12 +2,16 @@ package com.greenfoxacademy.springwebapp.player.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
+import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
+import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,6 +32,9 @@ public class PlayerControllerIT {
   @Autowired
   private MockMvc mockMvc;
 
+  @MockBean
+  private EmailService emailService;
+
   @Test
   public void postRegisterRequestShouldReturn201() throws Exception {
 
@@ -35,6 +42,8 @@ public class PlayerControllerIT {
         new PlayerRegisterRequestDTO("testUser", "testPassword", "email@gmail.com");
 
     String requestJson = new ObjectMapper().writeValueAsString(rqst);
+    VerificationEmail emailContext = new VerificationEmail();
+    Mockito.when(emailService.sendMailWithHtmlAndPlainText(emailContext)).thenReturn(true);
 
     mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))

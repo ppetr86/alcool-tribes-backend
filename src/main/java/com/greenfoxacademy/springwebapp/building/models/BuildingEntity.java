@@ -69,5 +69,17 @@ public class BuildingEntity {
     this.level = level;
     this.kingdom = kingdom;
   }
+
+  @Override
+  public String toString() {
+    return "BuildingEntity{"
+        + "id=" + id
+        + ", type=" + type
+        + ", level=" + level
+        + ", hp=" + hp
+        + ", startedAt=" + startedAt
+        + ", finishedAt=" + finishedAt
+        + ", kingdom=" + kingdom;
+  }
 }
 

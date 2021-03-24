@@ -12,8 +12,8 @@ public class PlayerFactory {
         .username("testUser")
         .password("password")
         .email("test@test.com")
-        .avatar(null)
-        .points(null)
+        .avatar("avatar")
+        .points(10)
         .kingdom(kingdom)
         .isAccountVerified(true)
         .tokens(null)
@@ -51,7 +51,7 @@ public class PlayerFactory {
     return pl;
   }
 
-  public static PlayerEntity createPlayer(PlayerRegisterRequestDTO rqst, KingdomEntity kingdom, boolean verified){
+  public static PlayerEntity createPlayer(PlayerRegisterRequestDTO rqst, KingdomEntity kingdom, boolean verified) {
     PlayerEntity player = new PlayerEntity();
     player.setEmail(rqst.getEmail());
     player.setUsername(rqst.getUsername());
