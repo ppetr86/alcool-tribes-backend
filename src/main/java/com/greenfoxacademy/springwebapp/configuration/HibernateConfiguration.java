@@ -15,7 +15,7 @@ public class HibernateConfiguration implements HibernatePropertiesCustomizer {
   }
 
   @Bean
-  public HibernateInterceptor kingdomInterceptor(){
+  public HibernateInterceptor kingdomInterceptor() {
     return new HibernateInterceptor();
   }
 

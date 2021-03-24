@@ -15,7 +15,7 @@ import java.util.Map;
 @Slf4j
 public class WebSocketHandler extends TextWebSocketHandler {
 
-  public static final HashMap<Long, WebSocketSession> sessionMap = new HashMap<>();
+  private final HashMap<Long, WebSocketSession> sessionMap = new HashMap<>();
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -35,6 +35,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    log.info("websocket session removed");
     sessionMap.remove(session);
   }
 
