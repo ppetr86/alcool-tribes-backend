@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.webSockets;
+package com.greenfoxacademy.springwebapp.websockets;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

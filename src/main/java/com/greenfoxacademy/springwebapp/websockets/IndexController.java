@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.webSockets;
+package com.greenfoxacademy.springwebapp.websockets;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

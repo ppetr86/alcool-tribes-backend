@@ -1,7 +1,7 @@
 package com.greenfoxacademy.springwebapp.configuration;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.webSockets.WebSocketHandler;
+import com.greenfoxacademy.springwebapp.websockets.WebSocketHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;

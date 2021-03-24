@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.webSockets;
+package com.greenfoxacademy.springwebapp.websockets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-  public final static String KINGDOM_UPDATE = "/kingdom-update/{kingdomID}";
+  public static final String KINGDOM_UPDATE = "/kingdom-update/{kingdomID}";
   @Autowired
   private WebSocketHandler webSocketHandler;
 
