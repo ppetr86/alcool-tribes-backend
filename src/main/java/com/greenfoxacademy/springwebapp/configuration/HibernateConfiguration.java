@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.kingdom.repositories;
+package com.greenfoxacademy.springwebapp.configuration;
 
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +16,8 @@ public class HibernateConfiguration implements HibernatePropertiesCustomizer {
 
 
   @Bean
-  public KingdomInterceptor kingdomInterceptor(){
-    return new KingdomInterceptor();
+  public HibernateInterceptor kingdomInterceptor(){
+    return new HibernateInterceptor();
   }
 
 }

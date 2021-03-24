@@ -48,4 +48,10 @@ public class KingdomController {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
   }
+
+  @PutMapping("/test")
+  public ResponseEntity<?> changeBuildingForTest(Authentication auth) {
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    return ResponseEntity.ok(kingdomService.petrTest(kingdom));
+  }
 }

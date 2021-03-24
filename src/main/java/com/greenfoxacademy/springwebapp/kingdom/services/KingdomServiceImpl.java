@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
+import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -12,6 +13,7 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,9 +61,7 @@ public class KingdomServiceImpl implements KingdomService {
 
   @Override
   public KingdomEntity saveKingdom(KingdomEntity kingdom) {
-
     kingdom = kingdomRepository.save(kingdom);
-
     return kingdom;
   }
 
@@ -76,4 +76,17 @@ public class KingdomServiceImpl implements KingdomService {
     saveKingdom(kingdom);
     return convert(kingdom);
   }
+
+  @Override
+  public KingdomResponseDTO petrTest(KingdomEntity kingdom) {
+    List<BuildingEntity> list  = kingdom.getBuildings();
+    BuildingEntity b = list.get(0);
+    b.setFinishedAt(1L);
+    list.set(0,b);
+    kingdom.setBuildings(list);
+    saveKingdom(kingdom);
+    return convert(kingdom);
+  }
+
+
 }

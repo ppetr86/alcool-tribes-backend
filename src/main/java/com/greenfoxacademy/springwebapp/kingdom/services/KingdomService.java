@@ -20,4 +20,5 @@ public interface KingdomService {
 
   KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
 
+  KingdomResponseDTO petrTest(KingdomEntity kingdom);
 }
