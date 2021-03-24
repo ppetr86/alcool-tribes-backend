@@ -17,26 +17,16 @@ public class KingdomInterceptor extends EmptyInterceptor {
   public boolean onSave(Object entity, Serializable id,
                         Object[] state, String[] propertyNames, Type[] types) {
 
-    if (entity.getClass().getMethod("getKingdom").invoke(entity) != null) {
-      KingdomEntity kingdom = (KingdomEntity) entity.getClass().getMethod("getKingdom").invoke(entity);
-      if (kingdom.getId() != null) {
-        if (WebSocketHandler.sessionMap.containsKey(kingdom.getId())) {
-          log.info("Intercepted hibernate save/update of Entity which contains KingdomEntity");
-          return false;
-        }
+    if (entity instanceof KingdomEntity || entity.getClass().getMethod("getKingdom").invoke(entity) != null) {
+      log.info("session map size " + WebSocketHandler.sessionMap.size());
+      if (entity instanceof KingdomEntity) {
+        return ((KingdomEntity) entity).getId() != null && WebSocketHandler.sessionMap.containsKey(((KingdomEntity) entity).getId());
+      } else {
+        KingdomEntity kingdom = (KingdomEntity) entity.getClass().getMethod("getKingdom").invoke(entity);
+        return WebSocketHandler.sessionMap.containsKey(kingdom.getId());
       }
-    } else if (entity instanceof KingdomEntity && ((KingdomEntity) entity).getId() != null) {
-      KingdomEntity kingdom = (KingdomEntity) entity;
-      if (kingdom.getId() != null) {
-        if (WebSocketHandler.sessionMap.containsKey(kingdom.getId())) {
-          log.info("Intercepted hibernate save/update of existing KingdomEntity");
-          return true;
-        }
-      }
-    } else if (entity instanceof KingdomEntity && ((KingdomEntity) entity).getId() == null) {
-      log.info("Intercepted hibernate save of newly created KingdomEntity without ID");
-      return false;
     }
+
     return false;
   }
 }
