@@ -37,7 +37,7 @@ public class KingdomController {
     return ResponseEntity.ok().body(allResources);
   }
 
-  @PostMapping
+  @PutMapping
   public ResponseEntity<?> updateKingdomByName(Authentication auth,
                                                @RequestBody @Valid KingdomNameDTO nameDTO) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();

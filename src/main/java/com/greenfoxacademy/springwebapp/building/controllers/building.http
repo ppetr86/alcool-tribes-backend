@@ -20,12 +20,12 @@ Accept: application/json
 
 ### PUT buildings
 
-PUT http://localhost:8080/kingdom/buildings/3
+PUT http://localhost:8080/kingdom/buildings/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDgxNjI4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.hxMbO7Lv0YKeAW_vTzoE6z6Hz5G-O6sRqIL0LKg3vDPRGxmpqTtVMoxhR6B_FIhW6gIbPM9KlD3gzofUNVRE5Q
 
 {
-  "level": 2
+  "level": 3
 }
 
 

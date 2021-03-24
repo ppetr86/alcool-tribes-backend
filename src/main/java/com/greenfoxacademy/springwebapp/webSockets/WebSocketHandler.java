@@ -46,6 +46,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     WebSocketSession session = sessionMap.get(id);
     try {
       session.sendMessage(new TextMessage(json));
+      log.info("websocket message sent");
       return true;
     } catch (IOException e) {
       e.printStackTrace();

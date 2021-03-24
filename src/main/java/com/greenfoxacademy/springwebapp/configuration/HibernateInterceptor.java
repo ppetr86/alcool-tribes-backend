@@ -1,8 +1,6 @@
 package com.greenfoxacademy.springwebapp.configuration;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
-import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.webSockets.WebSocketHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.EmptyInterceptor;
@@ -18,8 +16,6 @@ public class HibernateInterceptor extends EmptyInterceptor {
   @Autowired
   WebSocketHandler webSocketHandler;
   @Autowired
-  KingdomService kingdomService;
-  @Autowired
   ConvertService convertService;
 
   @Override
@@ -28,8 +24,8 @@ public class HibernateInterceptor extends EmptyInterceptor {
     KingdomEntity kingdom = entityKingdom(entity);
     if (kingdom != null && kingdom.getId() != null && webSocketHandler != null
         && webSocketHandler.hasSession(kingdom.getId())) {
-      KingdomResponseDTO dto = kingdomService.convert(kingdom);
-      webSocketHandler.sendMessage(kingdom.getId(), convertService.objectToJson(dto));
+
+      webSocketHandler.sendMessage(kingdom.getId(), convertService.objectToJson(kingdom));
     }
     return super.onSave(entity, id, state, propertyNames, types);
   }

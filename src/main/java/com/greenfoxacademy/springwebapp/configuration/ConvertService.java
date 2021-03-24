@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConvertService {
 
-  private final ObjectMapper  mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new ObjectMapper();
 
-  public String objectToJson(Object o){
-
+  public String objectToJson(Object o) {
     try {
       return mapper.writeValueAsString(o);
     } catch (JsonProcessingException e) {
