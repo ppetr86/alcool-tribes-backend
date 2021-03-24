@@ -9,14 +9,7 @@ import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -24,8 +17,7 @@ import java.util.stream.Collectors;
 public class LocationServiceImpl implements LocationService {
 
   private final LocationRepository repo;
-  private static int[][] DIRECTIONS
-      = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+  private final PathFinder pathFinder;
 
   @Override
   public LocationEntity save(LocationEntity entity) {
@@ -76,7 +68,6 @@ public class LocationServiceImpl implements LocationService {
     return !kingdoms.contains(new LocationEntity(x, y));
   }
 
-
   public PriorityQueue<LocationEntity> prioritizeLocationsByCoordinates(int x, int y, List<LocationEntity> locations) {
     PriorityQueue<LocationEntity> result = new PriorityQueue<>(locations.size(), new LocationComparator(x, y));
     result.addAll(locations);
@@ -90,17 +81,16 @@ public class LocationServiceImpl implements LocationService {
 
     //Legend: 1: Wall, 0: valid path, 3: start, 4: end
     int[][] grid = new int[201][201];
-    Arrays.stream(grid).forEach(a -> Arrays.fill(a, 0));
     List<LocationEntity> dbLocations = repo.findAll();
 
-    // setting all LocationType NOTEMPTY to "1" for wall
+    // setting all LocationType NOTEMPTY to "1" for can not walk
     for (LocationEntity each : dbLocations) {
       if (!each.getType().equals(LocationType.EMPTY)) {
         int yCoord = each.getY() * (-1) + 100;
         grid[yCoord][each.getX() + 100] = 1;
       }
     }
-    //setting start  location to "s" , end to "e"
+    //setting start  location to "3" , end to "4"
     grid[start.getLocation().getY() * (-1) + 100][start.getLocation().getX() + 100] = 3;
     grid[end.getLocation().getY() * (-1) + 100][end.getLocation().getX() + 100] = 4;
     System.out.println(Arrays.deepToString(grid));
@@ -108,51 +98,9 @@ public class LocationServiceImpl implements LocationService {
     Maze maze = new Maze(grid);
     maze.setStart(new Coordinate(start.getLocation().getY(),start.getLocation().getX()));
     maze.setEnd(new Coordinate(end.getLocation().getY(),end.getLocation().getX()));
-    List<Coordinate> path = solve(maze);
+    List<Coordinate> path = pathFinder.solve(maze);
     maze.printPath(path);
     maze.reset();
-
-    return path;
-  }
-
-  public List<Coordinate> solve(Maze maze) {
-    LinkedList<Coordinate> nextToVisit = new LinkedList<>();
-    Coordinate start = maze.getEntry();
-    nextToVisit.add(start);
-
-    while (!nextToVisit.isEmpty()) {
-      Coordinate cur = nextToVisit.remove();
-
-      if (!maze.isValidLocation(cur.getX(), cur.getY()) || maze.isExplored(cur.getX(), cur.getY())) {
-        continue;
-      }
-
-      if (maze.isWall(cur.getX(), cur.getY())) {
-        maze.setVisited(cur.getX(), cur.getY(), true);
-        continue;
-      }
-
-      if (maze.isExit(cur.getX(), cur.getY())) {
-        return backtrackPath(cur);
-      }
-
-      for (int[] direction : DIRECTIONS) {
-        Coordinate coordinate = new Coordinate(cur.getX() + direction[0], cur.getY() + direction[1], cur);
-        nextToVisit.add(coordinate);
-        maze.setVisited(cur.getX(), cur.getY(), true);
-      }
-    }
-    return Collections.emptyList();
-  }
-
-  private List<Coordinate> backtrackPath(Coordinate cur) {
-    List<Coordinate> path = new ArrayList<>();
-    Coordinate iter = cur;
-
-    while (iter != null) {
-      path.add(iter);
-      iter = iter.getParent();
-    }
 
     return path;
   }

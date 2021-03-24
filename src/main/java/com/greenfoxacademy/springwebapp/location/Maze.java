@@ -14,7 +14,7 @@ public class Maze {
   private static final int WALL = 1;
   private static final int START = 2;
   private static final int EXIT = 3;
-  private static final int PATH = 4;
+  private static final int SHORTEST_PATH = 4;
 
   private int[][] maze;
   private boolean[][] visited;
@@ -76,7 +76,7 @@ public class Maze {
       if (isStart(coordinate.getX(), coordinate.getY()) || isExit(coordinate.getX(), coordinate.getY())) {
         continue;
       }
-      tempMaze[coordinate.getX()][coordinate.getY()] = PATH;
+      tempMaze[coordinate.getX()][coordinate.getY()] = SHORTEST_PATH;
     }
     System.out.println(toString(tempMaze));
   }

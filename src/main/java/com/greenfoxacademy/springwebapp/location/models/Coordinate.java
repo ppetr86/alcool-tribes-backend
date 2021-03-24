@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Coordinate {
-  private int x;
-  private int y;
-  private Coordinate parent;
+  protected int x;
+  protected int y;
+  protected Coordinate parent;
 
   public Coordinate(int x, int y) {
     this.x = x;
