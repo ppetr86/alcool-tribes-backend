@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.location.Maze;
 import com.greenfoxacademy.springwebapp.location.models.Coordinate;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Component
 public class PathFinder {
 
   private static final int ROAD = 0;
@@ -20,7 +22,10 @@ public class PathFinder {
   private static final int EXIT = 3;
   private static final int SHORTEST_PATH = 4;
   private static int[][] DIRECTIONS
-      = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+      = { { 0, 1 },
+      { 1, 0 },
+      { 0, -1 },
+      { -1, 0 } };
 
   public List<Coordinate> solve(Maze maze) {
     LinkedList<Coordinate> nextToVisit = new LinkedList<>();
@@ -58,7 +63,7 @@ public class PathFinder {
 
     while (iter != null) {
       path.add(iter);
-      iter = iter.parent;
+      iter = iter.getParent();
     }
 
     return path;

@@ -93,15 +93,13 @@ public class LocationServiceImpl implements LocationService {
     //setting start  location to "3" , end to "4"
     grid[start.getLocation().getY() * (-1) + 100][start.getLocation().getX() + 100] = 3;
     grid[end.getLocation().getY() * (-1) + 100][end.getLocation().getX() + 100] = 4;
-    System.out.println(Arrays.deepToString(grid));
+//    System.out.println(Arrays.deepToString(grid));
 
     Maze maze = new Maze(grid);
     maze.setStart(new Coordinate(start.getLocation().getY(),start.getLocation().getX()));
     maze.setEnd(new Coordinate(end.getLocation().getY(),end.getLocation().getX()));
     List<Coordinate> path = pathFinder.solve(maze);
-    maze.printPath(path);
     maze.reset();
-
     return path;
   }
 

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +21,9 @@ public class Maze {
   private Coordinate end;
 
   public Maze(int[][] maze) {
+
     this.maze = maze;
+    this.visited = new boolean[maze.length][maze[0].length];
   }
 
   public int getHeight() {
@@ -54,6 +55,7 @@ public class Maze {
   }
 
   public boolean isWall(int row, int col) {
+
     return maze[row][col] == WALL;
   }
 
@@ -66,40 +68,6 @@ public class Maze {
       return false;
     }
     return true;
-  }
-
-  public void printPath(List<Coordinate> path) {
-    int[][] tempMaze = Arrays.stream(maze)
-        .map(int[]::clone)
-        .toArray(int[][]::new);
-    for (Coordinate coordinate : path) {
-      if (isStart(coordinate.getX(), coordinate.getY()) || isExit(coordinate.getX(), coordinate.getY())) {
-        continue;
-      }
-      tempMaze[coordinate.getX()][coordinate.getY()] = SHORTEST_PATH;
-    }
-    System.out.println(toString(tempMaze));
-  }
-
-  public String toString(int[][] maze) {
-    StringBuilder result = new StringBuilder(getWidth() * (getHeight() + 1));
-    for (int row = 0; row < getHeight(); row++) {
-      for (int col = 0; col < getWidth(); col++) {
-        if (maze[row][col] == ROAD) {
-          result.append(' ');
-        } else if (maze[row][col] == WALL) {
-          result.append('#');
-        } else if (maze[row][col] == START) {
-          result.append('S');
-        } else if (maze[row][col] == EXIT) {
-          result.append('E');
-        } else {
-          result.append('.');
-        }
-      }
-      result.append('\n');
-    }
-    return result.toString();
   }
 
   public void reset() {
