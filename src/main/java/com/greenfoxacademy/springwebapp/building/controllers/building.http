@@ -22,10 +22,10 @@ Accept: application/json
 
 PUT http://localhost:8080/kingdom/buildings/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTU0MTcyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.3RyE-Nhk44mcQIdxqfthi_MKBQqWEV1WoakwlhJ7tlkgwNbmCCFW7VozkLkv0NkS1Gzs5mkRPqjKEJm6dC9wCQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDgxNjI4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.hxMbO7Lv0YKeAW_vTzoE6z6Hz5G-O6sRqIL0LKg3vDPRGxmpqTtVMoxhR6B_FIhW6gIbPM9KlD3gzofUNVRE5Q
 
 {
-  "level": 5
+  "level": 2
 }
 
 

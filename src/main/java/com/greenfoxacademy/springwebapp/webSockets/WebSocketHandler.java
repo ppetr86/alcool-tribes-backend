@@ -7,6 +7,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,5 +36,21 @@ public class WebSocketHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     sessionMap.remove(session);
+  }
+
+  public boolean hasSession(Long id) {
+    return sessionMap.containsKey(id);
+  }
+
+  public boolean sendMessage(long id, String json) {
+    WebSocketSession session = sessionMap.get(id);
+    try {
+      session.sendMessage(new TextMessage(json));
+      return true;
+    } catch (IOException e) {
+      e.printStackTrace();
+      log.info("unable to send websocket message");
+      return false;
+    }
   }
 }

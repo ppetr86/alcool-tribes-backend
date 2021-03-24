@@ -18,7 +18,7 @@ public interface KingdomService {
 
   String findKingdomNameByPlayerID(Long id);
 
-  KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
+  KingdomResponseDTO convert(KingdomEntity e);
 
-  KingdomResponseDTO petrTest(KingdomEntity kingdom);
+  KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
 }

@@ -14,7 +14,6 @@ public class HibernateConfiguration implements HibernatePropertiesCustomizer {
     hibernateProperties.put("hibernate.session_factory.interceptor", kingdomInterceptor());
   }
 
-
   @Bean
   public HibernateInterceptor kingdomInterceptor(){
     return new HibernateInterceptor();

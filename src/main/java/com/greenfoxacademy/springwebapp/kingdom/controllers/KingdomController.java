@@ -10,12 +10,7 @@ import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -42,16 +37,10 @@ public class KingdomController {
     return ResponseEntity.ok().body(allResources);
   }
 
-  @PutMapping
+  @PostMapping
   public ResponseEntity<?> updateKingdomByName(Authentication auth,
                                                @RequestBody @Valid KingdomNameDTO nameDTO) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
-  }
-
-  @PutMapping("/test")
-  public ResponseEntity<?> changeBuildingForTest(Authentication auth) {
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-    return ResponseEntity.ok(kingdomService.petrTest(kingdom));
   }
 }
