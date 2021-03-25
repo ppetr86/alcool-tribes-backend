@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.location.models.Coordinate;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository;
@@ -73,43 +72,71 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public List<Coordinate> findShortestPathV99(KingdomEntity start, KingdomEntity end) {
+  public List<LocationEntity> findShortestPathV99(KingdomEntity start, KingdomEntity end) {
 
-    List<Coordinate> result = new ArrayList<>();
     List<LocationEntity> dbLocations = repo.findAll();
-    //Legend: 1: Wall, 0: valid path, 3: start, 4: end
 
     int mazeShifter = 2;
-    List<LocationEntity> reducedLocations = locationsRectangleAroundStartAndEnd(mazeShifter, start.getLocation(), end.getLocation(), dbLocations);
-    List<LocationEntity> sortReduced = sortReducedLocations(reducedLocations);
-    int mazeDimensions = (int) Math.sqrt(reducedLocations.size());
-    int[][] grid = new int[mazeDimensions][mazeDimensions];
+    List<LocationEntity> smallerRectangleList = locationsRectangleAroundStartAndEnd(mazeShifter, start.getLocation(), end.getLocation(), dbLocations);
+    List<LocationEntity> sortedSmallerRectangleList = sortReducedLocations(smallerRectangleList);
+    LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
 
-    // setting all LocationType NOTEMPTY to "1" for can not walk
-    for (LocationEntity each : reducedLocations) {
-      int yCoord = each.getY() * (-1) + mazeDimensions;
-
-      if (!each.getType().equals(LocationType.EMPTY)) {
-        grid[yCoord][each.getX() + mazeDimensions] = 1;
-      }
-      if (each.equals(start.getLocation())) {
-        grid[yCoord][each.getX() + mazeDimensions] = 3;
-      }
-      if (each.equals(end.getLocation())) {
-        grid[yCoord][each.getX() + mazeDimensions] = 4;
-      }
-    }
+    List<LocationEntity> result = pathFinder(start.getLocation(), end.getLocation());
 
     return result;
   }
 
+  private List<LocationEntity> pathFinder(LocationEntity start, LocationEntity end) {
+    boolean shortestPathFound = false;
+    Queue<LocationEntity> queue = new LinkedList<>();
+    Set<LocationEntity> visitedNodes = new HashSet<>();
+    List<LocationEntity> shortestPath = new ArrayList<>();
+    queue.add(start);
+    shortestPath.add(end);
+
+    while (!queue.isEmpty()) {
+      LocationEntity nextNode = queue.peek();
+      shortestPathFound = (nextNode.equals(end));
+      if (shortestPathFound) break;
+      visitedNodes.add(nextNode);
+      LocationEntity unvisitedNode = getUnvisitedNode(nextNode, visitedNodes);
+
+      if (unvisitedNode != null) {
+        queue.add(unvisitedNode);
+        visitedNodes.add(unvisitedNode);
+        shortestPath.add(nextNode); //Adding the previous node of the visited node
+        shortestPathFound = unvisitedNode.equals(end);
+        if (shortestPathFound) break;
+      } else {
+        queue.poll();
+      }
+    }
+    return shortestPath;
+  }
+
+  private LocationEntity[][] buildMap(List<LocationEntity> sortReduced) {
+    LocationEntity firstLocation = sortReduced.get(0);
+    LocationEntity lastLocation = sortReduced.get(sortReduced.size() - 1);
+    int minX = Math.min(firstLocation.getX(), lastLocation.getX());
+    int maxY = Math.max(firstLocation.getY(), lastLocation.getY());
+    int dimensions = (int) Math.sqrt(sortReduced.size());
+    LocationEntity[][] map = new LocationEntity[dimensions][dimensions];
+    for (LocationEntity location : sortReduced) {
+      map[Math.abs(location.getY() - maxY)][location.getX() - minX] = location;
+    }
+    return map;
+
+  }
+
   private List<LocationEntity> sortReducedLocations(List<LocationEntity> reducedLocations) {
-    Collections.sort( reducedLocations, new Comparator<LocationEntity>() {
+    Collections.sort(reducedLocations, new Comparator<LocationEntity>() {
       public int compare(LocationEntity x1, LocationEntity x2) {
-        int result = Double.compare(x1.getX(), x2.getX());
-        if ( result == 0 ) {
-          // both X are equal -> compare Y too
-          result = Double.compare(x1.getY(), x2.getY());
+        // decreasing order on Y
+        int result = Double.compare(x2.getY(), x1.getY());
+        if (result == 0) {
+          // both Y are equal -> compare X too
+          // ascending order on X
+          result = Double.compare(x1.getX(), x2.getX());
         }
         return result;
       }
