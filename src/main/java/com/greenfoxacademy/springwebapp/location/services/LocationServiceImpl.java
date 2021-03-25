@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.location.Maze;
 import com.greenfoxacademy.springwebapp.location.models.Coordinate;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 public class LocationServiceImpl implements LocationService {
 
   private final LocationRepository repo;
-  private final PathFinder pathFinder;
 
   @Override
   public LocationEntity save(LocationEntity entity) {
@@ -78,29 +76,63 @@ public class LocationServiceImpl implements LocationService {
   public List<Coordinate> findShortestPathV99(KingdomEntity start, KingdomEntity end) {
 
     List<Coordinate> result = new ArrayList<>();
-
-    //Legend: 1: Wall, 0: valid path, 3: start, 4: end
-    int[][] grid = new int[201][201];
     List<LocationEntity> dbLocations = repo.findAll();
+    //Legend: 1: Wall, 0: valid path, 3: start, 4: end
+
+    int mazeShifter = 2;
+    List<LocationEntity> reducedLocations = locationsRectangleAroundStartAndEnd(mazeShifter, start.getLocation(), end.getLocation(), dbLocations);
+    List<LocationEntity> sortReduced = sortReducedLocations(reducedLocations);
+    int mazeDimensions = (int) Math.sqrt(reducedLocations.size());
+    int[][] grid = new int[mazeDimensions][mazeDimensions];
 
     // setting all LocationType NOTEMPTY to "1" for can not walk
-    for (LocationEntity each : dbLocations) {
+    for (LocationEntity each : reducedLocations) {
+      int yCoord = each.getY() * (-1) + mazeDimensions;
+
       if (!each.getType().equals(LocationType.EMPTY)) {
-        int yCoord = each.getY() * (-1) + 100;
-        grid[yCoord][each.getX() + 100] = 1;
+        grid[yCoord][each.getX() + mazeDimensions] = 1;
+      }
+      if (each.equals(start.getLocation())) {
+        grid[yCoord][each.getX() + mazeDimensions] = 3;
+      }
+      if (each.equals(end.getLocation())) {
+        grid[yCoord][each.getX() + mazeDimensions] = 4;
       }
     }
-    //setting start  location to "3" , end to "4"
-    grid[start.getLocation().getY() * (-1) + 100][start.getLocation().getX() + 100] = 3;
-    grid[end.getLocation().getY() * (-1) + 100][end.getLocation().getX() + 100] = 4;
-//    System.out.println(Arrays.deepToString(grid));
 
-    Maze maze = new Maze(grid);
-    maze.setStart(new Coordinate(start.getLocation().getY(),start.getLocation().getX()));
-    maze.setEnd(new Coordinate(end.getLocation().getY(),end.getLocation().getX()));
-    List<Coordinate> path = pathFinder.solve(maze);
-    maze.reset();
-    return path;
+    return result;
+  }
+
+  private List<LocationEntity> sortReducedLocations(List<LocationEntity> reducedLocations) {
+    Collections.sort( reducedLocations, new Comparator<LocationEntity>() {
+      public int compare(LocationEntity x1, LocationEntity x2) {
+        int result = Double.compare(x1.getX(), x2.getX());
+        if ( result == 0 ) {
+          // both X are equal -> compare Y too
+          result = Double.compare(x1.getY(), x2.getY());
+        }
+        return result;
+      }
+    });
+    return reducedLocations;
+  }
+
+  private List<LocationEntity> locationsRectangleAroundStartAndEnd(int mazeShifter, LocationEntity start, LocationEntity end, List<LocationEntity> dbLocations) {
+
+    int minX = Math.min(end.getX(), start.getX()) - mazeShifter;
+    int maxX = Math.max(end.getX(), start.getX()) + mazeShifter;
+    int minY = Math.min(end.getY(), start.getY()) - mazeShifter;
+    int maxY = Math.max(end.getY(), start.getY()) + mazeShifter;
+    List<LocationEntity> result = dbLocations
+        .stream()
+        .filter(x -> x.getX() >= minX
+            && x.getX() <= maxX
+            && x.getY() >= minY
+            && x.getY() <= maxY
+            && x.getY() >= minY)
+        .collect(Collectors.toList());
+
+    return result;
   }
 
   @AllArgsConstructor

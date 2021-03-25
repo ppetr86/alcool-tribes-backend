@@ -11,10 +11,12 @@ public class Coordinate {
   private int x;
   private int y;
   private Coordinate parent;
+  private LocationEntity location;
 
-  public Coordinate(int x, int y) {
+  public Coordinate(int x, int y, LocationEntity locationEntity) {
     this.x = x;
     this.y = y;
     this.parent = null;
+    this.location = locationEntity;
   }
 }
