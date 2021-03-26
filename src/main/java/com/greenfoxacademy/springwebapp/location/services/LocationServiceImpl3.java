@@ -1,3 +1,4 @@
+/*
 package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class LocationServiceImpl implements LocationService {
+public class LocationServiceImpl3 implements LocationService {
 
   private final LocationRepository repo;
 
@@ -76,41 +77,53 @@ public class LocationServiceImpl implements LocationService {
   public List<LocationEntity> findShortestPath(KingdomEntity start, KingdomEntity end) {
 
     int mazeOffsetToFormRectangleAroundStartEnd = 2;
-    List<LocationEntity> sortedSmallerRectangleList = findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
-    LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
+    List<LocationEntity> sortedSmallerRectangleList =
+        findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
 
-    List<LocationEntity> result = pathFinder(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    List<LocationDistance> distanceList = convertToDistance(sortedSmallerRectangleList);
+
+    LocationDistance[][] distanceMaze = convertToDistanceMaze(distanceList);
+
+    List<LocationDistance> shortestPath = pathFinder(mazeOffsetToFormRectangleAroundStartEnd, new LocationDistance(start.getLocation()),
+        new LocationDistance(end.getLocation()), distanceMaze, distanceList);
+
+    List<LocationEntity> result = shortestPath.stream().map(LocationEntity::new).collect(Collectors.toList());
     return result;
   }
 
-  private List<LocationEntity> pathFinder(int offset, LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
-    // create `previousNodes` collection
-    // put start in `toVisit`
-    // fill distances in `distancesFromStart` with highest value for all nodes except `start` which should be 0
+  private List<LocationDistance> pathFinder(int offset, LocationDistance start, LocationDistance end, LocationDistance[][] maze, List<LocationDistance> list) {
+    Set<LocationDistance> visited = new HashSet<>();
+    PriorityQueue<LocationDistance> pqueue = new PriorityQueue<>();
+    //start in array is in [offset][offset]
+    start.setDistance(0);
+    pqueue.add(start);
 
-    // while we haven't reach the destination and `toVisit` is not empty
-    // `currentNode` should be the closest element from `toVisit`
-    // put those neighbours of `currentNode` in `toVisit` which we haven't visited yet
-    // for each neighbour check if the currently known distance from start is higher than the distance from start to current + current to neighbour. if yes, update `distancesFromStart` with the new value and update `previousNodes` with current
-    // if 'previousNodes` doesn't contain the neighbour, then add it with the source of current
-
-    // track back the shortest path from `previousNodes` starting from `destination` key till `start` key
-    // return the path
-    List<LocationEntity> shortestPath = new ArrayList<>();
-    Set<LocationEntity> visited = new HashSet<>();
-    PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>();
-    toVisit.add(start);
-    visited.add(start);
-    int[][] distancesFromStart = new int[maze.length][maze[0].length];
-
-    for (int[] ints : distancesFromStart) {
-      Arrays.fill(ints, Integer.MAX_VALUE);
+    while (visited.size() != maze.length*maze[0].length) {
+      LocationDistance popped = pqueue.poll();
+      visited.add(popped);
+      graph_adjacentNodes(u);
     }
-    distancesFromStart[offset][offset] = 0;
 
+    }
 
+  private LocationDistance[][] convertToDistanceMaze(List<LocationDistance> distanceList) {
+    LocationDistance firstLocation = distanceList.get(0);
+    LocationDistance lastLocation = distanceList.get(distanceList.size() - 1);
+    int minX = Math.min(firstLocation.getX(), lastLocation.getX());
+    int maxX = Math.max(firstLocation.getX(), lastLocation.getX());
+    int minY = Math.min(firstLocation.getY(), lastLocation.getY());
+    int maxY = Math.max(firstLocation.getY(), lastLocation.getY());
+    int width = maxX - minX + 1;
+    int height = maxY - minY + 1;
+    LocationDistance[][] map = new LocationDistance[width][height];
+    for (LocationDistance location : distanceList) {
+      map[Math.abs(location.getY() - maxY)][location.getX() - minX] = location;
+    }
+    return map;
+  }
 
-
+  private List<LocationDistance> convertToDistance(List<LocationEntity> sortedSmallerRectangleList) {
+    return sortedSmallerRectangleList.stream().map(LocationDistance::new).collect(Collectors.toList());
   }
 
   private List<LocationEntity> findAllInRectangleOrdered(int mazeOffsetToFormRectangleAroundStartEnd, LocationEntity start, LocationEntity end) {
@@ -122,9 +135,6 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> result = repo.findAllInRectangleOrdered(minX, maxX, maxY, minY);
     return result;
   }
-
-
-
 
   private LocationEntity[][] buildMap(List<LocationEntity> sortReduced) {
     LocationEntity firstLocation = sortReduced.get(0);
@@ -140,6 +150,22 @@ public class LocationServiceImpl implements LocationService {
       map[Math.abs(location.getY() - maxY)][location.getX() - minX] = location;
     }
     return map;
+  }
+
+  private List<LocationEntity> sortReducedLocations(List<LocationEntity> reducedLocations) {
+    Collections.sort(reducedLocations, new Comparator<LocationEntity>() {
+      public int compare(LocationEntity x1, LocationEntity x2) {
+        // decreasing order on Y
+        int result = Double.compare(x2.getY(), x1.getY());
+        if (result == 0) {
+          // both Y are equal -> compare X too
+          // ascending order on X
+          result = Double.compare(x1.getX(), x2.getX());
+        }
+        return result;
+      }
+    });
+    return reducedLocations;
   }
 
   @AllArgsConstructor
@@ -165,3 +191,4 @@ public class LocationServiceImpl implements LocationService {
     }
   }
 }
+*/

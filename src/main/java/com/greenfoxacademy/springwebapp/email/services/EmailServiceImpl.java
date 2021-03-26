@@ -22,7 +22,8 @@ public class EmailServiceImpl implements EmailService {
   private final SpringTemplateEngine templateEngine;
 
   @Override
-  public Boolean sendMailWithHtmlAndPlainText(AbstractEmail email) throws MessagingException {
+  public Boolean sendMailWithHtmlAndPlainText(AbstractEmail email)
+      throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
 
     MimeMessageHelper helper = new MimeMessageHelper(message,
@@ -31,8 +32,10 @@ public class EmailServiceImpl implements EmailService {
     Context context = new Context();
     context.setVariables(email.getContext());
 
-    String htmlMail = templateEngine.process(email.getTemplateLocationHtml(), context);
-    String textMail = templateEngine.process(email.getTemplateLocationText(), context);
+    String htmlMail = templateEngine.process(
+        email.getTemplateLocationHtml(), context);
+    String textMail = templateEngine.process(
+        email.getTemplateLocationText(), context);
 
     helper.setTo(email.getRecipientEmail());
     helper.setSubject(email.getSubject());

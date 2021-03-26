@@ -7,40 +7,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "locations")
-public class LocationEntity {
+public class LocationDistance {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private Integer x;
-  private Integer y;
-
-  @OneToOne
+  private long id;
+  private int x;
+  private int y;
   private KingdomEntity kingdom;
-
-  @Enumerated(EnumType.STRING)
   private LocationType type;
+  private int distance = Integer.MAX_VALUE;
 
-  public LocationEntity(Integer x, Integer y, KingdomEntity kingdom,
-                        LocationType type) {
-    this.x = x;
-    this.y = y;
-    this.kingdom = kingdom;
-    this.type = type;
-  }
-
-  public LocationEntity(int x, int y) {
-    this.x = x;
-    this.y = y;
+  public LocationDistance(LocationEntity e) {
+    this.id = e.getId();
+    this.x = e.getX();
+    this.y = e.getY();
+    this.kingdom = e.getKingdom();
+    this.type = e.getType();
   }
 
   @Override
@@ -51,8 +38,8 @@ public class LocationEntity {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LocationEntity that = (LocationEntity) o;
-    return x.equals(that.x) && y.equals(that.y);
+    LocationDistance that = (LocationDistance) o;
+    return x == that.x && y == that.y;
   }
 
   @Override
@@ -74,13 +61,5 @@ public class LocationEntity {
         + ", y=" + y
         + ", kingdom=" + kingdomName
         + ", type=" + type;
-  }
-
-  public LocationEntity(LocationDistance e) {
-    this.id = e.getId();
-    this.x = e.getX();
-    this.y = e.getY();
-    this.kingdom = e.getKingdom();
-    this.type = e.getType();
   }
 }
