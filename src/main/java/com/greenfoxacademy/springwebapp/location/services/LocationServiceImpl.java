@@ -72,63 +72,62 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public List<LocationEntity> findShortestPathV99(KingdomEntity start, KingdomEntity end) {
+  public List<LocationEntity> findShortestPath(KingdomEntity start, KingdomEntity end) {
 
     List<LocationEntity> dbLocations = repo.findAll();
 
-    int mazeShifter = 2;
-    List<LocationEntity> smallerRectangleList = locationsRectangleAroundStartAndEnd(mazeShifter, start.getLocation(), end.getLocation(), dbLocations);
-    List<LocationEntity> sortedSmallerRectangleList = sortReducedLocations(smallerRectangleList);
+    int mazeOffsetToFormRectangleAroundStartEnd = 2;
+    /*List<LocationEntity> smallerRectangleList = locationsRectangleAroundStartAndEnd(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation(), dbLocations);
+    List<LocationEntity> sortedSmallerRectangleList = sortReducedLocations(smallerRectangleList);*/
+    List<LocationEntity> sortedSmallerRectangleList = findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
 
-    List<LocationEntity> result = pathFinder(start.getLocation(), end.getLocation());
-
+    List<LocationEntity> result = pathFinder(start.getLocation(), end.getLocation(), locationMaze);
     return result;
   }
 
-  private List<LocationEntity> pathFinder(LocationEntity start, LocationEntity end) {
+  private List<LocationEntity> findAllInRectangleOrdered(int mazeOffsetToFormRectangleAroundStartEnd, LocationEntity start, LocationEntity end) {
+    int minX = Math.min(end.getX(), start.getX()) - mazeOffsetToFormRectangleAroundStartEnd;
+    int maxX = Math.max(end.getX(), start.getX()) + mazeOffsetToFormRectangleAroundStartEnd;
+    int minY = Math.min(end.getY(), start.getY()) - mazeOffsetToFormRectangleAroundStartEnd;
+    int maxY = Math.max(end.getY(), start.getY()) + mazeOffsetToFormRectangleAroundStartEnd;
+
+    List<LocationEntity> result = repo.findAllInRectangleOrdered(minX, maxX, maxY, minY);
+    return result;
+  }
+
+  private List<LocationEntity> pathFinder(LocationEntity start, LocationEntity end, LocationEntity[][] locationMaze) {
+    // as soon as offset is more than 0 this will not work because start will not be in [0][0] in Maze
     boolean shortestPathFound = false;
     Queue<LocationEntity> queue = new LinkedList<>();
     Set<LocationEntity> visitedNodes = new HashSet<>();
+    Set<LocationEntity> locationsInMazeSet = Arrays.stream(locationMaze).flatMap(Arrays::stream).collect(Collectors.toSet());
     List<LocationEntity> shortestPath = new ArrayList<>();
     queue.add(start);
-    shortestPath.add(end);
+    shortestPath.add(start);
 
-    while (!queue.isEmpty()) {
-      LocationEntity nextNode = queue.peek();
-      shortestPathFound = (nextNode.equals(end));
-      if (shortestPathFound) break;
-      visitedNodes.add(nextNode);
-      LocationEntity unvisitedNode = getUnvisitedNode(nextNode, visitedNodes);
 
-      if (unvisitedNode != null) {
-        queue.add(unvisitedNode);
-        visitedNodes.add(unvisitedNode);
-        shortestPath.add(nextNode); //Adding the previous node of the visited node
-        shortestPathFound = unvisitedNode.equals(end);
-        if (shortestPathFound) break;
-      } else {
-        queue.poll();
-      }
-    }
     return shortestPath;
   }
+
 
   private LocationEntity[][] buildMap(List<LocationEntity> sortReduced) {
     LocationEntity firstLocation = sortReduced.get(0);
     LocationEntity lastLocation = sortReduced.get(sortReduced.size() - 1);
     int minX = Math.min(firstLocation.getX(), lastLocation.getX());
+    int maxX = Math.max(firstLocation.getX(), lastLocation.getX());
+    int minY = Math.min(firstLocation.getY(), lastLocation.getY());
     int maxY = Math.max(firstLocation.getY(), lastLocation.getY());
-    int dimensions = (int) Math.sqrt(sortReduced.size());
-    LocationEntity[][] map = new LocationEntity[dimensions][dimensions];
+    int width = maxX - minX + 1;
+    int height = maxY - minY + 1;
+    LocationEntity[][] map = new LocationEntity[width][height];
     for (LocationEntity location : sortReduced) {
       map[Math.abs(location.getY() - maxY)][location.getX() - minX] = location;
     }
     return map;
-
   }
 
-  private List<LocationEntity> sortReducedLocations(List<LocationEntity> reducedLocations) {
+  /*private List<LocationEntity> sortReducedLocations(List<LocationEntity> reducedLocations) {
     Collections.sort(reducedLocations, new Comparator<LocationEntity>() {
       public int compare(LocationEntity x1, LocationEntity x2) {
         // decreasing order on Y
@@ -142,25 +141,26 @@ public class LocationServiceImpl implements LocationService {
       }
     });
     return reducedLocations;
-  }
+  }*/
 
-  private List<LocationEntity> locationsRectangleAroundStartAndEnd(int mazeShifter, LocationEntity start, LocationEntity end, List<LocationEntity> dbLocations) {
+  /*private List<LocationEntity> locationsRectangleAroundStartAndEnd(int mazeShifter, LocationEntity start, LocationEntity end, List<LocationEntity> dbLocations) {
 
     int minX = Math.min(end.getX(), start.getX()) - mazeShifter;
     int maxX = Math.max(end.getX(), start.getX()) + mazeShifter;
     int minY = Math.min(end.getY(), start.getY()) - mazeShifter;
     int maxY = Math.max(end.getY(), start.getY()) + mazeShifter;
-    List<LocationEntity> result = dbLocations
+    *//*List<LocationEntity> result = dbLocations
         .stream()
         .filter(x -> x.getX() >= minX
             && x.getX() <= maxX
             && x.getY() >= minY
             && x.getY() <= maxY
             && x.getY() >= minY)
-        .collect(Collectors.toList());
+        .collect(Collectors.toList());*//*
 
-    return result;
-  }
+    List<LocationEntity> result2 = repo.findAllInRectangle(minX, maxX, maxY, minY);
+    return result2;
+  }*/
 
   @AllArgsConstructor
   public static class LocationComparator implements Comparator<LocationEntity> {

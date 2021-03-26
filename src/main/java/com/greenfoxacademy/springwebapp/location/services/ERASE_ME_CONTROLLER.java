@@ -24,6 +24,6 @@ public class ERASE_ME_CONTROLLER {
     KingdomEntity start = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     KingdomEntity end = kingdomService.findByID(endKingdom);
 
-    return ResponseEntity.ok(locationService.findShortestPathV99(start, end));
+    return ResponseEntity.ok(locationService.findShortestPath(start, end));
   }
 }

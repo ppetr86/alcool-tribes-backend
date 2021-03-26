@@ -29,4 +29,10 @@ public interface LocationRepository extends JpaRepository<LocationEntity, Long> 
   LocationEntity findByXIsAndYIs(int x, int y);
 
   long countAllByTypeIs(LocationType type);
+
+  @Query(value = "select * from locations where x>=:minX AND x<=:maxX AND y <= :maxY AND y >= :minY", nativeQuery = true)
+  List<LocationEntity> findAllInRectangle(int minX, int maxX, int maxY, int minY);
+
+  @Query(value = "select * from locations where x>=:minX AND x<=:maxX AND y <= :maxY AND y >= :minY ORDER BY y DESC, x ASC ", nativeQuery = true)
+  List<LocationEntity> findAllInRectangleOrdered(int minX, int maxX, int maxY, int minY);
 }
