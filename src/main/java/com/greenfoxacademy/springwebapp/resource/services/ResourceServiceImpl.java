@@ -69,11 +69,11 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public void decreaseResourceAmountIfBuild(KingdomEntity kingdom, int amountChange, ResourceType resourceType) {
+  public void updateResourceAmount(KingdomEntity kingdom, int amountChange, ResourceType resourceType) {
     ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
     int actualAmount = calculateActualResource(kingdom, resourceType);
 
-    resource.setAmount(actualAmount - amountChange);
+    resource.setAmount(actualAmount + amountChange);
     resource.setUpdatedAt(timeService.getTime());
     resourceRepository.save(resource);
   }

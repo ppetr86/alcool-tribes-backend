@@ -415,25 +415,58 @@ public class BattleServiceTest {
   }
 
   @Test
-  public void nobodyOrDefKingdomWon_ShouldReturn_EveryTroopsDeadMessage() {
+  public void nobodyWon_ShouldReturn_True() {
     List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
-    armies.get(0).setHealthPoints(0);
-    armies.get(1).setHealthPoints(0);
+    armies.get(0).setHealthPoints(0);   //0 = Attacking Troops
+    armies.get(1).setHealthPoints(0);   //1 = Defending Troops
 
-    BattleResultDTO resultDTO = battleService.nobodyOrDefKingdomWon(armies.get(1), armies.get(0));
+    boolean result = battleService.nobodyWon(armies.get(1), armies.get(0));
 
-    Assert.assertEquals("Every Troops dead", resultDTO.getWinningTeam());
+    Assert.assertTrue(result);
   }
 
   @Test
-  public void nobodyOrDefKingdomWon_ShouldReturn_DefendingKingdomWonMessage() {
+  public void nobodyWon_ShouldReturn_False_IfAttackingTroopsHasHp() {
+    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    armies.get(0).setHealthPoints(10);
+    armies.get(1).setHealthPoints(0);
+
+    boolean result = battleService.nobodyWon(armies.get(1), armies.get(0));
+
+    Assert.assertFalse(result);
+  }
+
+  @Test
+  public void nobodyWon_ShouldReturn_False_IfDefendingTroopsHasHp() {
+    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    armies.get(0).setHealthPoints(0);
+    armies.get(1).setHealthPoints(10);
+
+    boolean result = battleService.nobodyWon(armies.get(1), armies.get(0));
+
+    Assert.assertFalse(result);
+  }
+
+  @Test
+  public void defKingdomWon_ShouldReturn_True() {
     List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
     armies.get(0).setHealthPoints(0);
     armies.get(1).setTroops(TroopFactory.createTroopsWithLowHp());
 
-    BattleResultDTO resultDTO = battleService.nobodyOrDefKingdomWon(armies.get(1), armies.get(0));
+    boolean result = battleService.defKingdomWon(armies.get(1), armies.get(0));
 
-    Assert.assertEquals("Defending Kingdom won", resultDTO.getWinningTeam());
+    Assert.assertTrue(result);
+  }
+
+  @Test
+  public void defKingdomWon_ShouldReturn_False_IfAttackingTroopsHasHp() {
+    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
+    armies.get(1).setTroops(TroopFactory.createTroopsWithLowHp());
+
+    boolean result = battleService.defKingdomWon(armies.get(1), armies.get(0));
+
+    Assert.assertFalse(result);
   }
 
   @Test
@@ -719,7 +752,8 @@ public class BattleServiceTest {
   public void mockingPart_PerformAfterBattleActions_WhenAttackingKingdomCanSteal(List<Army> armies) {
     Mockito.doReturn(armies.get(0)).when(battleService).getArmyByType(armies, ArmyType.ATTACKINGARMY);
     Mockito.doReturn(armies.get(1)).when(battleService).getArmyByType(armies, ArmyType.DEFENDINGARMY);
-    Mockito.doReturn(null).when(battleService).nobodyOrDefKingdomWon(armies.get(1), armies.get(0));
+    Mockito.doReturn(false).when(battleService).nobodyWon(armies.get(1), armies.get(0));
+    Mockito.doReturn(false).when(battleService).defKingdomWon(armies.get(1), armies.get(0));
     Mockito.doReturn(50).when(battleService)
         .calculateStolenResource(armies.get(1), armies.get(0), ResourceType.FOOD, ResourceType.GOLD);
     Mockito.doReturn(50).when(battleService)

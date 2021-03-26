@@ -18,7 +18,7 @@ public interface ResourceService {
 
   boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
 
-  void decreaseResourceAmountIfBuild(KingdomEntity kingdom, int amountChange, ResourceType resourceType);
+  void updateResourceAmount(KingdomEntity kingdom, int amountChange, ResourceType resourceType);
 
   Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType);
 

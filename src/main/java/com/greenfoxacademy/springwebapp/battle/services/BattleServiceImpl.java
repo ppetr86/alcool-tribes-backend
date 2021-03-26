@@ -14,7 +14,6 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundExcept
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
@@ -327,31 +326,28 @@ public class BattleServiceImpl implements BattleService {
     Army attackingArmy = getArmyByType(armiesAfterBattle, ArmyType.ATTACKINGARMY);
     Army defendingArmy = getArmyByType(armiesAfterBattle, ArmyType.DEFENDINGARMY);
 
-    if (nobodyOrDefKingdomWon(defendingArmy, attackingArmy) != null) {
-      return nobodyOrDefKingdomWon(defendingArmy, attackingArmy);
+    if (nobodyWon(defendingArmy, attackingArmy)) {
+      return new BattleResultDTO("Every Troops dead");
+    } else if (defKingdomWon(defendingArmy, attackingArmy)) {
+      return new BattleResultDTO("Defending Kingdom won");
     }
     int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
     int stolenGold = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.GOLD, ResourceType.FOOD);
     if (attackingArmy.getHealthPoints() > 0) {
-      modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
-      modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold, distance);
+      attackingKingdomSteal(attackingArmy, defendingArmy, distance, stolenFood, stolenGold);
       if (defendingArmy.getHealthPoints() == 0) {
         return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
       }
     }
-    return new BattleResultDTO("Nobody won",stolenFood, stolenGold);
+    return new BattleResultDTO("Nobody won", stolenFood, stolenGold);
   }
 
-  public BattleResultDTO nobodyOrDefKingdomWon(Army defendingArmy, Army attackingArmy) {
-    if (defendingArmy.getHealthPoints() == 0 && attackingArmy.getHealthPoints() == 0) {
-      return new BattleResultDTO("Every Troops dead");
-    }
-    if (defendingArmy.getHealthPoints() > 0) {
-      if (attackingArmy.getHealthPoints() == 0) {
-        return new BattleResultDTO("Defending Kingdom won");
-      }
-    }
-    return null;
+  public boolean nobodyWon(Army defendingArmy, Army attackingArmy) {
+    return (defendingArmy.getHealthPoints() == 0 && attackingArmy.getHealthPoints() == 0);
+  }
+
+  public boolean defKingdomWon(Army defendingArmy, Army attackingArmy) {
+    return (defendingArmy.getHealthPoints() > 0 && attackingArmy.getHealthPoints() == 0);
   }
 
   public void killTroopWhichCanNotReachHome(Army army, int distance) {
@@ -384,43 +380,21 @@ public class BattleServiceImpl implements BattleService {
     return actualStolenResourceAmount;
   }
 
+  private void attackingKingdomSteal(Army attackingArmy, Army defendingArmy,
+                                     int distance, int stolenFood, int stolenGold) {
+    killTroopWhichCanNotReachHome(attackingArmy, distance);
+    modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
+    modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold, distance);
+  }
+
   private void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
-    ResourceEntity defendingKingdomFood =
-        resourceService.getResourceByResourceType(defendingArmy.getKingdom(), ResourceType.FOOD);
-    ResourceEntity defendingKingdomGold =
-        resourceService.getResourceByResourceType(defendingArmy.getKingdom(), ResourceType.GOLD);
-
-    Integer actualFoodAmount = resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD);
-    Integer actualGoldAmount = resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.GOLD);
-
-    defendingKingdomFood.setAmount(actualFoodAmount - foodChange);
-    defendingKingdomGold.setAmount(actualGoldAmount - goldChange);
-    defendingKingdomFood.setUpdatedAt(timeService.getTime());
-    defendingKingdomGold.setUpdatedAt(timeService.getTime());
-
-    List<ResourceEntity> resources = Arrays.asList(defendingKingdomFood, defendingKingdomGold);
-    resourceService.saveResources(resources);
+    resourceService.updateResourceAmount(defendingArmy.getKingdom(), -(foodChange), ResourceType.FOOD);
+    resourceService.updateResourceAmount(defendingArmy.getKingdom(), -(goldChange), ResourceType.GOLD);
   }
 
   private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange, int distance) {
-    killTroopWhichCanNotReachHome(attackingArmy, distance);
-
-    ResourceEntity attackingKingdomFood =
-        resourceService.getResourceByResourceType(attackingArmy.getKingdom(), ResourceType.FOOD);
-    ResourceEntity attackingKingdomGold =
-        resourceService.getResourceByResourceType(attackingArmy.getKingdom(), ResourceType.GOLD);
-
-    Integer actualFoodAmount = resourceService.calculateActualResource(attackingArmy.getKingdom(), ResourceType.FOOD);
-    Integer actualGoldAmount = resourceService.calculateActualResource(attackingArmy.getKingdom(), ResourceType.GOLD);
-
-    //TODO: here I have to use the delay(travelTime) method
-    attackingKingdomFood.setAmount(actualFoodAmount + foodChange);
-    attackingKingdomGold.setAmount(actualGoldAmount + goldChange);
-    attackingKingdomFood.setUpdatedAt(timeService.getTime());
-    attackingKingdomGold.setUpdatedAt(timeService.getTime());
-
-    List<ResourceEntity> resources = Arrays.asList(attackingKingdomFood, attackingKingdomGold);
-    resourceService.saveResources(resources);
+    resourceService.updateResourceAmount(attackingArmy.getKingdom(), foodChange, ResourceType.FOOD);
+    resourceService.updateResourceAmount(attackingArmy.getKingdom(), goldChange, ResourceType.GOLD);
   }
 
   public Army getArmyByType(List<Army> armiesAfterBattle, ArmyType type) {

@@ -141,7 +141,7 @@ public class BuildingServiceImpl implements BuildingService {
     int amountChange = defineBuildingFirstLevelCosts(dto.getType());
     if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
-    resourceService.decreaseResourceAmountIfBuild(kingdom, amountChange, ResourceType.GOLD);
+    resourceService.updateResourceAmount(kingdom, -(amountChange), ResourceType.GOLD);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result.setKingdom(kingdom);
