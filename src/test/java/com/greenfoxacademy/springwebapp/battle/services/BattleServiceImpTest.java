@@ -1,4 +1,4 @@
-package com.greenfoxacademy.springwebapp.battle.service;
+package com.greenfoxacademy.springwebapp.battle.services;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +20,7 @@ public class BattleServiceImpTest {
     int attackX = 3;
     int defendX = 10;
 
-    Integer result = battleService.differenceBetweenTwoKingdomsXOrYPlaces(attackX, defendX);
+    Integer result = battleService.differenceBetweenTwoKingdomsLocations(attackX, defendX);
 
     Assert.assertEquals(java.util.Optional.of(7), java.util.Optional.of(result));
   }
@@ -30,7 +30,7 @@ public class BattleServiceImpTest {
     int attackX = 20;
     int defendX = 7;
 
-    Integer result = battleService.differenceBetweenTwoKingdomsXOrYPlaces(attackX, defendX);
+    Integer result = battleService.differenceBetweenTwoKingdomsLocations(attackX, defendX);
 
     Assert.assertEquals(java.util.Optional.of(13), java.util.Optional.of(result));
   }
@@ -40,7 +40,7 @@ public class BattleServiceImpTest {
     int attackX = -10;
     int defendX = 10;
 
-    Integer result = battleService.differenceBetweenTwoKingdomsXOrYPlaces(attackX, defendX);
+    Integer result = battleService.differenceBetweenTwoKingdomsLocations(attackX, defendX);
 
     Assert.assertEquals(java.util.Optional.of(20), java.util.Optional.of(result));
   }
@@ -50,7 +50,7 @@ public class BattleServiceImpTest {
     int attackX = 10;
     int defendX = -110;
 
-    Integer result = battleService.differenceBetweenTwoKingdomsXOrYPlaces(attackX, defendX);
+    Integer result = battleService.differenceBetweenTwoKingdomsLocations(attackX, defendX);
 
     Assert.assertEquals(java.util.Optional.of(120), java.util.Optional.of(result));
   }
@@ -60,7 +60,7 @@ public class BattleServiceImpTest {
     int attackX = -10;
     int defendX = -180;
 
-    Integer result = battleService.differenceBetweenTwoKingdomsXOrYPlaces(attackX, defendX);
+    Integer result = battleService.differenceBetweenTwoKingdomsLocations(attackX, defendX);
 
     Assert.assertEquals(java.util.Optional.of(170), java.util.Optional.of(result));
   }
