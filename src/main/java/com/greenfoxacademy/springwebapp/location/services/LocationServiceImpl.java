@@ -77,16 +77,14 @@ public class LocationServiceImpl implements LocationService {
     int mazeOffsetToFormRectangleAroundStartEnd = 2;
     List<LocationEntity> sortedSmallerRectangleList = findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
-
-    List<LocationEntity> result = pathFinder(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    List<LocationEntity> result = pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
     return result;
   }
 
-  private List<LocationEntity> pathFinder(int offset, LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
+  private List<LocationEntity> pathFinder(LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
 
     List<LocationEntity> shortestPath = new ArrayList<>();
     Set<LocationEntity> visited = new HashSet<>();
-    //Set<LocationEntity> previousNodes = new HashSet<>();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(start.getX(), start.getY()));
     toVisit.add(start);
     visited.add(start);
@@ -96,20 +94,42 @@ public class LocationServiceImpl implements LocationService {
     }
     distances.put(start, 0);
 
-    LocationEntity current = null;
-    while (toVisit.isEmpty() == false && !current.equals(end)) {
-      current = toVisit.poll();
-      toVisit.addAll(findNeighbours(current, maze, start));
+    while (toVisit.isEmpty() == false) {
+      //get first from queue
+      LocationEntity current = toVisit.poll();
+      //find neighbours of first
+      List<LocationEntity> neighboursOfCurrent = findNeighbours(current, maze);
+      for (int i = 0; i < neighboursOfCurrent.size(); i++) {
+        // if neighbour is different than EMPTY or END continue
+        if (neighboursOfCurrent.get(i).getType().equals(LocationType.EMPTY) == false) {
+          continue;
+        }
+        calculateDistanceToStart(neighboursOfCurrent.get(i), start, distances);
+      }
+      toVisit.addAll(neighboursOfCurrent);
+      if (current.equals(end)) break;
     }
+    calculateDistanceToStart(end, start, distances);
+    return shortestPath;
   }
 
-  private int[] mapLocationToIndex(LocationEntity location, int startX, int startY) {
-    return new int[]{location.getY() - startY, location.getX() - startX};
+  private void calculateDistanceToStart(LocationEntity current, LocationEntity zeroZero, HashMap<LocationEntity, Integer> distances) {
+    int[] mazeIndexes = mapLocationToIndex(current, zeroZero);
+
+    int distanceY = Math.max(mazeIndexes[0], zeroZero.getY()) - Math.min(mazeIndexes[0], zeroZero.getY());
+    int distanceX = Math.max(mazeIndexes[1], zeroZero.getX()) - Math.min(mazeIndexes[1], zeroZero.getX());
+    int distance = distanceX + distanceY;
+    distances.put(current, distances.get(current) + distance);
   }
 
-  private List<LocationEntity> findNeighbours(LocationEntity current, LocationEntity[][] maze, LocationEntity start) {
+  private int[] mapLocationToIndex(LocationEntity firstInQueue, LocationEntity zeroZero) {
+    int[] result = new int[]{Math.abs(firstInQueue.getY() - zeroZero.getY()), Math.abs(firstInQueue.getX() - zeroZero.getX())};
+    return new int[]{Math.abs(firstInQueue.getY() - zeroZero.getY()), Math.abs(firstInQueue.getX() - zeroZero.getX())};
+  }
+
+  private List<LocationEntity> findNeighbours(LocationEntity firstInQueue, LocationEntity[][] maze) {
     List<LocationEntity> neighbours = new ArrayList<>();
-    int[] indexes = mapLocationToIndex(current, start.getX(), start.getY());
+    int[] indexes = mapLocationToIndex(firstInQueue, maze[0][0]);
     int x = indexes[1];
     int y = indexes[0];
     if (y - 1 >= 0) neighbours.add(maze[y - 1][x]);
@@ -168,7 +188,5 @@ public class LocationServiceImpl implements LocationService {
       double result = Math.sqrt((Math.pow(l2.getX() - x, 2) + Math.pow(l2.getY() - y, 2)));
       return result;
     }
-
-
   }
 }
