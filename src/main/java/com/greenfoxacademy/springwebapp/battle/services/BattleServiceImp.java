@@ -15,16 +15,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 @Service
-public class BattleServiceImp implements BattleService{
+public class BattleServiceImp implements BattleService {
 
   public void scheduleBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
                                    KingdomEntity defendingKingdom, int distance) {
 
-    BattleTimerTask battleTimerTask = new BattleTimerTask(attackingKingdom, attackingTroops, defendingKingdom, distance, this);
+    BattleTimerTask battleTimerTask = new BattleTimerTask(
+        attackingKingdom, attackingTroops, defendingKingdom, distance, this);
     Timer timer = new Timer();
     timer.schedule(battleTimerTask, distance);
 
-   //TODO: this method will be replaced by different code when
+    //TODO: this method will be replaced by different code when
     //set the troops that they are not home (later - after peter has this method ready)
   }
 
@@ -73,13 +74,13 @@ public class BattleServiceImp implements BattleService{
   }
 
   public Integer differenceBetweenTwoKingdomsLocations(int attackXOrY, int defendXOrY) {
-    if ((attackXOrY <= 0 && defendXOrY <= 0) || (0 <= attackXOrY && 0 <= defendXOrY)){
-      if (attackXOrY < defendXOrY){
+    if ((attackXOrY <= 0 && defendXOrY <= 0) || (0 <= attackXOrY && 0 <= defendXOrY)) {
+      if (attackXOrY < defendXOrY) {
         return defendXOrY - attackXOrY;
       } else {
         return attackXOrY - defendXOrY;
       }
-    } else if (attackXOrY <= 0){
+    } else if (attackXOrY <= 0) {
       return defendXOrY - attackXOrY;
     } else {
       return attackXOrY - defendXOrY;

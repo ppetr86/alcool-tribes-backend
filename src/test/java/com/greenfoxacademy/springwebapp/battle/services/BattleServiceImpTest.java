@@ -6,11 +6,7 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class BattleServiceImpTest {
 
   private BattleServiceImp battleService;
@@ -18,7 +14,6 @@ public class BattleServiceImpTest {
   @Before
   public void init() {
     battleService = new BattleServiceImp();
-    battleService = Mockito.spy(BattleServiceImp.class);
   }
 
   @Test
@@ -27,11 +22,6 @@ public class BattleServiceImpTest {
     attackingKingdom.setLocation(LocationFactory.createNewLocation(10, 10, attackingKingdom));
     KingdomEntity defendingKingdom = KingdomFactory.createKingdomEntityWithId(2L);
     defendingKingdom.setLocation(LocationFactory.createNewLocation(20, 20, defendingKingdom));
-
-    Mockito.doReturn(10).when(battleService).differenceBetweenTwoKingdomsLocations(
-        attackingKingdom.getLocation().getX(), defendingKingdom.getLocation().getX());
-    Mockito.doReturn(10).when(battleService).differenceBetweenTwoKingdomsLocations(
-        attackingKingdom.getLocation().getY(), defendingKingdom.getLocation().getY());
 
     Integer result = battleService.calculateDistanceBetweenTwoKingdoms(attackingKingdom, defendingKingdom);
 
@@ -45,11 +35,6 @@ public class BattleServiceImpTest {
     KingdomEntity defendingKingdom = KingdomFactory.createKingdomEntityWithId(2L);
     defendingKingdom.setLocation(LocationFactory.createNewLocation(20, -20, defendingKingdom));
 
-    Mockito.doReturn(10).when(battleService).differenceBetweenTwoKingdomsLocations(
-        attackingKingdom.getLocation().getX(), defendingKingdom.getLocation().getX());
-    Mockito.doReturn(30).when(battleService).differenceBetweenTwoKingdomsLocations(
-        attackingKingdom.getLocation().getY(), defendingKingdom.getLocation().getY());
-
     Integer result = battleService.calculateDistanceBetweenTwoKingdoms(attackingKingdom, defendingKingdom);
 
     Assert.assertEquals(40, result.intValue());
@@ -61,11 +46,6 @@ public class BattleServiceImpTest {
     attackingKingdom.setLocation(LocationFactory.createNewLocation(-3, -56, attackingKingdom));
     KingdomEntity defendingKingdom = KingdomFactory.createKingdomEntityWithId(2L);
     defendingKingdom.setLocation(LocationFactory.createNewLocation(-11, -20, defendingKingdom));
-
-    Mockito.doReturn(8).when(battleService).differenceBetweenTwoKingdomsLocations(
-        attackingKingdom.getLocation().getX(), defendingKingdom.getLocation().getX());
-    Mockito.doReturn(36).when(battleService).differenceBetweenTwoKingdomsLocations(
-        attackingKingdom.getLocation().getY(), defendingKingdom.getLocation().getY());
 
     Integer result = battleService.calculateDistanceBetweenTwoKingdoms(attackingKingdom, defendingKingdom);
 
