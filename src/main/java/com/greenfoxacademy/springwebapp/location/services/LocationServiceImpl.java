@@ -99,15 +99,23 @@ public class LocationServiceImpl implements LocationService {
     LocationEntity current = null;
     while (toVisit.isEmpty() == false && !current.equals(end)) {
       current = toVisit.poll();
-      toVisit.addAll(addNeighbours(current, visited, locations, maze));
+      toVisit.addAll(findNeighbours(current, maze, start));
     }
   }
 
-  private Collection<? extends LocationEntity> addNeighbours(LocationEntity current, Set<LocationEntity> visited, List<LocationEntity> locations, LocationEntity[][] maze) {
-    Collection<LocationEntity> neighbours = new ArrayList<>();
+  private int[] mapLocationToIndex(LocationEntity location, int startX, int startY) {
+    return new int[]{location.getY() - startY, location.getX() - startX};
+  }
 
-    
-
+  private List<LocationEntity> findNeighbours(LocationEntity current, LocationEntity[][] maze, LocationEntity start) {
+    List<LocationEntity> neighbours = new ArrayList<>();
+    int[] indexes = mapLocationToIndex(current, start.getX(), start.getY());
+    int x = indexes[1];
+    int y = indexes[0];
+    if (y - 1 >= 0) neighbours.add(maze[y - 1][x]);
+    if (y + 1 < maze.length) neighbours.add(maze[y + 1][x]);
+    if (x - 1 >= 0) neighbours.add(maze[y][x - 1]);
+    if (x + 1 < maze[y].length) neighbours.add(maze[y][x + 1]);
     return neighbours;
   }
 
