@@ -1,7 +1,6 @@
 package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.location.models.LocationDistance;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository;
@@ -84,34 +83,34 @@ public class LocationServiceImpl implements LocationService {
   }
 
   private List<LocationEntity> pathFinder(int offset, LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
-    // create `previousNodes` collection
-    // put start in `toVisit`
-    // fill distances in `distancesFromStart` with highest value for all nodes except `start` which should be 0
 
-    // while we haven't reach the destination and `toVisit` is not empty
-    // `currentNode` should be the closest element from `toVisit`
-    // put those neighbours of `currentNode` in `toVisit` which we haven't visited yet
-    // for each neighbour check if the currently known distance from start is higher than the distance from start to current + current to neighbour. if yes, update `distancesFromStart` with the new value and update `previousNodes` with current
-    // if 'previousNodes` doesn't contain the neighbour, then add it with the source of current
-
-    // track back the shortest path from `previousNodes` starting from `destination` key till `start` key
-    // return the path
     List<LocationEntity> shortestPath = new ArrayList<>();
     Set<LocationEntity> visited = new HashSet<>();
-    PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>();
+    //Set<LocationEntity> previousNodes = new HashSet<>();
+    PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(start.getX(), start.getY()));
     toVisit.add(start);
     visited.add(start);
-    int[][] distancesFromStart = new int[maze.length][maze[0].length];
-
-    for (int[] ints : distancesFromStart) {
-      Arrays.fill(ints, Integer.MAX_VALUE);
+    HashMap<LocationEntity, Integer> distances = new HashMap<>();
+    for (int i = 0; i < locations.size(); i++) {
+      distances.put(locations.get(i), Integer.MAX_VALUE);
     }
-    distancesFromStart[offset][offset] = 0;
+    distances.put(start, 0);
 
-
-
-
+    LocationEntity current = null;
+    while (toVisit.isEmpty() == false && !current.equals(end)) {
+      current = toVisit.poll();
+      toVisit.addAll(addNeighbours(current, visited, locations, maze));
+    }
   }
+
+  private Collection<? extends LocationEntity> addNeighbours(LocationEntity current, Set<LocationEntity> visited, List<LocationEntity> locations, LocationEntity[][] maze) {
+    Collection<LocationEntity> neighbours = new ArrayList<>();
+
+    
+
+    return neighbours;
+  }
+
 
   private List<LocationEntity> findAllInRectangleOrdered(int mazeOffsetToFormRectangleAroundStartEnd, LocationEntity start, LocationEntity end) {
     int minX = Math.min(end.getX(), start.getX()) - mazeOffsetToFormRectangleAroundStartEnd;
@@ -122,8 +121,6 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> result = repo.findAllInRectangleOrdered(minX, maxX, maxY, minY);
     return result;
   }
-
-
 
 
   private LocationEntity[][] buildMap(List<LocationEntity> sortReduced) {
@@ -163,5 +160,7 @@ public class LocationServiceImpl implements LocationService {
       double result = Math.sqrt((Math.pow(l2.getX() - x, 2) + Math.pow(l2.getY() - y, 2)));
       return result;
     }
+
+
   }
 }
