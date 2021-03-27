@@ -2,6 +2,38 @@ POST http://localhost:8080/register
 Content-Type: application/json
 
 {
+  "username": "kelemen",
+  "password": "password",
+  "email": "kelemen9417@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/register
+Content-Type: application/json
+
+{
+  "username": "",
+  "password": ""
+}
+
+###
+
+POST http://localhost:8080/register
+Content-Type: application/json
+
+{
+  "username": "petrN",
+  "password": "password",
+  "email": "ppetrnovotny@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
   "username": "furkesz",
   "password": "password"
 }
@@ -12,7 +44,7 @@ POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "username": "furkesz",
+  "username": "petrN",
   "password": "password"
 }
 

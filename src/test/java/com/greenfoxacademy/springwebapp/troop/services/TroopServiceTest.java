@@ -1,9 +1,5 @@
 package com.greenfoxacademy.springwebapp.troop.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-
-
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
@@ -14,9 +10,10 @@ import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidAcademyIdException;
-import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.kingdom.services.KingdomServiceImpl;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
@@ -33,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+
 public class TroopServiceTest {
 
   private TroopService troopService;
@@ -40,16 +40,19 @@ public class TroopServiceTest {
   private TimeService timeService;
   private TroopRepository troopRepository;
   private Environment env;
+  private KingdomService kingdomService;
   private BuildingService buildingService;
+
 
   @Before
   public void init() {
+    kingdomService = Mockito.mock(KingdomServiceImpl.class);
     resourceService = Mockito.mock(ResourceService.class);
     timeService = Mockito.mock(TimeService.class);
     troopRepository = Mockito.mock(TroopRepository.class);
     env = Mockito.mock(Environment.class);
     buildingService = Mockito.mock(BuildingService.class);
-    troopService = new TroopServiceImpl(resourceService,timeService,troopRepository,env, buildingService);
+    troopService = new TroopServiceImpl(env, resourceService, timeService, troopRepository, buildingService);
   }
 
   @Test
@@ -60,7 +63,7 @@ public class TroopServiceTest {
     TroopListResponseDto result = troopService.troopsToListDTO(ke);
 
     Assert.assertEquals(3, result.getTroops().size());
-    Assert.assertEquals(101, (long) result.getTroops().get(0).getFinishedAt());
+    Assert.assertEquals(101, result.getTroops().get(0).getFinishedAt());
   }
 
   @Test(expected = ForbiddenActionException.class)
@@ -92,13 +95,17 @@ public class TroopServiceTest {
   @Test(expected = NotEnoughResourceException.class)
   public void createTroopThrowsNotEnoughResourceException() {
     KingdomEntity kingdom = new KingdomEntity();
+    kingdom.setId(1L);
     List<BuildingEntity> buildings = new ArrayList<>();
     BuildingEntity building = new BuildingEntity(1L, BuildingType.ACADEMY, 1, 1, 1L, 1L);
     buildings.add(building);
     kingdom.setBuildings(buildings);
     TroopRequestDTO requestDTO = new TroopRequestDTO(1L);
 
-    Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(false);
+    Mockito.when(resourceService.hasResourcesForTroop(kingdom, 25)).thenThrow(NotEnoughResourceException.class);
+    Mockito.when(kingdomService.findByID(kingdom.getId())).thenReturn(kingdom);
+    Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
+
     // TODO: after resources are defined, this method will be updated, so test should be updated as well
 
     TroopEntityResponseDTO response = troopService.createTroop(kingdom, requestDTO);
@@ -106,21 +113,21 @@ public class TroopServiceTest {
 
   @Test
   public void createTroopReturnsLevel1CreatedTroopAsDTO() {
-    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L); //academy is id2
-    TroopEntity fakeTroop = new TroopEntity(1L,1, 20, 10, 5, 1L, 30L, kingdom);
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L); //academy is id2
+    TroopEntity fakeTroop = new TroopEntity(1L, 1, 20, 10, 5, 1L, 30L, kingdom,true);
     TroopRequestDTO requestDTO = new TroopRequestDTO(2L);
-    TroopEntityResponseDTO expectedTroop = new TroopEntityResponseDTO(1L,1,20,10,5,1,30);
-
+    TroopEntityResponseDTO expectedTroop = new TroopEntityResponseDTO(1L, 1, 20, 10, 5, 1, 30);
     Mockito.when(env.getProperty("troop.hp")).thenReturn("20");
     Mockito.when(env.getProperty("troop.food")).thenReturn("-5");
     Mockito.when(env.getProperty("troop.attack")).thenReturn("10");
     Mockito.when(env.getProperty("troop.defence")).thenReturn("5");
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
-    Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
+    Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
+    Mockito.when(resourceService.hasResourcesForTroop(kingdom, 25)).thenReturn(true);
     Mockito.when(timeService.getTime()).thenReturn(1L);
-    Mockito.when(timeService.getTimeAfter(1
-        * Integer.parseInt(env.getProperty("troop.buildingTime")))).thenReturn(30L);
+    Mockito.when(timeService.getTimeAfter(1 * Integer.parseInt(env.getProperty("troop.buildingTime")))).thenReturn(30L);
     Mockito.when(troopRepository.save(any())).thenReturn(fakeTroop);
+    Mockito.when(kingdomService.findByID(kingdom.getId())).thenReturn(kingdom);
 
     TroopEntityResponseDTO response = troopService.createTroop(kingdom, requestDTO);
     assertThat(response).isEqualToComparingFieldByField(expectedTroop);
@@ -177,7 +184,8 @@ public class TroopServiceTest {
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(2L);
     fakeKingdom.getBuildings().get(1).setLevel(7);
 
-    Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
+    Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
+    Mockito.when(resourceService.hasResourcesForTroop(fakeKingdom, 175)).thenReturn(true);
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeKingdom.getTroops().get(0).getId()))
         .thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
@@ -196,29 +204,29 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(2L);
 
+    Mockito.when(env.getProperty("troop.buildingCosts")).thenReturn("25");
     Mockito.when(buildingService.findBuildingById(2L)).thenReturn(fakeBuildingList.get(1));
-    Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(false);
+    Mockito.when(resourceService.hasResourcesForTroop(fakeKingdom, 25)).thenReturn(false);
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeTroopList.get(0).getId())).thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
 
     TroopEntityResponseDTO response = troopService.updateTroopLevel(fakeKingdom, fakeTroopRequest, 1L);
   }
 
-  @Test(expected = MissingParameterException.class)
+  @Test(expected = RuntimeException.class)
   public void updateTroopLevelShouldReturnMissingParameterException() {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO();
 
     Mockito.when(buildingService.findBuildingById(2L)).thenReturn(fakeBuildingList.get(1));
-    Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeTroopList.get(0).getId())).thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
 
@@ -230,16 +238,14 @@ public class TroopServiceTest {
     List<TroopEntity> fakeTroopList = TroopFactory.createDefaultTroops();
     KingdomEntity fakeKingdom = KingdomFactory.createKingdomEntityWithId(1L);
     fakeTroopList.get(0).setKingdom(fakeKingdom);
-    List<BuildingEntity> fakeBuildingList = BuildingFactory.createBuildings(fakeKingdom);
+    List<BuildingEntity> fakeBuildingList = BuildingFactory.createDefaultBuildings(fakeKingdom);
     fakeKingdom.setBuildings(fakeBuildingList);
     TroopRequestDTO fakeTroopRequest = new TroopRequestDTO(5L);
 
     Mockito.when(buildingService.findBuildingById(5L)).thenReturn(null);
-    Mockito.when(resourceService.hasResourcesForTroop()).thenReturn(true);
     Mockito.when(troopRepository.findKingdomIdByTroopId(fakeTroopList.get(0).getId())).thenReturn(fakeKingdom.getId());
     Mockito.when(env.getProperty("troop.buildingTime")).thenReturn("30");
 
     TroopEntityResponseDTO response = troopService.updateTroopLevel(fakeKingdom, fakeTroopRequest, 1L);
   }
-
 }
