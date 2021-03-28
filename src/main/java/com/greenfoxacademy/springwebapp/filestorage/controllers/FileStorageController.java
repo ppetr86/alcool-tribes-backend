@@ -2,6 +2,9 @@ package com.greenfoxacademy.springwebapp.filestorage.controllers;
 
 import com.greenfoxacademy.springwebapp.filestorage.models.dtos.UploadFileResponseDTO;
 import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import java.io.IOException;
@@ -30,18 +33,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class FileStorageController {
 
   public static final String AVATAR_URI = "/images/avatar";
-  public static final String AVATARS_URI = "/images/avatars"; //just for training - upload of more avatars at time
+  public static final String AVATARS_URI = "/images/avatars";
 
   private FileStorageService fileStorageService;
 
   @PostMapping(AVATAR_URI)
-  public UploadFileResponseDTO uploadAvatar(@RequestParam("file") MultipartFile file, Authentication auth) {
+  public UploadFileResponseDTO uploadAvatar(@RequestParam("avatar") MultipartFile file, Authentication auth)
+      throws FileStorageException {
     PlayerEntity player = ((CustomUserDetails) auth.getPrincipal()).getPlayer();
 
     String fileName = fileStorageService.storeAvatar(file, player);
 
     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-        .path("/downloadFile/")
+        .path("/avatars/")
         .path(fileName)
         .toUriString();
 
@@ -51,17 +55,19 @@ public class FileStorageController {
   }
 
   @PostMapping(AVATARS_URI)
-  public List<UploadFileResponseDTO> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files, Authentication auth) {
+  public List<UploadFileResponseDTO> uploadMultipleAvatars(@RequestParam("avatars") MultipartFile[] files, Authentication auth) {
     return Arrays.asList(files)
         .stream()
         .map(file -> uploadAvatar(file, auth))
         .collect(Collectors.toList());
   }
 
-  @GetMapping("/downloadFile/{fileName:.+}")
-  public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+  @GetMapping("/avatars/{fileName:.+}")
+  public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request, Authentication auth)
+      throws ForbiddenActionException, MyFileNotFoundException {
+
     // Load file as Resource
-    Resource resource = fileStorageService.loadFileAsResource(fileName);
+    Resource resource = fileStorageService.loadFileAsResource(fileName, auth);
 
     // Try to determine file's content type
     String contentType = null;
