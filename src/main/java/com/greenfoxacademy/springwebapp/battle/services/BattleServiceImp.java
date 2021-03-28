@@ -1,6 +1,6 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
-import com.greenfoxacademy.springwebapp.battle.models.AfterBattleTimerTask;
+import com.greenfoxacademy.springwebapp.battle.models.ReturnHomeTimerTask;
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.BattleTimerTask;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResultDTO;
@@ -22,7 +22,7 @@ public class BattleServiceImp implements BattleService {
 
     BattleTimerTask battleTimerTask = new BattleTimerTask(
         attackingKingdom, attackingTroops, defendingKingdom, distance, this);
-    Timer timer = new Timer();
+    Timer timer = createTimer();
     timer.schedule(battleTimerTask, distance);
 
     //TODO: this method will be replaced by different code when
@@ -40,17 +40,21 @@ public class BattleServiceImp implements BattleService {
 
     int stolenFood = 0;
     int stolenGold = 0;
-    scheduleModifyAttackingKingRes(attackingArmy, stolenFood, stolenGold, distance);
+    scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
     return new BattleResultDTO("Nobody won", stolenFood, stolenGold);
   }
 
-  private void scheduleModifyAttackingKingRes(Army attackingArmy, int foodChange, int goldChange, int distance) {
-    AfterBattleTimerTask timerTask = new AfterBattleTimerTask(attackingArmy, foodChange, goldChange, distance, this);
-    Timer timer = new Timer();
+  private void scheduleReturnHome(Army attackingArmy, int foodChange, int goldChange, int distance) {
+    ReturnHomeTimerTask timerTask = new ReturnHomeTimerTask(attackingArmy, foodChange, goldChange, this);
+    Timer timer = createTimer();
     timer.schedule(timerTask, distance);
   }
 
-  public void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange, int distance) {
+  public Timer createTimer() {
+    return new Timer();
+  }
+
+  public void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange) {
 
   }
 
