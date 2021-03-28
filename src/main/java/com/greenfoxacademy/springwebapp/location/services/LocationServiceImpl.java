@@ -85,12 +85,16 @@ public class LocationServiceImpl implements LocationService {
 
     List<LocationEntity> shortestPath = new ArrayList<>();
     Set<LocationEntity> visited = new HashSet<>();
+    //???? keep ????
+    visited.addAll(locations.stream()
+        .filter(x -> x.getType().equals(LocationType.DESERT)
+            || x.getType().equals(LocationType.JUNGLE)
+            || x.getType().equals(LocationType.DESERT))
+        .collect(Collectors.toList()));
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(start.getX(), start.getY()));
     toVisit.add(start);
     HashMap<LocationEntity, Integer> distances = new HashMap<>();
-    for (int i = 0; i < locations.size(); i++) {
-      distances.put(locations.get(i), Integer.MAX_VALUE);
-    }
+    locations.forEach(entry -> distances.put(entry, Integer.MAX_VALUE));
     distances.put(start, 0);
 
     while (toVisit.isEmpty() == false) {
