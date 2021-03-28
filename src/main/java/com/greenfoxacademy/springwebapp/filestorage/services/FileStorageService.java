@@ -13,4 +13,6 @@ public interface FileStorageService {
 
   Resource loadFileAsResource(String fileName, Authentication auth) throws MyFileNotFoundException,
       ForbiddenActionException;
+
+  boolean userIsAllowedToAccessTheFile(String fileName, Authentication auth) throws ForbiddenActionException;
 }

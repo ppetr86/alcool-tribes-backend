@@ -78,6 +78,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
   }
 
+  @Override
   public boolean userIsAllowedToAccessTheFile(String fileName, Authentication auth)
       throws ForbiddenActionException {
 
