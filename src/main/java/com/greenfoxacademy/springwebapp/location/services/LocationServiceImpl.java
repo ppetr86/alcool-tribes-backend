@@ -24,11 +24,11 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public LocationEntity assignKingdomLocation(KingdomEntity kingdom) {
     List<LocationEntity> allLocations = repo.findAll();
-    Set<LocationEntity> kingdoms = allLocations.stream().filter(x -> x.getType().equals(LocationType.KINGDOM)).collect(
-        Collectors.toSet());
+    Set<LocationEntity> kingdoms = allLocations.stream().filter(x -> x.getType().equals(LocationType.KINGDOM))
+        .collect(Collectors.toSet());
     List<LocationEntity> emptyLocations =
-        allLocations.stream().filter(x -> x.getType().equals(LocationType.EMPTY)).collect(
-            Collectors.toList());
+        allLocations.stream().filter(x -> x.getType().equals(LocationType.EMPTY))
+            .collect(Collectors.toList());
     PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, emptyLocations);
     LocationEntity first = locationsInQueue.poll();
 
@@ -96,35 +96,49 @@ public class LocationServiceImpl implements LocationService {
 
     while (toVisit.isEmpty() == false) {
       //get first from queue
-      LocationEntity current = toVisit.poll();
+      LocationEntity popped = toVisit.poll();
       //find neighbours of first
-      List<LocationEntity> neighboursOfCurrent = findNeighbours(current, maze);
-      for (int i = 0; i < neighboursOfCurrent.size(); i++) {
-        // if neighbour is different than EMPTY or END continue
-        if (neighboursOfCurrent.get(i).getType().equals(LocationType.EMPTY) == false) {
-          continue;
+      List<LocationEntity> neighboursOfCurrent = findNeighbours(popped, maze);
+      for (LocationEntity each : neighboursOfCurrent) {
+        // if neighbour is EMPTY or END calculate distance
+        if (each.equals(end)) {
+          calculateDistanceToStart(each, popped, distances);
+          toVisit.add(each);
+          break;
+        } else if (each.getType().equals(LocationType.EMPTY)) {
+          calculateDistanceToStart(each, popped, distances);
+          toVisit.add(each);
         }
-        calculateDistanceToStart(neighboursOfCurrent.get(i), start, distances);
       }
-      toVisit.addAll(neighboursOfCurrent);
-      if (current.equals(end)) break;
+      if (popped.equals(end)) break;
     }
-    calculateDistanceToStart(end, start, distances);
+    
     return shortestPath;
   }
 
-  private void calculateDistanceToStart(LocationEntity current, LocationEntity zeroZero, HashMap<LocationEntity, Integer> distances) {
-    int[] mazeIndexes = mapLocationToIndex(current, zeroZero);
+  private void calculateDistanceToStart(LocationEntity firstInQueue, LocationEntity current, HashMap<LocationEntity, Integer> distances) {
 
-    int distanceY = Math.max(mazeIndexes[0], zeroZero.getY()) - Math.min(mazeIndexes[0], zeroZero.getY());
-    int distanceX = Math.max(mazeIndexes[1], zeroZero.getX()) - Math.min(mazeIndexes[1], zeroZero.getX());
-    int distance = distanceX + distanceY;
-    distances.put(current, distances.get(current) + distance);
+    // how to do this? get the first in queue and make distance++??
+    if (distances.get(firstInQueue) < distances.get(current)){
+      distances.put(current, distances.get(firstInQueue)+1);
+    }
   }
 
-  private int[] mapLocationToIndex(LocationEntity firstInQueue, LocationEntity zeroZero) {
-    int[] result = new int[]{Math.abs(firstInQueue.getY() - zeroZero.getY()), Math.abs(firstInQueue.getX() - zeroZero.getX())};
-    return new int[]{Math.abs(firstInQueue.getY() - zeroZero.getY()), Math.abs(firstInQueue.getX() - zeroZero.getX())};
+  private int findNeighbourShortestDistance(List<LocationEntity> neighbours, HashMap<LocationEntity, Integer> distances) {
+
+    int minDistance = Integer.MAX_VALUE;
+    for (LocationEntity each : neighbours) {
+      int currentDistance = distances.get(each);
+      if (currentDistance < minDistance) {
+        minDistance = distances.get(each);
+      }
+    }
+    return minDistance;
+  }
+
+  private int[] mapLocationToIndex(LocationEntity firstInQueue, LocationEntity start) {
+    int[] result = new int[]{Math.abs(firstInQueue.getY() - start.getY()), Math.abs(firstInQueue.getX() - start.getX())};
+    return new int[]{Math.abs(firstInQueue.getY() - start.getY()), Math.abs(firstInQueue.getX() - start.getX())};
   }
 
   private List<LocationEntity> findNeighbours(LocationEntity firstInQueue, LocationEntity[][] maze) {
@@ -160,8 +174,10 @@ public class LocationServiceImpl implements LocationService {
     int maxY = Math.max(firstLocation.getY(), lastLocation.getY());
     int width = maxX - minX + 1;
     int height = maxY - minY + 1;
-    LocationEntity[][] map = new LocationEntity[width][height];
+    LocationEntity[][] map = new LocationEntity[height][width];
     for (LocationEntity location : sortReduced) {
+      int y = location.getY() - maxY;
+      int x = location.getX() - minX;
       map[Math.abs(location.getY() - maxY)][location.getX() - minX] = location;
     }
     return map;
