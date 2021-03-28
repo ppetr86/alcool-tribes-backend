@@ -384,7 +384,7 @@ public class BattleServiceImpl implements BattleService {
                                      int distance, int stolenFood, int stolenGold) {
     killTroopWhichCanNotReachHome(attackingArmy, distance);
     modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
-    modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold, distance);
+    modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold);
   }
 
   private void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
@@ -392,7 +392,7 @@ public class BattleServiceImpl implements BattleService {
     resourceService.updateResourceAmount(defendingArmy.getKingdom(), -(goldChange), ResourceType.GOLD);
   }
 
-  private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange, int distance) {
+  private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange) {
     resourceService.updateResourceAmount(attackingArmy.getKingdom(), foodChange, ResourceType.FOOD);
     resourceService.updateResourceAmount(attackingArmy.getKingdom(), goldChange, ResourceType.GOLD);
   }
