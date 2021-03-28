@@ -47,7 +47,7 @@ public class LocationServiceImpl implements LocationService {
     if (first == null) {
       throw new RuntimeException("There is no location to place the kingdom");
     }
-    int range = 1;
+    int range = 2;
     if (!isEligible(kingdoms, first.getX() + range, first.getY())) {
       return false;
     } else if (!isEligible(kingdoms, first.getX(), first.getY() + range)) {
@@ -134,14 +134,14 @@ public class LocationServiceImpl implements LocationService {
     return minDistance;
   }
 
-  private int[] mapLocationToIndex(LocationEntity firstInQueue, LocationEntity start) {
-    int[] result = new int[]{Math.abs(firstInQueue.getY() - start.getY()), Math.abs(firstInQueue.getX() - start.getX())};
-    return new int[]{Math.abs(firstInQueue.getY() - start.getY()), Math.abs(firstInQueue.getX() - start.getX())};
+  private int[] mapLocationToIndex(LocationEntity popped, LocationEntity start) {
+    int[] result = new int[]{Math.abs(popped.getY() - start.getY()), Math.abs(popped.getX() - start.getX())};
+    return new int[]{Math.abs(popped.getY() - start.getY()), Math.abs(popped.getX() - start.getX())};
   }
 
-  private List<LocationEntity> findNeighbours(LocationEntity firstInQueue, LocationEntity[][] maze) {
+  private List<LocationEntity> findNeighbours(LocationEntity popped, LocationEntity[][] maze) {
     List<LocationEntity> neighbours = new ArrayList<>();
-    int[] indexes = mapLocationToIndex(firstInQueue, maze[0][0]);
+    int[] indexes = mapLocationToIndex(popped, maze[0][0]);
     int x = indexes[1];
     int y = indexes[0];
     if (y - 1 >= 0) neighbours.add(maze[y - 1][x]);
