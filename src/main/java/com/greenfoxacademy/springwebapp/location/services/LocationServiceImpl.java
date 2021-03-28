@@ -74,7 +74,7 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public List<LocationEntity> findShortestPath(KingdomEntity start, KingdomEntity end) {
 
-    int mazeOffsetToFormRectangleAroundStartEnd = 2;
+    int mazeOffsetToFormRectangleAroundStartEnd = 1;
     List<LocationEntity> sortedSmallerRectangleList = findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
     List<LocationEntity> result = pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
@@ -87,7 +87,6 @@ public class LocationServiceImpl implements LocationService {
     Set<LocationEntity> visited = new HashSet<>();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(start.getX(), start.getY()));
     toVisit.add(start);
-    visited.add(start);
     HashMap<LocationEntity, Integer> distances = new HashMap<>();
     for (int i = 0; i < locations.size(); i++) {
       distances.put(locations.get(i), Integer.MAX_VALUE);
@@ -95,32 +94,27 @@ public class LocationServiceImpl implements LocationService {
     distances.put(start, 0);
 
     while (toVisit.isEmpty() == false) {
-      //get first from queue
       LocationEntity popped = toVisit.poll();
-      //find neighbours of first
-      List<LocationEntity> neighboursOfCurrent = findNeighbours(popped, maze);
-      for (LocationEntity each : neighboursOfCurrent) {
-        // if neighbour is EMPTY or END calculate distance
-        if (each.equals(end)) {
-          calculateDistanceToStart(each, popped, distances);
-          toVisit.add(each);
-          break;
-        } else if (each.getType().equals(LocationType.EMPTY)) {
-          calculateDistanceToStart(each, popped, distances);
-          toVisit.add(each);
+      visited.add(popped);
+      for (LocationEntity neighbour : findNeighbours(popped, maze)) {
+        if ((neighbour.getType().equals(LocationType.EMPTY) && visited.contains(neighbour) == false) || neighbour.equals(end)) {
+          calculateDistanceToStart(neighbour, popped, distances);
+          toVisit.add(neighbour);
         }
       }
       if (popped.equals(end)) break;
     }
-    
+    System.out.println("hello");
     return shortestPath;
   }
 
-  private void calculateDistanceToStart(LocationEntity firstInQueue, LocationEntity current, HashMap<LocationEntity, Integer> distances) {
+  private void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped, HashMap<LocationEntity, Integer> distances) {
 
     // how to do this? get the first in queue and make distance++??
-    if (distances.get(firstInQueue) < distances.get(current)){
-      distances.put(current, distances.get(firstInQueue)+1);
+    int q = distances.get(popped);
+    int c = distances.get(neighbour);
+    if (distances.get(popped) < distances.get(neighbour)) {
+      distances.put(neighbour, distances.get(popped) + 1);
     }
   }
 
