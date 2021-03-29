@@ -85,7 +85,7 @@ public class LocationServiceImpl implements LocationService {
     return pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
   }
 
-  private List<LocationEntity> pathFinder(
+  public List<LocationEntity> pathFinder(
       LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
 
     Set<LocationEntity> visited = createNewLocationSet();
@@ -109,7 +109,7 @@ public class LocationServiceImpl implements LocationService {
     return backtrack(distances, end, maze);
   }
 
-  private List<LocationEntity> backtrack(HashMap<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
+  public List<LocationEntity> backtrack(HashMap<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
 
     List<LocationEntity> reversedPath = createNewLocationArrayList();
     reversedPath.add(end);
@@ -124,23 +124,23 @@ public class LocationServiceImpl implements LocationService {
     return reversedPath;
   }
 
-  private LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours,
+  public LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours,
                                                    HashMap<LocationEntity, Integer> distances, int distance) {
     return lastNeighbours.stream().filter(current -> distances.get(current) == distance).findFirst().orElse(null);
   }
 
-  private void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped,
+  public void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped,
                                         HashMap<LocationEntity, Integer> distances) {
     if (distances.get(popped) < distances.get(neighbour)) {
       distances.put(neighbour, distances.get(popped) + 1);
     }
   }
 
-  private int[] mapLocationToIndex(LocationEntity popped, LocationEntity start) {
+  public int[] mapLocationToIndex(LocationEntity popped, LocationEntity start) {
     return new int[]{Math.abs(popped.getY() - start.getY()), Math.abs(popped.getX() - start.getX())};
   }
 
-  private List<LocationEntity> findNeighbours(LocationEntity popped, LocationEntity[][] maze) {
+  public List<LocationEntity> findNeighbours(LocationEntity popped, LocationEntity[][] maze) {
     List<LocationEntity> neighbours = new ArrayList<>();
     int[] indexes = mapLocationToIndex(popped, maze[0][0]);
     int x = indexes[1];
@@ -153,7 +153,7 @@ public class LocationServiceImpl implements LocationService {
   }
 
 
-  private List<LocationEntity> findAllInRectangleOrdered(
+  public List<LocationEntity> findAllInRectangleOrdered(
       int mazeOffsetToFormRectangleAroundStartEnd, LocationEntity start, LocationEntity end) {
     int minX = Math.min(end.getX(), start.getX()) - mazeOffsetToFormRectangleAroundStartEnd;
     int maxX = Math.max(end.getX(), start.getX()) + mazeOffsetToFormRectangleAroundStartEnd;
@@ -164,7 +164,7 @@ public class LocationServiceImpl implements LocationService {
   }
 
 
-  private LocationEntity[][] buildMap(List<LocationEntity> sortReduced) {
+  public LocationEntity[][] buildMap(List<LocationEntity> sortReduced) {
     LocationEntity firstLocation = sortReduced.get(0);
     LocationEntity lastLocation = sortReduced.get(sortReduced.size() - 1);
     int minX = Math.min(firstLocation.getX(), lastLocation.getX());
@@ -219,7 +219,7 @@ public class LocationServiceImpl implements LocationService {
     return new HashSet<>();
   }
 
-  private Stack<List<LocationEntity>> createNewStack() {
+  public Stack<List<LocationEntity>> createNewStack() {
     return new Stack<>();
   }
 }

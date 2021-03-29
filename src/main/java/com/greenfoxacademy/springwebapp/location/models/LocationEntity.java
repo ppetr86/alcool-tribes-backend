@@ -75,12 +75,4 @@ public class LocationEntity {
         + ", kingdom=" + kingdomName
         + ", type=" + type;
   }
-
-  public LocationEntity(LocationDistance e) {
-    this.id = e.getId();
-    this.x = e.getX();
-    this.y = e.getY();
-    this.kingdom = e.getKingdom();
-    this.type = e.getType();
-  }
 }
