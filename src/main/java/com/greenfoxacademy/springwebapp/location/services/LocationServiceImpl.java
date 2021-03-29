@@ -90,9 +90,8 @@ public class LocationServiceImpl implements LocationService {
   private List<LocationEntity> pathFinder(
       LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
 
-    List<LocationEntity> shortestPath = createNewLocationArrayList();
     Set<LocationEntity> visited = createNewLocationSet();
-    //???? I will not visit not-walkable locations desert and jungle ????
+    //???? I will not visit not-walkable locations desert and jungle and kingdoms ????
     visited.addAll(allDesertsJunglesKingdomsExceptStartEnd(locations, start, end));
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(start.getX(), start.getY()));
     toVisit.add(start);
@@ -111,7 +110,29 @@ public class LocationServiceImpl implements LocationService {
       }
       if (popped.equals(end)) break;
     }
+    List<LocationEntity> shortestPath = createNewLocationArrayList();
+    shortestPath = backtrack(distances, end, maze);
     return shortestPath;
+  }
+
+  private List<LocationEntity> backtrack(HashMap<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
+
+    List<LocationEntity> reversedPath = createNewLocationArrayList();
+    reversedPath.add(end);
+    LocationEntity lastAdded = end;
+    int distanceOfLastAdded = distances.get(end);
+    for (int i = distanceOfLastAdded; i >= 0; i--) {
+      List<LocationEntity> lastNeighbours = findNeighbours(end, maze);
+      LocationEntity locationWithLowerDistance = locationWithLowerDistance(lastNeighbours, distances, i - 1);
+      lastAdded = locationWithLowerDistance;
+      reversedPath.add(lastAdded);
+    }
+    Collections.reverse(reversedPath);
+    return reversedPath;
+  }
+
+  private LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours, HashMap<LocationEntity, Integer> distances, int distance) {
+    return lastNeighbours.stream().filter(current -> distances.get(current) == distance).findFirst().orElse(null);
   }
 
   private List<LocationEntity> allDesertsJunglesKingdomsExceptStartEnd(List<LocationEntity> locations, LocationEntity start, LocationEntity end) {
@@ -126,7 +147,7 @@ public class LocationServiceImpl implements LocationService {
             || location.getType().equals(LocationType.JUNGLE)
             || location.getType().equals(LocationType.KINGDOM))
         .collect(Collectors.toList());
-    result.removeAll(Arrays.asList(start,end));
+    result.removeAll(Arrays.asList(start, end));
     return result;
   }
 
