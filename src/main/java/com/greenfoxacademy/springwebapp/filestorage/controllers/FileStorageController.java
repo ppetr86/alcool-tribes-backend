@@ -38,7 +38,7 @@ public class FileStorageController {
   private FileStorageService fileStorageService;
 
   @PostMapping(AVATAR_URI)
-  public UploadFileResponseDTO uploadAvatar(@RequestParam("avatar") MultipartFile file, Authentication auth)
+  public UploadFileResponseDTO uploadAvatar(@RequestParam("file") MultipartFile file, Authentication auth)
       throws FileStorageException {
     PlayerEntity player = ((CustomUserDetails) auth.getPrincipal()).getPlayer();
 
@@ -55,7 +55,7 @@ public class FileStorageController {
   }
 
   @PostMapping(AVATARS_URI)
-  public List<UploadFileResponseDTO> uploadMultipleAvatars(@RequestParam("avatars") MultipartFile[] files, Authentication auth) {
+  public List<UploadFileResponseDTO> uploadMultipleAvatars(@RequestParam("file") MultipartFile[] files, Authentication auth) {
     return Arrays.asList(files)
         .stream()
         .map(file -> uploadAvatar(file, auth))
