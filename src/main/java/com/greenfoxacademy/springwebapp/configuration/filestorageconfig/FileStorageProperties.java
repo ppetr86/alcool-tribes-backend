@@ -15,7 +15,5 @@ public class FileStorageProperties {
 
   public String getUploadAvatarDir() { return uploadAvatarDir; }
 
-  public void setUploadAvatarDir(String uploadAvatarDir) {
-    this.uploadAvatarDir = uploadAvatarDir;
-  }
+  public void setUploadAvatarDir(String uploadAvatarDir) { this.uploadAvatarDir = uploadAvatarDir; }
 }
