@@ -78,7 +78,7 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public List<LocationEntity> findShortestPath(KingdomEntity start, KingdomEntity end) {
 
-    int mazeOffsetToFormRectangleAroundStartEnd = 1;
+    int mazeOffsetToFormRectangleAroundStartEnd = 2;
     List<LocationEntity> sortedSmallerRectangleList =
         findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
@@ -91,28 +91,31 @@ public class LocationServiceImpl implements LocationService {
       LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
 
     Set<LocationEntity> visited = createNewLocationSet();
-    //???? I will not visit not-walkable locations desert and jungle and kingdoms ????
-    visited.addAll(allDesertsJunglesKingdomsExceptStartEnd(locations, start, end));
-    PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(start.getX(), start.getY()));
+    PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
     HashMap<LocationEntity, Integer> distances = createNewHashMap();
     locations.forEach(entry -> distances.put(entry, Integer.MAX_VALUE));
     distances.put(start, 0);
 
-    while (toVisit.isEmpty() == false) {
+    while (!toVisit.isEmpty()) {
       LocationEntity popped = toVisit.poll();
+
       visited.add(popped);
-      for (LocationEntity neighbour : findNeighbours(popped, maze)) {
-        if ((neighbour.getType().equals(LocationType.EMPTY) && visited.contains(neighbour) == false) || neighbour.equals(end)) {
+      List<LocationEntity> neighbours = findNeighbours(popped, maze);
+      for (LocationEntity neighbour : neighbours) {
+        if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour)) || neighbour.equals(end)) {
           calculateDistanceToStart(neighbour, popped, distances);
           toVisit.add(neighbour);
         }
       }
       if (popped.equals(end)) break;
     }
-    List<LocationEntity> shortestPath = createNewLocationArrayList();
-    shortestPath = backtrack(distances, end, maze);
-    return shortestPath;
+    return backtrack(distances, end, maze);
+  }
+
+  private Boolean isNeighbourShorterDistanceToEndThanPopped(LocationEntity popped,
+                                                            LocationEntity neighbour, LocationEntity end) {
+    return locationDistanceToXY(popped, end) > locationDistanceToXY(neighbour, end);
   }
 
   private List<LocationEntity> backtrack(HashMap<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
@@ -121,8 +124,8 @@ public class LocationServiceImpl implements LocationService {
     reversedPath.add(end);
     LocationEntity lastAdded = end;
     int distanceOfLastAdded = distances.get(end);
-    for (int i = distanceOfLastAdded; i >= 0; i--) {
-      List<LocationEntity> lastNeighbours = findNeighbours(end, maze);
+    for (int i = distanceOfLastAdded; i > 0; i--) {
+      List<LocationEntity> lastNeighbours = findNeighbours(lastAdded, maze);
       LocationEntity locationWithLowerDistance = locationWithLowerDistance(lastNeighbours, distances, i - 1);
       lastAdded = locationWithLowerDistance;
       reversedPath.add(lastAdded);
@@ -135,34 +138,14 @@ public class LocationServiceImpl implements LocationService {
     return lastNeighbours.stream().filter(current -> distances.get(current) == distance).findFirst().orElse(null);
   }
 
-  private List<LocationEntity> allDesertsJunglesKingdomsExceptStartEnd(List<LocationEntity> locations, LocationEntity start, LocationEntity end) {
-    /*return locations.stream()
-        .filter(location -> !location.getType().equals(LocationType.EMPTY)
-            || !location.equals(start)
-            || !location.equals(end))
-        .collect(Collectors.toList());*/
-
-    List<LocationEntity> result = locations.stream()
-        .filter(location -> location.getType().equals(LocationType.DESERT)
-            || location.getType().equals(LocationType.JUNGLE)
-            || location.getType().equals(LocationType.KINGDOM))
-        .collect(Collectors.toList());
-    result.removeAll(Arrays.asList(start, end));
-    return result;
-  }
-
-  private void calculateDistanceToStart(
-      LocationEntity neighbour, LocationEntity popped, HashMap<LocationEntity, Integer> distances) {
-    // how to do this? get the first in queue and make distance++??
-    int qDistance = distances.get(popped);
-    int neighbourDistance = distances.get(neighbour);
+  private void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped,
+                                        HashMap<LocationEntity, Integer> distances) {
     if (distances.get(popped) < distances.get(neighbour)) {
       distances.put(neighbour, distances.get(popped) + 1);
     }
   }
 
   private int[] mapLocationToIndex(LocationEntity popped, LocationEntity start) {
-    int[] result = new int[]{Math.abs(popped.getY() - start.getY()), Math.abs(popped.getX() - start.getX())};
     return new int[]{Math.abs(popped.getY() - start.getY()), Math.abs(popped.getX() - start.getX())};
   }
 
@@ -186,8 +169,7 @@ public class LocationServiceImpl implements LocationService {
     int minY = Math.min(end.getY(), start.getY()) - mazeOffsetToFormRectangleAroundStartEnd;
     int maxY = Math.max(end.getY(), start.getY()) + mazeOffsetToFormRectangleAroundStartEnd;
 
-    List<LocationEntity> result = repo.findAllInRectangleOrdered(minX, maxX, maxY, minY);
-    return result;
+    return repo.findAllInRectangleOrdered(minX, maxX, maxY, minY);
   }
 
 
@@ -202,8 +184,6 @@ public class LocationServiceImpl implements LocationService {
     int height = maxY - minY + 1;
     LocationEntity[][] map = new LocationEntity[height][width];
     for (LocationEntity location : sortReduced) {
-      int y = location.getY() - maxY;
-      int x = location.getX() - minX;
       map[Math.abs(location.getY() - maxY)][location.getX() - minX] = location;
     }
     return map;
@@ -211,8 +191,8 @@ public class LocationServiceImpl implements LocationService {
 
   @AllArgsConstructor
   public static class LocationComparator implements Comparator<LocationEntity> {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public int compare(LocationEntity l1, LocationEntity l2) {
       double maxDist1 = locationDistanceToXY(l1, this.x, this.y);
@@ -232,9 +212,12 @@ public class LocationServiceImpl implements LocationService {
     }*/
 
     private int locationDistanceToXY(LocationEntity l2, int x, int y) {
-      int result = Math.abs(l2.getY() - y) + Math.abs(l2.getX() - x);
-      return result;
+      return Math.abs(l2.getY() - y) + Math.abs(l2.getX() - x);
     }
+  }
+
+  public int locationDistanceToXY(LocationEntity l1, LocationEntity l2) {
+    return Math.abs(l2.getY() - l1.getY()) + Math.abs(l2.getX() - l1.getX());
   }
 
   public HashMap<LocationEntity, Integer> createNewHashMap() {
@@ -247,5 +230,9 @@ public class LocationServiceImpl implements LocationService {
 
   public Set<LocationEntity> createNewLocationSet() {
     return new HashSet<>();
+  }
+
+  private Stack<List<LocationEntity>> createNewStack() {
+    return new Stack<>();
   }
 }

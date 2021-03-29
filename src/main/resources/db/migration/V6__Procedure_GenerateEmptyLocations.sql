@@ -21,4 +21,4 @@ END $$
 
 DELIMITER ;
 
-CALL generateEmptyLocations(3);
+CALL generateEmptyLocations(100);

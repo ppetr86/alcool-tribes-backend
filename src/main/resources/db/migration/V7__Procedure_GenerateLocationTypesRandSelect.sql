@@ -8,4 +8,4 @@ END $$
 
 DELIMITER ;
 
-CALL generateNDesertsAndJunglesRandSelect(0);
+CALL generateNDesertsAndJunglesRandSelect(50);

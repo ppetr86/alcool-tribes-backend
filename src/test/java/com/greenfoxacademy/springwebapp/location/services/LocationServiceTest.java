@@ -31,7 +31,7 @@ public class LocationServiceTest {
   public void setUp() {
     locationRepository = Mockito.mock(LocationRepository.class);
     locationService = new LocationServiceImpl(locationRepository);
-    comparator = new LocationServiceImpl.LocationComparator(0, 0);
+    comparator = new LocationServiceImpl.LocationComparatorProximityToEnd(0, 0);
     locationService = Mockito.spy(locationService);
   }
 
