@@ -1,8 +1,8 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
-import com.greenfoxacademy.springwebapp.battle.models.ReturnHomeTimerTask;
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.BattleTimerTask;
+import com.greenfoxacademy.springwebapp.battle.models.ReturnHomeTimerTask;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResultDTO;
 import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 @Service
 public class BattleServiceImpl implements BattleService {

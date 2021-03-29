@@ -22,8 +22,8 @@ public class LocationServiceImpl implements LocationService {
   //TODO: have to delete if Petr implemented the Shortest Path branch
   @Override
   public Integer calculateDistanceBetweenTwoKingdoms(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom) {
-    return Math.abs(attackingKingdom.getLocation().getX() - defendingKingdom.getLocation().getX()) +
-        Math.abs(attackingKingdom.getLocation().getY() - defendingKingdom.getLocation().getY());
+    return Math.abs(attackingKingdom.getLocation().getX() - defendingKingdom.getLocation().getX())
+        + Math.abs(attackingKingdom.getLocation().getY() - defendingKingdom.getLocation().getY());
   }
 
   @Override
