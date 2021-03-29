@@ -24,21 +24,22 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public LocationEntity assignKingdomLocation(KingdomEntity kingdom) {
     List<LocationEntity> allLocations = repo.findAll();
-    Set<LocationEntity> kingdoms = allLocations.stream().filter(x -> x.getType().equals(LocationType.KINGDOM))
+    Set<LocationEntity> kingdoms = allLocations.stream()
+        .filter(x -> x.getType().equals(LocationType.KINGDOM))
         .collect(Collectors.toSet());
-    List<LocationEntity> emptyLocations =
-        allLocations.stream().filter(x -> x.getType().equals(LocationType.EMPTY))
-            .collect(Collectors.toList());
+    List<LocationEntity> emptyLocations = allLocations.stream()
+        .filter(x -> x.getType().equals(LocationType.EMPTY))
+        .collect(Collectors.toList());
     PriorityQueue<LocationEntity> locationsInQueue = prioritizeLocationsByCoordinates(0, 0, emptyLocations);
-    LocationEntity first = locationsInQueue.poll();
+    LocationEntity popped = locationsInQueue.poll();
 
-    while (!isTypeChangeableToTarget(first, kingdoms)) {
-      first = locationsInQueue.poll();
+    while (!isTypeChangeableToTarget(popped, kingdoms)) {
+      popped = locationsInQueue.poll();
     }
 
-    first.setKingdom(kingdom);
-    first.setType(LocationType.KINGDOM);
-    return first;
+    popped.setKingdom(kingdom);
+    popped.setType(LocationType.KINGDOM);
+    return popped;
   }
 
   @Override
@@ -47,18 +48,21 @@ public class LocationServiceImpl implements LocationService {
     if (first == null) {
       throw new RuntimeException("There is no location to place the kingdom");
     }
-    int range = 2;
-    if (!isEligible(kingdoms, first.getX() + range, first.getY())) {
-      return false;
-    } else if (!isEligible(kingdoms, first.getX(), first.getY() + range)) {
-      return false;
-    } else if (!isEligible(kingdoms, first.getX() - range, first.getY())) {
-      return false;
-    } else if (!isEligible(kingdoms, first.getX(), first.getY() - range)) {
-      return false;
-    } else {
-      return true;
+    // if range is greater we need to have the loop to check all neighbours in the range
+    // otherwise this would just jump over whatever is between Location first and range
+    int range = 1;
+    for (int i = 1; i <= range; i++) {
+      if (!isEligible(kingdoms, first.getX() + i, first.getY())) {
+        return false;
+      } else if (!isEligible(kingdoms, first.getX(), first.getY() + i)) {
+        return false;
+      } else if (!isEligible(kingdoms, first.getX() - i, first.getY())) {
+        return false;
+      } else if (!isEligible(kingdoms, first.getX(), first.getY() - i)) {
+        return false;
+      }
     }
+    return true;
   }
 
   public boolean isEligible(Set<LocationEntity> kingdoms, int x, int y) {
@@ -115,23 +119,11 @@ public class LocationServiceImpl implements LocationService {
   private void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped, HashMap<LocationEntity, Integer> distances) {
 
     // how to do this? get the first in queue and make distance++??
-    int q = distances.get(popped);
-    int c = distances.get(neighbour);
+    int qDistance = distances.get(popped);
+    int neighbourDistance = distances.get(neighbour);
     if (distances.get(popped) < distances.get(neighbour)) {
       distances.put(neighbour, distances.get(popped) + 1);
     }
-  }
-
-  private int findNeighbourShortestDistance(List<LocationEntity> neighbours, HashMap<LocationEntity, Integer> distances) {
-
-    int minDistance = Integer.MAX_VALUE;
-    for (LocationEntity each : neighbours) {
-      int currentDistance = distances.get(each);
-      if (currentDistance < minDistance) {
-        minDistance = distances.get(each);
-      }
-    }
-    return minDistance;
   }
 
   private int[] mapLocationToIndex(LocationEntity popped, LocationEntity start) {
@@ -187,8 +179,8 @@ public class LocationServiceImpl implements LocationService {
     private int y;
 
     public int compare(LocationEntity l1, LocationEntity l2) {
-      double maxDist1 = distanceTo(l1, this.x, this.y);
-      double maxDist2 = distanceTo(l2, this.x, this.y);
+      double maxDist1 = locationDistanceToXY(l1, this.x, this.y);
+      double maxDist2 = locationDistanceToXY(l2, this.x, this.y);
 
       if (maxDist1 > maxDist2) {
         return 1;
@@ -198,8 +190,13 @@ public class LocationServiceImpl implements LocationService {
       return 0;
     }
 
-    private double distanceTo(LocationEntity l2, int x, int y) {
+    /*private double locationDistanceToXY(LocationEntity l2, int x, int y) {
       double result = Math.sqrt((Math.pow(l2.getX() - x, 2) + Math.pow(l2.getY() - y, 2)));
+      return result;
+    }*/
+
+    private int locationDistanceToXY(LocationEntity l2, int x, int y) {
+      int result = Math.abs(l2.getY() - y) + Math.abs(l2.getX() - x);
       return result;
     }
   }

@@ -1,7 +1,7 @@
 ### Get buildings
 
-GET http://localhost:8080/erase/2
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDg1MDQ4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.bosTUSjlIkf1lOOHg7PLyn-lmV2bIBD-j2BoXeU-uxnsdt5QAziKt-n-F4XiJwaovDJu_RCzGaa1Py-irvtcWA
+GET http://localhost:8080/erase/4
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDg1OTEyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.bAc4vnE7X29qRlgCFzczm6_HZs4VwIRMfNFwwfHhMkfTPeeNyfZFafKDpna4R2lYV96HtklH_tS9Xf78f6CkKw
 Accept: application/json
 
 
