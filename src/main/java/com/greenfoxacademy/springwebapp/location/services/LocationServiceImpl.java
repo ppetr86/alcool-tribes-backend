@@ -82,9 +82,7 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> sortedSmallerRectangleList =
         findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
-    List<LocationEntity> result =
-        pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
-    return result;
+    return pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
   }
 
   private List<LocationEntity> pathFinder(
@@ -99,10 +97,8 @@ public class LocationServiceImpl implements LocationService {
 
     while (!toVisit.isEmpty()) {
       LocationEntity popped = toVisit.poll();
-
       visited.add(popped);
-      List<LocationEntity> neighbours = findNeighbours(popped, maze);
-      for (LocationEntity neighbour : neighbours) {
+      for (LocationEntity neighbour : findNeighbours(popped, maze)) {
         if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour)) || neighbour.equals(end)) {
           calculateDistanceToStart(neighbour, popped, distances);
           toVisit.add(neighbour);
@@ -113,11 +109,6 @@ public class LocationServiceImpl implements LocationService {
     return backtrack(distances, end, maze);
   }
 
-  private Boolean isNeighbourShorterDistanceToEndThanPopped(LocationEntity popped,
-                                                            LocationEntity neighbour, LocationEntity end) {
-    return locationDistanceToXY(popped, end) > locationDistanceToXY(neighbour, end);
-  }
-
   private List<LocationEntity> backtrack(HashMap<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
 
     List<LocationEntity> reversedPath = createNewLocationArrayList();
@@ -126,15 +117,15 @@ public class LocationServiceImpl implements LocationService {
     int distanceOfLastAdded = distances.get(end);
     for (int i = distanceOfLastAdded; i > 0; i--) {
       List<LocationEntity> lastNeighbours = findNeighbours(lastAdded, maze);
-      LocationEntity locationWithLowerDistance = locationWithLowerDistance(lastNeighbours, distances, i - 1);
-      lastAdded = locationWithLowerDistance;
+      lastAdded = locationWithLowerDistance(lastNeighbours, distances, i - 1);
       reversedPath.add(lastAdded);
     }
     Collections.reverse(reversedPath);
     return reversedPath;
   }
 
-  private LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours, HashMap<LocationEntity, Integer> distances, int distance) {
+  private LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours,
+                                                   HashMap<LocationEntity, Integer> distances, int distance) {
     return lastNeighbours.stream().filter(current -> distances.get(current) == distance).findFirst().orElse(null);
   }
 
@@ -214,10 +205,6 @@ public class LocationServiceImpl implements LocationService {
     private int locationDistanceToXY(LocationEntity l2, int x, int y) {
       return Math.abs(l2.getY() - y) + Math.abs(l2.getX() - x);
     }
-  }
-
-  public int locationDistanceToXY(LocationEntity l1, LocationEntity l2) {
-    return Math.abs(l2.getY() - l1.getY()) + Math.abs(l2.getX() - l1.getX());
   }
 
   public HashMap<LocationEntity, Integer> createNewHashMap() {
