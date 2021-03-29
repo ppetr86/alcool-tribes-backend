@@ -45,7 +45,7 @@ public class FileStorageController {
     String fileName = fileStorageService.storeAvatar(file, player);
 
     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-        .path("/avatars/")
+        .path(fileStorageService.getLastPathFolderName()+"/")
         .path(fileName)
         .toUriString();
 

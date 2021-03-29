@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.Authentication;
@@ -87,5 +89,24 @@ public class FileStorageServiceImpl implements FileStorageService {
     if (fileName.substring(firstIndex + 1, secondIndex).equals(userId)) return true;
 
     throw new ForbiddenActionException();
+  }
+
+  @Override
+  public String getLastPathFolderName() {
+    String target = fileStorageLocation.toString();
+
+    List<Character> folderPath = target.chars()
+        .mapToObj(a -> (char)a)
+        .collect(Collectors.toList());
+    int lastFolderIndex = 0;
+
+    for (int i = folderPath.size()-1; i>0; i--) {
+      if (folderPath.get(i).equals('\\')) {
+        lastFolderIndex = i;
+        break;
+      }
+    }
+
+    return target.substring(lastFolderIndex+1);
   }
 }
