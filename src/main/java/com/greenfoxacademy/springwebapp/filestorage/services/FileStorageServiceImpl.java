@@ -21,23 +21,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
-
   private final Path fileStorageLocation;
-  private FileStorageProperties fileStorageProperties;
+  FileStorageProperties fileStorageProperties;
 
-  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties) throws FileStorageException {
+  //injecting dependency to fileStorageProperties + using it immediately for defining fileStorageLocation
+  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties) {
     this.fileStorageProperties = fileStorageProperties;
 
     this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadAvatarDir())
         .toAbsolutePath().normalize();
-
     try {
       Files.createDirectories(this.fileStorageLocation);
     } catch (Exception ex) {
       throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
     }
   }
-
 
   @Override
   public String storeAvatar(MultipartFile file, PlayerEntity player) throws FileStorageException {
