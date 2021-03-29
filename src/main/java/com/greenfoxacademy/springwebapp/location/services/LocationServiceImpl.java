@@ -79,25 +79,24 @@ public class LocationServiceImpl implements LocationService {
   public List<LocationEntity> findShortestPath(KingdomEntity start, KingdomEntity end) {
 
     int mazeOffsetToFormRectangleAroundStartEnd = 1;
-    List<LocationEntity> sortedSmallerRectangleList = findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
+    List<LocationEntity> sortedSmallerRectangleList =
+        findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
-    List<LocationEntity> result = pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    List<LocationEntity> result =
+        pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
     return result;
   }
 
-  private List<LocationEntity> pathFinder(LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
+  private List<LocationEntity> pathFinder(
+      LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
 
-    List<LocationEntity> shortestPath = new ArrayList<>();
-    Set<LocationEntity> visited = new HashSet<>();
-    //???? keep ????
-    visited.addAll(locations.stream()
-        .filter(x -> x.getType().equals(LocationType.DESERT)
-            || x.getType().equals(LocationType.JUNGLE)
-            || x.getType().equals(LocationType.DESERT))
-        .collect(Collectors.toList()));
+    List<LocationEntity> shortestPath = createNewLocationArrayList();
+    Set<LocationEntity> visited = createNewLocationSet();
+    //???? I will not visit not-walkable locations desert and jungle ????
+    visited.addAll(allDesertsJunglesKingdomsExceptStartEnd(locations, start, end));
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(start.getX(), start.getY()));
     toVisit.add(start);
-    HashMap<LocationEntity, Integer> distances = new HashMap<>();
+    HashMap<LocationEntity, Integer> distances = createNewHashMap();
     locations.forEach(entry -> distances.put(entry, Integer.MAX_VALUE));
     distances.put(start, 0);
 
@@ -112,12 +111,27 @@ public class LocationServiceImpl implements LocationService {
       }
       if (popped.equals(end)) break;
     }
-    System.out.println("hello");
     return shortestPath;
   }
 
-  private void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped, HashMap<LocationEntity, Integer> distances) {
+  private List<LocationEntity> allDesertsJunglesKingdomsExceptStartEnd(List<LocationEntity> locations, LocationEntity start, LocationEntity end) {
+    /*return locations.stream()
+        .filter(location -> !location.getType().equals(LocationType.EMPTY)
+            || !location.equals(start)
+            || !location.equals(end))
+        .collect(Collectors.toList());*/
 
+    List<LocationEntity> result = locations.stream()
+        .filter(location -> location.getType().equals(LocationType.DESERT)
+            || location.getType().equals(LocationType.JUNGLE)
+            || location.getType().equals(LocationType.KINGDOM))
+        .collect(Collectors.toList());
+    result.removeAll(Arrays.asList(start,end));
+    return result;
+  }
+
+  private void calculateDistanceToStart(
+      LocationEntity neighbour, LocationEntity popped, HashMap<LocationEntity, Integer> distances) {
     // how to do this? get the first in queue and make distance++??
     int qDistance = distances.get(popped);
     int neighbourDistance = distances.get(neighbour);
@@ -144,7 +158,8 @@ public class LocationServiceImpl implements LocationService {
   }
 
 
-  private List<LocationEntity> findAllInRectangleOrdered(int mazeOffsetToFormRectangleAroundStartEnd, LocationEntity start, LocationEntity end) {
+  private List<LocationEntity> findAllInRectangleOrdered(
+      int mazeOffsetToFormRectangleAroundStartEnd, LocationEntity start, LocationEntity end) {
     int minX = Math.min(end.getX(), start.getX()) - mazeOffsetToFormRectangleAroundStartEnd;
     int maxX = Math.max(end.getX(), start.getX()) + mazeOffsetToFormRectangleAroundStartEnd;
     int minY = Math.min(end.getY(), start.getY()) - mazeOffsetToFormRectangleAroundStartEnd;
@@ -199,5 +214,17 @@ public class LocationServiceImpl implements LocationService {
       int result = Math.abs(l2.getY() - y) + Math.abs(l2.getX() - x);
       return result;
     }
+  }
+
+  public HashMap<LocationEntity, Integer> createNewHashMap() {
+    return new HashMap<>();
+  }
+
+  public ArrayList<LocationEntity> createNewLocationArrayList() {
+    return new ArrayList<>();
+  }
+
+  public Set<LocationEntity> createNewLocationSet() {
+    return new HashSet<>();
   }
 }
