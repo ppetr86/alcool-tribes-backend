@@ -28,14 +28,20 @@ public class ArmyFactory {
   }
 
   public static Army createDefendingArmy() {
-    return new Army(
+    Army defendingArmy = new Army(
         200,
         100,
         200,
         TroopFactory.createDefaultTroops(),
-        KingdomFactory.createFullKingdom(2L, 2L),
+        KingdomFactory.createFullKingdom(2L,2L),
         ArmyType.DEFENDINGARMY
     );
+    //setting same troops for Army and Kingdom (which is in Army)
+    List<TroopEntity> kingdomTroops = new ArrayList<>();
+    kingdomTroops.addAll(defendingArmy.getTroops());
+    defendingArmy.getKingdom().setTroops(kingdomTroops);
+
+    return defendingArmy;
   }
 
   public static Army createAttackingArmyWithProperTroops() {
