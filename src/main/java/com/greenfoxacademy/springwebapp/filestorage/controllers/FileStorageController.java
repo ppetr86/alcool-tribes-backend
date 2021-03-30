@@ -45,17 +45,17 @@ public class FileStorageController {
     String fileName = fileStorageService.storeAvatar(file, player);
 
     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-        .path(fileStorageService.getLastPathFolderName()+"/")
+        .path(fileStorageService.getLastPathFolderName() + "/")
         .path(fileName)
         .toUriString();
 
     return new UploadFileResponseDTO(fileName, fileDownloadUri,
         file.getContentType(), file.getSize());
-
   }
 
   @PostMapping(AVATARS_URI)
-  public List<UploadFileResponseDTO> uploadMultipleAvatars(@RequestParam("file") MultipartFile[] files, Authentication auth) {
+  public List<UploadFileResponseDTO> uploadMultipleAvatars(
+      @RequestParam("files") MultipartFile[] files, Authentication auth) {
     return Arrays.asList(files)
         .stream()
         .map(file -> uploadAvatar(file, auth))
@@ -63,12 +63,11 @@ public class FileStorageController {
   }
 
   @GetMapping("/avatars/{fileName:.+}")
-  public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request, Authentication auth)
+  public ResponseEntity<Resource> downloadFile(
+      @PathVariable String fileName, HttpServletRequest request, Authentication auth)
       throws ForbiddenActionException, MyFileNotFoundException {
-
     // Load file as Resource
     Resource resource = fileStorageService.loadFileAsResource(fileName, auth);
-
     // Try to determine file's content type
     String contentType = null;
     try {
@@ -76,12 +75,10 @@ public class FileStorageController {
     } catch (IOException ex) {
       log.info("Could not determine file type.");
     }
-
     // Fallback to the default content type if type could not be determined
-    if(contentType == null) {
+    if (contentType == null) {
       contentType = "application/octet-stream";
     }
-
     return ResponseEntity.ok()
         .contentType(MediaType.parseMediaType(contentType))
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")

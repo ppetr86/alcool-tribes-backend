@@ -102,7 +102,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(MissingParameterException.class)
-  public ResponseEntity<ErrorDTO> handleBadRequestExceptions(Exception ex) {
+  public ResponseEntity<ErrorDTO> handleBadRequestExceptions(MissingParameterException ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(WrongContentTypeException.class)
+  public ResponseEntity<ErrorDTO> handleWrongContentTypeException(WrongContentTypeException ex) {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }

@@ -44,7 +44,9 @@ public class CustomUserDetails implements UserDetails {
     this.login = player.getUsername();
   }
 
-  public PlayerEntity getPlayer() { return player; }
+  public PlayerEntity getPlayer() {
+    return player;
+  }
 
   @Override
   public String getPassword() {

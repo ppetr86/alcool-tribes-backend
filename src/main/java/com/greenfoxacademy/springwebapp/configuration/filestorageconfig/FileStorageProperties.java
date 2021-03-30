@@ -13,8 +13,12 @@ property shall be defined into this class.
 public class FileStorageProperties {
   private String uploadAvatarDir;
 
-  public String getUploadAvatarDir() { return uploadAvatarDir; }
+  public String getUploadAvatarDir() {
+    return uploadAvatarDir;
+  }
 
-  public void setUploadAvatarDir(String uploadAvatarDir) { this.uploadAvatarDir = uploadAvatarDir; }
+  public void setUploadAvatarDir(String uploadAvatarDir) {
+    this.uploadAvatarDir = uploadAvatarDir;
+  }
 
 }

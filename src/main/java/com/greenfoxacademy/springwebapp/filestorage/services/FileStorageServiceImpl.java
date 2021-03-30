@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.configuration.filestorageconfig.FileStor
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import java.io.IOException;
@@ -46,9 +47,12 @@ public class FileStorageServiceImpl implements FileStorageService {
         + player.getUsername() + "_" + file.getOriginalFilename());
 
     try {
-      // Check if the file's name contains invalid characters
-      if(fileName.contains("..")) {
+      // Check if the file's name contains invalid characters and is of type image
+      if (fileName.contains("..")) {
         throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+      }
+      if (!file.getContentType().contains("image")) {
+        throw new WrongContentTypeException("Other than image files are not allowed! : " + file.getContentType());
       }
 
       // Copy file to the target location (Replacing existing file with the same name)
@@ -67,7 +71,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     try {
       Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
       Resource resource = new UrlResource(filePath.toUri());
-      if(resource.exists()) {
+      if (resource.exists()) {
         userIsAllowedToAccessTheFile(fileName, auth);
         return resource;
       } else {
@@ -100,13 +104,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         .collect(Collectors.toList());
     int lastFolderIndex = 0;
 
-    for (int i = folderPath.size()-1; i>0; i--) {
+    for (int i = folderPath.size() - 1; i > 0; i--) {
       if (folderPath.get(i).equals('\\')) {
         lastFolderIndex = i;
         break;
       }
     }
 
-    return target.substring(lastFolderIndex+1);
+    return target.substring(lastFolderIndex + 1);
   }
 }
