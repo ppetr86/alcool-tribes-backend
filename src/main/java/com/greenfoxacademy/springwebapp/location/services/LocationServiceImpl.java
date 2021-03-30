@@ -97,7 +97,7 @@ public class LocationServiceImpl implements LocationService {
     Set<LocationEntity> visited = createNewLocationSet();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
-    Map<LocationEntity, Integer> distances = prepareDistancesMap(locations,start);
+    Map<LocationEntity, Integer> distances = prepareDistancesMap(locations, start);
     //Stack<LocationEntity[]> backtrackStack = prepareStackWithArray(start);
     //LocationEntity lastPoppped = start;
 
@@ -132,23 +132,23 @@ public class LocationServiceImpl implements LocationService {
   }
 
 
-  private Stack<LocationEntity[]> prepareStackWithArray(LocationEntity start) {
+  public Stack<LocationEntity[]> prepareStackWithArray(LocationEntity start) {
     Stack<LocationEntity[]> backtrackStack = createNewStack();
-    backtrackStack.add(new LocationEntity[]{start,null});
+    backtrackStack.add(new LocationEntity[]{start, null});
     return backtrackStack;
   }
 
-  private Map<LocationEntity, Integer> prepareDistancesMap(List<LocationEntity> locations, LocationEntity start) {
+  public Map<LocationEntity, Integer> prepareDistancesMap(List<LocationEntity> locations, LocationEntity start) {
     Map<LocationEntity, Integer> distances = createNewHashMap();
     locations.forEach(entry -> distances.put(entry, Integer.MAX_VALUE));
     distances.put(start, 0);
     return distances;
   }
 
-  public List<LocationEntity> backtrack(Map<LocationEntity, Integer> distancesWithoutIntMax,
+  public List<LocationEntity> backtrack(Map<LocationEntity, Integer> distances,
                                         LocationEntity end, LocationEntity[][] maze) {
 
-    distancesWithoutIntMax = removeIntMaxFromMap(distancesWithoutIntMax);
+    Map<LocationEntity, Integer> distancesWithoutIntMax = removeKeyValuesWithMaxInt(distances);
     List<LocationEntity> reversedPath = createNewLocationArrayList();
     reversedPath.add(end);
     LocationEntity lastAdded = end;
@@ -162,8 +162,8 @@ public class LocationServiceImpl implements LocationService {
     return reversedPath;
   }
 
-  private Map<LocationEntity, Integer> removeIntMaxFromMap(Map<LocationEntity, Integer> distances) {
-    for (Map.Entry each : distances.entrySet()){
+  public Map<LocationEntity, Integer> removeKeyValuesWithMaxInt(Map<LocationEntity, Integer> distances) {
+    for (Map.Entry each : distances.entrySet()) {
       if (each.getValue().equals(Integer.MAX_VALUE)) distances.remove(each);
     }
     return distances;

@@ -10,7 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.greenfoxacademy.springwebapp.factories.LocationFactory.createLocations;
@@ -204,13 +211,7 @@ public class LocationServiceTest {
 
   @Test
   public void buildMap_ReturnsCorrectResults() {
-    List<LocationEntity> sortReduced = new ArrayList<>(36);
-    long id = 1;
-    for (int i = 5; i >= 0; i--) {
-      for (int j = 0; j <= 5; j++) {
-        sortReduced.add(new LocationEntity(id++, j, i, null, LocationType.EMPTY));
-      }
-    }
+    List<LocationEntity> sortReduced = createListWithLocations(6, 6);
     LocationEntity[][] map = locationService.buildMap(sortReduced);
     long mapSize = Arrays.stream(map).flatMap(Arrays::stream).count();
     long countX = sortReduced.stream().map(x -> x.getX()).distinct().count();
@@ -221,6 +222,74 @@ public class LocationServiceTest {
     Assert.assertTrue(sortReduced.get(1).equals(map[0][1]));
     Assert.assertEquals(countX, map[0].length);
     Assert.assertEquals(countY, map.length);
+  }
+
+  @Test
+  public void removeKeyValuesWithMaxInt_RemovesKeyValuePairsWithMaxInt() {
+    Map<LocationEntity, Integer> distances = createDistances();
+    distances.put(new LocationEntity(100, 100), Integer.MAX_VALUE);
+    distances.put(new LocationEntity(100, 100), Integer.MAX_VALUE - 1);
+
+    Map<LocationEntity, Integer> result = locationService.removeKeyValuesWithMaxInt(distances);
+    Assert.assertEquals(6, distances.size());
+    Assert.assertFalse(distances.containsValue(Integer.MAX_VALUE));
+  }
+
+  @Test
+  public void prepareDistancesMap_ReturnsMapWithAllValusMaxInt_StartLocWithZero() {
+    int rows = 6;
+    int cols = 6;
+    List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
+    LocationEntity start = new LocationEntity(0, 0, null, LocationType.KINGDOM);
+    Map<LocationEntity, Integer> distances = locationService.prepareDistancesMap(sortReduced, start);
+
+    Assert.assertEquals(2, distances.values().stream().distinct().count());
+
+    int shouldBeZero = distances.values().stream().min(Integer::compare).orElse(Integer.MIN_VALUE);
+    Assert.assertEquals(0, shouldBeZero);
+
+    int shouldBeIntMax = distances.values().stream().max(Integer::compare).orElse(Integer.MIN_VALUE);
+    Assert.assertEquals(Integer.MAX_VALUE, shouldBeIntMax);
+
+    int result = distances.get(new LocationEntity(0, 0));
+    Assert.assertEquals(0, result);
+    Assert.assertEquals(rows * cols, distances.size());
+  }
+
+
+  @Test
+  public void backtrackReturns_CorrectPath() {
+    int rows = 6;
+    int cols = 6;
+    List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
+    LocationEntity[][] maze = locationService.buildMap(sortReduced);
+    LocationEntity start = new LocationEntity(cols - 1, 0, null, LocationType.KINGDOM);
+    LocationEntity end = new LocationEntity(0, 0, null, LocationType.KINGDOM);
+    Map<LocationEntity, Integer> distances = locationService.prepareDistancesMap(sortReduced, start);
+  }
+
+  @Test
+  public void pathfinder_ReturnsCorrectPath() {
+    int rows = 6;
+    int cols = 6;
+    List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
+    LocationEntity[][] maze = locationService.buildMap(sortReduced);
+    LocationEntity start = new LocationEntity(cols - 1, 0, null, LocationType.KINGDOM);
+    LocationEntity end = new LocationEntity(0, rows-1, null, LocationType.KINGDOM);
+    Map<LocationEntity, Integer> distances = locationService.prepareDistancesMap(sortReduced, start);
+    List<LocationEntity> result = locationService.pathFinder(start,end,maze,sortReduced);
+    Assert.assertEquals(11, result.size());
+  }
+
+  private List<LocationEntity> createListWithLocations(int rows, int cols) {
+    List<LocationEntity> sortReduced = new ArrayList<>(rows * cols);
+    long id = 1;
+    for (int i = rows - 1; i >= 0; i--) {
+      for (int j = 0; j <= cols - 1; j++) {
+        sortReduced.add(new LocationEntity(id++, j, i, null, LocationType.EMPTY));
+      }
+    }
+    return sortReduced;
   }
 
   private Map<LocationEntity, Integer> createDistances() {
