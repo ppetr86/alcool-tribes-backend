@@ -173,6 +173,56 @@ public class LocationServiceTest {
     Assert.assertEquals(3, result);
   }
 
+  @Test
+  public void mapLocationToIndex_ReturnsCorrectResult(){
+    int[] expected = new int[]{5,5};
+    LocationEntity start = new LocationEntity(5, 5);
+    LocationEntity popped = new LocationEntity(0, 0);
+    Assert.assertEquals(2, locationService.mapLocationToIndex(popped,start).length);
+    Assert.assertEquals(5, locationService.mapLocationToIndex(popped,start)[0]);
+    Assert.assertEquals(5, locationService.mapLocationToIndex(popped,start)[1]);
+  }
+
+  @Test
+  public void findNeighbours_ReturnsCorrectResults(){
+    List<LocationEntity> neighbours = new ArrayList<>(25);
+    long id =1;
+    for (int i = 1; i <= 5; i++) {
+      for (int j = 1; j <= 5; j++) {
+        neighbours.add(new LocationEntity(id,i,j,null,LocationType.EMPTY));
+      }
+    }
+
+    LocationEntity popped = new LocationEntity(2,2);
+    LocationEntity[][] maze = new LocationEntity[5][5];
+    for (int i = 0; i < maze.length; i++) {
+      for (int j = 0; j < maze[i].length; j++) {
+
+      }
+    }
+  }
+
+  @Test
+  public void buildMap_ReturnsCorrectResults(){
+    List<LocationEntity> sortReduced = new ArrayList<>(36);
+    long id =1;
+    for (int i = 5; i >=0; i--) {
+      for (int j = 0; j <= 5; j++) {
+        sortReduced.add(new LocationEntity(id++, j,i,null, LocationType.EMPTY));
+      }
+    }
+    LocationEntity[][] map = locationService.buildMap(sortReduced);
+    long mapSize = Arrays.stream(map).flatMap(Arrays::stream).count();
+    long countX = sortReduced.stream().map(x->x.getX()).distinct().count();
+    long countY = sortReduced.stream().map(x->x.getY()).distinct().count();
+    Assert.assertEquals(sortReduced.size(), mapSize);
+    Assert.assertTrue(sortReduced.get(0).equals(map[0][0]));
+    Assert.assertTrue(sortReduced.get(sortReduced.size()-1).equals(map[map.length-1][map[map.length-1].length-1]));
+    Assert.assertTrue(sortReduced.get(1).equals(map[0][1]));
+    Assert.assertEquals(countX, map[0].length);
+    Assert.assertEquals(countY, map.length);
+  }
+
   private Map<LocationEntity, Integer> createDistances() {
     Map<LocationEntity, Integer> distances = new HashMap<>();
     distances.put(new LocationEntity(1, 2), 3);
