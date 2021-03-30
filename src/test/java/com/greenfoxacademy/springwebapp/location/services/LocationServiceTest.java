@@ -101,7 +101,7 @@ public class LocationServiceTest {
 
     LocationEntity location = locationService.assignKingdomLocation(kingdom);
 
-    Assert.assertEquals(null, location);
+    Assert.assertNull(location);
   }
 
   private void mockLocations(List<LocationEntity> locations) {
@@ -182,7 +182,6 @@ public class LocationServiceTest {
 
   @Test
   public void mapLocationToIndex_ReturnsCorrectResult() {
-    int[] expected = new int[]{5, 5};
     LocationEntity start = new LocationEntity(5, 5);
     LocationEntity popped = new LocationEntity(0, 0);
     Assert.assertEquals(2, locationService.mapLocationToIndex(popped, start).length);
@@ -214,12 +213,12 @@ public class LocationServiceTest {
     List<LocationEntity> sortReduced = createListWithLocations(6, 6);
     LocationEntity[][] map = locationService.buildMap(sortReduced);
     long mapSize = Arrays.stream(map).flatMap(Arrays::stream).count();
-    long countX = sortReduced.stream().map(x -> x.getX()).distinct().count();
-    long countY = sortReduced.stream().map(x -> x.getY()).distinct().count();
+    long countX = sortReduced.stream().map(LocationEntity::getX).distinct().count();
+    long countY = sortReduced.stream().map(LocationEntity::getY).distinct().count();
     Assert.assertEquals(sortReduced.size(), mapSize);
-    Assert.assertTrue(sortReduced.get(0).equals(map[0][0]));
-    Assert.assertTrue(sortReduced.get(sortReduced.size() - 1).equals(map[map.length - 1][map[map.length - 1].length - 1]));
-    Assert.assertTrue(sortReduced.get(1).equals(map[0][1]));
+    Assert.assertEquals(sortReduced.get(0), map[0][0]);
+    Assert.assertEquals(sortReduced.get(sortReduced.size() - 1), map[map.length - 1][map[map.length - 1].length - 1]);
+    Assert.assertEquals(sortReduced.get(1), map[0][1]);
     Assert.assertEquals(countX, map[0].length);
     Assert.assertEquals(countY, map.length);
   }
@@ -266,6 +265,14 @@ public class LocationServiceTest {
     LocationEntity start = new LocationEntity(cols - 1, 0, null, LocationType.KINGDOM);
     LocationEntity end = new LocationEntity(0, 0, null, LocationType.KINGDOM);
     Map<LocationEntity, Integer> distances = locationService.prepareDistancesMap(sortReduced, start);
+    List<LocationEntity> backtracked = locationService.backtrack(distances, end, maze);
+    Assert.assertEquals(11, backtracked.size());
+    Assert.assertEquals(0, backtracked.stream().filter(each -> each.getType().equals(LocationType.DESERT)).count());
+    Assert.assertEquals(0, backtracked.stream().filter(each -> each.getType().equals(LocationType.JUNGLE)).count());
+    Assert.assertTrue(backtracked.contains(start));
+    Assert.assertTrue(backtracked.contains(end));
+    Assert.assertEquals(start,backtracked.get(0));
+    Assert.assertEquals(end,backtracked.get(backtracked.size()-1));
   }
 
   @Test
@@ -275,10 +282,14 @@ public class LocationServiceTest {
     List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
     LocationEntity[][] maze = locationService.buildMap(sortReduced);
     LocationEntity start = new LocationEntity(cols - 1, 0, null, LocationType.KINGDOM);
-    LocationEntity end = new LocationEntity(0, rows-1, null, LocationType.KINGDOM);
+    LocationEntity end = new LocationEntity(0, rows - 1, null, LocationType.KINGDOM);
     Map<LocationEntity, Integer> distances = locationService.prepareDistancesMap(sortReduced, start);
-    List<LocationEntity> result = locationService.pathFinder(start,end,maze,sortReduced);
+    List<LocationEntity> result = locationService.pathFinder(start, end, maze, sortReduced);
     Assert.assertEquals(11, result.size());
+    Assert.assertEquals(0, result.stream().filter(each -> each.getType().equals(LocationType.DESERT)).count());
+    Assert.assertEquals(0, result.stream().filter(each -> each.getType().equals(LocationType.JUNGLE)).count());
+    Assert.assertTrue(result.contains(start));
+    Assert.assertTrue(result.contains(end));
   }
 
   private List<LocationEntity> createListWithLocations(int rows, int cols) {
