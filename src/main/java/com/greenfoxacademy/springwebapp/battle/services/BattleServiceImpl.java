@@ -343,7 +343,8 @@ public class BattleServiceImpl implements BattleService {
   }
 
   private void scheduleReturnHome(Army attackingArmy, int foodChange, int goldChange, int distance) {
-
+    //this method will be run after returning home
+    modifyAttackingKingdomResources(attackingArmy, foodChange, goldChange);
   }
 
   public boolean nobodyWon(Army defendingArmy, Army attackingArmy) {
