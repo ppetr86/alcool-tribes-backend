@@ -10,12 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.greenfoxacademy.springwebapp.factories.LocationFactory.createLocations;
@@ -31,7 +26,7 @@ public class LocationServiceTest {
   public void setUp() {
     locationRepository = Mockito.mock(LocationRepository.class);
     locationService = new LocationServiceImpl(locationRepository);
-    comparator = new LocationServiceImpl.LocationComparatorProximityToEnd(0, 0);
+    comparator = new LocationServiceImpl.LocationComparator(0, 0);
     locationService = Mockito.spy(locationService);
   }
 
@@ -131,5 +126,61 @@ public class LocationServiceTest {
     Assert.assertTrue(locationService.isEligible(kingdoms, 111, 111));
   }
 
+  @Test
+  public void isEligible_returnsTrue_OnEmptyKingdomsSet() {
+    List<LocationEntity> locations = createLocations();
+
+    Set<LocationEntity> kingdoms = locations.stream().filter(x -> x.getType().equals(LocationType.EMPTY)).collect(
+        Collectors.toSet());
+    Assert.assertTrue(locationService.isEligible(kingdoms, 111, 111));
+  }
+
+  @Test
+  public void prioritizeLocationsByCoordinates_PolledFromQueueIsCorrect() {
+    List<LocationEntity> locations = createLocations();
+    PriorityQueue<LocationEntity> q = locationService.prioritizeLocationsByCoordinates(1, 0, locations);
+    Assert.assertEquals(new LocationEntity(1, 0), q.poll());
+    Assert.assertEquals(new LocationEntity(1, -1), q.poll());
+    Assert.assertEquals(new LocationEntity(0, 0), q.poll());
+    Assert.assertEquals(new LocationEntity(2, 0), q.poll());
+    Assert.assertEquals(new LocationEntity(1, 1), q.poll());
+    Assert.assertNotEquals(new LocationEntity(3, 3), q.poll());
+  }
+
+  @Test
+  public void locationWithLowerDistance_returnsFirstLocationWithReguiredDistance() {
+    List<LocationEntity> lastNeighbours = new ArrayList<>();
+    lastNeighbours.add(new LocationEntity(1, 2));
+    lastNeighbours.add(new LocationEntity(2, 2));
+    lastNeighbours.add(new LocationEntity(2, 3));
+    lastNeighbours.add(new LocationEntity(2, 1));
+
+    Map<LocationEntity, Integer> distances = createDistances();
+    Assert.assertEquals(new LocationEntity(2, 3),
+        locationService.locationWithLowerDistance(lastNeighbours, distances, 1));
+    Assert.assertNotEquals(new LocationEntity(2, 3),
+        locationService.locationWithLowerDistance(lastNeighbours, distances, 2));
+  }
+
+  @Test
+  public void calculateDistanceToStart_returnsCorrectResults() {
+    Map<LocationEntity, Integer> distances = createDistances();
+    distances.put(new LocationEntity(1, 2), 999);
+    LocationEntity neighbour = new LocationEntity(1, 2);
+    LocationEntity popped = new LocationEntity(2, 2);
+    locationService.calculateDistanceToStart(neighbour, popped, distances);
+    int result = distances.get(neighbour);
+    Assert.assertEquals(3, result);
+  }
+
+  private Map<LocationEntity, Integer> createDistances() {
+    Map<LocationEntity, Integer> distances = new HashMap<>();
+    distances.put(new LocationEntity(1, 2), 3);
+    distances.put(new LocationEntity(2, 2), 2);
+    distances.put(new LocationEntity(2, 3), 1);
+    distances.put(new LocationEntity(2, 1), 4);
+    distances.put(new LocationEntity(0, 0), 5);
+    return distances;
+  }
 
 }

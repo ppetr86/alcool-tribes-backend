@@ -91,7 +91,7 @@ public class LocationServiceImpl implements LocationService {
     Set<LocationEntity> visited = createNewLocationSet();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
-    HashMap<LocationEntity, Integer> distances = createNewHashMap();
+    Map<LocationEntity, Integer> distances = createNewHashMap();
     locations.forEach(entry -> distances.put(entry, Integer.MAX_VALUE));
     distances.put(start, 0);
 
@@ -109,7 +109,7 @@ public class LocationServiceImpl implements LocationService {
     return backtrack(distances, end, maze);
   }
 
-  public List<LocationEntity> backtrack(HashMap<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
+  public List<LocationEntity> backtrack(Map<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
 
     List<LocationEntity> reversedPath = createNewLocationArrayList();
     reversedPath.add(end);
@@ -125,12 +125,12 @@ public class LocationServiceImpl implements LocationService {
   }
 
   public LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours,
-                                                   HashMap<LocationEntity, Integer> distances, int distance) {
+                                                   Map<LocationEntity, Integer> distances, int distance) {
     return lastNeighbours.stream().filter(current -> distances.get(current) == distance).findFirst().orElse(null);
   }
 
   public void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped,
-                                        HashMap<LocationEntity, Integer> distances) {
+                                        Map<LocationEntity, Integer> distances) {
     if (distances.get(popped) < distances.get(neighbour)) {
       distances.put(neighbour, distances.get(popped) + 1);
     }
@@ -152,7 +152,6 @@ public class LocationServiceImpl implements LocationService {
     return neighbours;
   }
 
-
   public List<LocationEntity> findAllInRectangleOrdered(
       int mazeOffsetToFormRectangleAroundStartEnd, LocationEntity start, LocationEntity end) {
     int minX = Math.min(end.getX(), start.getX()) - mazeOffsetToFormRectangleAroundStartEnd;
@@ -162,7 +161,6 @@ public class LocationServiceImpl implements LocationService {
 
     return repo.findAllInRectangleOrdered(minX, maxX, maxY, minY);
   }
-
 
   public LocationEntity[][] buildMap(List<LocationEntity> sortReduced) {
     LocationEntity firstLocation = sortReduced.get(0);
