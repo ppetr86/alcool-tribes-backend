@@ -46,7 +46,6 @@ public class FileStorageServiceImpl implements FileStorageService {
     // Normalize file name
     String fileName = StringUtils.cleanPath("AVATAR_" + player.getId() + "_"
         + player.getUsername() + "_" + file.getOriginalFilename());
-
     try {
       // Check if the file's name contains invalid characters and is of type image
       if (fileName.contains("..")) {
@@ -55,11 +54,9 @@ public class FileStorageServiceImpl implements FileStorageService {
       if (!file.getContentType().contains("image")) {
         throw new WrongContentTypeException("Other than image files are not allowed! : " + file.getContentType());
       }
-
       // Copy file to the target location (Replacing existing file with the same name)
       Path targetLocation = this.fileStorageLocation.resolve(fileName);
       Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
       return fileName;
     } catch (IOException ex) {
       throw new FileStorageException("Could not store file " + fileName + ". Please try again!");

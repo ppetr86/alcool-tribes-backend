@@ -49,7 +49,7 @@ public class CustomUserDetails implements UserDetails {
   }
 
   public void setPlayer(PlayerEntity player) {
-   this.player = player;
+    this.player = player;
   }
 
   @Override
