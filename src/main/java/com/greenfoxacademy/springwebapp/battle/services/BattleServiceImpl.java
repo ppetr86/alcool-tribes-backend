@@ -388,6 +388,7 @@ public class BattleServiceImpl implements BattleService {
                                      int distance, int stolenFood, int stolenGold) {
     killTroopWhichCanNotReachHome(attackingArmy, distance);
     modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
+    scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
     modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold);
   }
 
