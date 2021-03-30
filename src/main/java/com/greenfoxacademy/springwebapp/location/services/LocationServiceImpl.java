@@ -7,7 +7,16 @@ import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -15,6 +24,7 @@ import java.util.stream.Collectors;
 public class LocationServiceImpl implements LocationService {
 
   private final LocationRepository repo;
+  public static final int MAZE_OFFSET_TO_FORM_RECTANGLE = 2;
 
   @Override
   public LocationEntity save(LocationEntity entity) {
@@ -44,23 +54,20 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   public boolean isTypeChangeableToTarget(LocationEntity first, Set<LocationEntity> kingdoms) {
-
-    if (first == null) {
+    if (first == null)
       throw new RuntimeException("There is no location to place the kingdom");
-    }
     // if range is greater we need to have the loop to check all neighbours in the range
     // otherwise this would just jump over whatever is between Location first and range
     int range = 1;
     for (int i = 1; i <= range; i++) {
-      if (!isEligible(kingdoms, first.getX() + i, first.getY())) {
+      if (!isEligible(kingdoms, first.getX() + i, first.getY()))
         return false;
-      } else if (!isEligible(kingdoms, first.getX(), first.getY() + i)) {
+      else if (!isEligible(kingdoms, first.getX(), first.getY() + i))
         return false;
-      } else if (!isEligible(kingdoms, first.getX() - i, first.getY())) {
+      else if (!isEligible(kingdoms, first.getX() - i, first.getY()))
         return false;
-      } else if (!isEligible(kingdoms, first.getX(), first.getY() - i)) {
+      else if (!isEligible(kingdoms, first.getX(), first.getY() - i))
         return false;
-      }
     }
     return true;
   }
@@ -78,9 +85,8 @@ public class LocationServiceImpl implements LocationService {
   @Override
   public List<LocationEntity> findShortestPath(KingdomEntity start, KingdomEntity end) {
 
-    int mazeOffsetToFormRectangleAroundStartEnd = 2;
     List<LocationEntity> sortedSmallerRectangleList =
-        findAllInRectangleOrdered(mazeOffsetToFormRectangleAroundStartEnd, start.getLocation(), end.getLocation());
+        findAllInRectangleOrdered(MAZE_OFFSET_TO_FORM_RECTANGLE, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
     return pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
   }
@@ -91,46 +97,86 @@ public class LocationServiceImpl implements LocationService {
     Set<LocationEntity> visited = createNewLocationSet();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
-    Map<LocationEntity, Integer> distances = createNewHashMap();
-    locations.forEach(entry -> distances.put(entry, Integer.MAX_VALUE));
-    distances.put(start, 0);
+    Map<LocationEntity, Integer> distances = prepareDistancesMap(locations,start);
+    //Stack<LocationEntity[]> backtrackStack = prepareStackWithArray(start);
+    //LocationEntity lastPoppped = start;
 
     while (!toVisit.isEmpty()) {
       LocationEntity popped = toVisit.poll();
       visited.add(popped);
+      //List<LocationEntity> neighbours = findNeighbours(popped, maze);
       for (LocationEntity neighbour : findNeighbours(popped, maze)) {
-        if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour)) || neighbour.equals(end)) {
+        if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))
+            || neighbour.equals(end)) {
           calculateDistanceToStart(neighbour, popped, distances);
           toVisit.add(neighbour);
         }
       }
+
+      //workWithStack(backtrackStack,neighbours,visited,distances, lastPoppped, popped);
+      //lastPoppped = popped;
       if (popped.equals(end)) break;
     }
+    List<LocationEntity> result = backtrack(distances, end, maze);
     return backtrack(distances, end, maze);
   }
 
-  public List<LocationEntity> backtrack(Map<LocationEntity, Integer> distances, LocationEntity end, LocationEntity[][] maze) {
+  private void workWithStack(Stack<LocationEntity[]> backtrackStack, List<LocationEntity> neighbours, Set<LocationEntity> visited, Map<LocationEntity, Integer> distances, LocationEntity lastPoppped, LocationEntity popped) {
+    List<LocationEntity> neighboursCopy = neighbours;
+    neighboursCopy.removeAll(visited);
+    int intMaxCounter = 0;
+    for (int i = 0; i < neighboursCopy.size(); i++) {
+      if (distances.get(neighboursCopy.get(i)) == Integer.MAX_VALUE) intMaxCounter++;
+    }
+    if (intMaxCounter == neighboursCopy.size()) backtrackStack.pop();
+  }
 
+
+  private Stack<LocationEntity[]> prepareStackWithArray(LocationEntity start) {
+    Stack<LocationEntity[]> backtrackStack = createNewStack();
+    backtrackStack.add(new LocationEntity[]{start,null});
+    return backtrackStack;
+  }
+
+  private Map<LocationEntity, Integer> prepareDistancesMap(List<LocationEntity> locations, LocationEntity start) {
+    Map<LocationEntity, Integer> distances = createNewHashMap();
+    locations.forEach(entry -> distances.put(entry, Integer.MAX_VALUE));
+    distances.put(start, 0);
+    return distances;
+  }
+
+  public List<LocationEntity> backtrack(Map<LocationEntity, Integer> distancesWithoutIntMax,
+                                        LocationEntity end, LocationEntity[][] maze) {
+
+    distancesWithoutIntMax = removeIntMaxFromMap(distancesWithoutIntMax);
     List<LocationEntity> reversedPath = createNewLocationArrayList();
     reversedPath.add(end);
     LocationEntity lastAdded = end;
-    int distanceOfLastAdded = distances.get(end);
+    int distanceOfLastAdded = distancesWithoutIntMax.get(end);
     for (int i = distanceOfLastAdded; i > 0; i--) {
       List<LocationEntity> lastNeighbours = findNeighbours(lastAdded, maze);
-      lastAdded = locationWithLowerDistance(lastNeighbours, distances, i - 1);
+      lastAdded = locationWithLowerDistance(lastNeighbours, distancesWithoutIntMax, i - 1);
       reversedPath.add(lastAdded);
     }
     Collections.reverse(reversedPath);
     return reversedPath;
   }
 
+  private Map<LocationEntity, Integer> removeIntMaxFromMap(Map<LocationEntity, Integer> distances) {
+    for (Map.Entry each : distances.entrySet()){
+      if (each.getValue().equals(Integer.MAX_VALUE)) distances.remove(each);
+    }
+    return distances;
+  }
+
+
   public LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours,
-                                                   Map<LocationEntity, Integer> distances, int distance) {
+                                                  Map<LocationEntity, Integer> distances, int distance) {
     return lastNeighbours.stream().filter(current -> distances.get(current) == distance).findFirst().orElse(null);
   }
 
   public void calculateDistanceToStart(LocationEntity neighbour, LocationEntity popped,
-                                        Map<LocationEntity, Integer> distances) {
+                                       Map<LocationEntity, Integer> distances) {
     if (distances.get(popped) < distances.get(neighbour)) {
       distances.put(neighbour, distances.get(popped) + 1);
     }
@@ -217,7 +263,7 @@ public class LocationServiceImpl implements LocationService {
     return new HashSet<>();
   }
 
-  public Stack<List<LocationEntity>> createNewStack() {
+  public Stack<LocationEntity[]> createNewStack() {
     return new Stack<>();
   }
 }

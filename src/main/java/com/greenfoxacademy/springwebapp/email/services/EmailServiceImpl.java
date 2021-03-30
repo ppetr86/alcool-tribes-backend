@@ -26,16 +26,13 @@ public class EmailServiceImpl implements EmailService {
       throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
 
-    MimeMessageHelper helper = new MimeMessageHelper(message,
-        MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+    MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
         StandardCharsets.UTF_8.name());
     Context context = new Context();
     context.setVariables(email.getContext());
 
-    String htmlMail = templateEngine.process(
-        email.getTemplateLocationHtml(), context);
-    String textMail = templateEngine.process(
-        email.getTemplateLocationText(), context);
+    String htmlMail = templateEngine.process(email.getTemplateLocationHtml(), context);
+    String textMail = templateEngine.process(email.getTemplateLocationText(), context);
 
     helper.setTo(email.getRecipientEmail());
     helper.setSubject(email.getSubject());

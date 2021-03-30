@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-public class ERASE_ME_CONTROLLER {
+public class EraseMeController {
 
   private LocationService locationService;
   private KingdomService kingdomService;
