@@ -342,6 +342,10 @@ public class BattleServiceImpl implements BattleService {
     return new BattleResultDTO("Nobody won", stolenFood, stolenGold);
   }
 
+  private void scheduleReturnHome(Army attackingArmy, int foodChange, int goldChange, int distance) {
+
+  }
+
   public boolean nobodyWon(Army defendingArmy, Army attackingArmy) {
     return (defendingArmy.getHealthPoints() == 0 && attackingArmy.getHealthPoints() == 0);
   }
