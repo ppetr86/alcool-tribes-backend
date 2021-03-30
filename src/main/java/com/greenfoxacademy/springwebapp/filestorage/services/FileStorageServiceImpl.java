@@ -41,7 +41,8 @@ public class FileStorageServiceImpl implements FileStorageService {
   }
 
   @Override
-  public String storeAvatar(MultipartFile file, PlayerEntity player) throws FileStorageException {
+  public String storeAvatar(MultipartFile file, PlayerEntity player)
+      throws FileStorageException, WrongContentTypeException {
     // Normalize file name
     String fileName = StringUtils.cleanPath("AVATAR_" + player.getId() + "_"
         + player.getUsername() + "_" + file.getOriginalFilename());

@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import java.io.IOException;
@@ -38,8 +39,9 @@ public class FileStorageController {
   private FileStorageService fileStorageService;
 
   @PostMapping(AVATAR_URI)
-  public UploadFileResponseDTO uploadAvatar(@RequestParam("file") MultipartFile file, Authentication auth)
-      throws FileStorageException {
+  public ResponseEntity<?> uploadAvatar(@RequestParam("file") MultipartFile file, Authentication auth)
+      throws FileStorageException, WrongContentTypeException {
+
     PlayerEntity player = ((CustomUserDetails) auth.getPrincipal()).getPlayer();
 
     String fileName = fileStorageService.storeAvatar(file, player);
@@ -49,12 +51,14 @@ public class FileStorageController {
         .path(fileName)
         .toUriString();
 
-    return new UploadFileResponseDTO(fileName, fileDownloadUri,
+    UploadFileResponseDTO responseDTO = new UploadFileResponseDTO(fileName, fileDownloadUri,
         file.getContentType(), file.getSize());
+
+    return ResponseEntity.ok().body(responseDTO);
   }
 
   @PostMapping(AVATARS_URI)
-  public List<UploadFileResponseDTO> uploadMultipleAvatars(
+  public List<ResponseEntity> uploadMultipleAvatars(
       @RequestParam("files") MultipartFile[] files, Authentication auth) {
     return Arrays.asList(files)
         .stream()

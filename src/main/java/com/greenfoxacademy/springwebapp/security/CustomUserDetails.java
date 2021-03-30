@@ -48,6 +48,10 @@ public class CustomUserDetails implements UserDetails {
     return player;
   }
 
+  public void setPlayer(PlayerEntity player) {
+   this.player = player;
+  }
+
   @Override
   public String getPassword() {
     return password;
