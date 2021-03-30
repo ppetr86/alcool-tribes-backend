@@ -13,6 +13,8 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import java.util.List;
 
+import java.util.List;
+
 public interface TroopService {
 
   TroopListResponseDto troopsToListDTO(KingdomEntity entity);

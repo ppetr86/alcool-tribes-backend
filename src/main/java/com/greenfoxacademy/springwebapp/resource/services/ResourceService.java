@@ -4,6 +4,7 @@ import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
+import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,9 @@ public interface ResourceService {
 
   boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
 
-  void updateResourcesByBuildingType(KingdomEntity kingdom, int amountChange);
+  void updateResourceAmount(KingdomEntity kingdom, int amountChange, ResourceType resourceType);
+
+  Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType);
 
   List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
 
@@ -27,4 +30,7 @@ public interface ResourceService {
 
   ResourceEntity findResourceByBuildingType(KingdomEntity kingdom, Enum buildingType);
 
+  ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType);
+
+  void saveResources(List<ResourceEntity> resources);
 }

@@ -10,6 +10,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BattleResultDTO {
-  //example
-  Integer goldStolen;
+  private String winningTeam;
+  private int stolenFood;
+  private int stolenGold;
+
+
+  public BattleResultDTO(String winningTeam) {
+    this.winningTeam = winningTeam;
+  }
 }

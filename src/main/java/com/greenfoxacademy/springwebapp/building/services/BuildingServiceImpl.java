@@ -14,6 +14,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -140,7 +141,7 @@ public class BuildingServiceImpl implements BuildingService {
     int amountChange = defineBuildingFirstLevelCosts(dto.getType());
     if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
-    resourceService.updateResourcesByBuildingType(kingdom, amountChange);
+    resourceService.updateResourceAmount(kingdom, -(amountChange), ResourceType.GOLD);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result.setKingdom(kingdom);

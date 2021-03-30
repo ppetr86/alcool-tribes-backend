@@ -1,6 +1,5 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
-
 import com.greenfoxacademy.springwebapp.battle.models.Army;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
@@ -9,28 +8,38 @@ import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
+import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class BattleServiceImpl implements BattleService {
+
   private final KingdomService kingdomService;
   private final BuildingService buildingService;
   private final TroopService troopService;
+  private final Environment env;
+  private final ResourceService resourceService;
+  private final TimeService timeService;
 
   @Override
   public BattleResponseDTO war(Long enemyKingdomId, BattleRequestDTO requestDTO,
@@ -74,11 +83,11 @@ public class BattleServiceImpl implements BattleService {
     Army attackingArmy = prepareAttackingArmy(attackingTroops, attackingKingdom, distance);
     Army defendingArmy = prepareDefendingArmy(defendingKingdom);
     List<Army> armiesAfterBattle = fightArmies(attackingArmy, defendingArmy);
-    BattleResultDTO resultDTO = performAfterBattleActions(armiesAfterBattle);
+    BattleResultDTO resultDTO = performAfterBattleActions(armiesAfterBattle, distance);
   }
 
   //"Prepare attacking army" section
-  public Army prepareAttackingArmy(List<TroopEntity> attackingTroops,KingdomEntity attackingKingdom,
+  public Army prepareAttackingArmy(List<TroopEntity> attackingTroops, KingdomEntity attackingKingdom,
                                    int distance) {
     Army attackingArmy = new Army();
     attackingArmy.setKingdom(attackingKingdom);
@@ -97,7 +106,7 @@ public class BattleServiceImpl implements BattleService {
         .filter(troop -> (Arrays.stream(requestDTO.getTroopIds())
             .filter(a -> a == troop.getId())
             .findFirst()
-            .orElse(null)) ==  troop.getId())
+            .orElse(null)) == troop.getId())
         .collect(Collectors.toList());
   }
 
@@ -144,6 +153,7 @@ public class BattleServiceImpl implements BattleService {
   //"Prepare defending army" section
   public Army prepareDefendingArmy(KingdomEntity defendingKingdom) {
     Army defendingArmy = new Army();
+
     defendingArmy.setKingdom(defendingKingdom);
     defendingArmy.setTroops(getDefendingTroops(defendingKingdom));
     defendingArmy.setHealthPoints(calculateHPforDefendingArmy(defendingArmy.getTroops()));
@@ -192,6 +202,14 @@ public class BattleServiceImpl implements BattleService {
     BuildingEntity academy = buildingService.findBuildingWithHighestLevel(kingdom,
         BuildingType.ACADEMY);
     return townhall.getLevel() * 0.02 + academy.getLevel() * 0.01;
+  }
+
+  //TODO: finish scenario when attacking army wins automatically
+  public void attackingArmyWins() {
+  }
+
+  //TODO: finish scenario when defending army wins automatically
+  public void defendingArmyWins() {
   }
 
   //"Fight Armies" section
@@ -302,9 +320,96 @@ public class BattleServiceImpl implements BattleService {
     return army;
   }
 
+  //Mark's section
   //"After battle" section
-  public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle) {
+  public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle, int distance) {
+    Army attackingArmy = getArmyByType(armiesAfterBattle, ArmyType.ATTACKINGARMY);
+    Army defendingArmy = getArmyByType(armiesAfterBattle, ArmyType.DEFENDINGARMY);
 
-    return null;
+    if (nobodyWon(defendingArmy, attackingArmy)) {
+      return new BattleResultDTO("Every Troops dead");
+    } else if (defKingdomWon(defendingArmy, attackingArmy)) {
+      return new BattleResultDTO("Defending Kingdom won");
+    }
+    int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
+    int stolenGold = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.GOLD, ResourceType.FOOD);
+    if (attackingArmy.getHealthPoints() > 0) {
+      attackingKingdomSteal(attackingArmy, defendingArmy, distance, stolenFood, stolenGold);
+      if (defendingArmy.getHealthPoints() == 0) {
+        return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
+      }
+    }
+    return new BattleResultDTO("Nobody won", stolenFood, stolenGold);
+  }
+
+  private void scheduleReturnHome(Army attackingArmy, int foodChange, int goldChange, int distance) {
+
+  }
+
+  public boolean nobodyWon(Army defendingArmy, Army attackingArmy) {
+    return (defendingArmy.getHealthPoints() == 0 && attackingArmy.getHealthPoints() == 0);
+  }
+
+  public boolean defKingdomWon(Army defendingArmy, Army attackingArmy) {
+    return (defendingArmy.getHealthPoints() > 0 && attackingArmy.getHealthPoints() == 0);
+  }
+
+  public void killTroopWhichCanNotReachHome(Army army, int distance) {
+    List<TroopEntity> deadTroops = army.getTroops().stream()
+        .filter(troop -> troop.getHp() * distance * 0.02 < 1)
+        .collect(Collectors.toList());
+
+    army.getTroops().removeAll(deadTroops);
+    troopService.deleteListOfTroops(deadTroops);
+  }
+
+  public int calculateStolenResource(Army defendingArmy, Army attackingArmy, ResourceType stolen,
+                                     ResourceType notStolen) {
+    Integer actualStolenResourceAmount =
+        resourceService.calculateActualResource(defendingArmy.getKingdom(), stolen);
+    Integer actualNotStolenResourceAmount =
+        resourceService.calculateActualResource(defendingArmy.getKingdom(), notStolen);
+
+    int halfOfRemainAttackArmyHP = attackingArmy.getHealthPoints() / 2;
+
+    if (halfOfRemainAttackArmyHP <= actualStolenResourceAmount
+        && halfOfRemainAttackArmyHP <= actualNotStolenResourceAmount) {
+      return halfOfRemainAttackArmyHP;
+    } else if (actualNotStolenResourceAmount <= halfOfRemainAttackArmyHP
+        && halfOfRemainAttackArmyHP <= actualStolenResourceAmount) {
+      if (halfOfRemainAttackArmyHP * 2 <= actualStolenResourceAmount) {
+        return halfOfRemainAttackArmyHP * 2 - actualNotStolenResourceAmount;
+      }
+    }
+    return actualStolenResourceAmount;
+  }
+
+  private void attackingKingdomSteal(Army attackingArmy, Army defendingArmy,
+                                     int distance, int stolenFood, int stolenGold) {
+    killTroopWhichCanNotReachHome(attackingArmy, distance);
+    modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
+    scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
+    modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold);
+  }
+
+  private void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
+    resourceService.updateResourceAmount(defendingArmy.getKingdom(), -(foodChange), ResourceType.FOOD);
+    resourceService.updateResourceAmount(defendingArmy.getKingdom(), -(goldChange), ResourceType.GOLD);
+  }
+
+  private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange) {
+    resourceService.updateResourceAmount(attackingArmy.getKingdom(), foodChange, ResourceType.FOOD);
+    resourceService.updateResourceAmount(attackingArmy.getKingdom(), goldChange, ResourceType.GOLD);
+  }
+
+  public Army getArmyByType(List<Army> armiesAfterBattle, ArmyType type) {
+    return armiesAfterBattle.stream()
+        .filter(army -> army.getArmyType().equals(type))
+        .findFirst()
+        .orElse(null);
+  }
+
+  public Integer defineTroopHp() {
+    return Integer.valueOf(Objects.requireNonNull(env.getProperty("troop.hp")));
   }
 }
