@@ -93,18 +93,14 @@ public class LocationServiceImpl implements LocationService {
 
   public List<LocationEntity> pathFinder(
       LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
-
     Set<LocationEntity> visited = createNewLocationSet();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
     Map<LocationEntity, Integer> distances = prepareDistancesMap(locations, start);
-    //Stack<LocationEntity[]> backtrackStack = prepareStackWithArray(start);
-    //LocationEntity lastPoppped = start;
 
     while (!toVisit.isEmpty()) {
       LocationEntity popped = toVisit.poll();
       visited.add(popped);
-      //List<LocationEntity> neighbours = findNeighbours(popped, maze);
       for (LocationEntity neighbour : findNeighbours(popped, maze)) {
         if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))
             || neighbour.equals(end)) {
@@ -112,16 +108,14 @@ public class LocationServiceImpl implements LocationService {
           toVisit.add(neighbour);
         }
       }
-
-      //workWithStack(backtrackStack,neighbours,visited,distances, lastPoppped, popped);
-      //lastPoppped = popped;
       if (popped.equals(end)) break;
     }
-    List<LocationEntity> result = backtrack(distances, end, maze);
     return backtrack(distances, end, maze);
   }
 
-  private void workWithStack(Stack<LocationEntity[]> backtrackStack, List<LocationEntity> neighbours, Set<LocationEntity> visited, Map<LocationEntity, Integer> distances, LocationEntity lastPoppped, LocationEntity popped) {
+  private void workWithStack(Stack<LocationEntity[]> backtrackStack, List<LocationEntity> neighbours,
+                             Set<LocationEntity> visited, Map<LocationEntity, Integer> distances,
+                             LocationEntity lastPoppped, LocationEntity popped) {
     List<LocationEntity> neighboursCopy = neighbours;
     neighboursCopy.removeAll(visited);
     int intMaxCounter = 0;
