@@ -1,7 +1,5 @@
 package com.greenfoxacademy.springwebapp.configuration;
 
-import com.greenfoxacademy.springwebapp.websockets.WebSocketHandler;
-import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
