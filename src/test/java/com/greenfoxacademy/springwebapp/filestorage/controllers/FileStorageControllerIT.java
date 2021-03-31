@@ -41,7 +41,7 @@ public class FileStorageControllerIT {
   }
 
   @Test
-  public void uploadAvatar_contentIsImage_returnsOkStatus() throws Exception {
+  public void uploadAvatar_contentIsImageType_returnsOkStatus() throws Exception {
 
     File file = new File("./src/test/resources/files/greenfox.png");
     MockMultipartFile upload = new MockMultipartFile("file", "greenfox.png",
@@ -58,7 +58,7 @@ public class FileStorageControllerIT {
   }
 
   @Test
-  public void uploadAvatar_contentIsNotImage_returns400Status() throws Exception {
+  public void uploadAvatar_contentIsNotImageType_returns400Status() throws Exception {
 
     File file = new File("./src/test/resources/files/greenfox.txt");
     MockMultipartFile upload = new MockMultipartFile("file", "greenfox.txt",

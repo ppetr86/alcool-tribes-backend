@@ -42,7 +42,7 @@ public class FileStorageControllerTest {
   }
 
   @Test
-  public void uploadAvatar_imageContent_returnsCorrectDTO() throws Exception {
+  public void uploadAvatar_isImageContentType_returnsCorrectDTO() throws Exception {
     MockMultipartFile file = new MockMultipartFile("someFile","avatar.png",
         "image/png", "test data".getBytes());
     PlayerEntity player = ((CustomUserDetails) authentication.getPrincipal()).getPlayer();
@@ -56,7 +56,7 @@ public class FileStorageControllerTest {
   }
 
   @Test (expected = WrongContentTypeException.class)
-  public void uploadAvatar_NotImageContent_throwsWronContentTypeException() throws Exception {
+  public void uploadAvatar_isNotImageContentType_throwsWronContentTypeException() throws Exception {
     MockMultipartFile file = new MockMultipartFile("someFile","avatar.png",
         "text/plain", "test data".getBytes());
     PlayerEntity player = ((CustomUserDetails) authentication.getPrincipal()).getPlayer();
