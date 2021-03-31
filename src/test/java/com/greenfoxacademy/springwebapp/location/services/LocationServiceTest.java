@@ -235,7 +235,7 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void prepareDistancesMap_ReturnsMapWithAllValusMaxInt_StartLocWithZero() {
+  public void prepareDistancesMap_ReturnsMapWithAllValuesMaxInt_StartLocWithZero() {
     int rows = 6;
     int cols = 6;
     List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
@@ -250,9 +250,11 @@ public class LocationServiceTest {
     int shouldBeIntMax = distances.values().stream().max(Integer::compare).orElse(Integer.MIN_VALUE);
     Assert.assertEquals(Integer.MAX_VALUE, shouldBeIntMax);
 
-    int result = distances.get(new LocationEntity(0, 0));
-    Assert.assertEquals(0, result);
+    int startLocShouldBeZero = distances.get(new LocationEntity(0, 0));
+    Assert.assertEquals(0, startLocShouldBeZero);
     Assert.assertEquals(rows * cols, distances.size());
+    long thereShouldBeTwoNumbersInValues = distances.values().stream().distinct().count();
+    Assert.assertEquals(2, thereShouldBeTwoNumbersInValues);
   }
 
 
@@ -260,10 +262,14 @@ public class LocationServiceTest {
   public void backtrackReturns_CorrectPath() {
     int rows = 6;
     int cols = 6;
+    long lastId = rows * cols;
+    LocationEntity start = new LocationEntity(1L, cols - 1, 0, KingdomFactory.createFullKingdom(1L, 1L), LocationType.KINGDOM);
+    LocationEntity end = new LocationEntity(lastId, 0, 0, KingdomFactory.createFullKingdom(2L, 2L), LocationType.KINGDOM);
     List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
+    sortReduced.set(0, start);
+    sortReduced.set(sortReduced.size() - 1, end);
     LocationEntity[][] maze = locationService.buildMap(sortReduced);
-    LocationEntity start = new LocationEntity(cols - 1, 0, null, LocationType.KINGDOM);
-    LocationEntity end = new LocationEntity(0, 0, null, LocationType.KINGDOM);
+
     Map<LocationEntity, Integer> distances = locationService.prepareDistancesMap(sortReduced, start);
     List<LocationEntity> backtracked = locationService.backtrack(distances, end, maze);
     Assert.assertEquals(11, backtracked.size());

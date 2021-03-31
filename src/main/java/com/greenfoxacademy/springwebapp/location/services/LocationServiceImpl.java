@@ -169,7 +169,6 @@ public class LocationServiceImpl implements LocationService {
     return distances;
   }
 
-
   public LocationEntity locationWithLowerDistance(List<LocationEntity> lastNeighbours,
                                                   Map<LocationEntity, Integer> distances, int distance) {
     return lastNeighbours.stream().filter(current -> distances.get(current) == distance).findFirst().orElse(null);
