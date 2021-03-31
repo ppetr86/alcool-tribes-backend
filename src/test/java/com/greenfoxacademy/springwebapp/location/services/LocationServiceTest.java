@@ -271,8 +271,8 @@ public class LocationServiceTest {
     Assert.assertEquals(0, backtracked.stream().filter(each -> each.getType().equals(LocationType.JUNGLE)).count());
     Assert.assertTrue(backtracked.contains(start));
     Assert.assertTrue(backtracked.contains(end));
-    Assert.assertEquals(start,backtracked.get(0));
-    Assert.assertEquals(end,backtracked.get(backtracked.size()-1));
+    Assert.assertEquals(start, backtracked.get(0));
+    Assert.assertEquals(end, backtracked.get(backtracked.size() - 1));
   }
 
   @Test
