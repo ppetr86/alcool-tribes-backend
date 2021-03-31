@@ -25,8 +25,8 @@ Content-Type: application/json
 ### kingdom
 PUT http://localhost:8080/kingdom
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDgxNjI4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.hxMbO7Lv0YKeAW_vTzoE6z6Hz5G-O6sRqIL0LKg3vDPRGxmpqTtVMoxhR6B_FIhW6gIbPM9KlD3gzofUNVRE5Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDg3NjQwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.u29oapzaTwbZjD9Yj4WFSQnuv9InV2vFZx5f6G4bn5wHY2W1lmQO1KLMpbP8gHqwSVvA8IfWpWhr3ld1nPTFMQ
 
 {
-  "name": "New  Kingdom"
+  "name": "Furkesz's Kingdom"
 }

@@ -29,10 +29,9 @@ public class HibernateInterceptor extends EmptyInterceptor {
 
   private void handleEntityForWebsocket(Object entity) {
     KingdomEntity kingdom = entityKingdom(entity);
-    log.info("hibernate interceptor");
     if (kingdom != null && kingdom.getId() != null && webSocketHandler != null
         && webSocketHandler.hasSession(kingdom.getId())) {
-      log.info("hibernate interceptor - should send websocket in a second");
+      log.info("Sending websocket message...");
 
       KingdomResponseDTO dto = convertService.convertKingdomToDTO(kingdom);
       String json = convertService.objectToJson(dto);
