@@ -276,11 +276,11 @@ public class BattleServiceImpl implements BattleService {
   }
 
   public List<TroopEntity> removeDeadTroopsFromArmy(Army army) {
-    List<TroopEntity> deadTroops = army.getTroops().stream()
-        .filter(troop -> troop.getHp() <= 0)
+    List<TroopEntity> aliveTroops = army.getTroops().stream()
+        .filter(troop -> troop.getHp() > 0)
         .collect(Collectors.toList());
 
-    army.getTroops().removeAll(deadTroops);
+    army.setTroops(aliveTroops);
 
     return army.getTroops();
   }
