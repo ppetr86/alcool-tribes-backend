@@ -226,7 +226,6 @@ public class BattleServiceImpl implements BattleService {
       removeDeadTroopsFromArmy(attackingArmy);
       removeDeadTroopsFromArmy(defendingArmy);
       if (attackingArmy.getTroops().size() <= 0 || defendingArmy.getTroops().size() <= 0) break;
-      i++;
     }
     removeDeadTroopsFromKingdom(attackingArmy, attackingTroopsBeforeFight);
     removeDeadTroopsFromKingdom(defendingArmy, defendingTroopsBeforeFight);
