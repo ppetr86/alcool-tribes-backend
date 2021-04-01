@@ -46,7 +46,7 @@ public class BattleServiceImpl implements BattleService {
                                KingdomEntity attackingKingdom)
       throws MissingParameterException, IdNotFoundException, ForbiddenActionException {
 
-    if (enemyKingdomId == attackingKingdom.getId()) throw new ForbiddenActionException();
+    if (enemyKingdomId.equals(attackingKingdom.getId())) throw new ForbiddenActionException();
 
     KingdomEntity defendingKingdom = kingdomService.findByID(enemyKingdomId);
     if (defendingKingdom == null) throw new IdNotFoundException();
@@ -104,7 +104,7 @@ public class BattleServiceImpl implements BattleService {
                                               KingdomEntity attackingKingdom) {
     return attackingKingdom.getTroops().stream()
         .filter(troop -> (Arrays.stream(requestDTO.getTroopIds())
-            .filter(a -> a == troop.getId())
+            .filter(a -> a.equals(troop.getId()))
             .findFirst()
             .orElse(null)) == troop.getId())
         .collect(Collectors.toList());
@@ -269,7 +269,7 @@ public class BattleServiceImpl implements BattleService {
           float troopSharesOnDamage = (float) maxDP / troop.getDefence();
           int troopDamage = Math.round(damagePerShare * troopSharesOnDamage);
           int troopHP = troop.getHp() - troopDamage;
-          troop.setHp(troopHP > 0 ? troopHP : 0);
+          troop.setHp(Math.max(troopHP, 0));
         });
 
     return troops;
