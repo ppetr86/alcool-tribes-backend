@@ -3,20 +3,19 @@ package com.greenfoxacademy.springwebapp.configuration;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.websockets.WebSocketHandler;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 @Slf4j
+@AllArgsConstructor
 public class HibernateInterceptor extends EmptyInterceptor {
 
-  @Autowired
   WebSocketHandler webSocketHandler;
-  @Autowired
   ConvertService convertService;
 
   @Override
