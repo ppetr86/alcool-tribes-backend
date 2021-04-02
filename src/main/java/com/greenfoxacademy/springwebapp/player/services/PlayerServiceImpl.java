@@ -15,6 +15,7 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequest
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +68,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     PlayerEntity player = copyProperties(kingdom, dto, false);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
-    player.setRole("ROLE_USER");
+    player.setRoleType(RoleType.ROLE_USER);
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
     LocationEntity defaultLocation = locationService.assignKingdomLocation(kingdom);

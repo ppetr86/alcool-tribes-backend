@@ -14,6 +14,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,14 +85,14 @@ public class BuildingServiceImpl implements BuildingService {
     if (building == null) throw new IdNotFoundException();
     if (levelDTO == null || levelDTO.getLevel() == 0) throw new MissingParameterException("level");
     if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)
-        && !kingdom.getPlayer().getRole().equals("ROLE_ADMIN")) throw new ForbiddenActionException();
+        && !kingdom.getPlayer().getRoleType().equals(RoleType.ROLE_ADMIN)) throw new ForbiddenActionException();
 
     int cost = fetchBuildingSetting(building.getType(), "buildingCosts");
     int amountChange = cost * levelDTO.getLevel();
-    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
+    if (!resourceService.hasResourcesForBuilding(building.getKingdom(), amountChange)) throw new NotEnoughResourceException();
 
     if (building.getType().equals(BuildingType.TOWNHALL)) return building;
-    BuildingEntity townHall = getTownHallFromKingdom(kingdom);
+    BuildingEntity townHall = getTownHallFromKingdom(building.getKingdom());
     if (townHall.getLevel() < levelDTO.getLevel()) throw new TownhallLevelException();
     return building;
   }

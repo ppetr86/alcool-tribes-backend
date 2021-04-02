@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.player.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,8 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -60,7 +63,8 @@ public class PlayerEntity {
   private Boolean isAccountVerified;
 
   @NonNull
-  private String role;
+  @Enumerated(EnumType.STRING)
+  private RoleType roleType;
 
   @OneToMany(mappedBy = "player")
   private Set<RegistrationTokenEntity> tokens;
