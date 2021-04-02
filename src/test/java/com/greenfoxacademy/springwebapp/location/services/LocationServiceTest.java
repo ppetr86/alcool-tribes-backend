@@ -192,22 +192,51 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void findNeighbours_ReturnsCorrectResults() {
-    List<LocationEntity> neighbours = new ArrayList<>(25);
-    long id = 1;
-    for (int i = 1; i <= 5; i++) {
-      for (int j = 1; j <= 5; j++) {
-        neighbours.add(new LocationEntity(id, i, j, null, LocationType.EMPTY));
-      }
-    }
+  public void findNeighbours_ReturnsCorrectResults_ForALocationSurroundedByOthersFromAllSides() {
+    int rows = 5;
+    int cols = 5;
+    int getID = 12;
+    List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
 
-    LocationEntity popped = new LocationEntity(2, 2);
-    LocationEntity[][] maze = new LocationEntity[5][5];
-    for (int i = 0; i < maze.length; i++) {
-      for (int j = 0; j < maze[i].length; j++) {
+    LocationEntity[][] map = locationService.buildMap(sortReduced);
+    LocationEntity centerPoint = sortReduced.get(getID - 1);
+    List<LocationEntity> neighbours = locationService.findNeighbours(centerPoint, map);
+    Assert.assertEquals(4, neighbours.size());
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID - 1));
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID + 1));
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID - cols));
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID + cols));
+  }
 
-      }
-    }
+  @Test
+  public void findNeighbours_ReturnsCorrectResults_ForALocationInCorner() {
+    int rows = 5;
+    int cols = 5;
+    int getID = 1;
+    List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
+
+    LocationEntity[][] map = locationService.buildMap(sortReduced);
+    LocationEntity centerPoint = sortReduced.get(getID - 1);
+    List<LocationEntity> neighbours = locationService.findNeighbours(centerPoint, map);
+    Assert.assertEquals(2, neighbours.size());
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID + 1));
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID + cols));
+  }
+
+  @Test
+  public void findNeighbours_ReturnsCorrectResults_ForALocationOnWall() {
+    int rows = 5;
+    int cols = 5;
+    int getID = cols+1;
+    List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
+
+    LocationEntity[][] map = locationService.buildMap(sortReduced);
+    LocationEntity centerPoint = sortReduced.get(getID - 1);
+    List<LocationEntity> neighbours = locationService.findNeighbours(centerPoint, map);
+    Assert.assertEquals(3, neighbours.size());
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID + 1));
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID + cols));
+    Assert.assertTrue(neighbours.stream().anyMatch(each -> each.getId() == getID - cols));
   }
 
   @Test
