@@ -97,15 +97,16 @@ public class LocationServiceImpl implements LocationService {
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
     Map<LocationEntity, Integer> distances = prepareDistancesMap(locations, start);
-    Stack<LocationEntity[]> backtrackStack = prepareStackWithArray(start);
-    LocationEntity poppedBefore = start;
+    Stack<LocationEntity[]> backtrackStack = createNewStack();
+    LocationEntity poppedBefore = null;
+
     while (!toVisit.isEmpty()) {
       LocationEntity popped = toVisit.poll();
       visited.add(popped);
 
       //stack
       addToStack(popped, poppedBefore, backtrackStack);
-      int neighbourCounter = 4;
+      int walkableNeighbourCount = 4;
       //
       for (LocationEntity neighbour : findNeighbours(popped, maze)) {
         // add only EMPTY and not visited
@@ -114,10 +115,10 @@ public class LocationServiceImpl implements LocationService {
           calculateDistanceToStart(neighbour, popped, distances);
           toVisit.add(neighbour);
         } else {
-          neighbourCounter--;
+          walkableNeighbourCount--;
         }
       }
-      if (neighbourCounter == 0) {
+      if (walkableNeighbourCount == 0) {
         backtrackStack.pop();
         checkStackHowFarToPop(backtrackStack, visited, maze);
       }
@@ -125,6 +126,15 @@ public class LocationServiceImpl implements LocationService {
       poppedBefore = popped;
       //
       if (popped.equals(end)) break;
+    }
+
+    List<LocationEntity> pathFromStack = new ArrayList<>();
+    while (backtrackStack.isEmpty()==false){
+      LocationEntity[] arr = backtrackStack.pop();
+      LocationEntity l1 = arr[0];
+      LocationEntity l2 = arr[1];
+      if (l1 != null) pathFromStack.add(l1);
+      if (l2 !=null) pathFromStack.add(l2);
     }
     return backtrack(distances, end, maze);
   }
@@ -135,15 +145,16 @@ public class LocationServiceImpl implements LocationService {
       LocationEntity[] lastArrInStack = backtrackStack.peek();
       LocationEntity lastAddedLocation = lastArrInStack[0];
       List<LocationEntity> neighboursOflastAddedLocation = findNeighbours(lastAddedLocation, maze);
-      int neighbourCounter = 4;
+      int walkableNeighbourCount = 4;
       //
       for (LocationEntity neighbour : findNeighbours(lastAddedLocation, maze)) {
         // add only EMPTY and not visited
         if (!(neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))) {
-          neighbourCounter--;
+          walkableNeighbourCount--;
         }
       }
-      if (neighbourCounter > 0) return;
+      if (walkableNeighbourCount == 0) backtrackStack.pop();
+      if (walkableNeighbourCount > 0) return;
     }
   }
 
@@ -157,13 +168,6 @@ public class LocationServiceImpl implements LocationService {
       if (distances.get(neighboursCopy.get(i)) == Integer.MAX_VALUE) intMaxCounter++;
     }
     if (intMaxCounter == neighboursCopy.size()) backtrackStack.pop();
-  }
-
-
-  public Stack<LocationEntity[]> prepareStackWithArray(LocationEntity start) {
-    Stack<LocationEntity[]> backtrackStack = createNewStack();
-    backtrackStack.add(new LocationEntity[]{start, null});
-    return backtrackStack;
   }
 
   public void addToStack(LocationEntity popped, LocationEntity poppedBefore, Stack<LocationEntity[]> backtrackStack) {
