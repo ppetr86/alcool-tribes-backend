@@ -227,7 +227,7 @@ public class LocationServiceTest {
   public void findNeighbours_ReturnsCorrectResults_ForALocationOnWall() {
     int rows = 5;
     int cols = 5;
-    int getID = cols+1;
+    int getID = cols + 1;
     List<LocationEntity> sortReduced = createListWithLocations(rows, cols);
 
     LocationEntity[][] map = locationService.buildMap(sortReduced);
