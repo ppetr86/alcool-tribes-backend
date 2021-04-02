@@ -59,6 +59,9 @@ public class PlayerEntity {
   @NonNull
   private Boolean isAccountVerified;
 
+  @NonNull
+  private String role;
+
   @OneToMany(mappedBy = "player")
   private Set<RegistrationTokenEntity> tokens;
 
