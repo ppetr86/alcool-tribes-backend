@@ -83,7 +83,8 @@ public class BuildingServiceImpl implements BuildingService {
     BuildingEntity building = findBuildingById(id);
     if (building == null) throw new IdNotFoundException();
     if (levelDTO == null || levelDTO.getLevel() == 0) throw new MissingParameterException("level");
-    if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)) throw new ForbiddenActionException();
+    if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)
+        && !kingdom.getPlayer().getRole().equals("ROLE_ADMIN")) throw new ForbiddenActionException();
 
     int cost = fetchBuildingSetting(building.getType(), "buildingCosts");
     int amountChange = cost * levelDTO.getLevel();
