@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class LocationServiceImpl implements LocationService {
 
   private final LocationRepository repo;
-  public static final int MAZE_OFFSET_TO_FORM_RECTANGLE = 2;
+  public static final int MAZE_OFFSET_TO_FORM_RECTANGLE = 5;
 
   @Override
   public LocationEntity save(LocationEntity entity) {
@@ -107,19 +107,19 @@ public class LocationServiceImpl implements LocationService {
       //stack
       addToStack(popped, poppedBefore, backtrackStack);
       int walkableNeighbourCount = 4;
-      //
+      List<LocationEntity> neighbours = findNeighbours(popped, maze);
       for (LocationEntity neighbour : findNeighbours(popped, maze)) {
         // add only EMPTY and not visited
         if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))
             || neighbour.equals(end)) {
           calculateDistanceToStart(neighbour, popped, distances);
           toVisit.add(neighbour);
-        } else {
+        }
+        if (!neighbour.getType().equals(LocationType.EMPTY) || visited.contains(neighbour)) {
           walkableNeighbourCount--;
         }
       }
       if (walkableNeighbourCount == 0) {
-        backtrackStack.pop();
         checkStackHowFarToPop(backtrackStack, visited, maze);
       }
       //stack
@@ -129,27 +129,28 @@ public class LocationServiceImpl implements LocationService {
     }
 
     List<LocationEntity> pathFromStack = new ArrayList<>();
-    while (backtrackStack.isEmpty()==false){
+    while (!backtrackStack.isEmpty()) {
       LocationEntity[] arr = backtrackStack.pop();
       LocationEntity l1 = arr[0];
       LocationEntity l2 = arr[1];
       if (l1 != null) pathFromStack.add(l1);
-      if (l2 !=null) pathFromStack.add(l2);
+      if (l2 != null) pathFromStack.add(l2);
     }
+    List<LocationEntity> copy = pathFromStack;
     return backtrack(distances, end, maze);
   }
 
   private void checkStackHowFarToPop(Stack<LocationEntity[]> backtrackStack, Set<LocationEntity> visited, LocationEntity[][] maze) {
 
+    backtrackStack.pop();
     while (true) {
       LocationEntity[] lastArrInStack = backtrackStack.peek();
       LocationEntity lastAddedLocation = lastArrInStack[0];
-      List<LocationEntity> neighboursOflastAddedLocation = findNeighbours(lastAddedLocation, maze);
       int walkableNeighbourCount = 4;
       //
       for (LocationEntity neighbour : findNeighbours(lastAddedLocation, maze)) {
         // add only EMPTY and not visited
-        if (!(neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))) {
+        if (!neighbour.getType().equals(LocationType.EMPTY) || visited.contains(neighbour)) {
           walkableNeighbourCount--;
         }
       }
