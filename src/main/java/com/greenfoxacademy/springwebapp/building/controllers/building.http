@@ -9,7 +9,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDU3NDM2MDAsImtpbmdkb21JZ
 ### Get buildings
 
 GET http://localhost:8080/kingdom/buildings
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTU0MTcyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.3RyE-Nhk44mcQIdxqfthi_MKBQqWEV1WoakwlhJ7tlkgwNbmCCFW7VozkLkv0NkS1Gzs5mkRPqjKEJm6dC9wCQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTc0MDA4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJrZWxlbWVuIn0.ioc5uEEWWbTizqkjNoNrR1kbZtRCIpUq7uX1PsuDu20fLQp9rDEvlOqXrJih8ENwSObUr7cbxBvtIRTDcTY4WQ
 Accept: application/json
 
 ### Get building
@@ -22,7 +22,7 @@ Accept: application/json
 
 PUT http://localhost:8080/kingdom/buildings/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTU0MTcyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.3RyE-Nhk44mcQIdxqfthi_MKBQqWEV1WoakwlhJ7tlkgwNbmCCFW7VozkLkv0NkS1Gzs5mkRPqjKEJm6dC9wCQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTc0MDA4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJrZWxlbWVuIn0.ioc5uEEWWbTizqkjNoNrR1kbZtRCIpUq7uX1PsuDu20fLQp9rDEvlOqXrJih8ENwSObUr7cbxBvtIRTDcTY4WQ
 
 {
   "level": 5
