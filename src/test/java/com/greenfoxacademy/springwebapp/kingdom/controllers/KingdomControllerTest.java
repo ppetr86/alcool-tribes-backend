@@ -119,7 +119,7 @@ public class KingdomControllerTest {
   }
 
   @Test
-  public void goToWarShouldReturnProperResponseDTO() {
+  public void initiateBattleShouldReturnProperResponseDTO() {
     Long[] troopIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
@@ -135,7 +135,7 @@ public class KingdomControllerTest {
   }
 
   @Test(expected = MissingParameterException.class)
-  public void goToWarShouldReturnMissingParameterException() {
+  public void initiateBattleShouldReturnMissingParameterException() {
     Long[] troopIds = {10L,20L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
@@ -148,7 +148,7 @@ public class KingdomControllerTest {
   }
 
   @Test(expected = IdNotFoundException.class)
-  public void goToWarShouldReturnIdNotFoundException() {
+  public void initiateBattleShouldReturnIdNotFoundException() {
     Long[] troopIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
@@ -161,7 +161,7 @@ public class KingdomControllerTest {
   }
 
   @Test(expected = ForbiddenActionException.class)
-  public void goToWarShouldReturnForbiddenActionException() {
+  public void initiateBattleShouldReturnForbiddenActionException() {
     Long[] troopIds = {1L,2L};
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();

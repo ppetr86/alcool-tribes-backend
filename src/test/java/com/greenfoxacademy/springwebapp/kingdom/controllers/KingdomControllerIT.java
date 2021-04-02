@@ -133,7 +133,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void warShouldReturnOkStatusAndBattleResponseDTO() throws Exception {
+  public void initiateBattleShouldReturnOkStatusAndBattleResponseDTO() throws Exception {
     Long[] troopIds = {1L,2L};
     String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(troopIds));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
@@ -150,7 +150,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void war_noTroopIdsShouldReturn400Status() throws Exception {
+  public void initiateBattleWithNoTroopIdsShouldReturn400Status() throws Exception {
     String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(null));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
@@ -166,7 +166,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void war_sameAttackerAndDefendantKinkdomId_ShouldReturn403Status() throws Exception {
+  public void initiateBattle_sameAttackerAndDefendantKinkdomId_ShouldReturn403Status() throws Exception {
     Long[] troopIds = {1L,2L};
     String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(troopIds));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
@@ -182,7 +182,7 @@ public class KingdomControllerIT {
   }
 
   @Test
-  public void war_nonExistentDefendantKinkdomId_ShouldReturn404Status() throws Exception {
+  public void initiateBattle_nonExistentDefendantKinkdomId_ShouldReturn404Status() throws Exception {
     Long[] troopIds = {1L,2L};
     String json = new ObjectMapper().writeValueAsString(new BattleRequestDTO(troopIds));
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
