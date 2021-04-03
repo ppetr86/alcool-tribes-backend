@@ -9,24 +9,16 @@ import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
   private final KingdomRepository kingdomRepository;
-
-  public KingdomServiceImpl(KingdomRepository kingdomRepository) {
-    this.kingdomRepository = kingdomRepository;
-  }
-
-
-  @Override
-  public KingdomEntity findByPlayerId(Long id) {
-    return null;
-  }
 
   @Override
   public KingdomEntity findByID(Long id) {
@@ -42,6 +34,12 @@ public class KingdomServiceImpl implements KingdomService {
     return convert(kingdom);
   }
 
+  @Override
+  public KingdomEntity findByPlayerId(Long id) {
+    return null;
+  }
+
+  @Override
   public KingdomResponseDTO convert(KingdomEntity e) {
     return KingdomResponseDTO.builder()
         .withId(e.getId())
@@ -77,4 +75,5 @@ public class KingdomServiceImpl implements KingdomService {
     saveKingdom(kingdom);
     return convert(kingdom);
   }
+
 }

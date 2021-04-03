@@ -79,6 +79,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(MyFileNotFoundException.class)
+  public ResponseEntity<ErrorDTO> handleExceptions(MyFileNotFoundException ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
+  }
+
   @ExceptionHandler({
       InvalidBuildingTypeException.class,
       TownhallLevelException.class,
@@ -96,7 +102,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(MissingParameterException.class)
-  public ResponseEntity<ErrorDTO> handleBadRequestExceptions(Exception ex) {
+  public ResponseEntity<ErrorDTO> handleBadRequestExceptions(MissingParameterException ex) {
+    log.error(ex.getMessage());
+    return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(WrongContentTypeException.class)
+  public ResponseEntity<ErrorDTO> handleWrongContentTypeException(WrongContentTypeException ex) {
     log.error(ex.getMessage());
     return new ResponseEntity<>(new ErrorDTO(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }

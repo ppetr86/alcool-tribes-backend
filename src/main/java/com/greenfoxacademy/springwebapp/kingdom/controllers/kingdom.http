@@ -8,7 +8,7 @@ Accept: application/json
 ### Get kingdom
 ### kingdom/{id}
 GET http://localhost:8080/kingdom/1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDcxMjYwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.gAZB-LWL8Dex1lxKxXV85px8ntue6Mf6vdCXFr1c8ipe6xdt4bPdS5SyERmSka7_mNjYaEOn3vbDBsLa1dS7jA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDgxNjI4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.hxMbO7Lv0YKeAW_vTzoE6z6Hz5G-O6sRqIL0LKg3vDPRGxmpqTtVMoxhR6B_FIhW6gIbPM9KlD3gzofUNVRE5Q
 Accept: application/json
 
 ### PUT kingdom
@@ -25,8 +25,8 @@ Content-Type: application/json
 ### kingdom
 PUT http://localhost:8080/kingdom
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUzMTE2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.55FYv_lh3cF6by5jzNCD-BypSydYr65fafvataJExuRszu8c7BREhy1kaxl3ExlOwzfFMpCdFy-MrxC8EvF4UA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDg3NjQwMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.u29oapzaTwbZjD9Yj4WFSQnuv9InV2vFZx5f6G4bn5wHY2W1lmQO1KLMpbP8gHqwSVvA8IfWpWhr3ld1nPTFMQ
 
 {
-  "name": "New Kingdom"
+  "name": "Furkesz's Kingdom"
 }

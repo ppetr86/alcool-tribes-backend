@@ -31,6 +31,7 @@ public class AuthFactory {
     CustomUserDetails userDetails = new CustomUserDetails();
     userDetails.setLogin(player);
     userDetails.setKingdom(kingdom);
+    userDetails.setPlayer(player);
     return userDetails;
   }
 
@@ -44,7 +45,9 @@ public class AuthFactory {
 
     userDetails.setLogin(player);
     userDetails.setKingdom(kingdom);
+    userDetails.setPlayer(player);
 
     return new UsernamePasswordAuthenticationToken(userDetails, null, null);
   }
+
 }
