@@ -93,6 +93,7 @@ public class LocationServiceImpl implements LocationService {
 
   public List<LocationEntity> pathFinder(
       LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
+
     Set<LocationEntity> visited = createNewLocationSet();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
@@ -119,10 +120,10 @@ public class LocationServiceImpl implements LocationService {
       }
       if (walkableNeighbourCount == 0) {
         checkStackHowFarToPop(backtrackStack, visited, maze);
+      } else if (walkableNeighbourCount > 0) {
+        locationBeforePopped = definePoppedBefore(locationBeforePopped, popped, neighbours, visited, distances, start);
+        addToStack(popped, locationBeforePopped, backtrackStack);
       }
-
-      locationBeforePopped = definePoppedBefore(locationBeforePopped, popped, neighbours, visited, distances,backtrackStack);
-      addToStack(popped, locationBeforePopped, backtrackStack);
       if (popped.equals(end)) break;
     }
 
@@ -143,10 +144,9 @@ public class LocationServiceImpl implements LocationService {
                                             List<LocationEntity> neighbours,
                                             Set<LocationEntity> visited,
                                             Map<LocationEntity, Integer> distances,
-                                            Stack<LocationEntity[]> backtrackStack) {
+                                            LocationEntity start) {
 
-    if (backtrackStack.isEmpty()) return null;
-    if (neighbours.contains(poppedBefore)) return popped;
+    if (popped.equals(start)) return null;
     int distanceOfPopped = distances.get(popped);
     LocationEntity check = neighbours
         .stream()
