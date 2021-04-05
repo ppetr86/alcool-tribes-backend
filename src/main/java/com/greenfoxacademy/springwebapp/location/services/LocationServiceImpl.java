@@ -88,10 +88,37 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> sortedSmallerRectangleList =
         findAllInRectangleOrdered(MAZE_OFFSET_TO_FORM_RECTANGLE, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
-    return pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    List<LocationEntity> pathFinderWithStack = pathFinderStack(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    List<LocationEntity> pathFinder = pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    return pathFinder;
   }
 
   public List<LocationEntity> pathFinder(
+      LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
+
+    Set<LocationEntity> visited = createNewLocationSet();
+    PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
+    toVisit.add(start);
+    Map<LocationEntity, Integer> distances = prepareDistancesMap(locations, start);
+
+    while (!toVisit.isEmpty()) {
+      LocationEntity popped = toVisit.poll();
+      visited.add(popped);
+
+      for (LocationEntity neighbour : findNeighbours(popped, maze)) {
+        if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))
+            || neighbour.equals(end)) {
+          calculateDistanceToStart(neighbour, popped, distances);
+          toVisit.add(neighbour);
+        }
+      }
+
+      if (popped.equals(end)) break;
+    }
+    return backtrack(distances, end, maze);
+  }
+
+  public List<LocationEntity> pathFinderStack(
       LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
 
     Set<LocationEntity> visited = createNewLocationSet();
@@ -107,8 +134,7 @@ public class LocationServiceImpl implements LocationService {
 
       int walkableNeighbourCount = 4;
       List<LocationEntity> neighbours = findNeighbours(popped, maze);
-      for (LocationEntity neighbour : findNeighbours(popped, maze)) {
-        // add only EMPTY and not visited
+      for (LocationEntity neighbour : neighbours) {
         if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))
             || neighbour.equals(end)) {
           calculateDistanceToStart(neighbour, popped, distances);
@@ -121,26 +147,31 @@ public class LocationServiceImpl implements LocationService {
       if (walkableNeighbourCount == 0) {
         checkStackHowFarToPop(backtrackStack, visited, maze);
       } else if (walkableNeighbourCount > 0) {
-        locationBeforePopped = definePoppedBefore(locationBeforePopped, popped, neighbours, visited, distances, start);
+        locationBeforePopped = definePoppedBefore(popped, neighbours, visited, distances, start);
         addToStack(popped, locationBeforePopped, backtrackStack);
       }
       if (popped.equals(end)) break;
     }
 
+    List<LocationEntity> pathFromStack = backtrackFromStack(backtrackStack, maze);
+
+    return pathFromStack;
+  }
+
+  private List<LocationEntity> backtrackFromStack(Stack<LocationEntity[]> backtrackStack, LocationEntity[][] maze) {
+
     List<LocationEntity> pathFromStack = new ArrayList<>();
+    pathFromStack.add(backtrackStack.pop()[0]);
+
     while (!backtrackStack.isEmpty()) {
       LocationEntity[] arr = backtrackStack.pop();
       LocationEntity l1 = arr[0];
-      LocationEntity l2 = arr[1];
-      if (l1 != null) pathFromStack.add(l1);
-      if (l2 != null) pathFromStack.add(l2);
+      if (findNeighbours(l1, maze).contains(pathFromStack.get(pathFromStack.size() - 1))) pathFromStack.add(l1);
     }
-    List<LocationEntity> copy = pathFromStack;
-    return backtrack(distances, end, maze);
+    return pathFromStack;
   }
 
-  private LocationEntity definePoppedBefore(LocationEntity poppedBefore,
-                                            LocationEntity popped,
+  private LocationEntity definePoppedBefore(LocationEntity popped,
                                             List<LocationEntity> neighbours,
                                             Set<LocationEntity> visited,
                                             Map<LocationEntity, Integer> distances,
