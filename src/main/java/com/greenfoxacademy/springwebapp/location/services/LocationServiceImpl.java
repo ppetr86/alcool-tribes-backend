@@ -88,8 +88,10 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> sortedSmallerRectangleList =
         findAllInRectangleOrdered(MAZE_OFFSET_TO_FORM_RECTANGLE, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
-    List<LocationEntity> pathFinderWithStack = pathFinderStack(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
-    List<LocationEntity> pathFinder = pathFinder(start.getLocation(), end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    List<LocationEntity> pathFinderWithStack = pathFinderStack(start.getLocation(),
+        end.getLocation(), locationMaze, sortedSmallerRectangleList);
+    List<LocationEntity> pathFinder = pathFinder(start.getLocation(), end.getLocation(),
+        locationMaze, sortedSmallerRectangleList);
     return pathFinder;
   }
 
@@ -104,15 +106,12 @@ public class LocationServiceImpl implements LocationService {
     while (!toVisit.isEmpty()) {
       LocationEntity popped = toVisit.poll();
       visited.add(popped);
-
-      for (LocationEntity neighbour : findNeighbours(popped, maze)) {
-        if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))
-            || neighbour.equals(end)) {
-          calculateDistanceToStart(neighbour, popped, distances);
-          toVisit.add(neighbour);
+      for (LocationEntity neighbor : findNeighbours(popped, maze)) {
+        if ((neighbor.getType().equals(LocationType.EMPTY) && !visited.contains(neighbor)) || neighbor.equals(end)) {
+          calculateDistanceToStart(neighbor, popped, distances);
+          toVisit.add(neighbor);
         }
       }
-
       if (popped.equals(end)) break;
     }
     return backtrack(distances, end, maze);
@@ -134,13 +133,12 @@ public class LocationServiceImpl implements LocationService {
 
       int walkableNeighbourCount = 4;
       List<LocationEntity> neighbours = findNeighbours(popped, maze);
-      for (LocationEntity neighbour : neighbours) {
-        if ((neighbour.getType().equals(LocationType.EMPTY) && !visited.contains(neighbour))
-            || neighbour.equals(end)) {
-          calculateDistanceToStart(neighbour, popped, distances);
-          toVisit.add(neighbour);
+      for (LocationEntity neighbor : neighbours) {
+        if ((neighbor.getType().equals(LocationType.EMPTY) && !visited.contains(neighbor)) || neighbor.equals(end)) {
+          calculateDistanceToStart(neighbor, popped, distances);
+          toVisit.add(neighbor);
         }
-        if (!neighbour.getType().equals(LocationType.EMPTY) || visited.contains(neighbour)) {
+        if (!neighbor.getType().equals(LocationType.EMPTY) || visited.contains(neighbor)) {
           walkableNeighbourCount--;
         }
       }
@@ -152,10 +150,7 @@ public class LocationServiceImpl implements LocationService {
       }
       if (popped.equals(end)) break;
     }
-
-    List<LocationEntity> pathFromStack = backtrackFromStack(backtrackStack, maze);
-
-    return pathFromStack;
+    return backtrackFromStack(backtrackStack, maze);
   }
 
   private List<LocationEntity> backtrackFromStack(Stack<LocationEntity[]> backtrackStack, LocationEntity[][] maze) {
@@ -187,7 +182,8 @@ public class LocationServiceImpl implements LocationService {
     return check;
   }
 
-  private void checkStackHowFarToPop(Stack<LocationEntity[]> backtrackStack, Set<LocationEntity> visited, LocationEntity[][] maze) {
+  private void checkStackHowFarToPop(Stack<LocationEntity[]> backtrackStack,
+                                     Set<LocationEntity> visited, LocationEntity[][] maze) {
 
     backtrackStack.pop();
     while (true) {
