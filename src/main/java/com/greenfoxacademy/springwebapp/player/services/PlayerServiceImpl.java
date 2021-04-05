@@ -193,4 +193,9 @@ public class PlayerServiceImpl implements PlayerService {
     player.setIsAccountVerified(verified);
     return player;
   }
+
+  @Override
+  public PlayerEntity savePlayer(PlayerEntity player) {
+    return playerRepo.save(player);
+  }
 }

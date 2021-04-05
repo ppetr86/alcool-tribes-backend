@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionE
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -26,10 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileStorageServiceImpl implements FileStorageService {
   private final Path fileStorageLocation;
   FileStorageProperties fileStorageProperties;
+  PlayerService playerService;
 
   //injecting dependency to fileStorageProperties + using it immediately for defining fileStorageLocation
-  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties) {
+  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties, PlayerService playerService) {
     this.fileStorageProperties = fileStorageProperties;
+    this.playerService = playerService;
 
     this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadAvatarDir())
         .toAbsolutePath().normalize();
@@ -48,18 +51,27 @@ public class FileStorageServiceImpl implements FileStorageService {
         + player.getUsername() + "_" + file.getOriginalFilename());
     try {
       // Check if the file's name contains invalid characters and is of type image
-      if (fileName.contains("..")) {
-        throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-      }
-      if (!file.getContentType().contains("image")) {
-        throw new WrongContentTypeException("Other than image files are not allowed! : " + file.getContentType());
-      }
+      checkCorrectnessOfFileNameAndFileType(fileName,file);
       // Copy file to the target location (Replacing existing file with the same name)
       Path targetLocation = this.fileStorageLocation.resolve(fileName);
       Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+      // Save avatar address into database
+      player.setAvatar(fileName);
+      playerService.savePlayer(player);
+
       return fileName;
     } catch (IOException ex) {
       throw new FileStorageException("Could not store file " + fileName + ". Please try again!");
+    }
+  }
+
+  public void checkCorrectnessOfFileNameAndFileType(String fileName, MultipartFile file)
+      throws FileStorageException, WrongContentTypeException {
+    if (fileName.contains("..")) {
+      throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+    }
+    if (!file.getContentType().contains("image")) {
+      throw new WrongContentTypeException("Other than image files are not allowed! : " + file.getContentType());
     }
   }
 

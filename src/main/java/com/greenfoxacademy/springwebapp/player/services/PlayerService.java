@@ -33,4 +33,6 @@ public interface PlayerService {
 
   PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
       throws RuntimeException;
+
+  PlayerEntity savePlayer(PlayerEntity player);
 }
