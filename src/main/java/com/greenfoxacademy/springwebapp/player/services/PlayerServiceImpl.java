@@ -83,8 +83,9 @@ public class PlayerServiceImpl implements PlayerService {
     return player;
   }
 
-  public void setDefaultAvatarImage(PlayerEntity player) {
+  public PlayerEntity setDefaultAvatarImage(PlayerEntity player) {
     player.setAvatar(fileStorageService.getAvatarsFolderName() + "/AVATAR_0_generic.png");
+    return player;
   }
 
   public KingdomEntity createNewEmptyKingdom() {

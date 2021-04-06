@@ -355,4 +355,12 @@ public class PlayerServiceTest {
     playerService.verifyUser(token);
     Assert.assertTrue(playerService.verifyUser("123"));
   }
+
+  @Test
+  public void setDefaultAvatarImage_setsCorrectDefaultLinkToAvatarImage() {
+    PlayerEntity initialPlayer = new PlayerEntity();
+    Mockito.when(fileStorageService.getAvatarsFolderName()).thenReturn("avatars");
+    PlayerEntity adjustedPlayer = playerService.setDefaultAvatarImage(initialPlayer);
+    Assert.assertEquals("avatars/AVATAR_0_generic.png",adjustedPlayer.getAvatar());
+  }
 }
