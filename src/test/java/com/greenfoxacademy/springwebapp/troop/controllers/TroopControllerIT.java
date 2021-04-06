@@ -268,7 +268,6 @@ public class TroopControllerIT {
     KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
     kingdom.setTroops(TroopFactory.createDefaultTroops());
     TroopRequestDTO request = new TroopRequestDTO();
-
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
