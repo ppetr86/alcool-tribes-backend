@@ -32,4 +32,6 @@ public interface TroopService {
   TroopEntity findTroopById(Long id);
 
   void deleteListOfTroops(List<TroopEntity> deadTroops);
+
+  void saveAllTroops(List<TroopEntity> troops);
 }

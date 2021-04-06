@@ -171,4 +171,9 @@ public class TroopServiceImpl implements TroopService {
   public void deleteListOfTroops(List<TroopEntity> deadTroops) {
     troopRepository.deleteListOfTroops(deadTroops);
   }
+
+  @Override
+  public void saveAllTroops(List<TroopEntity> troops) {
+    troopRepository.saveAll(troops);
+  }
 }

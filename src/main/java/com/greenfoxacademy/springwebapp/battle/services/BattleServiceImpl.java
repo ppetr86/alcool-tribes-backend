@@ -231,7 +231,7 @@ public class BattleServiceImpl implements BattleService {
     removeDeadTroopsFromKingdom(defendingArmy, defendingTroopsBeforeFight);
     updateArmyPointsAfterFight(attackingArmy);
     updateArmyPointsAfterFight(defendingArmy);
-    return  new ArrayList<>(Arrays.asList(attackingArmy,defendingArmy));
+    return  Arrays.asList(attackingArmy, defendingArmy);
   }
 
   public Army fightOponent(Army army1, Army army2) {
@@ -245,7 +245,7 @@ public class BattleServiceImpl implements BattleService {
     int army1DefencePoints = army1.getTroops().stream().mapToInt(troop -> troop.getDefence()).sum();
     int army2AttackPoints = army2.getTroops().stream().mapToInt(troop -> troop.getAttack()).sum();
 
-    return Math.max(army2AttackPoints - army1DefencePoints,0);
+    return Math.max(army2AttackPoints - army1DefencePoints, 0);
   }
 
   /* note: damage is distributed to troops based on calculated "shares". Troop with max DP represents 1 share.
@@ -328,17 +328,19 @@ public class BattleServiceImpl implements BattleService {
     if (nobodyWon(defendingArmy, attackingArmy)) {
       return new BattleResultDTO("Every Troops dead");
     } else if (defKingdomWon(defendingArmy, attackingArmy)) {
+      healUpAliveTroops(defendingArmy.getTroops());
       return new BattleResultDTO("Defending Kingdom won");
     }
     int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
     int stolenGold = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.GOLD, ResourceType.FOOD);
     if (attackingArmy.getHealthPoints() > 0) {
+      healUpAliveTroops(defendingArmy.getTroops());
       attackingKingdomSteal(attackingArmy, defendingArmy, distance, stolenFood, stolenGold);
       if (defendingArmy.getHealthPoints() == 0) {
         return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
       }
     }
-    return new BattleResultDTO("Nobody won", stolenFood, stolenGold);
+    return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
   }
 
   private void scheduleReturnHome(Army attackingArmy, int foodChange, int goldChange, int distance) {
@@ -386,7 +388,7 @@ public class BattleServiceImpl implements BattleService {
 
   private void attackingKingdomSteal(Army attackingArmy, Army defendingArmy,
                                      int distance, int stolenFood, int stolenGold) {
-    killTroopWhichCanNotReachHome(attackingArmy, distance);
+    applyHpLossDueToTravelling(attackingArmy, distance);
     modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
     scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
     modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold);
@@ -411,5 +413,15 @@ public class BattleServiceImpl implements BattleService {
 
   public Integer defineTroopHp() {
     return Integer.valueOf(Objects.requireNonNull(env.getProperty("troop.hp")));
+  }
+
+  private void healUpAliveTroops(List<TroopEntity> troops) {
+    for (int i = 0; i < troops.size(); i++) {
+      TroopEntity troop = troops.get(i);
+      if (troop.getHp() < defineTroopHp()) {
+        troop.setHp(troop.getLevel() * defineTroopHp());
+      }
+      troopService.saveAllTroops(troops);
+    }
   }
 }

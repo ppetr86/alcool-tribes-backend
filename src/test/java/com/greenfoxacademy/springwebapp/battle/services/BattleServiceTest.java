@@ -409,9 +409,25 @@ public class BattleServiceTest {
 
     BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
 
-    Assert.assertEquals("Nobody won", resultDTO.getWinningTeam());
+    Assert.assertEquals("Attacking Kingdom won", resultDTO.getWinningTeam());
     Assert.assertEquals(50, resultDTO.getStolenFood());
     Assert.assertEquals(50, resultDTO.getStolenGold());
+  }
+
+  @Test
+  public void performAfterBattleActions_ShouldReturn_JustStolenThings_AttackKingdomWon() {
+    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    int distance = 10;
+    armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
+    armies.get(0).setHealthPoints(50);
+
+    mockingPart_PerformAfterBattleActions_WhenAttackingKingdomCanSteal_10_100(armies);
+
+    BattleResultDTO resultDTO = battleService.performAfterBattleActions(armies, distance);
+
+    Assert.assertEquals("Attacking Kingdom won", resultDTO.getWinningTeam());
+    Assert.assertEquals(10, resultDTO.getStolenFood());
+    Assert.assertEquals(40, resultDTO.getStolenGold());
   }
 
   @Test
@@ -734,6 +750,50 @@ public class BattleServiceTest {
   }
 
   @Test
+  public void calculateStolenResource_ShouldReturn_50_IfStolenFood80AndGold80afasfasfa() {
+    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
+    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
+    stolenFood.setAmount(100);
+    gold.setAmount(10);
+    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    attackingArmy.setHealthPoints(50);
+
+    Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
+        .thenReturn(stolenFood.getAmount());
+    Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.GOLD))
+        .thenReturn(gold.getAmount());
+
+    //in parameters, the first ResourceType is that what we would like the steal
+    int result =
+        battleService.calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
+
+    Assert.assertEquals(40, result);
+  }
+
+  @Test
+  public void calculateStolenResource_ShouldReturn_50_IfStolenFood80AndGold80afafasa() {
+    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
+    ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
+    stolenFood.setAmount(10);
+    gold.setAmount(100);
+    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    attackingArmy.setHealthPoints(50);
+
+    Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
+        .thenReturn(stolenFood.getAmount());
+    Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.GOLD))
+        .thenReturn(gold.getAmount());
+
+    //in parameters, the first ResourceType is that what we would like the steal
+    int result =
+        battleService.calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
+
+    Assert.assertEquals(10, result);
+  }
+
+  @Test
   public void getArmyByType_ShouldReturn_CorrectArmy() {
     List<Army> armies = ArmyFactory.createListOf2Armies();
 
@@ -758,6 +818,25 @@ public class BattleServiceTest {
     Mockito.doReturn(50).when(battleService)
         .calculateStolenResource(armies.get(1), armies.get(0), ResourceType.FOOD, ResourceType.GOLD);
     Mockito.doReturn(50).when(battleService)
+        .calculateStolenResource(armies.get(1), armies.get(0), ResourceType.GOLD, ResourceType.FOOD);
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(1).getKingdom(), ResourceType.GOLD))
+        .thenReturn(armies.get(1).getKingdom().getResources().get(0));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(1).getKingdom(), ResourceType.FOOD))
+        .thenReturn(armies.get(1).getKingdom().getResources().get(1));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(0).getKingdom(), ResourceType.GOLD))
+        .thenReturn(armies.get(1).getKingdom().getResources().get(0));
+    Mockito.when(resourceService.getResourceByResourceType(armies.get(0).getKingdom(), ResourceType.FOOD))
+        .thenReturn(armies.get(1).getKingdom().getResources().get(1));
+  }
+
+  public void mockingPart_PerformAfterBattleActions_WhenAttackingKingdomCanSteal_10_100(List<Army> armies) {
+    Mockito.doReturn(armies.get(0)).when(battleService).getArmyByType(armies, ArmyType.ATTACKINGARMY);
+    Mockito.doReturn(armies.get(1)).when(battleService).getArmyByType(armies, ArmyType.DEFENDINGARMY);
+    Mockito.doReturn(false).when(battleService).nobodyWon(armies.get(1), armies.get(0));
+    Mockito.doReturn(false).when(battleService).defKingdomWon(armies.get(1), armies.get(0));
+    Mockito.doReturn(10).when(battleService)
+        .calculateStolenResource(armies.get(1), armies.get(0), ResourceType.FOOD, ResourceType.GOLD);
+    Mockito.doReturn(40).when(battleService)
         .calculateStolenResource(armies.get(1), armies.get(0), ResourceType.GOLD, ResourceType.FOOD);
     Mockito.when(resourceService.getResourceByResourceType(armies.get(1).getKingdom(), ResourceType.GOLD))
         .thenReturn(armies.get(1).getKingdom().getResources().get(0));
