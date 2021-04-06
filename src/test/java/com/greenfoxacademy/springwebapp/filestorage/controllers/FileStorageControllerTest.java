@@ -47,7 +47,7 @@ public class FileStorageControllerTest {
         "image/png", "test data".getBytes());
     PlayerEntity player = ((CustomUserDetails) authentication.getPrincipal()).getPlayer();
     Mockito.when(fileStorageService.storeAvatar(file, player)).thenReturn("AVATAR_1_avatar.png");
-    Mockito.when(fileStorageService.getLastPathFolderName()).thenReturn("avatars");
+    Mockito.when(fileStorageService.getAvatarsFolderName()).thenReturn("avatars");
 
     ResponseEntity response = fileStorageController.uploadAvatar(file,authentication);
     Assert.assertEquals(200, response.getStatusCodeValue());

@@ -18,5 +18,5 @@ public interface FileStorageService {
 
   boolean userIsAllowedToAccessTheFile(String fileName, Authentication auth) throws ForbiddenActionException;
 
-  String getLastPathFolderName();
+  String getAvatarsFolderName();
 }

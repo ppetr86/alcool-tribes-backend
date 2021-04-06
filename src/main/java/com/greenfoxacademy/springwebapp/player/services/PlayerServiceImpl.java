@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
+import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
@@ -42,6 +43,7 @@ public class PlayerServiceImpl implements PlayerService {
   private final ResourceService resourceService;
   private final LocationService locationService;
   private final Environment env;
+  private final FileStorageService fileStorageService;
 
   @Override
   public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
@@ -74,10 +76,15 @@ public class PlayerServiceImpl implements PlayerService {
 
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
+    setDefaultAvatarImage(player);
 
-    player = playerRepo.save(player);
+    playerRepo.save(player);
     locationService.save(defaultLocation);
     return player;
+  }
+
+  public void setDefaultAvatarImage(PlayerEntity player) {
+    player.setAvatar(fileStorageService.getAvatarsFolderName() + "/AVATAR_0_generic.png");
   }
 
   public KingdomEntity createNewEmptyKingdom() {
@@ -191,6 +198,7 @@ public class PlayerServiceImpl implements PlayerService {
     player.setUsername(dto.getUsername());
     player.setKingdom(kingdom);
     player.setIsAccountVerified(verified);
+
     return player;
   }
 

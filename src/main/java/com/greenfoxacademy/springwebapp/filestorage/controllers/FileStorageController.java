@@ -47,7 +47,7 @@ public class FileStorageController {
     String fileName = fileStorageService.storeAvatar(file, player);
 
     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-        .path(fileStorageService.getLastPathFolderName() + "/")
+        .path(fileStorageService.getAvatarsFolderName() + "/")
         .path(fileName)
         .toUriString();
 
@@ -67,7 +67,7 @@ public class FileStorageController {
   }
 
   @GetMapping("/avatars/{fileName:.+}")
-  public ResponseEntity<Resource> downloadFile(
+  public ResponseEntity<Resource> downloadAvatar(
       @PathVariable String fileName, HttpServletRequest request, Authentication auth)
       throws ForbiddenActionException, MyFileNotFoundException {
     // Load file as Resource

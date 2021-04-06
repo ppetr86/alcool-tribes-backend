@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.Authentication;
@@ -25,19 +26,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
-  private final Path fileStorageLocation;
+  private final Path avatarStorageLocation;
   FileStorageProperties fileStorageProperties;
   PlayerService playerService;
 
   //injecting dependency to fileStorageProperties + using it immediately for defining fileStorageLocation
-  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties, PlayerService playerService) {
+  //@Lazy - to prevent forming of a cycle of DI (in PlayerService there is also DI to FileStorageService)
+  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties, @Lazy PlayerService playerService) {
     this.fileStorageProperties = fileStorageProperties;
     this.playerService = playerService;
 
-    this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadAvatarDir())
+    this.avatarStorageLocation = Paths.get(fileStorageProperties.getUploadAvatarDir())
         .toAbsolutePath().normalize();
     try {
-      Files.createDirectories(this.fileStorageLocation);
+      Files.createDirectories(this.avatarStorageLocation);
     } catch (Exception ex) {
       throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
     }
@@ -53,7 +55,7 @@ public class FileStorageServiceImpl implements FileStorageService {
       // Check if the file's name contains invalid characters and is of type image
       checkCorrectnessOfFileNameAndFileType(fileName,file);
       // Copy file to the target location (Replacing existing file with the same name)
-      Path targetLocation = this.fileStorageLocation.resolve(fileName);
+      Path targetLocation = this.avatarStorageLocation.resolve(fileName);
       Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
       // Save avatar address into database
       player.setAvatar(fileName);
@@ -79,11 +81,15 @@ public class FileStorageServiceImpl implements FileStorageService {
   public Resource loadFileAsResource(String fileName, Authentication auth)
       throws MyFileNotFoundException, ForbiddenActionException {
     try {
-      Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+      Path filePath = this.avatarStorageLocation.resolve(fileName).normalize();
       Resource resource = new UrlResource(filePath.toUri());
       if (resource.exists()) {
-        userIsAllowedToAccessTheFile(fileName, auth);
-        return resource;
+        if (fileName.equals("AVATAR_0_generic.png")) {
+          return resource;
+        } else {
+          userIsAllowedToAccessTheFile(fileName, auth);
+          return resource;
+        }
       } else {
         throw new MyFileNotFoundException("File not found " + fileName);
       }
@@ -106,8 +112,8 @@ public class FileStorageServiceImpl implements FileStorageService {
   }
 
   @Override
-  public String getLastPathFolderName() {
-    String target = fileStorageLocation.toString();
+  public String getAvatarsFolderName() {
+    String target = avatarStorageLocation.toString();
 
     List<Character> folderPath = target.chars()
         .mapToObj(a -> (char)a)

@@ -49,7 +49,7 @@ public class PlayerEntity {
   @Column(name = "email")
   private String email;
   @Column(name = "avatar")
-  private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
+  private String avatar = "genericName.jpg"; //this field is set to its actual default value within PlayerServiceImpl
   @Column(name = "points")
   private Integer points = 0; //TODO: need to have proper point logic
 
