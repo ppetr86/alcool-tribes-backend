@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,6 +37,7 @@ public class PlayerControllerTest {
         .id(1L)
         .password("password")
         .isAccountVerified(true)
+        .roleType(RoleType.ROLE_USER)
         .build();
 
     PlayerRegisterRequestDTO playerRegistrationRequestDTO =

@@ -69,7 +69,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   @Override
-  public void updateResourcesByBuildingType(KingdomEntity kingdom, int amountChange) {
+  public void updateResourcesByBuildings(KingdomEntity kingdom, int amountChange) {
     ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
     int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
 

@@ -11,6 +11,7 @@ import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import org.junit.Assert;
@@ -71,7 +72,7 @@ public class KingdomServiceTest {
     List<ResourceEntity> fakeResources = new ArrayList<>();
     Set<RegistrationTokenEntity> tokens = new HashSet<>();
     PlayerEntity fakePlayer =
-        new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, tokens);
+        new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, RoleType.ROLE_USER, tokens);
     KingdomEntity kingdom =
         new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
             new LocationEntity(1L, 10, 10, null, LocationType.KINGDOM));
@@ -89,7 +90,7 @@ public class KingdomServiceTest {
     List<ResourceEntity> fakeResources = new ArrayList<>();
     Set<RegistrationTokenEntity> tokens = new HashSet<>();
     PlayerEntity fakePlayer =
-        new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, tokens);
+        new PlayerEntity(1L, "test", "test", "test@gmail.com", "avatar.test", 0, null, true, RoleType.ROLE_USER, tokens);
     KingdomEntity kingdom = new KingdomEntity(1L, fakePlayer, fakeBuildings, "Old Kingdom", fakeTroops, fakeResources,
         new LocationEntity(1L, 10, 10, null, LocationType.KINGDOM));
 

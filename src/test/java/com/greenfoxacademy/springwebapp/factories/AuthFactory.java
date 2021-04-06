@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.factories;
 
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ public class AuthFactory {
   private static CustomUserDetails createUser(String userName, Long kingdomId) {
     PlayerEntity player = new PlayerEntity();
     player.setUsername(userName);
+    player.setRoleType(RoleType.ROLE_USER);
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(kingdomId);
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
@@ -40,7 +42,21 @@ public class AuthFactory {
     PlayerEntity player = new PlayerEntity();
     player.setUsername(userName);
     player.setId(kingdomId);
+    player.setRoleType(RoleType.ROLE_USER);
     KingdomEntity kingdom = KingdomFactory.createFullKingdom(kingdomId, kingdomId);
+
+    userDetails.setLogin(player);
+    userDetails.setKingdom(kingdom);
+
+
+    return new UsernamePasswordAuthenticationToken(userDetails, null, null);
+  }
+
+  public static Authentication createAuth2(Long kingdomId) {
+
+    CustomUserDetails userDetails = new CustomUserDetails();
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(kingdomId, kingdomId);
+    PlayerEntity player = PlayerFactory.createPlayer(1L, kingdom);
 
     userDetails.setLogin(player);
     userDetails.setKingdom(kingdom);

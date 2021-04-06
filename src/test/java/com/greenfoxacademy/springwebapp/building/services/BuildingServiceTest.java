@@ -8,6 +8,8 @@ import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.repositories.BuildingRepository;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
+import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
@@ -223,9 +225,10 @@ public class BuildingServiceTest {
 
   @Test
   public void updateBuildingShouldReturnWithUpdatedTownHall() {
-    KingdomEntity kingdom = new KingdomEntity();
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8());
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
     BuildingEntity townHall = kingdom.getBuildings().get(0);
 
     buildingService = Mockito.spy(buildingService);
@@ -245,19 +248,21 @@ public class BuildingServiceTest {
 
   @Test
   public void updateBuildingShouldReturnWithUpdatedAcademy() {
-    KingdomEntity kingdom = new KingdomEntity();
+    BuildingLevelDTO levelDTO = new BuildingLevelDTO(3);
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
     BuildingEntity academy = kingdom.getBuildings().get(1);
 
     buildingService = Mockito.spy(buildingService);
-    Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
-    Mockito.when(buildingRepository.findById(2L)).thenReturn(java.util.Optional.of(academy));
+    Mockito.doReturn(academy).when(buildingService).checkBuildingDetails(kingdom, academy.getId(), levelDTO);
+    Mockito.when(buildingRepository.findById(academy.getId())).thenReturn(Optional.of(academy));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(buildingRepository.save(any())).thenReturn(academy);
     Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 300)).thenReturn(true);
 
-    BuildingEntity result = buildingService.updateBuilding(kingdom, 2L, new BuildingLevelDTO(3));
+    BuildingEntity result = buildingService.updateBuilding(kingdom, 2L, levelDTO);
 
     Assert.assertEquals(java.util.Optional.of(3), java.util.Optional.ofNullable(result.getLevel()));
     Assert.assertEquals(java.util.Optional.of(450), java.util.Optional.ofNullable(result.getHp()));
@@ -267,19 +272,21 @@ public class BuildingServiceTest {
 
   @Test
   public void updateBuildingShouldReturnWithUpdatedFarm() {
-    KingdomEntity kingdom = new KingdomEntity();
+    BuildingLevelDTO levelDTO = new BuildingLevelDTO(2);
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
     BuildingEntity farm = kingdom.getBuildings().get(2);
 
     buildingService = Mockito.spy(buildingService);
-    Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
-    Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(farm));
+    Mockito.doReturn(farm).when(buildingService).checkBuildingDetails(kingdom, farm.getId(), levelDTO);
+    Mockito.when(buildingRepository.findById(farm.getId())).thenReturn(Optional.of(farm));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(buildingRepository.save(any())).thenReturn(farm);
     Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 200)).thenReturn(true);
 
-    BuildingEntity result = buildingService.updateBuilding(kingdom, 3L, new BuildingLevelDTO(2));
+    BuildingEntity result = buildingService.updateBuilding(kingdom, 3L, levelDTO);
 
     Assert.assertEquals(Optional.of(2), Optional.ofNullable(result.getLevel()));
     Assert.assertEquals(Optional.of(200), Optional.ofNullable(result.getHp()));
@@ -289,19 +296,21 @@ public class BuildingServiceTest {
 
   @Test
   public void updateBuildingShouldReturnWithUpdatedMine() {
-    KingdomEntity kingdom = new KingdomEntity();
+    BuildingLevelDTO levelDTO = new BuildingLevelDTO(4);
+    KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
     BuildingEntity mine = kingdom.getBuildings().get(3);
 
     buildingService = Mockito.spy(buildingService);
-    Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
-    Mockito.when(buildingRepository.findById(4L)).thenReturn(Optional.of(mine));
+    Mockito.doReturn(mine).when(buildingService).checkBuildingDetails(kingdom, mine.getId(), levelDTO);
+    Mockito.when(buildingRepository.findById(mine.getId())).thenReturn(Optional.of(mine));
     Mockito.when(timeService.getTime()).thenReturn(1060L);
     Mockito.when(buildingRepository.save(any())).thenReturn(mine);
     Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 400)).thenReturn(true);
 
-    BuildingEntity result = buildingService.updateBuilding(kingdom, 4L, new BuildingLevelDTO(4));
+    BuildingEntity result = buildingService.updateBuilding(kingdom, 4L, levelDTO);
 
     Assert.assertEquals(Optional.of(4), Optional.ofNullable(result.getLevel()));
     Assert.assertEquals(Optional.of(400), Optional.ofNullable(result.getHp()));

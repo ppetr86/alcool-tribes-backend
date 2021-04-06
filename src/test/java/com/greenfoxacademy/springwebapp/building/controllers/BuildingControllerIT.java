@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
+import com.greenfoxacademy.springwebapp.factories.AuthFactory;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
+import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth2;
 import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuthWithResources;
 import static com.greenfoxacademy.springwebapp.factories.BuildingFactory.createDefaultBuildings;
 import static org.hamcrest.core.Is.is;
@@ -278,6 +281,8 @@ public class BuildingControllerIT {
   @Test
   public void updateTheGivenBuildingDetailsShouldReturnNotAcceptablewithTownHallNeedHigherLevel() throws Exception {
     Authentication auth = createAuthWithResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    Authentication auth2 = createAuth2(1L);
+
     BuildingLevelDTO request = new BuildingLevelDTO(2);
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
@@ -285,7 +290,7 @@ public class BuildingControllerIT {
     mockMvc.perform(put(BuildingController.URI + "/2")
       .contentType(MediaType.APPLICATION_JSON)
       .content(json)
-      .principal(auth))
+      .principal(auth2))
       .andExpect(status().isNotAcceptable())
       .andExpect(jsonPath("$.status", is("error")))
       .andExpect(jsonPath("$.message", is("Cannot build buildings with higher level than the Townhall")));
