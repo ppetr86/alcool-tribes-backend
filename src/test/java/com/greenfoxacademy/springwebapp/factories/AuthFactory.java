@@ -20,18 +20,19 @@ public class AuthFactory {
   public static Authentication createAuthWithResources(List<ResourceEntity> resources) {
     CustomUserDetails user = createUser("user name", 1L);
     user.getKingdom().setResources(resources);
+    PlayerEntity player = new PlayerEntity();
+    player.setUsername("userName");
+    player.setRoleType(RoleType.ROLE_USER);
+    user.getKingdom().setPlayer(player);
     return new UsernamePasswordAuthenticationToken(user, null, null);
   }
 
   private static CustomUserDetails createUser(String userName, Long kingdomId) {
-    PlayerEntity player = new PlayerEntity();
-    player.setUsername(userName);
-    player.setRoleType(RoleType.ROLE_USER);
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(kingdomId);
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
     CustomUserDetails userDetails = new CustomUserDetails();
-    userDetails.setLogin(player);
+
     userDetails.setKingdom(kingdom);
     return userDetails;
   }
@@ -56,7 +57,7 @@ public class AuthFactory {
 
     CustomUserDetails userDetails = new CustomUserDetails();
     KingdomEntity kingdom = KingdomFactory.createFullKingdom(kingdomId, kingdomId);
-    PlayerEntity player = PlayerFactory.createPlayer(1L, kingdom);
+    PlayerEntity player = PlayerFactory.createPlayer(3L, kingdom);
 
     userDetails.setLogin(player);
     userDetails.setKingdom(kingdom);

@@ -10,14 +10,14 @@ DELETE
 FROM players;
 
 
-INSERT INTO players (id, avatar, email, password, points, username, is_account_verified)
+INSERT INTO players (id, avatar, email, password, points, username, is_account_verified, role_type)
 VALUES (1, 'http://avatar.loc/my.png', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG',
-        0, 'furkesz', true);
-INSERT INTO players (id, avatar, username, email, password, points, is_account_verified)
-VALUES (2, '', 'zdenek', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0, true);
-INSERT INTO players (id, avatar, username, email, password, points, is_account_verified)
+        0, 'furkesz', true, 'ROLE_USER');
+INSERT INTO players (id, avatar, username, email, password, points, is_account_verified, role_type)
+VALUES (2, '', 'zdenek', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG', 0, true, 'ROLE_USER');
+INSERT INTO players (id, avatar, username, email, password, points, is_account_verified, role_type)
 VALUES (100, '', 'occupied_username', 'test@email.com', '$2a$10$NaD84OJw/IJCe6jExv21Reah0hCOgZDhp1N8D.ovKHeKtAYzevcQG',
-        0, true);
+        0, true, 'ROLE_USER');
 
 INSERT INTO kingdoms (id, kingdomname, player_id)
 VALUES (1, 'furkesz''s kingdom', 1);

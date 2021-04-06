@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.factories.AuthFactory;
 import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
+import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
@@ -54,6 +55,7 @@ public class BuildingControllerIT {
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithLowAmount());
     kingdom.setBuildings(createDefaultBuildings(kingdom));
+    kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
   }
 
   @Test
