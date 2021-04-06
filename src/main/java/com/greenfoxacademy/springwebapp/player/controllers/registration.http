@@ -17,6 +17,7 @@ Content-Type: application/json
   "password": "password",
   "email": "kelemen9417@gmail.com"
 }
+
 ###
 
 POST http://localhost:8080/register
