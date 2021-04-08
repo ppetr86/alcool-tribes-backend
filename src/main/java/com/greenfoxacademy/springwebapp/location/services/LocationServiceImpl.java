@@ -88,19 +88,16 @@ public class LocationServiceImpl implements LocationService {
         findAllInRectangleOrdered(MAZE_OFFSET_TO_FORM_RECTANGLE, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
 
-    return pathFinder(start.getLocation(), end.getLocation(),
+    return pathFinder(0, start.getLocation(), end.getLocation(),
         locationMaze, sortedSmallerRectangleList);
   }
 
-  public List<LocationEntity> pathFinder(
-      LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
-
+  public List<LocationEntity> pathFinder(int failSafe, LocationEntity start,
+                                         LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
     Set<LocationEntity> visited = createNewLocationSet();
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
     Map<LocationEntity, Integer> distances = prepareDistancesMap(locations, start);
-    int failSafe = 0;
-
     while (!toVisit.isEmpty() && failSafe < 10000) {
       LocationEntity popped = toVisit.poll();
       visited.add(popped);

@@ -324,7 +324,7 @@ public class LocationServiceTest {
     LocationEntity start = new LocationEntity(cols - 1, 0, null, LocationType.KINGDOM);
     LocationEntity end = new LocationEntity(0, rows - 1, null, LocationType.KINGDOM);
     Map<LocationEntity, Integer> distances = locationService.prepareDistancesMap(sortReduced, start);
-    List<LocationEntity> result = locationService.pathFinder(start, end, maze, sortReduced);
+    List<LocationEntity> result = locationService.pathFinder(0, start, end, maze, sortReduced);
     Assert.assertEquals(11, result.size());
     Assert.assertEquals(0, result.stream().filter(each -> each.getType().equals(LocationType.DESERT)).count());
     Assert.assertEquals(0, result.stream().filter(each -> each.getType().equals(LocationType.JUNGLE)).count());
