@@ -75,7 +75,7 @@ public class PlayerController {
 
 
   @PreAuthorize("@authenticationServiceImpl.hasAccess(#loggedId)")
-  @DeleteMapping("/delete/{loggedId}/{deletedId}")
+  @DeleteMapping("/players/{loggedId}/{deletedId}")
   public ResponseEntity<?> deletePlayer(@PathVariable Long loggedId, @PathVariable Long deletedId) {
     return ResponseEntity.ok(playerService.deletePlayer(deletedId));
   }
