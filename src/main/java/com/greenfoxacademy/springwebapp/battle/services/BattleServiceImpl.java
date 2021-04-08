@@ -331,10 +331,10 @@ public class BattleServiceImpl implements BattleService {
       healUpAliveTroops(defendingArmy.getTroops());
       return new BattleResultDTO("Defending Kingdom won");
     }
+    if (defendingArmy.getHealthPoints() > 0) healUpAliveTroops(defendingArmy.getTroops());
     int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
     int stolenGold = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.GOLD, ResourceType.FOOD);
     if (attackingArmy.getHealthPoints() > 0) {
-      healUpAliveTroops(defendingArmy.getTroops());
       attackingKingdomSteal(attackingArmy, defendingArmy, distance, stolenFood, stolenGold);
       if (defendingArmy.getHealthPoints() == 0) {
         return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
@@ -388,10 +388,11 @@ public class BattleServiceImpl implements BattleService {
 
   private void attackingKingdomSteal(Army attackingArmy, Army defendingArmy,
                                      int distance, int stolenFood, int stolenGold) {
-    applyHpLossDueToTravelling(attackingArmy, distance);
+    Army troopsWhoCanALiveBackTravel = applyHpLossDueToTravelling(attackingArmy, distance);
     modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
     scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
     modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold);
+    healUpAliveTroops(troopsWhoCanALiveBackTravel.getTroops());
   }
 
   private void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
@@ -402,6 +403,7 @@ public class BattleServiceImpl implements BattleService {
   private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange) {
     resourceService.updateResourceAmount(attackingArmy.getKingdom(), foodChange, ResourceType.FOOD);
     resourceService.updateResourceAmount(attackingArmy.getKingdom(), goldChange, ResourceType.GOLD);
+
   }
 
   public Army getArmyByType(List<Army> armiesAfterBattle, ArmyType type) {
