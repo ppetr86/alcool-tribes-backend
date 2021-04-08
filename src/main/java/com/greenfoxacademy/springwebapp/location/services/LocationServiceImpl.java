@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -88,11 +87,9 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> sortedSmallerRectangleList =
         findAllInRectangleOrdered(MAZE_OFFSET_TO_FORM_RECTANGLE, start.getLocation(), end.getLocation());
     LocationEntity[][] locationMaze = buildMap(sortedSmallerRectangleList);
-    List<LocationEntity> pathFinderWithStack = pathFinderStack(start.getLocation(),
-        end.getLocation(), locationMaze, sortedSmallerRectangleList);
-    List<LocationEntity> pathFinder = pathFinder(start.getLocation(), end.getLocation(),
+
+    return pathFinder(start.getLocation(), end.getLocation(),
         locationMaze, sortedSmallerRectangleList);
-    return pathFinder;
   }
 
   public List<LocationEntity> pathFinder(
@@ -102,8 +99,9 @@ public class LocationServiceImpl implements LocationService {
     PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
     toVisit.add(start);
     Map<LocationEntity, Integer> distances = prepareDistancesMap(locations, start);
+    int failSafe = 0;
 
-    while (!toVisit.isEmpty()) {
+    while (!toVisit.isEmpty() && failSafe < 10000) {
       LocationEntity popped = toVisit.poll();
       visited.add(popped);
       for (LocationEntity neighbor : findNeighbours(popped, maze)) {
@@ -113,97 +111,10 @@ public class LocationServiceImpl implements LocationService {
         }
       }
       if (popped.equals(end)) break;
+      failSafe++;
     }
+    if (failSafe == 9999) throw new RuntimeException("PATH NOT FOUND");
     return backtrack(distances, end, maze);
-  }
-
-  public List<LocationEntity> pathFinderStack(
-      LocationEntity start, LocationEntity end, LocationEntity[][] maze, List<LocationEntity> locations) {
-
-    Set<LocationEntity> visited = createNewLocationSet();
-    PriorityQueue<LocationEntity> toVisit = new PriorityQueue<>(new LocationComparator(end.getX(), end.getY()));
-    toVisit.add(start);
-    Map<LocationEntity, Integer> distances = prepareDistancesMap(locations, start);
-    Stack<LocationEntity[]> backtrackStack = createNewStack();
-    LocationEntity locationBeforePopped = null;
-
-    while (!toVisit.isEmpty()) {
-      LocationEntity popped = toVisit.poll();
-      visited.add(popped);
-
-      int walkableNeighbourCount = 4;
-      List<LocationEntity> neighbours = findNeighbours(popped, maze);
-      for (LocationEntity neighbor : neighbours) {
-        if ((neighbor.getType().equals(LocationType.EMPTY) && !visited.contains(neighbor)) || neighbor.equals(end)) {
-          calculateDistanceToStart(neighbor, popped, distances);
-          toVisit.add(neighbor);
-        }
-        if (!neighbor.getType().equals(LocationType.EMPTY) || visited.contains(neighbor)) {
-          walkableNeighbourCount--;
-        }
-      }
-      if (walkableNeighbourCount == 0) {
-        checkStackHowFarToPop(backtrackStack, visited, maze);
-      } else if (walkableNeighbourCount > 0) {
-        locationBeforePopped = definePoppedBefore(popped, neighbours, visited, distances, start);
-        addToStack(popped, locationBeforePopped, backtrackStack);
-      }
-      if (popped.equals(end)) break;
-    }
-    return backtrackFromStack(backtrackStack, maze);
-  }
-
-  private List<LocationEntity> backtrackFromStack(Stack<LocationEntity[]> backtrackStack, LocationEntity[][] maze) {
-
-    List<LocationEntity> pathFromStack = new ArrayList<>();
-    pathFromStack.add(backtrackStack.pop()[0]);
-
-    while (!backtrackStack.isEmpty()) {
-      LocationEntity[] arr = backtrackStack.pop();
-      LocationEntity l1 = arr[0];
-      if (findNeighbours(l1, maze).contains(pathFromStack.get(pathFromStack.size() - 1))) pathFromStack.add(l1);
-    }
-    return pathFromStack;
-  }
-
-  private LocationEntity definePoppedBefore(LocationEntity popped,
-                                            List<LocationEntity> neighbours,
-                                            Set<LocationEntity> visited,
-                                            Map<LocationEntity, Integer> distances,
-                                            LocationEntity start) {
-
-    if (popped.equals(start)) return null;
-    int distanceOfPopped = distances.get(popped);
-    LocationEntity check = neighbours
-        .stream()
-        .filter(location -> visited.contains(location)
-            && distances.get(location) == distanceOfPopped - 1)
-        .findFirst().orElse(null);
-    return check;
-  }
-
-  private void checkStackHowFarToPop(Stack<LocationEntity[]> backtrackStack,
-                                     Set<LocationEntity> visited, LocationEntity[][] maze) {
-
-    backtrackStack.pop();
-    while (true) {
-      LocationEntity[] lastArrInStack = backtrackStack.peek();
-      LocationEntity lastAddedLocation = lastArrInStack[1];
-      int walkableNeighbourCount = 4;
-      //
-      for (LocationEntity neighbour : findNeighbours(lastAddedLocation, maze)) {
-        // add only EMPTY and not visited
-        if (!neighbour.getType().equals(LocationType.EMPTY) || visited.contains(neighbour)) {
-          walkableNeighbourCount--;
-        }
-      }
-      if (walkableNeighbourCount == 0) backtrackStack.pop();
-      if (walkableNeighbourCount > 0) return;
-    }
-  }
-
-  public void addToStack(LocationEntity popped, LocationEntity poppedBefore, Stack<LocationEntity[]> backtrackStack) {
-    backtrackStack.add(new LocationEntity[]{popped, poppedBefore});
   }
 
   public Map<LocationEntity, Integer> prepareDistancesMap(List<LocationEntity> locations, LocationEntity start) {
@@ -308,11 +219,6 @@ public class LocationServiceImpl implements LocationService {
       return 0;
     }
 
-    /*private double locationDistanceToXY(LocationEntity l2, int x, int y) {
-      double result = Math.sqrt((Math.pow(l2.getX() - x, 2) + Math.pow(l2.getY() - y, 2)));
-      return result;
-    }*/
-
     private int locationDistanceToXY(LocationEntity l2, int x, int y) {
       return Math.abs(l2.getY() - y) + Math.abs(l2.getX() - x);
     }
@@ -330,7 +236,4 @@ public class LocationServiceImpl implements LocationService {
     return new HashSet<>();
   }
 
-  public Stack<LocationEntity[]> createNewStack() {
-    return new Stack<>();
-  }
 }
