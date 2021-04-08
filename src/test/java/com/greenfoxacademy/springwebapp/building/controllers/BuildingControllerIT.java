@@ -300,14 +300,15 @@ public class BuildingControllerIT {
 
   @Test
   public void updateTheGivenBuildingDetailsShouldReturnConflictWithNoResource() throws Exception {
+    Authentication auth = AuthFactory.createAuth2(3L);
     BuildingLevelDTO request = new BuildingLevelDTO(2);
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
 
-    mockMvc.perform(put(BuildingController.URI + "/1")
+    mockMvc.perform(put(BuildingController.URI + "/9")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json)
-        .principal(authentication))
+        .principal(auth))
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.status", is("error")))
         .andExpect(jsonPath("$.message", is("Not enough resource")));

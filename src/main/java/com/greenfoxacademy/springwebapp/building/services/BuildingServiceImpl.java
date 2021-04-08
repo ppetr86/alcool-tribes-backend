@@ -85,18 +85,35 @@ public class BuildingServiceImpl implements BuildingService {
       throws IdNotFoundException, MissingParameterException, TownhallLevelException,
       NotEnoughResourceException, ForbiddenActionException {
     BuildingEntity building = findBuildingById(id);
-    if (building == null) throw new IdNotFoundException();
-    if (levelDTO == null || levelDTO.getLevel() == 0) throw new MissingParameterException("level");
-    if (!kingdom.getPlayer().getRoleType().equals(RoleType.ROLE_ADMIN)
-      || (!findBuildingsByKingdomId(kingdom.getId()).contains(building))) throw new ForbiddenActionException();
+    if (building == null) {
+      throw new IdNotFoundException();
+    }
+    if (levelDTO == null || levelDTO.getLevel() == 0) {
+      throw new MissingParameterException("level");
+    }
+    if (!(findBuildingsByKingdomId(kingdom.getId()).contains(building)
+        || kingdom.getPlayer().getRoleType().equals(RoleType.ROLE_ADMIN))) {
+      throw new ForbiddenActionException();
+    }
+    //if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)) {
+    //  if (!kingdom.getPlayer().getRoleType().equals(RoleType.ROLE_ADMIN)) {
+    //    throw new ForbiddenActionException();
+    //  }
+    //}
 
     int cost = fetchBuildingSetting(building.getType(), "buildingCosts");
     int amountChange = cost * levelDTO.getLevel();
-    if (!resourceService.hasResourcesForBuilding(building.getKingdom(), amountChange)) throw new NotEnoughResourceException();
+    if (!resourceService.hasResourcesForBuilding(building.getKingdom(), amountChange)) {
+      throw new NotEnoughResourceException();
+    }
 
-    if (building.getType().equals(BuildingType.TOWNHALL)) return building;
+    if (building.getType().equals(BuildingType.TOWNHALL)) {
+      return building;
+    }
     BuildingEntity townHall = getTownHallFromKingdom(building.getKingdom());
-    if (townHall.getLevel() < levelDTO.getLevel()) throw new TownhallLevelException();
+    if (townHall.getLevel() < levelDTO.getLevel()) {
+      throw new TownhallLevelException();
+    }
     return building;
   }
 
@@ -140,10 +157,16 @@ public class BuildingServiceImpl implements BuildingService {
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
 
-    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
-    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
+    if (!isBuildingTypeInRequestOk(dto)) {
+      throw new InvalidInputException("building type");
+    }
+    if (!hasKingdomTownhall(kingdom)) {
+      throw new TownhallLevelException();
+    }
     int amountChange = defineBuildingFirstLevelCosts(dto.getType());
-    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
+    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) {
+      throw new NotEnoughResourceException();
+    }
 
     resourceService.updateResourcesByBuildings(kingdom, amountChange);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());

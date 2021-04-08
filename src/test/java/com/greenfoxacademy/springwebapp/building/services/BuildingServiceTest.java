@@ -185,7 +185,7 @@ public class BuildingServiceTest {
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setBuildings(BuildingFactory.createBuildingsWhereTownHallsLevelFive());
     KingdomEntity kingdom2 = new KingdomEntity();
-    kingdom2.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8());
+    kingdom2.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8(kingdom));
 
     buildingService = Mockito.spy(BuildingService.class);
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
@@ -212,7 +212,7 @@ public class BuildingServiceTest {
   @Test(expected = TownhallLevelException.class)
   public void updateBuildingShouldReturnTownhallLevelException() {
     KingdomEntity kingdom = new KingdomEntity();
-    kingdom.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8());
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8(kingdom));
 
     buildingService = Mockito.spy(BuildingService.class);
     Mockito.doReturn(kingdom.getBuildings()).when(buildingService).findBuildingsByKingdomId(kingdom.getId());
@@ -226,7 +226,7 @@ public class BuildingServiceTest {
   @Test
   public void updateBuildingShouldReturnWithUpdatedTownHall() {
     KingdomEntity kingdom = KingdomFactory.createKingdomEntityWithId(1L);
-    kingdom.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8());
+    kingdom.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8(kingdom));
     kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
     kingdom.setPlayer(PlayerFactory.createPlayer(1L, kingdom));
     BuildingEntity townHall = kingdom.getBuildings().get(0);
