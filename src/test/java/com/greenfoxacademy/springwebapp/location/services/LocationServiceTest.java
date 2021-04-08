@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.location.services;
 
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
+import com.greenfoxacademy.springwebapp.factories.LocationFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
@@ -351,6 +352,42 @@ public class LocationServiceTest {
     distances.put(new LocationEntity(2, 1), 4);
     distances.put(new LocationEntity(0, 0), 5);
     return distances;
+  }
+
+  @Test
+  public void calculateDistanceBetweenTwoKingdoms_ShouldReturn_CorrectValue_IfAllNumberArePositive() {
+    KingdomEntity attackingKingdom = KingdomFactory.createKingdomEntityWithId(1L);
+    attackingKingdom.setLocation(LocationFactory.createNewLocation(10, 10, attackingKingdom));
+    KingdomEntity defendingKingdom = KingdomFactory.createKingdomEntityWithId(2L);
+    defendingKingdom.setLocation(LocationFactory.createNewLocation(20, 20, defendingKingdom));
+
+    Integer result = locationService.distanceBetweenKingdomsWithoutObstacles(attackingKingdom, defendingKingdom);
+
+    Assert.assertEquals(20, result.intValue());
+  }
+
+  @Test
+  public void calculateDistanceBetweenTwoKingdoms_ShouldReturn_CorrectValue_IfOneNumberIsNegative() {
+    KingdomEntity attackingKingdom = KingdomFactory.createKingdomEntityWithId(1L);
+    attackingKingdom.setLocation(LocationFactory.createNewLocation(10, 10, attackingKingdom));
+    KingdomEntity defendingKingdom = KingdomFactory.createKingdomEntityWithId(2L);
+    defendingKingdom.setLocation(LocationFactory.createNewLocation(20, -20, defendingKingdom));
+
+    Integer result = locationService.distanceBetweenKingdomsWithoutObstacles(attackingKingdom, defendingKingdom);
+
+    Assert.assertEquals(40, result.intValue());
+  }
+
+  @Test
+  public void calculateDistanceBetweenTwoKingdoms_ShouldReturn_CorrectValue_IfAllNumberIsNegative() {
+    KingdomEntity attackingKingdom = KingdomFactory.createKingdomEntityWithId(1L);
+    attackingKingdom.setLocation(LocationFactory.createNewLocation(-3, -56, attackingKingdom));
+    KingdomEntity defendingKingdom = KingdomFactory.createKingdomEntityWithId(2L);
+    defendingKingdom.setLocation(LocationFactory.createNewLocation(-11, -20, defendingKingdom));
+
+    Integer result = locationService.distanceBetweenKingdomsWithoutObstacles(attackingKingdom, defendingKingdom);
+
+    Assert.assertEquals(44, result.intValue());
   }
 
 }

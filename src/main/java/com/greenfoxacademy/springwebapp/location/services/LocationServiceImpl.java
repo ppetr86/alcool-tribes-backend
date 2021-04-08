@@ -25,6 +25,13 @@ public class LocationServiceImpl implements LocationService {
   private final LocationRepository repo;
   public static final int MAZE_OFFSET_TO_FORM_RECTANGLE = 5;
 
+  //TODO: have to delete if Petr implemented the Shortest Path branch
+  @Override
+  public Integer distanceBetweenKingdomsWithoutObstacles(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom) {
+    return Math.abs(attackingKingdom.getLocation().getX() - defendingKingdom.getLocation().getX())
+        + Math.abs(attackingKingdom.getLocation().getY() - defendingKingdom.getLocation().getY());
+  }
+
   @Override
   public LocationEntity save(LocationEntity entity) {
     return repo.save(entity);

@@ -28,6 +28,10 @@ public class LocationFactory {
     return locationEntities;
   }
 
+  public static LocationEntity createNewLocation(int x, int y, KingdomEntity kingdom) {
+    return new LocationEntity(x, y, kingdom, LocationType.KINGDOM);
+  }
+
   public static List<LocationEntity> createKingdoms() {
     List<LocationEntity> kingdoms = Arrays.asList(
         new LocationEntity(0, 2, new KingdomEntity(), LocationType.KINGDOM),

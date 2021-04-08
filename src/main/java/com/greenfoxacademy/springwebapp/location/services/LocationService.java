@@ -10,6 +10,8 @@ import java.util.Set;
 @Service
 public interface LocationService {
 
+  Integer distanceBetweenKingdomsWithoutObstacles(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom);
+
   LocationEntity save(LocationEntity entity);
 
   LocationEntity assignKingdomLocation(KingdomEntity kingdom);
