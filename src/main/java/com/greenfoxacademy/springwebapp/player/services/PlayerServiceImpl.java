@@ -5,11 +5,13 @@ import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.DeletedPlayerDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
@@ -135,6 +137,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public PlayerEntity findById(Long id) {
+    return playerRepo.findById(id).orElse(null);
+  }
+
+  @Override
   public boolean existsPlayerByUsername(String username) {
     return playerRepo.existsByUsername(username);
   }
@@ -194,5 +201,19 @@ public class PlayerServiceImpl implements PlayerService {
     player.setKingdom(kingdom);
     player.setIsAccountVerified(verified);
     return player;
+  }
+
+  @Override
+  public DeletedPlayerDTO deletePlayer(Long deletedPlayerId) {
+    PlayerEntity deletedPlayer = playerRepo.findById(deletedPlayerId).orElse(null);
+    if (deletedPlayer == null) throw new IdNotFoundException();
+    playerRepo.delete(deletedPlayer);
+    return new DeletedPlayerDTO(true, deletedPlayer.getUsername() + " player deleted.");
+  }
+
+  //TODO:DELETE
+  @Override
+  public String hello() {
+    return "hello world";
   }
 }

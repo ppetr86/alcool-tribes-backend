@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.player.services;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.DeletedPlayerDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
@@ -16,6 +17,8 @@ public interface PlayerService {
   PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO playerRegistrationRequestDTO);
 
   PlayerEntity findByUsername(String username);
+
+  PlayerEntity findById(Long id);
 
   PlayerEntity findByUsernameAndPassword(String username, String password);
 
@@ -33,4 +36,8 @@ public interface PlayerService {
 
   PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
       throws RuntimeException;
+
+  DeletedPlayerDTO deletePlayer(Long deletedPlayerId);
+
+  String hello();
 }

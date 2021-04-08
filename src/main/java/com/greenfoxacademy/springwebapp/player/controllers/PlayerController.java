@@ -1,6 +1,11 @@
 package com.greenfoxacademy.springwebapp.player.controllers;
 
+import com.greenfoxacademy.springwebapp.building.services.BuildingService;
+import com.greenfoxacademy.springwebapp.common.services.AuthenticationService;
+import com.greenfoxacademy.springwebapp.common.services.AuthenticationServiceImpl;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
@@ -12,8 +17,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +37,8 @@ public class PlayerController {
   public static final String URI = "/register";
   public static final String URIVERIFY = URI + "/verify";
   private final PlayerService playerService;
+  private final BuildingService buildingService;
+  private final AuthenticationServiceImpl authenticationServiceImpl;
 
   @GetMapping(URIVERIFY)
   @ResponseBody
@@ -63,4 +73,18 @@ public class PlayerController {
     return ResponseEntity.ok(playerListResponseDTO);
   }
 
+
+  @PreAuthorize("@authenticationServiceImpl.hasAccess(#loggedId)")
+  @DeleteMapping("/delete/{loggedId}/{deletedId}")
+  public ResponseEntity<?> deletePlayer(@PathVariable Long loggedId, @PathVariable Long deletedId) {
+    return ResponseEntity.ok(playerService.deletePlayer(deletedId));
+  }
+
+  //TODO:DELETE
+  @PreAuthorize("@authenticationServiceImpl.hasAccess(#loggedId)")
+  @GetMapping("/get-delete/{loggedId}/{deletedId}")
+  public ResponseEntity<?> getBuildingById(@PathVariable Long loggedId, @PathVariable Long deletedId)
+      throws IdNotFoundException, ForbiddenActionException {
+    return ResponseEntity.ok(playerService.hello());
+  }
 }
