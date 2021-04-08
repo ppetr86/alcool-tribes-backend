@@ -321,10 +321,10 @@ public class BattleServiceImpl implements BattleService {
 
   //Mark's section
   //"After battle" section
-  public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle, int distance) {
+  public BattleResultDTO performAfterBattleActions(List<Army> armiesAfterBattle,
+                                                   int distance) {
     Army attackingArmy = getArmyByType(armiesAfterBattle, ArmyType.ATTACKINGARMY);
     Army defendingArmy = getArmyByType(armiesAfterBattle, ArmyType.DEFENDINGARMY);
-
     if (nobodyWon(defendingArmy, attackingArmy)) {
       return new BattleResultDTO("Every Troops dead");
     } else if (defKingdomWon(defendingArmy, attackingArmy)) {
@@ -388,10 +388,10 @@ public class BattleServiceImpl implements BattleService {
 
   private void attackingKingdomSteal(Army attackingArmy, Army defendingArmy,
                                      int distance, int stolenFood, int stolenGold) {
-    Army troopsWhoCanALiveBackTravel = applyHpLossDueToTravelling(attackingArmy, distance);
     modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
     scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
     modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold);
+    Army troopsWhoCanALiveBackTravel = applyHpLossDueToTravelling(attackingArmy, distance);
     healUpAliveTroops(troopsWhoCanALiveBackTravel.getTroops());
   }
 
