@@ -198,19 +198,19 @@ public class BattleServiceTest {
 
   @Test
   public void calculateHPforAttackingArmy_returnsCorrectHP() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
     int distance = 10;
 
     Mockito.doReturn(army).when(battleService).applyHpLossDueToTravelling(army,distance);
 
     int hp = battleService.calculateHPforAttackingArmy(army,distance);
 
-    Assert.assertEquals(306, hp);
+    Assert.assertEquals(120, hp);
   }
 
   @Test
   public void calculateHPforAttackingArmy_ArmyWithNegativeHp_returns0hp() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
     army.getTroops().get(0).setHp(-400); //therefore whole army has negative sum of HP
     int distance = 10;
 
@@ -223,7 +223,8 @@ public class BattleServiceTest {
 
   @Test
   public void applyHpLossDueToTravelling_nobodyDies_returnsCorrecArmyAndKingdomTroopSizes() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
+    army.setTroops(TroopFactory.createDefaultTroops());
     int distance = 10;
 
     Army updatedArmy = battleService.applyHpLossDueToTravelling(army, distance);
@@ -237,7 +238,7 @@ public class BattleServiceTest {
 
   @Test
   public void applyHpLossDueToTravelling_everyoneDies_returnsCorrecArmyAndKingdomTroopSizes() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
     int distance = 50; //since troops looses 2% per distance, every troop dies after 50 distance
 
     Army updatedArmy = battleService.applyHpLossDueToTravelling(army, distance);
@@ -352,8 +353,8 @@ public class BattleServiceTest {
 
   @Test
   public void fightArmies_returnsCorrectListOfArmies() {
-    Army attackingArmy = ArmyFactory.createAttackingArmy();
-    Army defendingArmy = ArmyFactory.createDefendingArmy();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
 
     Mockito.doReturn(attackingArmy).when(battleService).fightOponent(any(),any());
     Mockito.doReturn(attackingArmy.getTroops()).when(battleService).removeDeadTroopsFromArmy(any());
@@ -370,8 +371,10 @@ public class BattleServiceTest {
   @Test
   public void fightArmies_noOneDies_ArmiesDontHarmEachOther() {
     //note: its a kind of "integration" unit test
-    Army attackingArmy = ArmyFactory.createAttackingArmy();
-    Army defendingArmy = ArmyFactory.createDefendingArmy();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
+    attackingArmy.setTroops(TroopFactory.createDefaultTroops());
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
+    defendingArmy.setTroops(TroopFactory.createDefaultTroops());
 
     List<Army> armiesAfterBattle = battleService.fightArmies(attackingArmy, defendingArmy);
 
@@ -384,7 +387,7 @@ public class BattleServiceTest {
 
   @Test
   public void performAfterBattleActions_ShouldReturn_AttackingKingdomWonMessage() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
     armies.get(1).setHealthPoints(0);
 
@@ -401,7 +404,7 @@ public class BattleServiceTest {
 
   @Test
   public void performAfterBattleActions_ShouldReturn_JustStolenThings_BecauseNobodyWon() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     int distance = 10;
     armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
 
@@ -416,7 +419,7 @@ public class BattleServiceTest {
 
   @Test
   public void performAfterBattleActions_ShouldReturn_JustStolenThings_AttackKingdomWon() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
     armies.get(0).setHealthPoints(50);
     int distance = 10;
@@ -432,7 +435,7 @@ public class BattleServiceTest {
 
   @Test
   public void nobodyWon_ShouldReturn_True() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     armies.get(0).setHealthPoints(0);   //0 = Attacking Troops
     armies.get(1).setHealthPoints(0);   //1 = Defending Troops
 
@@ -443,7 +446,7 @@ public class BattleServiceTest {
 
   @Test
   public void nobodyWon_ShouldReturn_False_IfAttackingTroopsHasHp() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     armies.get(0).setHealthPoints(10);
     armies.get(1).setHealthPoints(0);
 
@@ -454,7 +457,7 @@ public class BattleServiceTest {
 
   @Test
   public void nobodyWon_ShouldReturn_False_IfDefendingTroopsHasHp() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     armies.get(0).setHealthPoints(0);
     armies.get(1).setHealthPoints(10);
 
@@ -465,7 +468,7 @@ public class BattleServiceTest {
 
   @Test
   public void defKingdomWon_ShouldReturn_True() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     armies.get(0).setHealthPoints(0);
     armies.get(1).setTroops(TroopFactory.createTroopsWithLowHp());
 
@@ -476,7 +479,7 @@ public class BattleServiceTest {
 
   @Test
   public void defKingdomWon_ShouldReturn_False_IfAttackingTroopsHasHp() {
-    List<Army> armies = ArmyFactory.createListOf2ArmiesWithProperTroops();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
     armies.get(0).setTroops(TroopFactory.createTroopsWithLowHp());
     armies.get(1).setTroops(TroopFactory.createTroopsWithLowHp());
 
@@ -488,10 +491,10 @@ public class BattleServiceTest {
   @Test
   public void fightArmies_oneTroopSurvives_returnsCorrectListOfArmiesAndCorrectSizesOfTroopLists() {
     //note: its a kind of "integration" unit test
-    Army attackingArmy = ArmyFactory.createAttackingArmy();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
     attackingArmy.getTroops().get(0).setAttack(300);
     attackingArmy.getTroops().get(0).setDefence(150); //only this troop with id=1 shall survive
-    Army defendingArmy = ArmyFactory.createDefendingArmy();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     defendingArmy.getTroops().get(0).setAttack(300);
 
     List<Army> armiesAfterBattle = battleService.fightArmies(attackingArmy, defendingArmy);
@@ -506,9 +509,9 @@ public class BattleServiceTest {
   @Test
   public void fightArmies_allTroopsDie_returnsCorrectListOfArmiesAndZeroSizeOfTroopLists() {
     //note: its a kind of "integration" unit test
-    Army attackingArmy = ArmyFactory.createAttackingArmy();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
     attackingArmy.getTroops().get(0).setAttack(300);
-    Army defendingArmy = ArmyFactory.createDefendingArmy();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(1);
     defendingArmy.getTroops().get(0).setAttack(300);
 
     List<Army> armiesAfterBattle = battleService.fightArmies(attackingArmy, defendingArmy);
@@ -520,8 +523,8 @@ public class BattleServiceTest {
 
   @Test
   public void fightOpponent_returnsArmyWithUpdatedTroops() {
-    Army army1 = ArmyFactory.createAttackingArmy();
-    Army army2 = ArmyFactory.createDefendingArmy();
+    Army army1 = ArmyFactory.createAttackingArmy(1);
+    Army army2 = ArmyFactory.createDefendingArmy(1);
     List<TroopEntity> damagedTroops = TroopFactory.createDefaultTroops();
     int damage = 50;
 
@@ -536,20 +539,20 @@ public class BattleServiceTest {
 
   @Test
   public void calculateIncuredDamage_shouldReturnCorrectDamage() {
-    Army army1 = ArmyFactory.createAttackingArmy();
+    Army army1 = ArmyFactory.createAttackingArmy(1);
     army1.getTroops().get(0).setDefence(1);
-    Army army2 = ArmyFactory.createDefendingArmy();
+    Army army2 = ArmyFactory.createDefendingArmy(2);
 
     int damage = battleService.calculateIncuredDamage(army1,army2);
 
-    Assert.assertEquals(100, damage);
+    Assert.assertEquals(34, damage);
   }
 
   @Test
   public void calculateIncuredDamage_shouldReturnZeroDamage() {
-    Army army1 = ArmyFactory.createAttackingArmy();
-    Army army2 = ArmyFactory.createDefendingArmy();
-    army2.getTroops().get(0).setAttack(1);
+    Army army1 = ArmyFactory.createAttackingArmy(1);
+    Army army2 = ArmyFactory.createDefendingArmy(2);
+    army2.getTroops().get(2).setAttack(0);
 
     int damage = battleService.calculateIncuredDamage(army1,army2);
 
@@ -558,7 +561,8 @@ public class BattleServiceTest {
 
   @Test
   public void shareDamageAmongTroops_returnsDamagedTroops() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
+    army.setTroops(TroopFactory.createDefaultTroops());
     final int incuredDamage = 100;
     army.getTroops().get(0).setDefence(300);
 
@@ -572,7 +576,7 @@ public class BattleServiceTest {
 
   @Test
   public void removeDeadTroopsFromArmy_returnsOnlySurvivedTroops() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
     army.getTroops().get(0).setHp(0);
 
     List<TroopEntity> aliveTroops = battleService.removeDeadTroopsFromArmy(army);
@@ -582,7 +586,7 @@ public class BattleServiceTest {
 
   @Test
   public void removeDeadTroopsFromKingdom_returnsUpdtedArmy() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
     List<TroopEntity> originalListOfTroops = new ArrayList<>();
     originalListOfTroops.addAll(army.getTroops());
     army.getTroops().remove(0); //removing one troop from fighting troops (he died)
@@ -594,7 +598,8 @@ public class BattleServiceTest {
 
   @Test
   public void updateArmyPointsAfterFight_returnsUpdtedArmy() {
-    Army army = ArmyFactory.createAttackingArmy();
+    Army army = ArmyFactory.createAttackingArmy(1);
+    army.setTroops(TroopFactory.createDefaultTroops());
     army.setHealthPoints(10);
     army.setDefencePoints(10);
     army.setAttackPoints(10);
@@ -608,8 +613,8 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_50_IfStolenFood1000AndGold1000() {
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
 
@@ -627,11 +632,11 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_30_IfStolenFood30AndGold1000() {
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(30);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
         .thenReturn(stolenFood.getAmount());
@@ -647,11 +652,11 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_70_IfStolenFood1000AndGold30() {
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     gold.setAmount(30);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
         .thenReturn(stolenFood.getAmount());
@@ -667,12 +672,12 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_60_IfStolenFood60AndGold10() {
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(60);
     gold.setAmount(10);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
         .thenReturn(stolenFood.getAmount());
@@ -688,12 +693,12 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_20_IfStolenFood20AndGold20() {
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(20);
     gold.setAmount(20);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
         .thenReturn(stolenFood.getAmount());
@@ -709,12 +714,12 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_20_IfStolenFood20AndGold70() {
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(20);
     gold.setAmount(70);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
         .thenReturn(stolenFood.getAmount());
@@ -730,12 +735,12 @@ public class BattleServiceTest {
 
   @Test
   public void calculateStolenResource_ShouldReturn_50_IfStolenFood80AndGold80() {
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     ResourceEntity stolenFood = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(1);
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(80);
     gold.setAmount(80);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
         .thenReturn(stolenFood.getAmount());
@@ -755,8 +760,8 @@ public class BattleServiceTest {
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(100);
     gold.setAmount(10);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     attackingArmy.setHealthPoints(50);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
@@ -777,8 +782,8 @@ public class BattleServiceTest {
     ResourceEntity gold = ResourceFactory.createResourcesWithAllDataWithHighAmount().get(0);
     stolenFood.setAmount(10);
     gold.setAmount(100);
-    Army attackingArmy = ArmyFactory.createAttackingArmyWithProperTroops();
-    Army defendingArmy = ArmyFactory.createDefendingArmyWithProperTroops();
+    Army attackingArmy = ArmyFactory.createAttackingArmy(1);
+    Army defendingArmy = ArmyFactory.createDefendingArmy(2);
     attackingArmy.setHealthPoints(50);
 
     Mockito.when(resourceService.calculateActualResource(defendingArmy.getKingdom(), ResourceType.FOOD))
@@ -795,7 +800,7 @@ public class BattleServiceTest {
 
   @Test
   public void getArmyByType_ShouldReturn_CorrectArmy() {
-    List<Army> armies = ArmyFactory.createListOf2Armies();
+    List<Army> armies = ArmyFactory.createArmiesForBattle();
 
     Army result = battleService.getArmyByType(armies, ArmyType.ATTACKINGARMY);
 
