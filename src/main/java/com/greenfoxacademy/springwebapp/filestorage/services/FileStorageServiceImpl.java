@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.filestorage.services;
 
 import com.greenfoxacademy.springwebapp.configuration.filestorageconfig.FileStorageProperties;
+import com.greenfoxacademy.springwebapp.filestorage.models.dtos.FileResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
@@ -23,18 +24,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
   private final Path avatarStorageLocation;
   FileStorageProperties fileStorageProperties;
-  PlayerService playerService;
 
   //injecting dependency to fileStorageProperties + using it immediately for defining fileStorageLocation
   //@Lazy - to prevent forming of a cycle of DI (in PlayerService there is also DI to FileStorageService)
-  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties, @Lazy PlayerService playerService) {
+  public FileStorageServiceImpl(FileStorageProperties fileStorageProperties) {
     this.fileStorageProperties = fileStorageProperties;
-    this.playerService = playerService;
 
     this.avatarStorageLocation = Paths.get(fileStorageProperties.getUploadAvatarDir())
         .toAbsolutePath().normalize();
@@ -59,7 +59,6 @@ public class FileStorageServiceImpl implements FileStorageService {
       Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
       // Save avatar address into database
       player.setAvatar(fileName);
-      playerService.savePlayer(player);
 
       return fileName;
     } catch (IOException ex) {
@@ -114,19 +113,15 @@ public class FileStorageServiceImpl implements FileStorageService {
   @Override
   public String getAvatarsFolderName() {
     String target = avatarStorageLocation.toString();
-
-    List<Character> folderPath = target.chars()
-        .mapToObj(a -> (char)a)
-        .collect(Collectors.toList());
-    int lastFolderIndex = 0;
-
-    for (int i = folderPath.size() - 1; i > 0; i--) {
-      if (folderPath.get(i).equals('\\')) {
-        lastFolderIndex = i;
-        break;
-      }
-    }
-
-    return target.substring(lastFolderIndex + 1);
+    return target.substring(target.lastIndexOf("/") + 1);
   }
+
+  @Override
+  public String getFileUrl(String folderName, String fileName) {
+    return ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path(folderName + "/")
+            .path(fileName)
+            .toUriString();
+  }
+
 }

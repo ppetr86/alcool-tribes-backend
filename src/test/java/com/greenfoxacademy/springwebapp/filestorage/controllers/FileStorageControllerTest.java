@@ -4,7 +4,7 @@ import static com.greenfoxacademy.springwebapp.factories.AuthFactory.createAuth;
 
 
 import com.greenfoxacademy.springwebapp.TestNoSecurityConfig;
-import com.greenfoxacademy.springwebapp.filestorage.models.dtos.UploadFileResponseDTO;
+import com.greenfoxacademy.springwebapp.filestorage.models.dtos.FileResponseDTO;
 import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
@@ -51,8 +51,8 @@ public class FileStorageControllerTest {
 
     ResponseEntity response = fileStorageController.uploadAvatar(file,authentication);
     Assert.assertEquals(200, response.getStatusCodeValue());
-    Assert.assertEquals("AVATAR_1_avatar.png",((UploadFileResponseDTO)response.getBody()).getFileName());
-    Assert.assertEquals("image/png", ((UploadFileResponseDTO)response.getBody()).getFileType());
+    Assert.assertEquals("AVATAR_1_avatar.png",((FileResponseDTO)response.getBody()).getFileName());
+    Assert.assertEquals("image/png", ((FileResponseDTO)response.getBody()).getFileType());
   }
 
   @Test (expected = WrongContentTypeException.class)

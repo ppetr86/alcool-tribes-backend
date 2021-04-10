@@ -9,6 +9,7 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public interface PlayerService {
@@ -35,4 +36,7 @@ public interface PlayerService {
       throws RuntimeException;
 
   PlayerEntity savePlayer(PlayerEntity player);
+
+  PlayerEntity setAvatar(PlayerEntity player, MultipartFile file);
+
 }

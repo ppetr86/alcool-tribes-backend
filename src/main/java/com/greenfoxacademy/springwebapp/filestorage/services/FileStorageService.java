@@ -1,5 +1,6 @@
 package com.greenfoxacademy.springwebapp.filestorage.services;
 
+import com.greenfoxacademy.springwebapp.filestorage.models.dtos.FileResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
@@ -19,4 +20,6 @@ public interface FileStorageService {
   boolean userIsAllowedToAccessTheFile(String fileName, Authentication auth) throws ForbiddenActionException;
 
   String getAvatarsFolderName();
+
+  String getFileUrl(String folderName, String fileName);
 }

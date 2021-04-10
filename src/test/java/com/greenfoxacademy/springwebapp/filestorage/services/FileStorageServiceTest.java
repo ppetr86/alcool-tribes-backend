@@ -26,7 +26,7 @@ public class FileStorageServiceTest {
     fileStorageProperties = Mockito.mock(FileStorageProperties.class);
     playerService = Mockito.mock(PlayerService.class);
     Mockito.when(fileStorageProperties.getUploadAvatarDir()).thenReturn("src/test/resources/files/testAvatars");
-    fileStorageService = new FileStorageServiceImpl(fileStorageProperties,playerService);
+    fileStorageService = new FileStorageServiceImpl(fileStorageProperties);
 
     authentication = AuthFactory.createAuth("Zdenek", 1L);
   }

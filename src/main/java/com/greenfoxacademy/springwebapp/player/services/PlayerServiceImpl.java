@@ -23,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
@@ -207,4 +208,11 @@ public class PlayerServiceImpl implements PlayerService {
   public PlayerEntity savePlayer(PlayerEntity player) {
     return playerRepo.save(player);
   }
+
+  @Override
+  public PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) {
+    fileStorageService.storeAvatar(file, player);
+    return savePlayer(player);
+  }
+
 }
