@@ -205,9 +205,9 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public DeletedPlayerDTO deletePlayer(Long deletedPlayerId) {
-    PlayerEntity deletedPlayer = playerRepo.findById(deletedPlayerId).orElse(null);
+    PlayerEntity deletedPlayer = findById(deletedPlayerId);
     if (deletedPlayer == null) throw new IdNotFoundException();
     playerRepo.delete(deletedPlayer);
-    return new DeletedPlayerDTO(true, deletedPlayer.getUsername() + " player deleted.");
+    return new DeletedPlayerDTO(true, deletedPlayer.getUsername());
   }
 }

@@ -1,14 +1,17 @@
 package com.greenfoxacademy.springwebapp.player.models.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 public class DeletedPlayerDTO {
 
   private boolean deleted;
-  private String deletedPlayer;
+  private String deletedPlayerName;
 
-
+  public DeletedPlayerDTO(boolean deleted, String deletedPlayerName) {
+    this.deleted = deleted;
+    this.deletedPlayerName = deletedPlayerName + " player deleted.";
+  }
 }

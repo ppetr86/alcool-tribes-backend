@@ -6,6 +6,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundExcept
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.DeletedPlayerDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.services.PlayerService;
@@ -71,8 +72,7 @@ public class PlayerController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/players/{deletedId}")
-  public ResponseEntity<?> deletePlayer( @PathVariable Long deletedId) {
+  public ResponseEntity<DeletedPlayerDTO> deletePlayer(@PathVariable Long deletedId) {
     return ResponseEntity.ok(playerService.deletePlayer(deletedId));
   }
-
 }
