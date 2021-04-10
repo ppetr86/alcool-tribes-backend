@@ -210,10 +210,4 @@ public class PlayerServiceImpl implements PlayerService {
     playerRepo.delete(deletedPlayer);
     return new DeletedPlayerDTO(true, deletedPlayer.getUsername() + " player deleted.");
   }
-
-  //TODO:DELETE
-  @Override
-  public String hello() {
-    return "hello world";
-  }
 }

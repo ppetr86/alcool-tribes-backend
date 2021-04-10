@@ -39,5 +39,4 @@ public interface PlayerService {
 
   DeletedPlayerDTO deletePlayer(Long deletedPlayerId);
 
-  String hello();
 }
