@@ -6,7 +6,9 @@ import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
 import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
@@ -210,7 +212,8 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
-  public PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) {
+  public PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) throws
+      FileStorageException, WrongContentTypeException {
     fileStorageService.storeAvatar(file, player);
     return savePlayer(player);
   }

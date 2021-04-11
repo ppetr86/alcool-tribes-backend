@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 
 public class FileStorageServiceTest {
   private FileStorageProperties fileStorageProperties;
-  private PlayerService playerService;
   private FileStorageService fileStorageService;
 
   private Authentication authentication;
@@ -24,7 +23,6 @@ public class FileStorageServiceTest {
   @Before
   public void setUp() {
     fileStorageProperties = Mockito.mock(FileStorageProperties.class);
-    playerService = Mockito.mock(PlayerService.class);
     Mockito.when(fileStorageProperties.getUploadAvatarDir()).thenReturn("src/test/resources/files/testAvatars");
     fileStorageService = new FileStorageServiceImpl(fileStorageProperties);
 

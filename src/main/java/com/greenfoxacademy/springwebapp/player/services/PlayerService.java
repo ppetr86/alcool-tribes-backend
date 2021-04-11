@@ -1,6 +1,8 @@
 package com.greenfoxacademy.springwebapp.player.services;
 
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
@@ -37,6 +39,7 @@ public interface PlayerService {
 
   PlayerEntity savePlayer(PlayerEntity player);
 
-  PlayerEntity setAvatar(PlayerEntity player, MultipartFile file);
+  PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) throws FileStorageException,
+      WrongContentTypeException;
 
 }
