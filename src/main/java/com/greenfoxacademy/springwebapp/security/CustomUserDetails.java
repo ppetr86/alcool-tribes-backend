@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class CustomUserDetails implements UserDetails {
+  private PlayerEntity player;
   private String login;
   private String password;
   private KingdomEntity kingdom;
@@ -18,6 +19,7 @@ public class CustomUserDetails implements UserDetails {
 
   public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity player) {
     CustomUserDetails details = new CustomUserDetails();
+    details.player = player;
     details.login = player.getUsername();
     details.password = player.getPassword();
     details.kingdom = player.getKingdom();
@@ -42,6 +44,14 @@ public class CustomUserDetails implements UserDetails {
 
   public void setLogin(PlayerEntity player) {
     this.login = player.getUsername();
+  }
+
+  public PlayerEntity getPlayer() {
+    return player;
+  }
+
+  public void setPlayer(PlayerEntity player) {
+    this.player = player;
   }
 
   @Override

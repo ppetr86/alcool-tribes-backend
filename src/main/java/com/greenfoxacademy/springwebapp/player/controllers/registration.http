@@ -57,9 +57,3 @@ Content-Type: application/json
   "username": "kelemen",
   "password": "password"
 }
-
-###//TODO:DELETE
-
-GET http://localhost:8080/get-delete/1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTgwMDU2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJrZWxlbWVuIn0.EssWBaZpjlSrZCQLvhsQlj63a7hXBTBOAJZXtwuh2oyBZnqWR05tOiMtODpy99gjN1q29Yv_MDXehqFD91REFw
-Accept: application/json
