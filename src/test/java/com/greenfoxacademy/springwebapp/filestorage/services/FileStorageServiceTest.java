@@ -5,7 +5,6 @@ import com.greenfoxacademy.springwebapp.factories.AuthFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Assert;
 import org.junit.Before;

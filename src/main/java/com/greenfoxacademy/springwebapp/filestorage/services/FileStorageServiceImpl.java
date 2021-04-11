@@ -1,13 +1,11 @@
 package com.greenfoxacademy.springwebapp.filestorage.services;
 
 import com.greenfoxacademy.springwebapp.configuration.filestorageconfig.FileStorageProperties;
-import com.greenfoxacademy.springwebapp.filestorage.models.dtos.FileResponseDTO;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
-import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,9 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.Authentication;
