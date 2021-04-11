@@ -282,7 +282,6 @@ public class BuildingControllerIT {
 
   @Test
   public void updateTheGivenBuildingDetailsShouldReturnNotAcceptablewithTownHallNeedHigherLevel() throws Exception {
-    Authentication auth = createAuthWithResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
     Authentication auth2 = createAuth2(1L);
 
     BuildingLevelDTO request = new BuildingLevelDTO(2);

@@ -17,6 +17,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -318,6 +319,106 @@ public class BuildingServiceTest {
     Assert.assertEquals(Optional.of(1300L), Optional.ofNullable(result.getFinishedAt()));
   }
 
+  @Test(expected = IdNotFoundException.class)
+  public void checkBuildingDetails_ShouldThrow_IdNotFound() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+
+    Mockito.when(buildingRepository.findById(6L)).thenThrow(IdNotFoundException.class);
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 6L, new BuildingLevelDTO(2));
+  }
+
+  @Test(expected = MissingParameterException.class)
+  public void checkBuildingDetails_MissingParameterException_IfLevelDTOIsEmpty() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.ofNullable(kingdom.getBuildings().get(1)));
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 2L, new BuildingLevelDTO());
+  }
+
+  @Test(expected = MissingParameterException.class)
+  public void checkBuildingDetails_MissingParameterException_IfLevelDTOIsEqualZero() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.ofNullable(kingdom.getBuildings().get(1)));
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 2L, new BuildingLevelDTO(0));
+  }
+
+  @Test(expected = MissingParameterException.class)
+  public void checkBuildingDetails_MissingParameterException_IfLevelDTOIsNull() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.ofNullable(kingdom.getBuildings().get(1)));
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 2L, null);
+  }
+
+  @Test(expected = ForbiddenActionException.class)
+  public void checkBuildingDetails_ForbiddenActionException_IfKingdomNotContainTheBuilding() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+    KingdomEntity kingdom2 = KingdomFactory.createFullKingdom(1L, 1L);
+    kingdom2.setBuildings(BuildingFactory.createBuildingsWhereBuildingsIdAre_5_8(kingdom2));
+
+    Mockito.when(buildingRepository.findById(5L)).thenReturn(Optional.ofNullable(kingdom2.getBuildings().get(0)));
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 5L, new BuildingLevelDTO(2));
+  }
+
+  @Test(expected = NotEnoughResourceException.class)
+  public void checkBuildingDetails_NotEnoughResourceException() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.ofNullable(kingdom.getBuildings().get(1)));
+    Mockito.when(buildingRepository.findAllByKingdomId(kingdom.getId())).thenReturn(kingdom.getBuildings());
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 2L, new BuildingLevelDTO(10));
+  }
+
+  @Test(expected = TownhallLevelException.class)
+  public void checkBuildingDetails_TownHallLevelException() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+
+    Mockito.when(buildingRepository.findById(2L)).thenReturn(Optional.ofNullable(kingdom.getBuildings().get(1)));
+    Mockito.when(buildingRepository.findAllByKingdomId(kingdom.getId())).thenReturn(kingdom.getBuildings());
+    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 300)).thenReturn(true);
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 2L, new BuildingLevelDTO(3));
+  }
+
+  @Test
+  public void checkBuildingDetails_ShouldReturnTownHall_IfUpdateOwnBuilding() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+    BuildingEntity townHall = kingdom.getBuildings().get(0);
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.ofNullable(townHall));
+    Mockito.when(buildingRepository.findAllByKingdomId(kingdom.getId())).thenReturn(kingdom.getBuildings());
+    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 600)).thenReturn(true);
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom, 1L, new BuildingLevelDTO(3));
+
+    Assert.assertEquals(townHall, result);
+  }
+
+  @Test
+  public void checkBuildingDetails_ShouldReturnTownHall_IfUserHasAdminRole() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L, 1L);
+    BuildingEntity townHall = kingdom.getBuildings().get(0);
+    kingdom.setResources(ResourceFactory.createResourcesWithAllDataWithHighAmount());
+    KingdomEntity kingdom2 = KingdomFactory.createFullKingdom(1L, 1L);
+    kingdom2.getPlayer().setRoleType(RoleType.ROLE_ADMIN);
+
+    Mockito.when(buildingRepository.findById(1L)).thenReturn(Optional.ofNullable(townHall));
+    Mockito.when(buildingRepository.findAllByKingdomId(kingdom2.getId())).thenReturn(kingdom2.getBuildings());
+    Mockito.when(resourceService.hasResourcesForBuilding(kingdom, 600)).thenReturn(true);
+
+    BuildingEntity result = buildingService.checkBuildingDetails(kingdom2, 1L, new BuildingLevelDTO(3));
+
+    Assert.assertEquals(townHall, result);
+  }
 
   @Test
   public void findBuildingByIdShouldReturnWithCorrectBuildingType() {

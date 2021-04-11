@@ -85,36 +85,31 @@ public class BuildingServiceImpl implements BuildingService {
       throws IdNotFoundException, MissingParameterException, TownhallLevelException,
       NotEnoughResourceException, ForbiddenActionException {
     BuildingEntity building = findBuildingById(id);
-    if (building == null) {
-      throw new IdNotFoundException();
-    }
-    if (levelDTO == null || levelDTO.getLevel() == 0) {
-      throw new MissingParameterException("level");
-    }
+    if (building == null) throw new IdNotFoundException();
+    if (levelDTO == null || levelDTO.getLevel() == 0) throw new MissingParameterException("level");
     if (!(findBuildingsByKingdomId(kingdom.getId()).contains(building)
         || kingdom.getPlayer().getRoleType().equals(RoleType.ROLE_ADMIN))) {
       throw new ForbiddenActionException();
     }
-    //if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)) {
-    //  if (!kingdom.getPlayer().getRoleType().equals(RoleType.ROLE_ADMIN)) {
-    //    throw new ForbiddenActionException();
-    //  }
-    //}
+
+    hasEnoughResourceForBuild(building, levelDTO);
+
+    if (building.getType().equals(BuildingType.TOWNHALL)) return building;
+    BuildingEntity townHall = getTownHallFromKingdom(building.getKingdom());
+    if (townHall.getLevel() < levelDTO.getLevel()) throw new TownhallLevelException();
+
+    return building;
+  }
+
+  private void hasEnoughResourceForBuild(BuildingEntity building, BuildingLevelDTO levelDTO)
+    throws NotEnoughResourceException {
 
     int cost = fetchBuildingSetting(building.getType(), "buildingCosts");
     int amountChange = cost * levelDTO.getLevel();
+
     if (!resourceService.hasResourcesForBuilding(building.getKingdom(), amountChange)) {
       throw new NotEnoughResourceException();
     }
-
-    if (building.getType().equals(BuildingType.TOWNHALL)) {
-      return building;
-    }
-    BuildingEntity townHall = getTownHallFromKingdom(building.getKingdom());
-    if (townHall.getLevel() < levelDTO.getLevel()) {
-      throw new TownhallLevelException();
-    }
-    return building;
   }
 
   private BuildingEntity getTownHallFromKingdom(KingdomEntity kingdom) {
