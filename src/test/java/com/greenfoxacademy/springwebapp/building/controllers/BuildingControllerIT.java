@@ -9,7 +9,6 @@ import com.greenfoxacademy.springwebapp.factories.BuildingFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
-import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
 import org.junit.Before;
 import org.junit.Test;

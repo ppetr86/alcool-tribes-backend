@@ -102,7 +102,7 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   private void hasEnoughResourceForBuild(BuildingEntity building, BuildingLevelDTO levelDTO)
-    throws NotEnoughResourceException {
+      throws NotEnoughResourceException {
 
     int cost = fetchBuildingSetting(building.getType(), "buildingCosts");
     int amountChange = cost * levelDTO.getLevel();
@@ -152,16 +152,10 @@ public class BuildingServiceImpl implements BuildingService {
   public BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
       throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
 
-    if (!isBuildingTypeInRequestOk(dto)) {
-      throw new InvalidInputException("building type");
-    }
-    if (!hasKingdomTownhall(kingdom)) {
-      throw new TownhallLevelException();
-    }
+    if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
+    if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
     int amountChange = defineBuildingFirstLevelCosts(dto.getType());
-    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) {
-      throw new NotEnoughResourceException();
-    }
+    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
     resourceService.updateResourcesByBuildings(kingdom, amountChange);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());

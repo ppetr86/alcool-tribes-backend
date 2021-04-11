@@ -17,7 +17,6 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.persistence.Id;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;

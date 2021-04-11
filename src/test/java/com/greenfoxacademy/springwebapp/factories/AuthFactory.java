@@ -39,13 +39,13 @@ public class AuthFactory {
 
   public static Authentication createAuthFullKingdom(String userName, Long kingdomId) {
 
-    CustomUserDetails userDetails = new CustomUserDetails();
     PlayerEntity player = new PlayerEntity();
     player.setUsername(userName);
     player.setId(kingdomId);
     player.setRoleType(RoleType.ROLE_USER);
     KingdomEntity kingdom = KingdomFactory.createFullKingdom(kingdomId, kingdomId);
 
+    CustomUserDetails userDetails = new CustomUserDetails();
     userDetails.setLogin(player);
     userDetails.setKingdom(kingdom);
 
