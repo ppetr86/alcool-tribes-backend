@@ -113,7 +113,10 @@ public class FileStorageServiceImpl implements FileStorageService {
   @Override
   public String getAvatarsFolderName() {
     String target = avatarStorageLocation.toString();
-    return target.substring(target.lastIndexOf("/") + 1);
+    int lastIndexVar1 = target.lastIndexOf("/");
+    int lastIndexVar2 = target.lastIndexOf("\\");
+    int lastIndex = Math.max(lastIndexVar1,lastIndexVar2);
+    return target.substring(lastIndex + 1);
   }
 
   @Override
