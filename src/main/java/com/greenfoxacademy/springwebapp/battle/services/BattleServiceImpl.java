@@ -71,7 +71,6 @@ public class BattleServiceImpl implements BattleService {
         attackingKingdom, attackingTroops, defendingKingdom, distance, this);
     Timer timer = createTimer();
     timer.schedule(battleTimerTask, distance);
-    //BattleResultDTO battleResultDTO = runBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
 
     //TODO: this method will be replaced by different code when
     //set the troops that they are not home (later - after peter has this method ready)
