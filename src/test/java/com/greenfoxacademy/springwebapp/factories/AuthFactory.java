@@ -28,11 +28,13 @@ public class AuthFactory {
   }
 
   private static CustomUserDetails createUser(String userName, Long kingdomId) {
+    PlayerEntity player = new PlayerEntity();
+    player.setUsername(userName);
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setId(kingdomId);
     kingdom.setBuildings(BuildingFactory.createDefaultLevel1BuildingsWithAllData());
     CustomUserDetails userDetails = new CustomUserDetails();
-
+    userDetails.setLogin(player);
     userDetails.setKingdom(kingdom);
     userDetails.setPlayer(player);
     return userDetails;
