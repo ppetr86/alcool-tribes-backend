@@ -2,8 +2,6 @@ package com.greenfoxacademy.springwebapp.battle.models;
 
 import com.greenfoxacademy.springwebapp.battle.services.BattleServiceImpl;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.TimerTask;

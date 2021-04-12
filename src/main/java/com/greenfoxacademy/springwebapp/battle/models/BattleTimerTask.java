@@ -4,8 +4,6 @@ import com.greenfoxacademy.springwebapp.battle.services.BattleServiceImpl;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;
