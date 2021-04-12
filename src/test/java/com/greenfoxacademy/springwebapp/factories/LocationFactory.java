@@ -18,7 +18,6 @@ public class LocationFactory {
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-
         if (id % 9 == 0) {
           locationEntities.add(new LocationEntity((long) ++id, j - cols / 2, i - rows / 2, null, LocationType.KINGDOM));
         } else {
