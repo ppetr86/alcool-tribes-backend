@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.security;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ public class CustomUserDetails implements UserDetails {
   private String password;
   private KingdomEntity kingdom;
   private Boolean isVerified;
-  private Collection<? extends GrantedAuthority> grantedAuthorities;
+  private Collection<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
   public static CustomUserDetails fromPlayerToCustomUserDetails(PlayerEntity player) {
     CustomUserDetails details = new CustomUserDetails();
@@ -23,13 +24,14 @@ public class CustomUserDetails implements UserDetails {
     details.password = player.getPassword();
     details.kingdom = player.getKingdom();
     details.isVerified = player.getIsAccountVerified();
-    details.grantedAuthorities = details.getAuthorities();//returning empty authorities since we dont use roles
+    details.grantedAuthorities = details.getAuthorities();
+    details.grantedAuthorities.add(new SimpleGrantedAuthority(player.getRoleType().toString()));
     return details;
   }
 
   @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return new HashSet<GrantedAuthority>(); //returns empty authorities since we dont use roles
+  public Collection<GrantedAuthority> getAuthorities() {
+    return grantedAuthorities;
   }
 
   public KingdomEntity getKingdom() {
