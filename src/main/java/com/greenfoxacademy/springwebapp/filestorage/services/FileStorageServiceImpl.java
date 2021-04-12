@@ -27,7 +27,6 @@ public class FileStorageServiceImpl implements FileStorageService {
   FileStorageProperties fileStorageProperties;
 
   //injecting dependency to fileStorageProperties + using it immediately for defining fileStorageLocation
-  //@Lazy - to prevent forming of a cycle of DI (in PlayerService there is also DI to FileStorageService)
   public FileStorageServiceImpl(FileStorageProperties fileStorageProperties) {
     this.fileStorageProperties = fileStorageProperties;
 
@@ -52,7 +51,7 @@ public class FileStorageServiceImpl implements FileStorageService {
       // Copy file to the target location (Replacing existing file with the same name)
       Path targetLocation = this.avatarStorageLocation.resolve(fileName);
       Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-      // Save avatar address into database
+      // Set avatar´s address into player object
       player.setAvatar(fileName);
 
       return fileName;
