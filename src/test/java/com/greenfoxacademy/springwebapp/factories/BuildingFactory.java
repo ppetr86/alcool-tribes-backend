@@ -45,12 +45,12 @@ public class BuildingFactory {
     );
   }
 
-  public static List<BuildingEntity> createBuildingsWhereBuildingsIdAre_5_8() {
+  public static List<BuildingEntity> createBuildingsWhereBuildingsIdAre_5_8(KingdomEntity kingdom) {
     return Arrays.asList(
-        new BuildingEntity(5L, BuildingType.TOWNHALL, 1, 100, 100L, 200L),
-        new BuildingEntity(6L, BuildingType.ACADEMY, 1, 100, 100L, 200L),
-        new BuildingEntity(7L, BuildingType.FARM, 1, 100, 100L, 200L),
-        new BuildingEntity(8L, BuildingType.MINE, 1, 100, 100L, 200L)
+        new BuildingEntity(5L, BuildingType.TOWNHALL, 1, 100, 100L, 200L, kingdom),
+        new BuildingEntity(6L, BuildingType.ACADEMY, 1, 100, 100L, 200L, kingdom),
+        new BuildingEntity(7L, BuildingType.FARM, 1, 100, 100L, 200L, kingdom),
+        new BuildingEntity(8L, BuildingType.MINE, 1, 100, 100L, 200L, kingdom)
     );
   }
 }

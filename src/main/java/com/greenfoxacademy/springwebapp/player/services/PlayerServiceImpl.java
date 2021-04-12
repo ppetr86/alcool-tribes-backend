@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
@@ -13,11 +14,13 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.DeletedPlayerDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +75,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     PlayerEntity player = copyProperties(kingdom, dto, false);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
+    player.setRoleType(RoleType.ROLE_USER);
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
     LocationEntity defaultLocation = locationService.assignKingdomLocation(kingdom);
@@ -144,6 +148,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public PlayerEntity findById(Long id) {
+    return playerRepo.findById(id).orElse(null);
+  }
+
+  @Override
   public boolean existsPlayerByUsername(String username) {
     return playerRepo.existsByUsername(username);
   }
@@ -204,6 +213,14 @@ public class PlayerServiceImpl implements PlayerService {
     player.setIsAccountVerified(verified);
 
     return player;
+  }
+
+  @Override
+  public DeletedPlayerDTO deletePlayer(Long deletedPlayerId) {
+    PlayerEntity deletedPlayer = findById(deletedPlayerId);
+    if (deletedPlayer == null) throw new IdNotFoundException();
+    playerRepo.delete(deletedPlayer);
+    return new DeletedPlayerDTO(true, deletedPlayer.getUsername());
   }
 
   @Override
