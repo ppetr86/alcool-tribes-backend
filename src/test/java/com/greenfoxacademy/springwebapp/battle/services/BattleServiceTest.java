@@ -9,7 +9,6 @@ import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.factories.ArmyFactory;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
@@ -19,6 +18,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundExcept
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
@@ -41,7 +41,7 @@ public class BattleServiceTest {
   private TroopService troopService;
   private ResourceService resourceService;
   private BattleServiceImpl battleService;
-  private TimeService timeService;
+  private LocationService locationService;
 
   @Before
   public void init() {
@@ -50,9 +50,9 @@ public class BattleServiceTest {
     troopService = Mockito.mock(TroopService.class);
     Environment env = TestConfig.mockEnvironment();
     resourceService = Mockito.mock(ResourceService.class);
-    timeService = Mockito.mock(TimeService.class);
+    locationService = Mockito.mock(LocationService.class);
     battleService = new BattleServiceImpl(kingdomService, buildingService, troopService,
-        env, resourceService, timeService);
+        env, resourceService, locationService);
     battleService = Mockito.spy(battleService);
   }
 
@@ -66,8 +66,11 @@ public class BattleServiceTest {
     BattleRequestDTO requestDTO = new BattleRequestDTO(troopsIds);
 
     Mockito.when(kingdomService.findByID(2L)).thenReturn(defendingKingdom);
+    Mockito.when(buildingService.findBuildingWithHighestLevel(defendingKingdom, BuildingType.TOWNHALL))
+        .thenReturn(defendingKingdom.getBuildings().get(0));
+    Mockito.when(buildingService.findBuildingWithHighestLevel(defendingKingdom, BuildingType.ACADEMY))
+        .thenReturn(defendingKingdom.getBuildings().get(1));
     Mockito.doReturn(troops).when(battleService).getAttackingTroops(requestDTO, attackingKingdom);
-    Mockito.doReturn(1).when(battleService).scheduleBattle(attackingKingdom,troops, defendingKingdom);
 
     BattleResponseDTO response = battleService.war(2L, requestDTO, attackingKingdom);
     Assert.assertEquals("ok", response.getStatus());

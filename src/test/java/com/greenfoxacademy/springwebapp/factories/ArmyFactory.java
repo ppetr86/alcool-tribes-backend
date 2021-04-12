@@ -11,7 +11,8 @@ import java.util.List;
 
 public class ArmyFactory {
 
-  public static Army createArmy(int ap, int dp, int hp, List<TroopEntity> troops, KingdomEntity kingdom, ArmyType type) {
+  public static Army createArmy(int ap, int dp, int hp, List<TroopEntity> troops,
+                                KingdomEntity kingdom, ArmyType type) {
     return new Army(ap, dp, hp, troops, kingdom, type);
   }
 

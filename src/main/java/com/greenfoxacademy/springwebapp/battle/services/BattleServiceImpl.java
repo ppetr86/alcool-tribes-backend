@@ -1,6 +1,8 @@
 package com.greenfoxacademy.springwebapp.battle.services;
 
 import com.greenfoxacademy.springwebapp.battle.models.Army;
+import com.greenfoxacademy.springwebapp.battle.models.BattleTimerTask;
+import com.greenfoxacademy.springwebapp.battle.models.ReturnHomeTimerTask;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
 import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResultDTO;
@@ -8,12 +10,12 @@ import com.greenfoxacademy.springwebapp.battle.models.enums.ArmyType;
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
-import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
+import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +42,7 @@ public class BattleServiceImpl implements BattleService {
   private final TroopService troopService;
   private final Environment env;
   private final ResourceService resourceService;
-  private final TimeService timeService;
+  private final LocationService locationService;
 
   @Override
   public BattleResponseDTO war(Long enemyKingdomId, BattleRequestDTO requestDTO,
@@ -55,35 +58,31 @@ public class BattleServiceImpl implements BattleService {
     if (attackingTroops.isEmpty()) throw new MissingParameterException(
         "none of the provided troop IDs is available in your kingdom. Your army is empty");
 
-    int delay = scheduleBattle(attackingKingdom, attackingTroops, defendingKingdom);
+    int distance = locationService.calculateDistanceBetweenTwoKingdoms(attackingKingdom, defendingKingdom);
+    scheduleBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
 
     return new BattleResponseDTO();
   }
 
-  //"scheduling the battle
-  public int scheduleBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
-                            KingdomEntity defendingKingdom) {
+  public void scheduleBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
+                             KingdomEntity defendingKingdom, int distance) {
 
-    //calculate distance
-    //TODO: change this temporary distance when you are implementing scheduleBattle
-    int distance = 10;
+    BattleTimerTask battleTimerTask = new BattleTimerTask(
+        attackingKingdom, attackingTroops, defendingKingdom, distance, this);
+    Timer timer = createTimer();
+    timer.schedule(battleTimerTask, distance);
+    BattleResultDTO battleResultDTO = runBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
 
-    //do the delay logic here such as in case of ResourceServiceImpl - doResourceUpdate
-    //you will be delaying this method: runBattle and passing 5 variables into it using custom BattleTimerTask
     //TODO: this method will be replaced by different code when
-    runBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
-
     //set the troops that they are not home (later - after peter has this method ready)
-
-    return 1;
   }
 
-  private void runBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
+  public BattleResultDTO runBattle(KingdomEntity attackingKingdom, List<TroopEntity> attackingTroops,
                          KingdomEntity defendingKingdom, int distance) {
     Army attackingArmy = prepareAttackingArmy(attackingTroops, attackingKingdom, distance);
     Army defendingArmy = prepareDefendingArmy(defendingKingdom);
     List<Army> armiesAfterBattle = fightArmies(attackingArmy, defendingArmy);
-    BattleResultDTO resultDTO = performAfterBattleActions(armiesAfterBattle, distance);
+    return performAfterBattleActions(armiesAfterBattle, distance);
   }
 
   //"Prepare attacking army" section
@@ -202,14 +201,6 @@ public class BattleServiceImpl implements BattleService {
     BuildingEntity academy = buildingService.findBuildingWithHighestLevel(kingdom,
         BuildingType.ACADEMY);
     return townhall.getLevel() * 0.02 + academy.getLevel() * 0.01;
-  }
-
-  //TODO: finish scenario when attacking army wins automatically
-  public void attackingArmyWins() {
-  }
-
-  //TODO: finish scenario when defending army wins automatically
-  public void defendingArmyWins() {
   }
 
   //"Fight Armies" section
@@ -335,17 +326,20 @@ public class BattleServiceImpl implements BattleService {
     int stolenFood = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.FOOD, ResourceType.GOLD);
     int stolenGold = calculateStolenResource(defendingArmy, attackingArmy, ResourceType.GOLD, ResourceType.FOOD);
     if (attackingArmy.getHealthPoints() > 0) {
-      attackingKingdomSteal(attackingArmy, defendingArmy, distance, stolenFood, stolenGold);
-      if (defendingArmy.getHealthPoints() == 0) {
-        return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
-      }
+      modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
+      scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
+      return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
     }
-    return new BattleResultDTO("Attacking Kingdom won", stolenFood, stolenGold);
+    return null;
   }
 
   private void scheduleReturnHome(Army attackingArmy, int foodChange, int goldChange, int distance) {
-    //this method will be run after returning home
+    ReturnHomeTimerTask timerTask = new ReturnHomeTimerTask(attackingArmy, foodChange, goldChange, this);
+    Timer timer = createTimer();
+    timer.schedule(timerTask, distance);
     modifyAttackingKingdomResources(attackingArmy, foodChange, goldChange);
+    Army troopsWhoCanALiveBackTravel = applyHpLossDueToTravelling(attackingArmy, distance);
+    healUpAliveTroops(troopsWhoCanALiveBackTravel.getTroops());
   }
 
   public boolean nobodyWon(Army defendingArmy, Army attackingArmy) {
@@ -354,15 +348,6 @@ public class BattleServiceImpl implements BattleService {
 
   public boolean defKingdomWon(Army defendingArmy, Army attackingArmy) {
     return (defendingArmy.getHealthPoints() > 0 && attackingArmy.getHealthPoints() == 0);
-  }
-
-  public void killTroopWhichCanNotReachHome(Army army, int distance) {
-    List<TroopEntity> deadTroops = army.getTroops().stream()
-        .filter(troop -> troop.getHp() * distance * 0.02 < 1)
-        .collect(Collectors.toList());
-
-    army.getTroops().removeAll(deadTroops);
-    troopService.deleteListOfTroops(deadTroops);
   }
 
   public int calculateStolenResource(Army defendingArmy, Army attackingArmy, ResourceType stolen,
@@ -386,24 +371,19 @@ public class BattleServiceImpl implements BattleService {
     return actualStolenResourceAmount;
   }
 
-  private void attackingKingdomSteal(Army attackingArmy, Army defendingArmy,
-                                     int distance, int stolenFood, int stolenGold) {
-    modifyDefendingKingdomResources(defendingArmy, stolenFood, stolenGold);
-    scheduleReturnHome(attackingArmy, stolenFood, stolenGold, distance);
-    modifyAttackingKingdomResources(attackingArmy, stolenFood, stolenGold);
-    Army troopsWhoCanALiveBackTravel = applyHpLossDueToTravelling(attackingArmy, distance);
-    healUpAliveTroops(troopsWhoCanALiveBackTravel.getTroops());
-  }
-
-  private void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
+  public void modifyDefendingKingdomResources(Army defendingArmy, int foodChange, int goldChange) {
     resourceService.updateResourceAmount(defendingArmy.getKingdom(), -(foodChange), ResourceType.FOOD);
     resourceService.updateResourceAmount(defendingArmy.getKingdom(), -(goldChange), ResourceType.GOLD);
   }
 
-  private void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange) {
+  public void modifyAttackingKingdomResources(Army attackingArmy, int foodChange, int goldChange) {
     resourceService.updateResourceAmount(attackingArmy.getKingdom(), foodChange, ResourceType.FOOD);
     resourceService.updateResourceAmount(attackingArmy.getKingdom(), goldChange, ResourceType.GOLD);
 
+  }
+
+  public Timer createTimer() {
+    return new Timer();
   }
 
   public Army getArmyByType(List<Army> armiesAfterBattle, ArmyType type) {
