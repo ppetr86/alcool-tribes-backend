@@ -24,14 +24,14 @@ public class CustomUserDetails implements UserDetails {
     details.password = player.getPassword();
     details.kingdom = player.getKingdom();
     details.isVerified = player.getIsAccountVerified();
-    details.grantedAuthorities = details.getAuthorities();//returning empty authorities since we dont use roles
+    details.grantedAuthorities = details.getAuthorities();
     details.grantedAuthorities.add(new SimpleGrantedAuthority(player.getRoleType().toString()));
     return details;
   }
 
   @Override
   public Collection<GrantedAuthority> getAuthorities() {
-    return grantedAuthorities; //returns empty authorities since we dont use roles
+    return grantedAuthorities;
   }
 
   public KingdomEntity getKingdom() {
