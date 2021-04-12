@@ -71,7 +71,7 @@ public class BattleServiceImpl implements BattleService {
         attackingKingdom, attackingTroops, defendingKingdom, distance, this);
     Timer timer = createTimer();
     timer.schedule(battleTimerTask, distance);
-    BattleResultDTO battleResultDTO = runBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
+    //BattleResultDTO battleResultDTO = runBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
 
     //TODO: this method will be replaced by different code when
     //set the troops that they are not home (later - after peter has this method ready)
@@ -334,12 +334,13 @@ public class BattleServiceImpl implements BattleService {
   }
 
   private void scheduleReturnHome(Army attackingArmy, int foodChange, int goldChange, int distance) {
-    ReturnHomeTimerTask timerTask = new ReturnHomeTimerTask(attackingArmy, foodChange, goldChange, this);
-    Timer timer = createTimer();
-    timer.schedule(timerTask, distance);
-    modifyAttackingKingdomResources(attackingArmy, foodChange, goldChange);
     Army troopsWhoCanALiveBackTravel = applyHpLossDueToTravelling(attackingArmy, distance);
-    healUpAliveTroops(troopsWhoCanALiveBackTravel.getTroops());
+    if (0 < troopsWhoCanALiveBackTravel.getHealthPoints()) {
+      ReturnHomeTimerTask returnHomeTimerTask = new ReturnHomeTimerTask(attackingArmy, foodChange, goldChange, this);
+      Timer timer = createTimer();
+      timer.schedule(returnHomeTimerTask, distance);
+      healUpAliveTroops(troopsWhoCanALiveBackTravel.getTroops());
+    }
   }
 
   public boolean nobodyWon(Army defendingArmy, Army attackingArmy) {

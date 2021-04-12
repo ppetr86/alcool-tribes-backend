@@ -4,12 +4,12 @@ import com.greenfoxacademy.springwebapp.battle.services.BattleServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.TimerTask;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 @AllArgsConstructor
+@Getter
 public class ReturnHomeTimerTask extends TimerTask {
 
   private Army attackingArmy;
