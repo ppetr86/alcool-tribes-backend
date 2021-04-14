@@ -8,6 +8,7 @@ import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.RegistrationTokenFactory;
+import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -48,6 +49,7 @@ public class PlayerServiceTest {
   RegistrationTokenService registrationTokenService;
   TokenService tokenService;
   Environment mockEnvironment;
+  private FileStorageService fileStorageService;
   private PlayerServiceImpl playerService;
 
   @Before
@@ -61,8 +63,9 @@ public class PlayerServiceTest {
     registrationTokenService = Mockito.mock(RegistrationTokenService.class);
     tokenService = Mockito.mock(TokenService.class);
     mockEnvironment = TestConfig.mockEnvironment();
+    fileStorageService = Mockito.mock(FileStorageService.class);
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
-        registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
+        registrationTokenService, tokenService, resourceService, locationService, mockEnvironment,fileStorageService);
   }
 
   @Test
@@ -374,5 +377,13 @@ public class PlayerServiceTest {
   public void deletePlayer_ShouldReturn_IdNowFoundException() {
     Mockito.when(playerRepository.findById(2L)).thenThrow(IdNotFoundException.class);
     DeletedPlayerDTO result = playerService.deletePlayer(2L);
+  }
+
+  @Test
+  public void setDefaultAvatarImage_setsCorrectDefaultLinkToAvatarImage() {
+    PlayerEntity initialPlayer = new PlayerEntity();
+    Mockito.when(fileStorageService.getAvatarsFolderName()).thenReturn("avatars");
+    PlayerEntity adjustedPlayer = playerService.setDefaultAvatarImage(initialPlayer);
+    Assert.assertEquals("avatars/AVATAR_0_generic.png",adjustedPlayer.getAvatar());
   }
 }

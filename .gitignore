@@ -29,3 +29,5 @@ hs_err_pid*
 out/
 .gradle/
 build/
+avatars/
+!*/avatars/AVATAR_0_generic.png

@@ -6,7 +6,10 @@ import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
@@ -25,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
@@ -45,6 +49,7 @@ public class PlayerServiceImpl implements PlayerService {
   private final ResourceService resourceService;
   private final LocationService locationService;
   private final Environment env;
+  private final FileStorageService fileStorageService;
 
   @Override
   public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
@@ -75,12 +80,17 @@ public class PlayerServiceImpl implements PlayerService {
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
     LocationEntity defaultLocation = locationService.assignKingdomLocation(kingdom);
     kingdom.setLocation(defaultLocation);
-
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
+    setDefaultAvatarImage(player);
 
-    player = playerRepo.save(player);
+    playerRepo.save(player);
     locationService.save(defaultLocation);
+    return player;
+  }
+
+  public PlayerEntity setDefaultAvatarImage(PlayerEntity player) {
+    player.setAvatar(fileStorageService.getAvatarsFolderName() + "/AVATAR_0_generic.png");
     return player;
   }
 
@@ -200,6 +210,7 @@ public class PlayerServiceImpl implements PlayerService {
     player.setUsername(dto.getUsername());
     player.setKingdom(kingdom);
     player.setIsAccountVerified(verified);
+
     return player;
   }
 
@@ -210,4 +221,17 @@ public class PlayerServiceImpl implements PlayerService {
     playerRepo.delete(deletedPlayer);
     return new DeletedPlayerDTO(true, deletedPlayer.getUsername());
   }
+
+  @Override
+  public PlayerEntity savePlayer(PlayerEntity player) {
+    return playerRepo.save(player);
+  }
+
+  @Override
+  public PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) throws
+      FileStorageException, WrongContentTypeException {
+    fileStorageService.storeAvatar(file, player);
+    return savePlayer(player);
+  }
+
 }

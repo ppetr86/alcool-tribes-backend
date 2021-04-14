@@ -59,9 +59,8 @@ public class PlayerController {
   }
 
   @GetMapping("/players")
-  public ResponseEntity<PlayerListResponseDTO> getPlayersAroundMyKingdom(Authentication auth,
-                                                                         @RequestParam(required = false)
-                                                                             Integer distance) {
+  public ResponseEntity<PlayerListResponseDTO> getPlayersAroundMyKingdom(
+      Authentication auth, @RequestParam(required = false) Integer distance) {
     KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
     PlayerListResponseDTO playerListResponseDTO = playerService.findPlayersAroundMe(kingdom, distance);
     return ResponseEntity.ok(playerListResponseDTO);
