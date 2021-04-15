@@ -35,6 +35,9 @@ public interface BuildingService {
   BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
       throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
 
+  BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
+
   BuildingDetailsDTO showBuilding(KingdomEntity kingdomEntity, Long id)
       throws IdNotFoundException, ForbiddenActionException;
 

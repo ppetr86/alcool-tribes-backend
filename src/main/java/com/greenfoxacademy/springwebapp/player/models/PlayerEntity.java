@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.player.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,8 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,7 +52,7 @@ public class PlayerEntity {
   @Column(name = "email")
   private String email;
   @Column(name = "avatar")
-  private String avatar = "http://avatar.loc/my.png"; //TODO: need to have proper avatar for every player
+  private String avatar = "genericName.jpg"; //this field is set to its actual default value within PlayerServiceImpl
   @Column(name = "points")
   private Integer points = 0; //TODO: need to have proper point logic
 
@@ -58,6 +61,10 @@ public class PlayerEntity {
 
   @NonNull
   private Boolean isAccountVerified;
+
+  @NonNull
+  @Enumerated(EnumType.STRING)
+  private RoleType roleType;
 
   @OneToMany(mappedBy = "player")
   private Set<RegistrationTokenEntity> tokens;

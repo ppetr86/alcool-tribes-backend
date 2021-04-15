@@ -22,11 +22,11 @@ public class EmailServiceImpl implements EmailService {
   private final SpringTemplateEngine templateEngine;
 
   @Override
-  public Boolean sendMailWithHtmlAndPlainText(AbstractEmail email) throws MessagingException {
+  public Boolean sendMailWithHtmlAndPlainText(AbstractEmail email)
+      throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
 
-    MimeMessageHelper helper = new MimeMessageHelper(message,
-        MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+    MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
         StandardCharsets.UTF_8.name());
     Context context = new Context();
     context.setVariables(email.getContext());

@@ -58,7 +58,7 @@ public class BattleServiceImpl implements BattleService {
     if (attackingTroops.isEmpty()) throw new MissingParameterException(
         "none of the provided troop IDs is available in your kingdom. Your army is empty");
 
-    int distance = locationService.calculateDistanceBetweenTwoKingdoms(attackingKingdom, defendingKingdom);
+    int distance = locationService.distanceBetweenKingdomsWithoutObstacles(attackingKingdom, defendingKingdom);
     scheduleBattle(attackingKingdom, attackingTroops, defendingKingdom, distance);
 
     return new BattleResponseDTO();

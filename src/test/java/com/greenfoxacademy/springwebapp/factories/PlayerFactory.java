@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.factories;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 
 public class PlayerFactory {
 
@@ -16,6 +17,7 @@ public class PlayerFactory {
         .points(10)
         .kingdom(kingdom)
         .isAccountVerified(true)
+        .roleType(RoleType.ROLE_USER)
         .tokens(null)
         .build();
     return pl;
@@ -31,6 +33,7 @@ public class PlayerFactory {
         .points(null)
         .kingdom(kingdom)
         .isAccountVerified(verified)
+        .roleType(RoleType.ROLE_USER)
         .tokens(null)
         .build();
     return pl;
@@ -46,6 +49,7 @@ public class PlayerFactory {
         .points(null)
         .kingdom(kingdom)
         .isAccountVerified(verified)
+        .roleType(RoleType.ROLE_USER)
         .tokens(null)
         .build();
     return pl;
@@ -57,6 +61,7 @@ public class PlayerFactory {
     player.setUsername(rqst.getUsername());
     player.setKingdom(kingdom);
     player.setIsAccountVerified(verified);
+    player.setRoleType(RoleType.ROLE_USER);
     return player;
   }
 }

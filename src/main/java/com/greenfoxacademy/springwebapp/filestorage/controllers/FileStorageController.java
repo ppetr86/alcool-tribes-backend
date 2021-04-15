@@ -1,18 +1,14 @@
 package com.greenfoxacademy.springwebapp.filestorage.controllers;
 
-import com.greenfoxacademy.springwebapp.filestorage.models.dtos.UploadFileResponseDTO;
+import com.greenfoxacademy.springwebapp.filestorage.models.dtos.FileResponseDTO;
 import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MyFileNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.services.PlayerService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -26,7 +22,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -37,23 +38,17 @@ public class FileStorageController {
   public static final String AVATARS_URI = "/images/avatars";
 
   private FileStorageService fileStorageService;
+  private PlayerService playerService;
 
   @PostMapping(AVATAR_URI)
   public ResponseEntity<?> uploadAvatar(@RequestParam("file") MultipartFile file, Authentication auth)
       throws FileStorageException, WrongContentTypeException {
-
+    FileResponseDTO responseDTO = new FileResponseDTO(file);
     PlayerEntity player = ((CustomUserDetails) auth.getPrincipal()).getPlayer();
-
-    String fileName = fileStorageService.storeAvatar(file, player);
-
-    String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-        .path(fileStorageService.getLastPathFolderName() + "/")
-        .path(fileName)
-        .toUriString();
-
-    UploadFileResponseDTO responseDTO = new UploadFileResponseDTO(fileName, fileDownloadUri,
-        file.getContentType(), file.getSize());
-
+    playerService.setAvatar(player, file);
+    responseDTO.setFileName(player.getAvatar());
+    String folderName = fileStorageService.getAvatarsFolderName();
+    responseDTO.setFileDownloadUri(fileStorageService.getFileUrl(folderName, responseDTO.getFileName()));
     return ResponseEntity.ok().body(responseDTO);
   }
 
@@ -67,7 +62,7 @@ public class FileStorageController {
   }
 
   @GetMapping("/avatars/{fileName:.+}")
-  public ResponseEntity<Resource> downloadFile(
+  public ResponseEntity<Resource> downloadAvatar(
       @PathVariable String fileName, HttpServletRequest request, Authentication auth)
       throws ForbiddenActionException, MyFileNotFoundException {
     // Load file as Resource

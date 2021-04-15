@@ -94,6 +94,7 @@ public class ResourceServiceImpl implements ResourceService {
     return lastUpdatedAmount + betweenUpdateAndActualAmount;
   }
 
+
   @Override
   public ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType) {
     return kingdom.getResources().stream()

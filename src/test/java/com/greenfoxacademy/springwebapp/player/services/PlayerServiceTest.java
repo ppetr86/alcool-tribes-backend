@@ -8,12 +8,15 @@ import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
 import com.greenfoxacademy.springwebapp.factories.KingdomFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.factories.RegistrationTokenFactory;
+import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.DeletedPlayerDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
@@ -46,6 +49,7 @@ public class PlayerServiceTest {
   RegistrationTokenService registrationTokenService;
   TokenService tokenService;
   Environment mockEnvironment;
+  private FileStorageService fileStorageService;
   private PlayerServiceImpl playerService;
 
   @Before
@@ -59,8 +63,9 @@ public class PlayerServiceTest {
     registrationTokenService = Mockito.mock(RegistrationTokenService.class);
     tokenService = Mockito.mock(TokenService.class);
     mockEnvironment = TestConfig.mockEnvironment();
+    fileStorageService = Mockito.mock(FileStorageService.class);
     playerService = new PlayerServiceImpl(playerRepository, passwordEncoder, buildingService, emailService,
-        registrationTokenService, tokenService, resourceService, locationService, mockEnvironment);
+        registrationTokenService, tokenService, resourceService, locationService, mockEnvironment,fileStorageService);
   }
 
   @Test
@@ -351,5 +356,34 @@ public class PlayerServiceTest {
     Mockito.when(playerRepository.getOne(secureToken.getPlayer().getId())).thenReturn(pl);
     playerService.verifyUser(token);
     Assert.assertTrue(playerService.verifyUser("123"));
+  }
+
+  @Test
+  public void deletePlayer_ShouldReturn_TrueAndDeletedPlayerName() {
+    List<PlayerEntity> players = Arrays.asList(
+        PlayerFactory.createPlayer(1L, null, true, "firstName"),
+        PlayerFactory.createPlayer(2L, null, true, "secondName")
+    );
+
+    Mockito.when(playerRepository.findById(2L)).thenReturn(java.util.Optional.ofNullable(players.get(1)));
+
+    DeletedPlayerDTO result = playerService.deletePlayer(2L);
+
+    Assert.assertTrue(result.isDeleted());
+    Assert.assertEquals("secondName player deleted.", result.getDeletedPlayerName());
+  }
+
+  @Test(expected = IdNotFoundException.class)
+  public void deletePlayer_ShouldReturn_IdNowFoundException() {
+    Mockito.when(playerRepository.findById(2L)).thenThrow(IdNotFoundException.class);
+    DeletedPlayerDTO result = playerService.deletePlayer(2L);
+  }
+
+  @Test
+  public void setDefaultAvatarImage_setsCorrectDefaultLinkToAvatarImage() {
+    PlayerEntity initialPlayer = new PlayerEntity();
+    Mockito.when(fileStorageService.getAvatarsFolderName()).thenReturn("avatars");
+    PlayerEntity adjustedPlayer = playerService.setDefaultAvatarImage(initialPlayer);
+    Assert.assertEquals("avatars/AVATAR_0_generic.png",adjustedPlayer.getAvatar());
   }
 }
