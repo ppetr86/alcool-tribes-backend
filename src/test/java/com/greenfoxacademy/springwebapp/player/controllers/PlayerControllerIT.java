@@ -52,7 +52,7 @@ public class PlayerControllerIT {
         .andExpect(jsonPath("$.username", is("testUser")))
         .andExpect(jsonPath("$.email", is("email@gmail.com")))
         .andExpect(jsonPath("$.kingdomId", is(greaterThan(0))))
-        .andExpect(jsonPath("$.avatar", is("http://avatar.loc/my.png")))
+        .andExpect(jsonPath("$.avatar", is("avatars/AVATAR_0_generic.png")))
         .andExpect(jsonPath("$.points", is(0)));
   }
 

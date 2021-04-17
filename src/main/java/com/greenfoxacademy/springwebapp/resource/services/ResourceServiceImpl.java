@@ -1,10 +1,11 @@
 package com.greenfoxacademy.springwebapp.resource.services;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import com.greenfoxacademy.springwebapp.resource.models.ResourceTimerTask;
+import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
 import com.greenfoxacademy.springwebapp.common.services.TimeService;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
+import com.greenfoxacademy.springwebapp.resource.models.ResourceTimerTask;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
@@ -16,26 +17,88 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.stream.Collectors;
 
 @Slf4j
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class ResourceServiceImpl implements ResourceService {
   private ResourceRepository resourceRepository;
   private TimeService timeService;
   private Environment env;
 
-  public boolean hasResourcesForTroop() {
-    // TODO: has Resources For Troops creation
-    return true;
+  @Override
+  public boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange) {
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+    return amountChange <= actualAmount;
   }
 
   @Override
-  public boolean hasResourcesForBuilding() {
-    // TODO: hasResourcesForBuilding
-    return true;
+  public void updateResourcesBasedOnTroop(KingdomEntity kingdom, int amountChange) {
+    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
+    ResourceEntity kingdomsFood = getResourceByResourceType(kingdom, ResourceType.FOOD);
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+
+    kingdomsGold.setAmount(actualAmount - amountChange);
+    kingdomsGold.setUpdatedAt(timeService.getTime());
+    BuildingEntity academy = getAcademy(kingdom);
+    int level = academy.getLevel();
+    kingdomsFood.setGeneration(kingdomsFood.getGeneration() + (level * defineTroopFoodFromAppProperty()));
+
+    List<ResourceEntity> resources = Arrays.asList(kingdomsFood, kingdomsGold);
+    resourceRepository.saveAll(resources);
+  }
+
+  private BuildingEntity getAcademy(KingdomEntity kingdom) {
+    return kingdom.getBuildings().stream()
+        .filter(b -> b.getType().equals(BuildingType.ACADEMY))
+        .findFirst()
+        .orElse(null);
+  }
+
+  private int defineTroopFoodFromAppProperty() {
+    return Integer.parseInt(Objects.requireNonNull(env.getProperty("troop.food")));
+  }
+
+  @Override
+  public boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange) {
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+    return amountChange <= actualAmount;
+  }
+
+  @Override
+  public void updateResourcesByBuildings(KingdomEntity kingdom, int amountChange) {
+    ResourceEntity kingdomsGold = getResourceByResourceType(kingdom, ResourceType.GOLD);
+    int actualAmount = calculateActualResource(kingdom, ResourceType.GOLD);
+
+    kingdomsGold.setAmount(actualAmount - amountChange);
+    kingdomsGold.setUpdatedAt(timeService.getTime());
+    resourceRepository.save(kingdomsGold);
+  }
+
+  private ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType) {
+    return kingdom.getResources().stream()
+        .filter(r -> r.getType().equals(resourceType))
+        .findFirst()
+        .orElse(null);
+  }
+
+  private Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType) {
+    ResourceEntity resource = getResourceByResourceType(kingdom, resourceType);
+    Integer lastUpdatedAmount = resource.getAmount();
+    Integer betweenUpdateAndActualAmount = 0;
+
+    long updatedTime = resource.getUpdatedAt();
+    long actualTime = timeService.getTime();
+    int betweenUpdateAndActualTime = timeService.getTimeBetween(updatedTime, actualTime);
+
+    if (updatedTime < actualTime) {
+      betweenUpdateAndActualAmount = (betweenUpdateAndActualTime / 60 * resource.getGeneration());
+    }
+
+    return lastUpdatedAmount + betweenUpdateAndActualAmount;
   }
 
   @Override
@@ -57,7 +120,7 @@ public class ResourceServiceImpl implements ResourceService {
   // TODO: when PUT kingdom/buildings/{buildingId} then also update resources
   @Override
   public ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building) {
-    ResourceEntity resource = findResourceByBuildingType(kingdom,building.getType());
+    ResourceEntity resource = findResourceByBuildingType(kingdom, building.getType());
     if (resource != null) {
       doResourceUpdate(kingdom, building, resource);
       if (resource != null) {

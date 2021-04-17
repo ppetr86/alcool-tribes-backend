@@ -2,6 +2,7 @@ package com.greenfoxacademy.springwebapp.security;
 
 import com.greenfoxacademy.springwebapp.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -10,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) //for @PreAuthorize annotation
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public static final int AUTHENTICATION_FAILURE_STATUSCODE = 401;
 
@@ -29,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/register/verify", "/register", "/login").permitAll() //permits these endpoints without auth.
+        .antMatchers("/register/verify", "/register", "/login", "/ws-test", "/kingdom-update/**").permitAll()
         .anyRequest().authenticated() //any other endpoints requires authentication
         .and()
         .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)

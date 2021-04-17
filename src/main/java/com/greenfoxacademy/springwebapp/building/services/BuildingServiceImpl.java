@@ -14,6 +14,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,51 +57,58 @@ public class BuildingServiceImpl implements BuildingService {
   }
 
   @Override
-  public BuildingEntity findBuildingById(Long id) {
-    return repo.findById(id).orElse(null);
+  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
+    return repo.findAllByKingdomId(id);
   }
 
   @Override
   public BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
       throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
-    BuildingEntity building = checkBuildingDetails(kingdom, id, levelDTO);
+    BuildingEntity updatedBuilding = checkBuildingDetails(kingdom, id, levelDTO);
 
-    int buildingHp = Integer.parseInt(
-        Objects.requireNonNull(
-            env.getProperty(String.format("building.%s.hp", building.getType().buildingType.toLowerCase()))));
+    int buildingHp = fetchBuildingSetting(updatedBuilding.getType(), "hp");
+    int buildingTime = fetchBuildingSetting(updatedBuilding.getType(), "buildingTime");
 
-    int buildingTime = Integer.parseInt(
-        Objects.requireNonNull(
-            env.getProperty(String.format("building.%s.buildingTime", building.getType().buildingType.toLowerCase()))));
-
-    building.setLevel(levelDTO.getLevel());
-    building.setHp(levelDTO.getLevel() * buildingHp);
-    building.setStartedAt(timeService.getTime());
-    building.setFinishedAt(building.getStartedAt() + (levelDTO.getLevel() * buildingTime));
-    return repo.save(building);
+    updatedBuilding.setLevel(levelDTO.getLevel());
+    updatedBuilding.setHp(levelDTO.getLevel() * buildingHp);
+    updatedBuilding.setStartedAt(timeService.getTime());
+    updatedBuilding.setFinishedAt(updatedBuilding.getStartedAt() + (levelDTO.getLevel() * buildingTime));
+    int cost = fetchBuildingSetting(updatedBuilding.getType(), "buildingCosts");
+    int amountChange = cost * levelDTO.getLevel();
+    resourceService.updateResourcesByBuildings(updatedBuilding.getKingdom(), amountChange);
+    return repo.save(updatedBuilding);
   }
 
-  private BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
-      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException,
-      ForbiddenActionException {
-    BuildingEntity townHall = getTownHallFromKingdom(kingdom);
+  @Override
+  public BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException,
+      NotEnoughResourceException, ForbiddenActionException {
     BuildingEntity building = findBuildingById(id);
-
-    if (building == null) {
-      throw new IdNotFoundException();
-    } else if (levelDTO == null || levelDTO.getLevel() == 0) {
-      throw new MissingParameterException("level");
-    } else if (!findBuildingsByKingdomId(kingdom.getId()).contains(building)) {
+    if (building == null) throw new IdNotFoundException();
+    if (levelDTO == null || levelDTO.getLevel() == 0) throw new MissingParameterException("level");
+    if (!(findBuildingsByKingdomId(kingdom.getId()).contains(building)
+        || kingdom.getPlayer().getRoleType().equals(RoleType.ROLE_ADMIN))) {
       throw new ForbiddenActionException();
-    } else if (!resourceService.hasResourcesForBuilding()) {
+    }
+
+    hasEnoughResourceForBuild(building, levelDTO);
+
+    if (building.getType().equals(BuildingType.TOWNHALL)) return building;
+    BuildingEntity townHall = getTownHallFromKingdom(building.getKingdom());
+    if (townHall.getLevel() < levelDTO.getLevel()) throw new TownhallLevelException();
+
+    return building;
+  }
+
+  private void hasEnoughResourceForBuild(BuildingEntity building, BuildingLevelDTO levelDTO)
+      throws NotEnoughResourceException {
+
+    int cost = fetchBuildingSetting(building.getType(), "buildingCosts");
+    int amountChange = cost * levelDTO.getLevel();
+
+    if (!resourceService.hasResourcesForBuilding(building.getKingdom(), amountChange)) {
       throw new NotEnoughResourceException();
-    } else if (building.getType() == townHall.getType()) {
-      return building;
-    } else if (townHall.getLevel() < levelDTO.getLevel()) {
-      throw new TownhallLevelException();
-    } else {
-      return building;
     }
   }
 
@@ -109,6 +117,12 @@ public class BuildingServiceImpl implements BuildingService {
         .filter(building -> building.getType().equals(BuildingType.TOWNHALL))
         .findFirst()
         .get();
+  }
+
+  private int fetchBuildingSetting(BuildingType buildingType, String setting) {
+    return Integer
+        .parseInt(Objects.requireNonNull(
+            env.getProperty(String.format("building.%s.%s", buildingType.buildingType.toLowerCase(), setting))));
   }
 
   @Override
@@ -140,8 +154,10 @@ public class BuildingServiceImpl implements BuildingService {
 
     if (!isBuildingTypeInRequestOk(dto)) throw new InvalidInputException("building type");
     if (!hasKingdomTownhall(kingdom)) throw new TownhallLevelException();
-    if (!resourceService.hasResourcesForBuilding()) throw new NotEnoughResourceException();
+    int amountChange = defineBuildingFirstLevelCosts(dto.getType());
+    if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
+    resourceService.updateResourcesByBuildings(kingdom, amountChange);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result.setKingdom(kingdom);
@@ -149,10 +165,24 @@ public class BuildingServiceImpl implements BuildingService {
     result = defineFinishedAt(result);
     result = defineHp(result);
     result = save(result);
-
     resourceService.updateResourceGeneration(kingdom, result);
 
     return result;
+  }
+
+  public int defineBuildingFirstLevelCosts(String buildingType) {
+    return Integer.parseInt(Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts.firstLevel",
+        buildingType.toLowerCase()))));
+  }
+
+  public int defineBuildingCosts(String buildingType) {
+    return Integer.parseInt(Objects.requireNonNull(env.getProperty(String.format("building.%s.buildingCosts",
+        buildingType.toLowerCase()))));
+  }
+
+  @Override
+  public BuildingEntity findBuildingById(Long id) {
+    return repo.findById(id).orElse(null);
   }
 
   @Override
@@ -173,11 +203,6 @@ public class BuildingServiceImpl implements BuildingService {
       }
     }
     return new BuildingDetailsDTO(myBuilding);
-  }
-
-  @Override
-  public List<BuildingEntity> findBuildingsByKingdomId(Long id) {
-    return repo.findAllByKingdomId(id);
   }
 
   @Override

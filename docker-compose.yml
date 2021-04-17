@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+    myapp-mysql:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${DATABASE_NAME}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${DB_PWD}
+        ports:
+            - 3307:3306
+
+    myapp-spring:
+        image: 4hm3d/dockerhub:tribeimagev2
+        restart: on-failure
+        depends_on:
+            - myapp-mysql
+        ports:
+            - 8080:8080
+        environment:
+            - DATABASE_HOST=${DATABASE_HOST}
+            - DATABASE_NAME=${DATABASE_NAME}
+            - DATABASE_PORT=${DATABASE_PORT}
+            - DB_URL=${APP_DB_URL}
+            - USERNAME=${DB_USERNAME}
+            - JWT_SECRET=${JWT_SECRET}
+            - PWD=${DB_PWD}
+            - HIB_DIA=${HIB_DIA}
+            - EMAIL_USER=${EMAIL_USER}
+            - EMAIL_PWD=${EMAIL_PWD}

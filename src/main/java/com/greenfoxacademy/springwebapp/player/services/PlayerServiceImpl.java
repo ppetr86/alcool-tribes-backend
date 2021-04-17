@@ -5,15 +5,22 @@ import com.greenfoxacademy.springwebapp.email.context.VerificationEmail;
 import com.greenfoxacademy.springwebapp.email.models.RegistrationTokenEntity;
 import com.greenfoxacademy.springwebapp.email.services.EmailService;
 import com.greenfoxacademy.springwebapp.email.services.RegistrationTokenService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
+import com.greenfoxacademy.springwebapp.filestorage.services.FileStorageService;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.FileStorageException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.InvalidTokenException;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.WrongContentTypeException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.services.LocationService;
 import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
+import com.greenfoxacademy.springwebapp.player.models.dtos.DeletedPlayerDTO;
+import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerListResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
+import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.player.repositories.PlayerRepository;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +28,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +49,7 @@ public class PlayerServiceImpl implements PlayerService {
   private final ResourceService resourceService;
   private final LocationService locationService;
   private final Environment env;
+  private final FileStorageService fileStorageService;
 
   @Override
   public PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request)
@@ -65,16 +75,22 @@ public class PlayerServiceImpl implements PlayerService {
 
     PlayerEntity player = copyProperties(kingdom, dto, false);
     player.setPassword(passwordEncoder.encode(dto.getPassword()));
+    player.setRoleType(RoleType.ROLE_USER);
 
     kingdom.setResources(resourceService.createDefaultResources(kingdom));
-    LocationEntity defaultLocation = new LocationEntity(1L, 10, 10);
-    locationService.save(defaultLocation);
+    LocationEntity defaultLocation = locationService.assignKingdomLocation(kingdom);
     kingdom.setLocation(defaultLocation);
-
     player.setKingdom(kingdom);
     kingdom.setPlayer(player);
+    setDefaultAvatarImage(player);
 
-    player = playerRepo.save(player);
+    playerRepo.save(player);
+    locationService.save(defaultLocation);
+    return player;
+  }
+
+  public PlayerEntity setDefaultAvatarImage(PlayerEntity player) {
+    player.setAvatar(fileStorageService.getAvatarsFolderName() + "/AVATAR_0_generic.png");
     return player;
   }
 
@@ -101,6 +117,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
     return true;
   }
+
 
   @Override
   public PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity) {
@@ -130,6 +147,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public PlayerEntity findById(Long id) {
+    return playerRepo.findById(id).orElse(null);
+  }
+
+  @Override
   public boolean existsPlayerByUsername(String username) {
     return playerRepo.existsByUsername(username);
   }
@@ -147,9 +169,27 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance) {
+    return new PlayerListResponseDTO(
+        playerRepo.findAll().stream()
+            .filter(p -> !p.getKingdom().getId().equals(kingdom.getId()))
+            .filter(p -> distance == null || isWithinGrid(kingdom, distance, p.getKingdom()))
+            .map(this::playerToResponseDTO)
+            .collect(Collectors.toList())
+    );
+  }
+
+  private boolean isWithinGrid(KingdomEntity thisKingdom, Integer distance, KingdomEntity otherKingdom) {
+    return otherKingdom.getLocation().getX() > thisKingdom.getLocation().getX() - distance
+        && otherKingdom.getLocation().getX() < thisKingdom.getLocation().getX() + distance
+        && otherKingdom.getLocation().getY() > thisKingdom.getLocation().getY() - distance
+        && otherKingdom.getLocation().getY() < thisKingdom.getLocation().getY() + distance;
+  }
+
   public boolean verifyUser(String token) throws InvalidTokenException {
     RegistrationTokenEntity secureToken = registrationTokenService.findByToken(token);
-    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
+    if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken())
+        || secureToken.isExpired()) {
       throw new InvalidTokenException();
     }
     PlayerEntity player = playerRepo.getOne(secureToken.getPlayer().getId());
@@ -164,12 +204,34 @@ public class PlayerServiceImpl implements PlayerService {
     return true;
   }
 
-  private PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
+  public PlayerEntity copyProperties(KingdomEntity kingdom, PlayerRegisterRequestDTO dto, boolean verified) {
     PlayerEntity player = new PlayerEntity();
     player.setEmail(dto.getEmail());
     player.setUsername(dto.getUsername());
     player.setKingdom(kingdom);
     player.setIsAccountVerified(verified);
+
     return player;
   }
+
+  @Override
+  public DeletedPlayerDTO deletePlayer(Long deletedPlayerId) {
+    PlayerEntity deletedPlayer = findById(deletedPlayerId);
+    if (deletedPlayer == null) throw new IdNotFoundException();
+    playerRepo.delete(deletedPlayer);
+    return new DeletedPlayerDTO(true, deletedPlayer.getUsername());
+  }
+
+  @Override
+  public PlayerEntity savePlayer(PlayerEntity player) {
+    return playerRepo.save(player);
+  }
+
+  @Override
+  public PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) throws
+      FileStorageException, WrongContentTypeException {
+    fileStorageService.storeAvatar(file, player);
+    return savePlayer(player);
+  }
+
 }

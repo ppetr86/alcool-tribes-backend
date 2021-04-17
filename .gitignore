@@ -10,6 +10,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# For docker env var
+.env
+
 # Package Files #
 *.jar
 *.war
@@ -26,3 +29,5 @@ hs_err_pid*
 out/
 .gradle/
 build/
+avatars/
+!*/avatars/AVATAR_0_generic.png
