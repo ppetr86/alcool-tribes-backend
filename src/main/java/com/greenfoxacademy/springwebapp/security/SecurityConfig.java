@@ -37,5 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling()
         .authenticationEntryPoint(authenticationExceptionHandler); //here i put custom json together with 401
+
+    http.cors();
   }
 }
