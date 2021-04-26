@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -496,5 +497,21 @@ public class BuildingServiceTest {
     Mockito.when(buildingRepository.findById(3L)).thenReturn(Optional.of(fakeBuilding2));
 
     BuildingDetailsDTO response = buildingService.showBuilding(kingdomEntity, 3L);
+  }
+
+  @Test
+  public void findBuildingWithHighestLevel_typeAcademy_returnsHighestAcademy() {
+    KingdomEntity kingdom = KingdomFactory.createFullKingdom(1L,1L);
+    BuildingEntity academy1 = new BuildingEntity(kingdom, BuildingType.ACADEMY,1);
+    BuildingEntity academy2 = new BuildingEntity(kingdom, BuildingType.ACADEMY,2);
+    BuildingEntity academy3 = new BuildingEntity(kingdom, BuildingType.ACADEMY,3);
+    BuildingEntity farm4 = new BuildingEntity(kingdom, BuildingType.FARM,4);
+    List<BuildingEntity> buildins = new ArrayList<>();
+    buildins.addAll(Arrays.asList(academy1,academy2,academy3,farm4));
+    kingdom.setBuildings(buildins);
+
+    BuildingEntity building = buildingService.findBuildingWithHighestLevel(kingdom, BuildingType.ACADEMY);
+
+    Assert.assertEquals(academy3, building);
   }
 }
