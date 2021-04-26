@@ -11,6 +11,7 @@ public class TestConfig {
     mockEnvironmentBuildingTime(env);
     mockEnvironmentHp(env);
     mockEnvironmentBuildingCosts(env);
+    mockEnvironmentTroopDetails(env);
     return env;
   }
 
@@ -45,5 +46,20 @@ public class TestConfig {
         .thenReturn("100");
     Mockito.when(env.getProperty("building.academy.buildingCosts"))
         .thenReturn("100");
+  }
+
+  public static void mockEnvironmentTroopDetails(Environment env) {
+    Mockito.when(env.getProperty("troop.buildingTime"))
+        .thenReturn("30");
+    Mockito.when(env.getProperty("troop.buildingCosts"))
+        .thenReturn("25");
+    Mockito.when(env.getProperty("troop.hp"))
+        .thenReturn("20");
+    Mockito.when(env.getProperty("troop.food"))
+        .thenReturn("-5");
+    Mockito.when(env.getProperty("troop.attack"))
+        .thenReturn("10");
+    Mockito.when(env.getProperty("troop.defence"))
+        .thenReturn("5");
   }
 }

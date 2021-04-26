@@ -57,6 +57,7 @@ public class TroopEntity {
         + ", defence=" + defence
         + ", startedAt=" + startedAt
         + ", finishedAt=" + finishedAt
-        + ", kingdom name=" + kingdom.getKingdomName();
+        + ", kingdom name=" + (kingdom == null ? null : kingdom.getKingdomName());
   }
+
 }

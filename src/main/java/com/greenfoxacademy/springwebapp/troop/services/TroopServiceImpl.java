@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -163,5 +164,16 @@ public class TroopServiceImpl implements TroopService {
   @Override
   public TroopEntity findTroopById(Long id) {
     return troopRepository.findById(id).orElse(null);
+  }
+
+  @Transactional
+  @Override
+  public void deleteListOfTroops(List<TroopEntity> deadTroops) {
+    troopRepository.deleteListOfTroops(deadTroops);
+  }
+
+  @Override
+  public void saveAllTroops(List<TroopEntity> troops) {
+    troopRepository.saveAll(troops);
   }
 }

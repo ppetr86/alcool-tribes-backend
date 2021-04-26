@@ -11,6 +11,7 @@ import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
+import java.util.List;
 
 public interface TroopService {
 
@@ -28,4 +29,7 @@ public interface TroopService {
 
   TroopEntity findTroopById(Long id);
 
+  void deleteListOfTroops(List<TroopEntity> deadTroops);
+
+  void saveAllTroops(List<TroopEntity> troops);
 }

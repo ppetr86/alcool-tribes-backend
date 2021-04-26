@@ -1,7 +1,12 @@
 package com.greenfoxacademy.springwebapp.kingdom.controllers;
 
+import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleRequestDTO;
+import com.greenfoxacademy.springwebapp.battle.models.dtos.BattleResponseDTO;
+import com.greenfoxacademy.springwebapp.battle.services.BattleService;
+import com.greenfoxacademy.springwebapp.factories.TroopFactory;
 import com.greenfoxacademy.springwebapp.factories.PlayerFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.ErrorDTO;
+import com.greenfoxacademy.springwebapp.globalexceptionhandling.ForbiddenActionException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
@@ -29,6 +34,7 @@ public class KingdomControllerTest {
   private ResourceService resourceService;
   private KingdomRepository kingdomRepository;
   private Authentication authentication;
+  private BattleService battleService;
 
   @Before
   public void setUp() {
@@ -36,7 +42,8 @@ public class KingdomControllerTest {
     kingdomRepository = Mockito.mock(KingdomRepository.class);
     resourceService = Mockito.mock(ResourceService.class);
     kingdomService = Mockito.mock(KingdomService.class);
-    kingdomController = new KingdomController(kingdomService, resourceService);
+    battleService = Mockito.mock(BattleService.class);
+    kingdomController = new KingdomController(kingdomService, resourceService, battleService);
 
     KingdomEntity kingdom = new KingdomEntity();
     kingdom.setKingdomName("testKingdom");
@@ -109,5 +116,60 @@ public class KingdomControllerTest {
     Mockito.when(kingdomService.changeKingdomName(kingdom, nameDTO)).thenThrow(MissingParameterException.class);
 
     ResponseEntity<?> response = kingdomController.updateKingdomByName(authentication, nameDTO);
+  }
+
+  @Test
+  public void initiateBattleShouldReturnProperResponseDTO() {
+    Long[] troopIds = {1L,2L};
+    BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    Mockito.when(battleService.war(2L,requestDTO,kingdom)).thenReturn(new BattleResponseDTO());
+
+    ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
+
+    Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    Assert.assertEquals("ok", ((BattleResponseDTO) response.getBody()).getStatus());
+    Assert.assertEquals("Battle started", ((BattleResponseDTO) response.getBody()).getMessage());
+  }
+
+  @Test(expected = MissingParameterException.class)
+  public void initiateBattleShouldReturnMissingParameterException() {
+    Long[] troopIds = {10L,20L};
+    BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    Mockito.when(battleService.war(2L,requestDTO,kingdom))
+        .thenThrow(new MissingParameterException("anything"));
+
+    ResponseEntity<?> response = kingdomController.initiateBattle(2L, requestDTO, authentication);
+  }
+
+  @Test(expected = IdNotFoundException.class)
+  public void initiateBattleShouldReturnIdNotFoundException() {
+    Long[] troopIds = {1L,2L};
+    BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    Mockito.when(battleService.war(20L,requestDTO,kingdom))
+        .thenThrow(new IdNotFoundException());
+
+    ResponseEntity<?> response = kingdomController.initiateBattle(20L, requestDTO, authentication);
+  }
+
+  @Test(expected = ForbiddenActionException.class)
+  public void initiateBattleShouldReturnForbiddenActionException() {
+    Long[] troopIds = {1L,2L};
+    BattleRequestDTO requestDTO = new BattleRequestDTO(troopIds);
+    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+    kingdom.setTroops(TroopFactory.createDefaultTroops());
+
+    Mockito.when(battleService.war(1L,requestDTO,kingdom))
+        .thenThrow(new ForbiddenActionException());
+
+    ResponseEntity<?> response = kingdomController.initiateBattle(1L, requestDTO, authentication);
   }
 }

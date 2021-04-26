@@ -15,6 +15,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourc
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
+import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +77,7 @@ public class BuildingServiceImpl implements BuildingService {
     updatedBuilding.setFinishedAt(updatedBuilding.getStartedAt() + (levelDTO.getLevel() * buildingTime));
     int cost = fetchBuildingSetting(updatedBuilding.getType(), "buildingCosts");
     int amountChange = cost * levelDTO.getLevel();
-    resourceService.updateResourcesByBuildings(updatedBuilding.getKingdom(), amountChange);
+    resourceService.updateResourceAmount(updatedBuilding.getKingdom(), -(amountChange), ResourceType.GOLD);
     return repo.save(updatedBuilding);
   }
 
@@ -157,7 +158,7 @@ public class BuildingServiceImpl implements BuildingService {
     int amountChange = defineBuildingFirstLevelCosts(dto.getType());
     if (!resourceService.hasResourcesForBuilding(kingdom, amountChange)) throw new NotEnoughResourceException();
 
-    resourceService.updateResourcesByBuildings(kingdom, amountChange);
+    resourceService.updateResourceAmount(kingdom, -(amountChange), ResourceType.GOLD);
     BuildingEntity result = setBuildingTypeOnEntity(dto.getType());
     result.setStartedAt(timeService.getTime());
     result.setKingdom(kingdom);
@@ -225,6 +226,16 @@ public class BuildingServiceImpl implements BuildingService {
     }
     return kingdom.getBuildings().stream()
         .anyMatch(building -> building.getType().equals(BuildingType.TOWNHALL));
+  }
+
+  @Override
+  public BuildingEntity findBuildingWithHighestLevel(KingdomEntity kingdom, BuildingType buildingType) {
+    List<BuildingEntity> buildings = kingdom.getBuildings().stream()
+        .filter(a -> a.getType() == buildingType)
+        .collect(Collectors.toList());
+    return buildings.stream()
+        .max((building1, building2) -> building1.getLevel() > building2.getLevel() ? 1 : -1)
+        .orElse(null);
   }
 }
 

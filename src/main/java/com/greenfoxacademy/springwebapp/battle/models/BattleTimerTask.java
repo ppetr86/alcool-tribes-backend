@@ -4,15 +4,13 @@ import com.greenfoxacademy.springwebapp.battle.services.BattleServiceImpl;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.troop.models.TroopEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.TimerTask;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 @AllArgsConstructor
+@Getter
 public class BattleTimerTask extends TimerTask {
 
   private KingdomEntity attackingKingdom;

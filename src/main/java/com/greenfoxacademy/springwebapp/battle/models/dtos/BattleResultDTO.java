@@ -18,5 +18,4 @@ public class BattleResultDTO {
   public BattleResultDTO(String winningTeam) {
     this.winningTeam = winningTeam;
   }
-
 }
