@@ -1,32 +1,17 @@
-POST http://localhost:8080/kingdom/buildings
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
-
-{
-  "type": "academy"
-}
-
-### Get buildings
-
-GET http://localhost:8080/kingdom/buildings
+### Get locations by specification
+### /location/specifications
+GET http://localhost:8080/location/specifications?x=99&locationType=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 Accept: application/json
 
-### Get building
-
-GET http://localhost:8080/kingdom/buildings/4
+### existskingdom
+### location/existskingdom
+GET http://localhost:8080/location/existskingdom
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 Accept: application/json
 
-### PUT buildings
-
-
-PUT http://localhost:8080/kingdom/buildings/1
-Content-Type: application/json
+### randommatches
+### location/randommatches
+GET http://localhost:8080/location/randommatches?x=x&y=y&id=id
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
-
-{
-  "level": 3
-}
-
-
+Accept: application/json
