@@ -1,7 +1,7 @@
 ### Get kingdom
 ### kingdom/resources
 GET http://localhost:8080/kingdom/resources
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTM3NzU2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.DtUdBear4jyYArWfPOCmvbxwFqY0lXPkxyGP8Kqs_2KrVLs_q1oF7Q6VWiaUgWyTNqyIKSjGEQyLcrXDB7X5_w
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 Accept: application/json
 
 

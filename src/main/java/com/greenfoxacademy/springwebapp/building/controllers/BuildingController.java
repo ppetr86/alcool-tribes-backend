@@ -33,43 +33,43 @@ import java.util.List;
 @RequestMapping(BuildingController.URI)
 public class BuildingController {
 
-  public static final String URI = "/kingdom/buildings";
+    public static final String URI = "/kingdom/buildings";
 
-  private final BuildingService buildingService;
+    private final BuildingService buildingService;
 
-  @GetMapping
-  public ResponseEntity<BuildingListResponseDTO> getKingdomBuildings(Authentication auth) {
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-    List<BuildingEntity> list = kingdom.getBuildings();
-    return ResponseEntity.status(HttpStatus.OK).body(new BuildingListResponseDTO(list));
-  }
+    @PostMapping
+    public ResponseEntity<?> buildBuilding(Authentication auth, @RequestBody @Valid BuildingRequestDTO dto)
+            throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
+        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+        return ResponseEntity.ok(buildingService.createBuilding(kingdom, dto));
+    }
 
-  @PostMapping
-  public ResponseEntity<?> buildBuilding(Authentication auth, @RequestBody @Valid BuildingRequestDTO dto)
-      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException {
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-    return ResponseEntity.ok(buildingService.createBuilding(kingdom, dto));
-  }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBuildingById(@PathVariable Long id,
+                                             Authentication auth)
+            throws IdNotFoundException, ForbiddenActionException {
 
-  @GetMapping("/{id}")
-  public ResponseEntity<?> getBuildingById(@PathVariable Long id,
-                                           Authentication auth)
-      throws IdNotFoundException, ForbiddenActionException {
+        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+        return ResponseEntity.ok(buildingService.showBuilding(kingdom, id));
+    }
 
-    return ResponseEntity.ok(buildingService.showBuilding(kingdom, id));
-  }
+    @GetMapping
+    public ResponseEntity<BuildingListResponseDTO> getKingdomBuildings(Authentication auth) {
+        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+        List<BuildingEntity> list = kingdom.getBuildings();
+        return ResponseEntity.status(HttpStatus.OK).body(new BuildingListResponseDTO(list));
+    }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<?> updateTheGivenBuildingDetails(@PathVariable Long id,
-                                                         Authentication auth,
-                                                         @RequestBody BuildingLevelDTO level)
-      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTheGivenBuildingDetails(@PathVariable Long id,
+                                                           Authentication auth,
+                                                           @RequestBody BuildingLevelDTO level)
+            throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException {
 
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-    return ResponseEntity.ok().body(buildingService.updateBuilding(kingdom, id, level));
+        return ResponseEntity.ok().body(buildingService.updateBuilding(kingdom, id, level));
 
-  }
+    }
 }
