@@ -1,6 +1,6 @@
 POST http://localhost:8080/kingdom/buildings
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDU3NDM2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.EbEppw_CfPvVhT7hz0Rs6GeQ33FmA_uyc13lE9BQbprhgkyA8qrVejSNfUptj3mC2a5oaeXrZXbDZ4oFAfemcg
 
 {
   "type": "academy"
@@ -9,13 +9,13 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZ
 ### Get buildings
 
 GET http://localhost:8080/kingdom/buildings
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTc0ODcyMDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJrZWxlbWVuIn0.K9LMRtnhIRDgnW9aayIt3jGPgNV52c2vXxgkRGYRQ2GmPPF-CY5YB2dOMk0h_aI5cYcsqRzu4lwY_ARj03Iagw
 Accept: application/json
 
 ### Get building
 
 GET http://localhost:8080/kingdom/buildings/4
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MTc0MDA4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJmdXJrZXN6In0.82V0FgQJnDcTiW6LS6TewF4KttCVUTSxcQlhWqNZkWrLI_IUgW0d8e9ZYde8fM6Gl6W3nKN_rFhc_6sRS0kmmg
 Accept: application/json
 
 ### PUT buildings
@@ -23,7 +23,7 @@ Accept: application/json
 
 PUT http://localhost:8080/kingdom/buildings/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDgxNjI4MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.hxMbO7Lv0YKeAW_vTzoE6z6Hz5G-O6sRqIL0LKg3vDPRGxmpqTtVMoxhR6B_FIhW6gIbPM9KlD3gzofUNVRE5Q
 
 {
   "level": 3
