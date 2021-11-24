@@ -2,14 +2,16 @@ package com.greenfoxacademy.springwebapp.battle.models.dtos;
 
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class BattleRequestDTO {
 
-  @NotEmpty(message = "You cant start battle with no troops in your army!")
-  private Long[] troopIds;
+    @NotEmpty(message = "You cant start battle with no troops in your army!")
+    private Long[] troopIds;
 }

@@ -1,15 +1,16 @@
 package com.greenfoxacademy.springwebapp.player.models.dtos;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class PlayerListResponseDTO {
 
-  private List<PlayerResponseDTO> players;
+    private List<PlayerResponseDTO> players;
 
-  public PlayerListResponseDTO(List<PlayerResponseDTO> players) {
-    this.players = players;
-  }
+    public PlayerListResponseDTO(List<PlayerResponseDTO> players) {
+        this.players = players;
+    }
 }

@@ -1,0 +1,77 @@
+### Get weapon
+### kingdom/resources
+GET http://localhost:8080/kingdom/weapons
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
+Accept: application/json
+
+###POST WEAPONS
+POST http://localhost:8080/kingdom/weapons
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
+
+[
+  {
+    "name": "cold weapon nr1",
+    "type": "COLD_WEAPON",
+    "kingdom": 1,
+    "bladeLength": 12,
+    "is_automaticable": "null",
+    "is_semiautoable": "null",
+    "is_concealable": "null"
+  },
+  {
+    "name": "machine gun nr1",
+    "type": "MACHINE_GUN",
+    "kingdom": 1,
+    "magazineSize": 44,
+    "is_automaticable": "null",
+    "is_semiautoable": "null",
+    "is_concealable": "null"
+  },
+  {
+    "name": "pistol nr1",
+    "type": "PISTOL",
+    "kingdom": 1,
+    "magazineSize": 8,
+    "isConcealable": "true",
+    "is_automaticable": "null",
+    "is_semiautoable": "null"
+  },
+  {
+    "name": "pistol nr2",
+    "type": "PISTOL",
+    "kingdom": 1,
+    "magazineSize": 8,
+    "isConcealable": "true",
+    "is_automaticable": "null",
+    "is_semiautoable": "null"
+  },
+  {
+    "name": "semi auto nr1",
+    "type": "SEMI_AUTOMATIC_GUN",
+    "kingdom": 1,
+    "magazineSize": 8,
+    "isAutomaticable": "false",
+    "is_automaticable": "null",
+    "is_concealable": "null"
+  },
+  {
+    "name": "shotgun nr1",
+    "type": "SHOTGUN",
+    "kingdom": 1,
+    "magazineSize": 44,
+    "is_automaticable": "null",
+    "is_semiautoable": "null",
+    "is_concealable": "null"
+  },
+  {
+    "name": "sniper nr1",
+    "type": "SNIPER_RIFLE",
+    "kingdom": 1,
+    "magazineSize": 6,
+    "shootingDistance": 486,
+    "is_automaticable": "null",
+    "is_semiautoable": "null",
+    "is_concealable": "null"
+  }
+]

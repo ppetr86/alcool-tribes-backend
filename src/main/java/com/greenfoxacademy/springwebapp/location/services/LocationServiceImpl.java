@@ -7,10 +7,7 @@ import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntitySpecificationDto;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
+import com.greenfoxacademy.springwebapp.specification.SpecificationFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +21,10 @@ import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 
 import static com.greenfoxacademy.springwebapp.location.services.LocationSpecifications.findLocationByType;
 import static com.greenfoxacademy.springwebapp.location.services.LocationSpecifications.hasXBiggerThan;
@@ -146,6 +147,11 @@ public class LocationServiceImpl implements LocationService {
                                                            KingdomEntity defendingKingdom) {
         return Math.abs(attackingKingdom.getLocation().getX() - defendingKingdom.getLocation().getX())
                 + Math.abs(attackingKingdom.getLocation().getY() - defendingKingdom.getLocation().getY());
+    }
+
+    @Override
+    public boolean existsLocationWhereKingdomIsNotNull() {
+        return repo.existsByKingdomIsNotNull();
     }
 
     public List<LocationEntity> findAllInRectangleOrdered(
@@ -310,12 +316,7 @@ public class LocationServiceImpl implements LocationService {
         LocationEntity l1 = repo.findByXIsAndYIs(x, y);
         LocationEntity l2 = repo.findById(id).orElse(null);
 
-        return new LocationEntityDTO[]{convertEntityToDTO(l1),convertEntityToDTO(l2)};
-    }
-
-    @Override
-    public boolean existsLocationWhereKingdomIsNotNull() {
-        return repo.existsByKingdomIsNotNull();
+        return new LocationEntityDTO[]{convertEntityToDTO(l1), convertEntityToDTO(l2)};
     }
 
     private LocationEntityDTO convertEntityToDTO(LocationEntity entity) {

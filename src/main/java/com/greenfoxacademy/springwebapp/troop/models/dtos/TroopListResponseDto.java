@@ -1,16 +1,17 @@
 package com.greenfoxacademy.springwebapp.troop.models.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class TroopListResponseDto {
 
-  private List<TroopEntityResponseDTO> troops;
+    private List<TroopEntityResponseDTO> troops;
 
 }

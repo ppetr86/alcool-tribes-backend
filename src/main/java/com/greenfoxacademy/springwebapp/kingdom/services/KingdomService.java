@@ -8,17 +8,23 @@ import org.springframework.stereotype.Service;
 @Service
 public interface KingdomService {
 
-  KingdomEntity findByID(Long id);
+    KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
 
-  KingdomResponseDTO entityToKingdomResponseDTO(Long id);
 
-  KingdomEntity findByPlayerId(Long id);
+    KingdomResponseDTO convert(KingdomEntity e);
 
-  KingdomEntity saveKingdom(KingdomEntity kingdom);
 
-  String findKingdomNameByPlayerID(Long id);
+    KingdomResponseDTO entityToKingdomResponseDTO(Long id);
 
-  KingdomResponseDTO convert(KingdomEntity e);
 
-  KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO);
+    KingdomEntity findByID(Long id);
+
+
+    KingdomEntity findByPlayerId(Long id);
+
+
+    String findKingdomNameByPlayerID(Long id);
+
+
+    KingdomEntity saveKingdom(KingdomEntity kingdom);
 }

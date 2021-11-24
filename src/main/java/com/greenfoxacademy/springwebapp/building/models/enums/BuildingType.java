@@ -1,15 +1,17 @@
 package com.greenfoxacademy.springwebapp.building.models.enums;
 
-public enum BuildingType {
-  TOWNHALL("townhall"),
-  FARM("farm"),
-  MINE("mine"),
-  ACADEMY("academy");
+import java.io.Serializable;
 
-  public final String buildingType;
+public enum BuildingType implements Serializable {
+    TOWNHALL("townhall"),
+    FARM("farm"),
+    MINE("mine"),
+    ACADEMY("academy");
 
-  BuildingType(String buildingType) {
-    this.buildingType = buildingType;
+    public final String buildingType;
 
-  }
+    BuildingType(String buildingType) {
+        this.buildingType = buildingType;
+
+    }
 }

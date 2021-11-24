@@ -19,6 +19,7 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelExc
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.player.models.enums.RoleType;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
+import com.greenfoxacademy.springwebapp.specification.SpecificationFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +39,7 @@ public class BuildingServiceTest {
   private BuildingRepository buildingRepository;
   private TimeService timeService;
   private ResourceService resourceService;
+  private SpecificationFactory<BuildingEntity> buildingSpecificationFactory;
 
   @Before
   public void init() {
@@ -47,8 +49,10 @@ public class BuildingServiceTest {
     timeService = Mockito.mock(TimeService.class);
     resourceService = Mockito.mock(ResourceService.class);
 
+    buildingSpecificationFactory = new SpecificationFactory<>();
+
     Environment mockEnvironment = TestConfig.mockEnvironment();
-    buildingService = new BuildingServiceImpl(mockEnvironment, buildingRepository, timeService, resourceService);
+    buildingService = new BuildingServiceImpl(mockEnvironment, buildingRepository, timeService, resourceService,buildingSpecificationFactory);
 
     Mockito.when(buildingRepository.findAllByKingdomId(1L)).thenReturn(BuildingFactory.createDefaultBuildings(null));
   }

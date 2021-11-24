@@ -5,6 +5,7 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingDetailsDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingLevelDTO;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingRequestDTO;
 import com.greenfoxacademy.springwebapp.building.models.enums.BuildingType;
+import com.greenfoxacademy.springwebapp.building.services.BuildingDao;
 import com.greenfoxacademy.springwebapp.building.services.BuildingService;
 import com.greenfoxacademy.springwebapp.factories.ResourceFactory;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
@@ -33,6 +34,7 @@ public class BuildingControllerTest {
 
   private BuildingController buildingController;
   private BuildingService buildingService;
+  private BuildingDao buildingDao;
   private ResourceService resourceService;
   private Authentication authentication;
 
@@ -42,7 +44,8 @@ public class BuildingControllerTest {
 
     buildingService = Mockito.mock(BuildingService.class);
     resourceService = Mockito.mock(ResourceService.class);
-    buildingController = new BuildingController(buildingService);
+    buildingDao = Mockito.mock(BuildingDao.class);
+    buildingController = new BuildingController(buildingService, buildingDao);
   }
 
   @Test

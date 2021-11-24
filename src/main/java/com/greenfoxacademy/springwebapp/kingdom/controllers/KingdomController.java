@@ -18,55 +18,54 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping(KingdomController.URI)
 public class KingdomController {
 
-  public static final String URI = "/kingdom";
+    public static final String URI = "/kingdom";
 
-  private final KingdomService kingdomService;
-  private final ResourceService resourceService;
-  private final BattleService battleService;
+    private final KingdomService kingdomService;
+    private final ResourceService resourceService;
+    private final BattleService battleService;
 
-  @GetMapping("/{id}")
-  public ResponseEntity<Object> getKingdomByID(@PathVariable Long id) throws IdNotFoundException {
-    return ResponseEntity.ok(kingdomService.entityToKingdomResponseDTO(id));
-  }
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getKingdomByID(@PathVariable Long id) throws IdNotFoundException {
+        return ResponseEntity.ok(kingdomService.entityToKingdomResponseDTO(id));
+    }
 
-  @GetMapping("/resources")
-  public ResponseEntity<?> getKingdomResources(Authentication authentication) {
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
-    ResourceListResponseDTO allResources = resourceService.convertKingdomResourcesToListResponseDTO(kingdom);
-    return ResponseEntity.ok().body(allResources);
-  }
+    @GetMapping("/resources")
+    public ResponseEntity<?> getKingdomResources(Authentication authentication) {
+        KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+        ResourceListResponseDTO allResources = resourceService.convertKingdomResourcesToListResponseDTO(kingdom);
+        return ResponseEntity.ok().body(allResources);
+    }
 
-  @PutMapping
-  public ResponseEntity<?> updateKingdomByName(Authentication auth,
-                                               @RequestBody @Valid KingdomNameDTO nameDTO) {
-    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-    return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
-  }
+    @PostMapping("/{id}/battle")
+    public ResponseEntity<?> initiateBattle(@PathVariable("id") Long enemyKingdomId,
+                                            @RequestBody @Valid BattleRequestDTO requestDTO,
+                                            Authentication authentication) throws
+            MissingParameterException,
+            IdNotFoundException,
+            ForbiddenActionException {
 
-  @PostMapping("/{id}/battle")
-  public ResponseEntity<?> initiateBattle(@PathVariable("id") Long enemyKingdomId,
-                                          @RequestBody @Valid BattleRequestDTO requestDTO,
-                                          Authentication authentication) throws
-      MissingParameterException,
-      IdNotFoundException,
-      ForbiddenActionException {
+        KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
-    KingdomEntity kingdom = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+        BattleResponseDTO battleHasStarted = battleService.war(enemyKingdomId, requestDTO, kingdom);
 
-    BattleResponseDTO battleHasStarted = battleService.war(enemyKingdomId, requestDTO, kingdom);
+        return ResponseEntity.ok().body(battleHasStarted);
+    }
 
-    return ResponseEntity.ok().body(battleHasStarted);
-  }
+    @PutMapping
+    public ResponseEntity<?> updateKingdomByName(Authentication auth,
+                                                 @RequestBody @Valid KingdomNameDTO nameDTO) {
+        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+        return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
+    }
 }
