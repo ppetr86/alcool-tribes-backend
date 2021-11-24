@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface KingdomRepository extends JpaRepository<KingdomEntity, Long> {
 
-  @Query(value = "select kingdomname from kingdoms where player_id = :id", nativeQuery = true)
-  String findKingdomNameByPlayerID(Long id);
+    KingdomEntity findKingdomEntityByPlayer(PlayerEntity playerEntity);
 
-  KingdomEntity findKingdomEntityByPlayer(PlayerEntity playerEntity);
+
+    @Query(value = "select kingdomname from kingdoms where player_id = :id", nativeQuery = true)
+    String findKingdomNameByPlayerID(Long id);
 
 }

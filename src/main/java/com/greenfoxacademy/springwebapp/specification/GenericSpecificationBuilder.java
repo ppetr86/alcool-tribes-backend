@@ -1,13 +1,13 @@
-package com.greenfoxacademy.springwebapp.location.services;
-
-import org.springframework.data.jpa.domain.Specification;
+package com.greenfoxacademy.springwebapp.specification;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.data.jpa.domain.Specification;
 
-import static com.greenfoxacademy.springwebapp.location.services.GenericSpecification.SearchCriteria;
-import static com.greenfoxacademy.springwebapp.location.services.GenericSpecification.SearchOperation;
+
+import static com.greenfoxacademy.springwebapp.specification.GenericSpecification.SearchCriteria;
+import static com.greenfoxacademy.springwebapp.specification.GenericSpecification.SearchOperation;
 
 class GenericSpecificationsBuilder<T> {
 

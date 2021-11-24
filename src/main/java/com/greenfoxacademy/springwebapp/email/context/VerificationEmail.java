@@ -10,34 +10,34 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Setter
 public class VerificationEmail extends AbstractEmail {
 
-  private String token;
+    private String token;
 
-  @Override
-  public <T> void init(T context) {
-    PlayerEntity player = (PlayerEntity) context;
-    // we pass the variables we want in Thymeleaf in the context map
-    put("username", player.getUsername());
-    put("kingdomname", player.getKingdom().getKingdomName());
+    public void buildVerificationUrl(final String baseURL, final String token) {
+        final String url = UriComponentsBuilder.fromHttpUrl(baseURL)
+                .path(PlayerController.URIVERIFY).queryParam("token", token).toUriString();
+        put("verificationURL", url);
+    }
 
-    setSenderEmail("2abbedeb1d-3b2376@inbox.mailtrap.io");
-    setSenderDisplayName("AlcoolGame");
+    @Override
+    public <T> void init(T context) {
+        PlayerEntity player = (PlayerEntity) context;
+        // we pass the variables we want in Thymeleaf in the context map
+        put("username", player.getUsername());
+        put("kingdomname", player.getKingdom().getKingdomName());
 
-    setRecipientEmail(player.getEmail());
-    setKingdomName(player.getKingdom().getKingdomName());
-    setUsername(player.getUsername());
-    setTemplateLocationHtml("registration.html");
-    setTemplateLocationText("registrationEmail.txt");
-    setSubject("Verify your email for Alcool Game");
-  }
+        setSenderEmail("2abbedeb1d-3b2376@inbox.mailtrap.io");
+        setSenderDisplayName("AlcoolGame");
 
-  public void setToken(String token) {
-    this.token = token;
-    put("token", token);
-  }
+        setRecipientEmail(player.getEmail());
+        setKingdomName(player.getKingdom().getKingdomName());
+        setUsername(player.getUsername());
+        setTemplateLocationHtml("registration.html");
+        setTemplateLocationText("registrationEmail.txt");
+        setSubject("Verify your email for Alcool Game");
+    }
 
-  public void buildVerificationUrl(final String baseURL, final String token) {
-    final String url = UriComponentsBuilder.fromHttpUrl(baseURL)
-        .path(PlayerController.URIVERIFY).queryParam("token", token).toUriString();
-    put("verificationURL", url);
-  }
+    public void setToken(String token) {
+        this.token = token;
+        put("token", token);
+    }
 }

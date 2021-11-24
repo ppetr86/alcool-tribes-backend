@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private final PlayerService playerService;
+    private final PlayerService playerService;
 
-  @Override
-  public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    PlayerEntity player = playerService.findByUsername(username);
-    if (player == null) {
-      throw new UsernameNotFoundException("Player with username " + username + " was not found!");
+    @Override
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        PlayerEntity player = playerService.findByUsername(username);
+        if (player == null) {
+            throw new UsernameNotFoundException("Player with username " + username + " was not found!");
+        }
+        return CustomUserDetails.fromPlayerToCustomUserDetails(player);
     }
-    return CustomUserDetails.fromPlayerToCustomUserDetails(player);
-  }
 }

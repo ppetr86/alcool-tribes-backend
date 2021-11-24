@@ -39,31 +39,32 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    compile 'org.springframework.security:spring-security-crypto:5.4.2'
-9
+    compile 'org.springframework.security:spring-security-crypto:5.5.1'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java:8.0.25'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.6'
 
     implementation 'org.flywaydb:flyway-core'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'junit:junit:4.12'
-    compile 'junit:junit:4.12'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.6'
+    testCompile 'junit:junit:4.13.2'
+    compile 'junit:junit:4.13.2'
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.5.6'
 
-    implementation 'org.springframework.security:spring-security-test'      //This is need for PasswordEncoder class
+    implementation 'org.springframework.security:spring-security-test:5.5.1'
+    //This is need for PasswordEncoder class
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'        //This is need for JwtProvider class
 
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.4.3' // spring boot starter email
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.4'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.6'
     implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.5.4'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.5.6'
 
     testImplementation group: 'com.icegreen', name: 'greenmail', version: '1.6.2'
 

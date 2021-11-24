@@ -34,9 +34,9 @@ POST http://localhost:8080/register
 Content-Type: application/json
 
 {
-  "username": "petrN",
+  "username": "rxb",
   "password": "password",
-  "email": "ppetrnovotny@gmail.com"
+  "email": "rxb@gmail.com"
 }
 
 ###
@@ -68,3 +68,4 @@ Content-Type: application/json
   "username": "kelemen",
   "password": "password"
 }
+

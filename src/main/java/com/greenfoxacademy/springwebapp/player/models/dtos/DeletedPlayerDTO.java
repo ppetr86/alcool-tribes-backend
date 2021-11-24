@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class DeletedPlayerDTO {
 
-  private boolean deleted;
-  private String deletedPlayerName;
+    private boolean deleted;
+    private String deletedPlayerName;
 
-  public DeletedPlayerDTO(boolean deleted, String deletedPlayerName) {
-    this.deleted = deleted;
-    this.deletedPlayerName = deletedPlayerName + " player deleted.";
-  }
+    public DeletedPlayerDTO(boolean deleted, String deletedPlayerName) {
+        this.deleted = deleted;
+        this.deletedPlayerName = deletedPlayerName + " player deleted.";
+    }
 }

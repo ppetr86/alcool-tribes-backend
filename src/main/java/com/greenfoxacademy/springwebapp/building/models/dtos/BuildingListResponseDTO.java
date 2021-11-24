@@ -1,16 +1,17 @@
 package com.greenfoxacademy.springwebapp.building.models.dtos;
 
 import com.greenfoxacademy.springwebapp.building.models.BuildingEntity;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class BuildingListResponseDTO {
 
-  private List<BuildingEntity> buildings;
+    private List<BuildingEntity> buildings;
 
-  public BuildingListResponseDTO(List<BuildingEntity> buildings) {
-    this.buildings = buildings;
-  }
+    public BuildingListResponseDTO(List<BuildingEntity> buildings) {
+        this.buildings = buildings;
+    }
 }

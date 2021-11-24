@@ -11,41 +11,65 @@ import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRegisterRequest
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerRequestDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerResponseDTO;
 import com.greenfoxacademy.springwebapp.player.models.dtos.PlayerTokenDTO;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public interface PlayerService {
 
-  PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO playerRegistrationRequestDTO);
-
-  PlayerEntity findByUsername(String username);
-
-  PlayerEntity findById(Long id);
-
-  PlayerEntity findByUsernameAndPassword(String username, String password);
-
-  PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance);
-
-  boolean sendRegistrationConfirmationEmail(final PlayerEntity user);
-
-  boolean verifyUser(final String token) throws InvalidTokenException;
-
-  PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity);
-
-  PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request) throws RuntimeException;
-
-  boolean existsPlayerByUsername(String username);
-
-  PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
-      throws RuntimeException;
-
-  DeletedPlayerDTO deletePlayer(Long deletedPlayerId);
+    DeletedPlayerDTO deletePlayer(Long deletedPlayerId);
 
 
-  PlayerEntity savePlayer(PlayerEntity player);
+    Boolean existsPlayerByIdAndIsVerified(long id, boolean isVerified);
 
-  PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) throws FileStorageException,
-      WrongContentTypeException;
 
+    boolean existsPlayerByUsername(String username);
+
+
+    List<Long> findAllByIsAccountVerified(boolean isAccountVerified);
+
+
+    PlayerEntity findById(Long id);
+
+
+    PlayerEntity findByUsername(String username);
+
+
+    PlayerEntity findByUsernameAndPassword(String username, String password);
+
+
+    PlayerListResponseDTO findPlayersAroundMe(KingdomEntity kingdom, Integer distance);
+
+
+    PlayerTokenDTO loginPlayer(PlayerRequestDTO request)
+            throws RuntimeException;
+
+
+    PlayerResponseDTO playerToResponseDTO(PlayerEntity playerEntity);
+
+
+    PlayerEntity registerNewPlayer(PlayerRegisterRequestDTO request) throws RuntimeException;
+
+
+    PlayerEntity saveNewPlayer(PlayerRegisterRequestDTO playerRegistrationRequestDTO);
+
+
+    PlayerEntity savePlayer(PlayerEntity player);
+
+
+    boolean selectIsVerified(long id);
+
+
+    boolean sendRegistrationConfirmationEmail(final PlayerEntity user);
+
+
+    void setAccountVerified(long id, boolean isAccountVerified);
+
+
+    PlayerEntity setAvatar(PlayerEntity player, MultipartFile file) throws FileStorageException,
+            WrongContentTypeException;
+
+
+    boolean verifyUser(final String token) throws InvalidTokenException;
 }

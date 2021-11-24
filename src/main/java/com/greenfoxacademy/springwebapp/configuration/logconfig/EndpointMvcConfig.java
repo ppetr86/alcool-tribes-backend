@@ -8,10 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @AllArgsConstructor
 @Configuration
 public class EndpointMvcConfig implements WebMvcConfigurer {
-  EndpointsInterceptor endpointsInterceptor;
+    EndpointsInterceptor endpointsInterceptor;
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(endpointsInterceptor);
-  }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(endpointsInterceptor);
+    }
 }
