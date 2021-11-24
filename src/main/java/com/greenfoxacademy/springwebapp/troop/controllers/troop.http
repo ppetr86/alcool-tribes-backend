@@ -8,7 +8,7 @@ Accept: application/json
 
 POST http://localhost:8080/kingdom/troops
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 
 {
   "buildingId": 3

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class TokenServiceImpl implements TokenService {
 
-    private final JwtProvider jwtProvider;
+  private final JwtProvider jwtProvider;
 
-    @Override
-    public PlayerTokenDTO generateTokenToLoggedInPlayer(PlayerEntity player) {
-        String token = jwtProvider.generateToken(player);
-        return new PlayerTokenDTO(token);
-    }
+  @Override
+  public PlayerTokenDTO generateTokenToLoggedInPlayer(PlayerEntity player) {
+    String token = jwtProvider.generateToken(player);
+    return new PlayerTokenDTO(token);
+  }
 }

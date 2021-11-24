@@ -1,21 +1,19 @@
 package com.greenfoxacademy.springwebapp.globalexceptionhandling;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class ErrorDTO {
 
-    private String status;
-    private String message;
+  private String status;
+  private String message;
 
-    public ErrorDTO(String message) {
-        this.message = message;
-        this.status = "error";
-    }
+  public ErrorDTO(String message) {
+    this.message = message;
+    this.status = "error";
+  }
 }

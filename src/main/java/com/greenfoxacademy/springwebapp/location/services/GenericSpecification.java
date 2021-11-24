@@ -1,19 +1,18 @@
-package com.greenfoxacademy.springwebapp.specification;
+package com.greenfoxacademy.springwebapp.location.services;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.data.jpa.domain.Specification;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.jpa.domain.Specification;
+import java.util.List;
 
 public class GenericSpecification<T> implements Specification<T> {
 
-    @Getter
-    @Setter
+    @Data
     @AllArgsConstructor
     public static class SearchCriteria {
 
@@ -22,7 +21,14 @@ public class GenericSpecification<T> implements Specification<T> {
         private boolean isOrOperation;
         private List<Object> arguments;
     }
+
+    public enum SearchOperation {
+
+        EQUALITY, NEGATION, GREATER_THAN, LESS_THAN, LIKE, STARTS_WITH, IN
+    }
+
     private SearchCriteria searchCriteria;
+
 
     public GenericSpecification(final SearchCriteria searchCriteria) {
         super();
@@ -46,15 +52,10 @@ public class GenericSpecification<T> implements Specification<T> {
             case LESS_THAN:
                 return cb.lessThan(root.get(searchCriteria.getKey()), (Comparable) arg);
             case LIKE:
-                return criteriaQuery.where(cb.like(root.get(searchCriteria.getKey()), "%" + arg + "%")).getRestriction();
+                return criteriaQuery.where(cb.like(root.<String>get("type"), "%" + arg + "%")).getRestriction();
             case STARTS_WITH:
-                return criteriaQuery.where(cb.like(root.get(searchCriteria.getKey()), arg + "%")).getRestriction();
+                return criteriaQuery.where(cb.like(root.<String>get("type"), arg + "%")).getRestriction();
         }
         return null;
-    }
-
-    public enum SearchOperation {
-
-        EQUALITY, NEGATION, GREATER_THAN, LESS_THAN, LIKE, STARTS_WITH, IN
     }
 }

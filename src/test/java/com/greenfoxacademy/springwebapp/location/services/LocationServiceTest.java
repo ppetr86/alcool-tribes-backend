@@ -6,7 +6,6 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
 import com.greenfoxacademy.springwebapp.location.repositories.LocationRepository;
-import com.greenfoxacademy.springwebapp.specification.SpecificationFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;

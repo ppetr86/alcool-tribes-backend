@@ -10,14 +10,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TroopRepository extends JpaRepository<TroopEntity, Long> {
 
-    @Modifying
-    @Query("DELETE FROM TroopEntity c where c IN ?1")
-    void deleteListOfTroops(List<TroopEntity> deadTroops);
+  TroopEntity save(TroopEntity troop);
 
+  @Query("SELECT c.kingdom.id FROM TroopEntity c WHERE c.id = ?1")
+  Long findKingdomIdByTroopId(Long troopId);
 
-    @Query("SELECT c.kingdom.id FROM TroopEntity c WHERE c.id = ?1")
-    Long findKingdomIdByTroopId(Long troopId);
-
-
-    TroopEntity save(TroopEntity troop);
+  @Modifying
+  @Query("DELETE FROM TroopEntity c where c IN ?1")
+  void deleteListOfTroops(List<TroopEntity> deadTroops);
 }

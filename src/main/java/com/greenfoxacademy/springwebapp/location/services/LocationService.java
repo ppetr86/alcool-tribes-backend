@@ -6,9 +6,10 @@ import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntitySpecificationDto;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Set;
-import org.springframework.stereotype.Service;
 
 @Service
 public interface LocationService {
@@ -23,9 +24,6 @@ public interface LocationService {
 
 
     Integer distanceBetweenKingdomsWithoutObstacles(KingdomEntity attackingKingdom, KingdomEntity defendingKingdom);
-
-
-    boolean existsLocationWhereKingdomIsNotNull();
 
 
     List<LocationEntity> findLocationWhereXIsBiggerThan(int x);
@@ -47,4 +45,7 @@ public interface LocationService {
 
 
     LocationEntityDTO[] showRandomMatchesByClassFieldsSpecifications(String... fields) throws WrongContentTypeException;
+
+
+    boolean existsLocationWhereKingdomIsNotNull();
 }

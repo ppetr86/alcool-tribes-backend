@@ -14,10 +14,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Army {
-    private int attackPoints = 0;
-    private int defencePoints = 0;
-    private int healthPoints = 0;
-    private List<TroopEntity> troops;
-    private KingdomEntity kingdom;
-    private ArmyType armyType;
+  private int attackPoints = 0;
+  private int defencePoints = 0;
+  private int healthPoints = 0;
+  private List<TroopEntity> troops;
+  private KingdomEntity kingdom;
+  private ArmyType armyType;
 }

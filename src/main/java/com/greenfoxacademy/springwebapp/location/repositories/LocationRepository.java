@@ -2,20 +2,21 @@ package com.greenfoxacademy.springwebapp.location.repositories;
 
 import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.enums.LocationType;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
 @Repository
 public interface LocationRepository extends JpaRepository<LocationEntity, Long>, JpaSpecificationExecutor<LocationEntity> {
 
     long countAllByTypeIs(LocationType type);
-
-
-    boolean existsByKingdomIsNotNull();
 
 
     List<LocationEntity> findAll();
@@ -32,12 +33,11 @@ public interface LocationRepository extends JpaRepository<LocationEntity, Long>,
     List<LocationEntity> findAllInRectangleOrdered(int minX, int maxX, int maxY, int minY);
 
 
-    //@Query(value = "select * from locations where x=:x AND y=:y", nativeQuery = true)
-    //LocationEntity findByXIsAndYIs(int x, int y);
-
-
     List<LocationEntity> findAllLocationsByTypeIs(LocationType type);
 
+
+    //@Query(value = "select * from locations where x=:x AND y=:y", nativeQuery = true)
+    //LocationEntity findByXIsAndYIs(int x, int y);
 
     LocationEntity findByXIsAndYIs(int x, int y);
 
@@ -53,6 +53,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, Long>,
     @Query(value = "select max(id) from locations", nativeQuery = true)
     Long getMaxID();
 
+    boolean existsByKingdomIsNotNull();
 
     @Query(value = "select min(id) from locations", nativeQuery = true)
     long getMinID();
@@ -61,14 +62,11 @@ public interface LocationRepository extends JpaRepository<LocationEntity, Long>,
     @Query(value = "select max(x) from locations", nativeQuery = true)
     int xMax();
 
-
     @Query(value = "select min(x) from locations", nativeQuery = true)
     int xMin();
 
-
     @Query(value = "select max(y) from locations", nativeQuery = true)
     int yMax();
-
 
     @Query(value = "select min(y) from locations", nativeQuery = true)
     int yMin();

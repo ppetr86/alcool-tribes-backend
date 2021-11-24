@@ -10,19 +10,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileStorageService {
-    String getAvatarsFolderName();
+  String storeAvatar(MultipartFile file, PlayerEntity player) throws FileStorageException,
+      WrongContentTypeException;
 
+  Resource loadFileAsResource(String fileName, Authentication auth) throws MyFileNotFoundException,
+      ForbiddenActionException;
 
-    String getFileUrl(String folderName, String fileName);
+  boolean userIsAllowedToAccessTheFile(String fileName, Authentication auth) throws ForbiddenActionException;
 
+  String getAvatarsFolderName();
 
-    Resource loadFileAsResource(String fileName, Authentication auth) throws MyFileNotFoundException,
-            ForbiddenActionException;
-
-
-    String storeAvatar(MultipartFile file, PlayerEntity player) throws FileStorageException,
-            WrongContentTypeException;
-
-
-    boolean userIsAllowedToAccessTheFile(String fileName, Authentication auth) throws ForbiddenActionException;
+  String getFileUrl(String folderName, String fileName);
 }

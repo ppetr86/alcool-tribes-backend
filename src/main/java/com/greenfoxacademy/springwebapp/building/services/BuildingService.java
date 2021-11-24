@@ -12,74 +12,40 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameter
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.NotEnoughResourceException;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.TownhallLevelException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
+
 import java.util.List;
 
 public interface BuildingService {
 
-    List<BuildingDetailsDTO> getBuildingsByRequestParams(Integer level, Integer hp, Long startedAt);
+  BuildingEntity save(BuildingEntity entity);
 
+  BuildingEntity defineFinishedAt(BuildingEntity entity);
 
-    List<BuildingDetailsDTO> buildingsByGenericSpecification(Long id, Integer level,
-                                                             Integer type, Long startedAt);
+  boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto);
 
+  BuildingEntity setBuildingTypeOnEntity(String type);
 
-    List<BuildingDetailsDTO> buildingsByGenericSpecificationPaged(Long id, int pageNr, int pageSize);
+  BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
+      throws InvalidInputException, TownhallLevelException, NotEnoughResourceException;
 
+  BuildingEntity defineHp(BuildingEntity entity);
 
-    List<BuildingDetailsDTO> buildingsByGenericSpecificationSorted(Long id, String sort);
+  BuildingEntity findBuildingById(Long id);
 
+  BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
 
-    BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
-            throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
+  BuildingEntity checkBuildingDetails(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
+      throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
 
+  BuildingDetailsDTO showBuilding(KingdomEntity kingdomEntity, Long id)
+      throws IdNotFoundException, ForbiddenActionException;
 
-    BuildingEntity createBuilding(KingdomEntity kingdom, BuildingRequestDTO dto)
-            throws InvalidInputException, TownhallLevelException, NotEnoughResourceException;
+  boolean hasKingdomTownhall(KingdomEntity kingdom);
 
+  List<BuildingEntity> findBuildingsByKingdomId(Long id);
 
-    List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
+  List<BuildingEntity> createDefaultBuildings(KingdomEntity kingdom);
 
-
-    BuildingEntity defineFinishedAt(BuildingEntity entity);
-
-
-    BuildingEntity defineHp(BuildingEntity entity);
-
-
-    List<Long> findAllIdsPaged(int size);
-
-
-    BuildingEntity findBuildingById(Long id);
-
-
-    BuildingEntity findBuildingWithHighestLevel(KingdomEntity kingdom, BuildingType townhall);
-
-
-    List<BuildingEntity> findBuildingsByKingdomId(Long id);
-
-
-    List<BuildingDetailsDTO> getAllBuildingsByType(int buildingType);
-
-
-    List<BuildingDetailsDTO> getAllBuildingsByTypeLevelKingdomId(Integer type, int level);
-
-
-    boolean hasKingdomTownhall(KingdomEntity kingdom);
-
-
-    boolean isBuildingTypeInRequestOk(BuildingRequestDTO dto);
-
-
-    BuildingEntity save(BuildingEntity entity);
-
-
-    BuildingEntity setBuildingTypeOnEntity(String type);
-
-
-    BuildingDetailsDTO showBuilding(KingdomEntity kingdomEntity, Long id)
-            throws IdNotFoundException, ForbiddenActionException;
-
-
-    BuildingEntity updateBuilding(KingdomEntity kingdom, Long id, BuildingLevelDTO levelDTO)
-            throws IdNotFoundException, MissingParameterException, TownhallLevelException, NotEnoughResourceException;
+  BuildingEntity findBuildingWithHighestLevel(KingdomEntity kingdom, BuildingType townhall);
 }

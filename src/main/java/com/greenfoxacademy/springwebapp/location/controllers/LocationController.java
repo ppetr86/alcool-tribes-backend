@@ -20,18 +20,18 @@ public class LocationController {
 
     private final LocationService locationService;
 
-    @GetMapping("/existskingdom")
-    public ResponseEntity<Boolean> existsKingdomInLocations() {
-        return ResponseEntity.ok(locationService.existsLocationWhereKingdomIsNotNull());
-    }
-
     @GetMapping("/specifications")
     public ResponseEntity<Object> getKingdomByID(@RequestParam int x, @RequestParam int locationType) throws IdNotFoundException {
         return ResponseEntity.ok(locationService.showMatchesBySpecification(x, LocationType.values()[locationType]));
     }
 
+    @GetMapping("/existskingdom")
+    public ResponseEntity<Boolean> existsKingdomInLocations() {
+        return ResponseEntity.ok(locationService.existsLocationWhereKingdomIsNotNull());
+    }
+
     @GetMapping("/randommatches")
     public ResponseEntity<LocationEntityDTO[]> showRandomMatchesByClassFieldsSpecifications(String x, String y, String id) {
-        return ResponseEntity.ok(locationService.showRandomMatchesByClassFieldsSpecifications(x, y, id));
+        return ResponseEntity.ok(locationService.showRandomMatchesByClassFieldsSpecifications(x,y,id));
     }
 }

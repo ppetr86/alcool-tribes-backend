@@ -11,14 +11,14 @@ property shall be defined into this class.
 @Component
 @ConfigurationProperties(prefix = "file")
 public class FileStorageProperties {
-    private String uploadAvatarDir;
+  private String uploadAvatarDir;
 
-    public String getUploadAvatarDir() {
-        return uploadAvatarDir;
-    }
+  public String getUploadAvatarDir() {
+    return uploadAvatarDir;
+  }
 
-    public void setUploadAvatarDir(String uploadAvatarDir) {
-        this.uploadAvatarDir = uploadAvatarDir;
-    }
+  public void setUploadAvatarDir(String uploadAvatarDir) {
+    this.uploadAvatarDir = uploadAvatarDir;
+  }
 
 }

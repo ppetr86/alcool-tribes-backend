@@ -11,11 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PlayerResponseDTO {
 
-    private long id;
-    private String username;
-    private String email;
-    private long kingdomId;
-    private String avatar;
-    private int points;
+  private long id;
+  private String username;
+  private String email;
+  private long kingdomId;
+  private String avatar;
+  private int points;
 
 }

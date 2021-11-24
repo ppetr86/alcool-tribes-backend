@@ -1,19 +1,18 @@
 package com.greenfoxacademy.springwebapp.resource.models.dtos;
 
-import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.List;
+
+@Data
 @NoArgsConstructor
 @Builder(setterPrefix = "with")
 public class ResourceListResponseDTO {
-    private List<ResourceResponseDTO> resources;
+  private List<ResourceResponseDTO> resources;
 
-    public ResourceListResponseDTO(List<ResourceResponseDTO> resources) {
-        this.resources = resources;
-    }
+  public ResourceListResponseDTO(List<ResourceResponseDTO> resources) {
+    this.resources = resources;
+  }
 }

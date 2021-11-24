@@ -5,41 +5,32 @@ import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.resource.models.ResourceEntity;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.models.enums.ResourceType;
-import java.util.List;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface ResourceService {
 
-    Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType);
+  boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange);
 
+  void updateResourcesBasedOnTroop(KingdomEntity kingdom, int amountChange);
 
-    ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
+  boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
 
+  void updateResourceAmount(KingdomEntity kingdom, int amountChange, ResourceType resourceType);
 
-    List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
+  Integer calculateActualResource(KingdomEntity kingdom, ResourceType resourceType);
 
+  List<ResourceEntity> createDefaultResources(KingdomEntity kingdomEntity);
 
-    ResourceEntity findResourceByBuildingType(KingdomEntity kingdom, Enum buildingType);
+  ResourceListResponseDTO convertKingdomResourcesToListResponseDTO(KingdomEntity kingdom);
 
+  ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building);
 
-    ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType);
+  ResourceEntity findResourceByBuildingType(KingdomEntity kingdom, Enum buildingType);
 
+  ResourceEntity getResourceByResourceType(KingdomEntity kingdom, ResourceType resourceType);
 
-    boolean hasResourcesForBuilding(KingdomEntity kingdom, int amountChange);
-
-
-    boolean hasResourcesForTroop(KingdomEntity kingdom, int amountChange);
-
-
-    void saveResources(List<ResourceEntity> resources);
-
-
-    void updateResourceAmount(KingdomEntity kingdom, int amountChange, ResourceType resourceType);
-
-
-    ResourceEntity updateResourceGeneration(KingdomEntity kingdom, BuildingEntity building);
-
-
-    void updateResourcesBasedOnTroop(KingdomEntity kingdom, int amountChange);
+  void saveResources(List<ResourceEntity> resources);
 }

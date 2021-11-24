@@ -1,18 +1,16 @@
 package com.greenfoxacademy.springwebapp.player.models.dtos;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class PlayerTokenDTO {
-    private String status;
-    private String token;
+  private String status;
+  private String token;
 
-    public PlayerTokenDTO(String token) {
-        this.status = "ok";
-        this.token = token;
-    }
+  public PlayerTokenDTO(String token) {
+    this.status = "ok";
+    this.token = token;
+  }
 }

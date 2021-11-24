@@ -4,26 +4,25 @@ import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleRespo
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.List;
+
+@Data
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 @NoArgsConstructor
 public class KingdomResponseDTO {
 
-    private long id;
-    private String name;
-    private long userId;
-    private List<BuildingSingleResponseDTO> buildings;
-    private List<ResourceResponseDTO> resources;
-    private List<TroopEntityResponseDTO> troops;
-    private LocationEntityDTO location;
+  private long id;
+  private String name;
+  private long userId;
+  private List<BuildingSingleResponseDTO> buildings;
+  private List<ResourceResponseDTO> resources;
+  private List<TroopEntityResponseDTO> troops;
+  private LocationEntityDTO location;
 
 }

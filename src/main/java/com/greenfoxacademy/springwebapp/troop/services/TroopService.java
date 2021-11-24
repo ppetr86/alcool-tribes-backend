@@ -15,27 +15,21 @@ import java.util.List;
 
 public interface TroopService {
 
-    TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
-            ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException;
+  TroopListResponseDto troopsToListDTO(KingdomEntity entity);
 
+  TroopEntityResponseDTO createTroop(KingdomEntity kingdom, TroopRequestDTO requestDTO) throws
+      ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException;
 
-    void deleteListOfTroops(List<TroopEntity> deadTroops);
+  TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO, Long troopId) throws
+      MissingParameterException, ForbiddenActionException, IdNotFoundException,
+      InvalidInputException, NotEnoughResourceException;
 
+  TroopEntityResponseDTO getTroop(KingdomEntity kingdom, Long troopId) throws
+      ForbiddenActionException, IdNotFoundException;
 
-    TroopEntity findTroopById(Long id);
+  TroopEntity findTroopById(Long id);
 
+  void deleteListOfTroops(List<TroopEntity> deadTroops);
 
-    TroopEntityResponseDTO getTroop(KingdomEntity kingdom, Long troopId) throws
-            ForbiddenActionException, IdNotFoundException;
-
-
-    void saveAllTroops(List<TroopEntity> troops);
-
-
-    TroopListResponseDto troopsToListDTO(KingdomEntity entity);
-
-
-    TroopEntityResponseDTO updateTroopLevel(KingdomEntity kingdomEntity, TroopRequestDTO requestDTO, Long troopId) throws
-            MissingParameterException, ForbiddenActionException, IdNotFoundException,
-            InvalidInputException, NotEnoughResourceException;
+  void saveAllTroops(List<TroopEntity> troops);
 }

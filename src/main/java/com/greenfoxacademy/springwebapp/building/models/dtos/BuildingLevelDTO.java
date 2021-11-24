@@ -1,14 +1,12 @@
 package com.greenfoxacademy.springwebapp.building.models.dtos;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class BuildingLevelDTO {
-    private int level;
+  private int level;
 }

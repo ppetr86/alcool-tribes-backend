@@ -10,14 +10,14 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-    public static final String KINGDOM_UPDATE = "/kingdom-update/{kingdomID}";
-    @Autowired
-    private WebSocketHandler webSocketHandler;
+  public static final String KINGDOM_UPDATE = "/kingdom-update/{kingdomID}";
+  @Autowired
+  private WebSocketHandler webSocketHandler;
 
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-        webSocketHandlerRegistry.addHandler(webSocketHandler, KINGDOM_UPDATE)
-                .setAllowedOrigins("*");
-    }
+  @Override
+  public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
+    webSocketHandlerRegistry.addHandler(webSocketHandler, KINGDOM_UPDATE)
+        .setAllowedOrigins("*");
+  }
 
 }

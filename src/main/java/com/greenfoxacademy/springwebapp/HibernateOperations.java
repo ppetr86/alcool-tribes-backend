@@ -12,27 +12,8 @@ import javax.persistence.Persistence;
 
 */
 /**
- * Class to illustrate the usage of EntityManager API.
- * <p>
- * Static block for creating EntityManagerFactory. The Persistence class looks for META-INF/persistence.xml in the classpath.
- * <p>
- * Static method returning EntityManager.
  *
- * @return EntityManager
- * <p>
- * Saves the LocationEntity entity into the database. Here we are using Application Managed EntityManager, hence should handle transactions by ourselves.
- * <p>
- * Method to illustrate the querying support in EntityManager when the result is a single object.
- * @return LocationEntity
- * <p>
- * Method to illustrate the querying support in EntityManager when the result is a list.
- * @return Method to illustrate the usage of find() method.
- * @param locId
- * @return LocationEntity
- * <p>
- * Method to illustrate the usage of merge() function.
- * <p>
- * Method to illustrate the usage of remove() function.
+ *Class to illustrate the usage of EntityManager API.
  *//*
 
 public class HibernateOperations {
@@ -41,8 +22,8 @@ public class HibernateOperations {
 
     */
 /**
- * Static block for creating EntityManagerFactory. The Persistence class looks for META-INF/persistence.xml in the classpath.
- *//*
+     * Static block for creating EntityManagerFactory. The Persistence class looks for META-INF/persistence.xml in the classpath.
+     *//*
 
     static {
         emf = Persistence.createEntityManagerFactory("com.greenfoxacademy.springwebapp");
@@ -50,9 +31,9 @@ public class HibernateOperations {
 
     */
 /**
- * Static method returning EntityManager.
- * @return EntityManager
- *//*
+     * Static method returning EntityManager.
+     * @return EntityManager
+     *//*
 
     public static EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -60,8 +41,8 @@ public class HibernateOperations {
 
     */
 /**
- * Saves the LocationEntity entity into the database. Here we are using Application Managed EntityManager, hence should handle transactions by ourselves.
- *//*
+     * Saves the LocationEntity entity into the database. Here we are using Application Managed EntityManager, hence should handle transactions by ourselves.
+     *//*
 
     public void saveLocationEntity() {
         EntityManager em = HibernateOperations.getEntityManager();
@@ -80,9 +61,9 @@ public class HibernateOperations {
 
     */
 /**
- * Method to illustrate the querying support in EntityManager when the result is a single object.
- * @return LocationEntity
- *//*
+     * Method to illustrate the querying support in EntityManager when the result is a single object.
+     * @return LocationEntity
+     *//*
 
     public LocationEntity queryForLocationEntityById() {
         EntityManager em = HibernateOperations.getEntityManager();
@@ -94,9 +75,9 @@ public class HibernateOperations {
 
     */
 /**
- * Method to illustrate the querying support in EntityManager when the result is a list.
- * @return
- *//*
+     * Method to illustrate the querying support in EntityManager when the result is a list.
+     * @return
+     *//*
 
     public List<?> queryForLocationEntities() {
         EntityManager em = HibernateOperations.getEntityManager();
@@ -108,10 +89,10 @@ public class HibernateOperations {
 
     */
 /**
- * Method to illustrate the usage of find() method.
- * @param locId
- * @return LocationEntity
- *//*
+     * Method to illustrate the usage of find() method.
+     * @param locId
+     * @return LocationEntity
+     *//*
 
     public LocationEntity getLocationEntity(Long locId) {
         EntityManager em = HibernateOperations.getEntityManager();
@@ -121,8 +102,8 @@ public class HibernateOperations {
 
     */
 /**
- * Method to illustrate the usage of merge() function.
- *//*
+     * Method to illustrate the usage of merge() function.
+     *//*
 
     public void mergeLocationEntity() {
         EntityManager em = HibernateOperations.getEntityManager();
@@ -138,8 +119,8 @@ public class HibernateOperations {
 
     */
 /**
- * Method to illustrate the usage of remove() function.
- *//*
+     * Method to illustrate the usage of remove() function.
+     *//*
 
     public void removeLocationEntity() {
         EntityManager em = HibernateOperations.getEntityManager();

@@ -12,7 +12,6 @@ import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopListResponseDto;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopRequestDTO;
 import com.greenfoxacademy.springwebapp.troop.services.TroopService;
-import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,49 +23,51 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping(TroopController.URI)
 public class TroopController {
-    public static final String URI = "/kingdom/troops";
-    private final TroopService troopService;
+  public static final String URI = "/kingdom/troops";
+  private final TroopService troopService;
 
-    @PostMapping
-    public ResponseEntity<?> createTroop(@RequestBody @Valid TroopRequestDTO requestDTO, Authentication auth)
-            throws ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException {
+  @GetMapping
+  public ResponseEntity<TroopListResponseDto> getTroopsOfKingdom(Authentication auth) {
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    TroopListResponseDto troops = troopService.troopsToListDTO(kingdom);
+    return ResponseEntity.ok(troops);
+  }
 
-        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+  @PostMapping
+  public ResponseEntity<?> createTroop(@RequestBody @Valid TroopRequestDTO requestDTO, Authentication auth)
+      throws ForbiddenActionException, InvalidAcademyIdException, NotEnoughResourceException {
 
-        TroopEntityResponseDTO responseDTO = troopService.createTroop(kingdom, requestDTO);
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
 
-        return ResponseEntity.ok(responseDTO);
-    }
+    TroopEntityResponseDTO responseDTO = troopService.createTroop(kingdom, requestDTO);
 
-    @GetMapping
-    public ResponseEntity<TroopListResponseDto> getTroopsOfKingdom(Authentication auth) {
-        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-        TroopListResponseDto troops = troopService.troopsToListDTO(kingdom);
-        return ResponseEntity.ok(troops);
-    }
+    return ResponseEntity.ok(responseDTO);
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> returnTroop(@PathVariable("id") Long troopId, Authentication auth)
-            throws ForbiddenActionException, IdNotFoundException {
+  @PutMapping("/{troopId}")
+  public ResponseEntity<?> updateTroop(@PathVariable Long troopId, Authentication authentication,
+                                       @RequestBody TroopRequestDTO requestDTO) throws
+      MissingParameterException, ForbiddenActionException, IdNotFoundException,
+      NotEnoughResourceException, InvalidInputException {
 
-        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
-        TroopEntityResponseDTO responseDTO = troopService.getTroop(kingdom, troopId);
-        return ResponseEntity.ok(responseDTO);
-    }
+    KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
 
-    @PutMapping("/{troopId}")
-    public ResponseEntity<?> updateTroop(@PathVariable Long troopId, Authentication authentication,
-                                         @RequestBody TroopRequestDTO requestDTO) throws
-            MissingParameterException, ForbiddenActionException, IdNotFoundException,
-            NotEnoughResourceException, InvalidInputException {
+    TroopEntityResponseDTO responseDTO = troopService.updateTroopLevel(kingdomEntity, requestDTO, troopId);
+    return ResponseEntity.ok(responseDTO);
+  }
 
-        KingdomEntity kingdomEntity = ((CustomUserDetails) authentication.getPrincipal()).getKingdom();
+  @GetMapping("/{id}")
+  public ResponseEntity<?> returnTroop(@PathVariable("id") Long troopId, Authentication auth)
+      throws ForbiddenActionException, IdNotFoundException {
 
-        TroopEntityResponseDTO responseDTO = troopService.updateTroopLevel(kingdomEntity, requestDTO, troopId);
-        return ResponseEntity.ok(responseDTO);
-    }
+    KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+    TroopEntityResponseDTO responseDTO = troopService.getTroop(kingdom, troopId);
+    return ResponseEntity.ok(responseDTO);
+  }
 }

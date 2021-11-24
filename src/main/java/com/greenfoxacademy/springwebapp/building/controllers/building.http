@@ -1,6 +1,6 @@
 POST http://localhost:8080/kingdom/buildings
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 
 {
   "type": "academy"
@@ -9,57 +9,13 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZ
 ### Get buildings
 
 GET http://localhost:8080/kingdom/buildings
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings
-
-GET http://localhost:8080/kingdom/buildings/dao?buildingType=townhall&buildingId=5
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-
-### Get buildings Dao byParams
-
-GET http://localhost:8080/kingdom/buildings/dao/byParams?level=1&hp=1&startedAt=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings Dao byParams in String query
-
-GET http://localhost:8080/kingdom/buildings/dao/byParamsString?level=1&hp=1&startedAt=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-
-### Get buildings Dao directly in DTO v2
-
-GET http://localhost:8080/kingdom/buildings/dao/byParamsInDtoV2?level=1&hp=1&startedAt=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings Dao directly in DTO v3 - projection join
-
-GET http://localhost:8080/kingdom/buildings/dao/byParamsInDtoProjectionsJoin?level=1&hp=1&startedAt=1&kingdomName=e
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings Dao directly in DTO v1
-
-GET http://localhost:8080/kingdom/buildings/dao/byParamsInDtoV1?level=1&hp=1&startedAt=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings Dao directly in DTO projections
-
-GET http://localhost:8080/kingdom/buildings/dao/byParamsInDtoProjections?level=1&hp=1&startedAt=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 Accept: application/json
 
 ### Get building
 
 GET http://localhost:8080/kingdom/buildings/4
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 Accept: application/json
 
 ### PUT buildings
@@ -67,44 +23,10 @@ Accept: application/json
 
 PUT http://localhost:8080/kingdom/buildings/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjE4MTA0MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.b-L-Eyz-5mfocm2bgfgBKkoFnsQAtwCbX9TXapO6NAA9E5xS_--DAOAtJ7k-cnVKJGgnK_ty9TzedXc_C31Qdw
 
 {
   "level": 3
 }
 
-### Get buildings by type
 
-GET http://localhost:8080/kingdom/buildings/type/0
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings by search
-
-GET http://localhost:8080/kingdom/buildings/search?level=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings by search
-
-GET http://localhost:8080/kingdom/buildings/search?type=1&level=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-
-### Get buildings by buildingsByGenericSpecification
-GET http://localhost:8080/kingdom/buildings/buildingsByGenericSpecification?id=1&level=0&type=0&startedAt=123456
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get buildings paged size
-
-GET http://localhost:8080/kingdom/buildings/building-ids?size=4
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
-
-### Get getBean
-
-GET http://localhost:8080/kingdom/buildings/dao/getBean?buildingType=townhall&buildingId=1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2Njg2Mzk2MDAsImtpbmdkb21JZCI6MSwidXNlcm5hbWUiOiJwZXRyTiJ9.7GgDq-kjpjr1qSKvmrqG437huTWTdZLk9CaCJeg3Rg3Qo6aRRZtlkW6rIFNAMU98ZJwzR21CWe6T-MRLufoD_Q
-Accept: application/json
