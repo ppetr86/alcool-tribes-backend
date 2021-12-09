@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
+import com.greenfoxacademy.springwebapp.location.models.LocationEntity;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
+import com.greenfoxacademy.springwebapp.player.models.PlayerEntity;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +21,9 @@ public class ConvertService {
 
     public KingdomResponseDTO convertKingdomToDTO(KingdomEntity e) {
         return KingdomResponseDTO.builder()
-                .withId(e.getId())
-                .withName(e.getKingdomName())
-                .withUserId(e.getPlayer().getId())
+                .withId(Optional.ofNullable(e.getId()).orElseGet(() -> 0L))
+                .withName(Optional.ofNullable(e.getKingdomName()).orElseGet(()->"no name kingdom"))
+                .withUserId(Optional.ofNullable(e.getPlayer()).map(PlayerEntity::getId).orElseGet(()-> 0L))
                 .withBuildings(e.getBuildings().stream()
                         .map(BuildingSingleResponseDTO::new)
                         .collect(Collectors.toList()))
@@ -30,7 +33,7 @@ public class ConvertService {
                 .withTroops(e.getTroops().stream()
                         .map(TroopEntityResponseDTO::new)
                         .collect(Collectors.toList()))
-                .withLocation(new LocationEntityDTO(e.getLocation()))
+                .withLocation(LocationEntityDTO.copyUtil(e.getLocation()))
                 .build();
     }
 

@@ -8,10 +8,12 @@ import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundExcept
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.MissingParameterException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
+import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
 import com.greenfoxacademy.springwebapp.kingdom.services.KingdomService;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceListResponseDTO;
 import com.greenfoxacademy.springwebapp.resource.services.ResourceService;
 import com.greenfoxacademy.springwebapp.security.CustomUserDetails;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -67,5 +70,11 @@ public class KingdomController {
                                                  @RequestBody @Valid KingdomNameDTO nameDTO) {
         KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
         return ResponseEntity.ok(kingdomService.changeKingdomName(kingdom, nameDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<KingdomResponseDTO>> kingdomsWithNameLike(Authentication auth, @RequestParam String name){
+        KingdomEntity kingdom = ((CustomUserDetails) auth.getPrincipal()).getKingdom();
+        return ResponseEntity.ok(kingdomService.kingomWithNameLike(name));
     }
 }

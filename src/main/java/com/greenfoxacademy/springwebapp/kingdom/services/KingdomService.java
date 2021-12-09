@@ -3,6 +3,7 @@ package com.greenfoxacademy.springwebapp.kingdom.services;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomResponseDTO;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +25,9 @@ public interface KingdomService {
 
 
     String findKingdomNameByPlayerID(Long id);
+
+
+    List<KingdomResponseDTO> kingomWithNameLike(String name);
 
 
     KingdomEntity saveKingdom(KingdomEntity kingdom);

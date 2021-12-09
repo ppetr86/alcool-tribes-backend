@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
@@ -21,9 +22,13 @@ public class KingdomResponseDTO {
     private long id;
     private String name;
     private long userId;
+    @Nullable
     private List<BuildingSingleResponseDTO> buildings;
+    @Nullable
     private List<ResourceResponseDTO> resources;
+    @Nullable
     private List<TroopEntityResponseDTO> troops;
+    @Nullable
     private LocationEntityDTO location;
 
 }

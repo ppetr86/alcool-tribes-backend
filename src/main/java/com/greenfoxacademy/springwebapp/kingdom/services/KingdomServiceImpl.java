@@ -1,6 +1,7 @@
 package com.greenfoxacademy.springwebapp.kingdom.services;
 
 import com.greenfoxacademy.springwebapp.building.models.dtos.BuildingSingleResponseDTO;
+import com.greenfoxacademy.springwebapp.configuration.ConvertService;
 import com.greenfoxacademy.springwebapp.globalexceptionhandling.IdNotFoundException;
 import com.greenfoxacademy.springwebapp.kingdom.models.KingdomEntity;
 import com.greenfoxacademy.springwebapp.kingdom.models.dtos.KingdomNameDTO;
@@ -9,15 +10,21 @@ import com.greenfoxacademy.springwebapp.kingdom.repositories.KingdomRepository;
 import com.greenfoxacademy.springwebapp.location.models.dtos.LocationEntityDTO;
 import com.greenfoxacademy.springwebapp.resource.models.dtos.ResourceResponseDTO;
 import com.greenfoxacademy.springwebapp.troop.models.dtos.TroopEntityResponseDTO;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
 public class KingdomServiceImpl implements KingdomService {
 
     private final KingdomRepository kingdomRepository;
+    private final ConvertService convertService;
 
     @Override
     public KingdomResponseDTO changeKingdomName(KingdomEntity kingdom, KingdomNameDTO nameDTO) {
@@ -34,13 +41,13 @@ public class KingdomServiceImpl implements KingdomService {
                 .withUserId(e.getPlayer().getId())
                 .withBuildings(e.getBuildings().stream()
                         .map(BuildingSingleResponseDTO::new)
-                        .collect(Collectors.toList()))
+                        .collect(toList()))
                 .withResources(e.getResources().stream()
                         .map(ResourceResponseDTO::new)
-                        .collect(Collectors.toList()))
+                        .collect(toList()))
                 .withTroops(e.getTroops().stream()
                         .map(TroopEntityResponseDTO::new)
-                        .collect(Collectors.toList()))
+                        .collect(toList()))
                 .withLocation(new LocationEntityDTO(e.getLocation()))
                 .build();
     }
@@ -67,6 +74,12 @@ public class KingdomServiceImpl implements KingdomService {
     @Override
     public String findKingdomNameByPlayerID(Long id) {
         return kingdomRepository.findKingdomNameByPlayerID(id);
+    }
+
+    @Override
+    public List<KingdomResponseDTO> kingomWithNameLike(String name) {
+        Specification<KingdomEntity> nameLike = (root, query, cb) -> cb.like(root.get("kingdomName"), "%" + name + "%");
+        return kingdomRepository.findAll(nameLike).stream().map(convertService::convertKingdomToDTO).collect(toList());
     }
 
     @Override
